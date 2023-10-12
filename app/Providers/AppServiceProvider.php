@@ -31,18 +31,8 @@ class AppServiceProvider extends ServiceProvider
             ['*'],
             function ($view) {
                 //$enabled_modules = !empty(session('business.enabled_modules')) ? session('business.enabled_modules') : [];
-                
-                if(empty(session('business.enabled_modules'))){
-                    $enabled_modules = [];
-                }else{
-                    $systemModules = Module::orderBy('name', 'ASC')->get();
-                    foreach($systemModules as $systemModule){
-                        if($systemModule->status == 1){
-                            $enabled[] = $systemModule->name;
-                        }
-                    }
-                    $enabled_modules = $enabled;
-                }
+                $nameModules = Module::where('status', 1)->orderBy('name', 'ASC')->get()->pluck('name');
+                $enabled_modules = $nameModules->all();
                 $view->with('enabled_modules', $enabled_modules);
             }
         );
