@@ -357,6 +357,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="trendingProducts-table"></tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">
+                                        <small>{{__('home.trendingProductosNotes')}}</small>
+                                    </td>
+                                </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

@@ -10,8 +10,8 @@
     "sells" => "Ventas",
     "products" => "Producto",
     "amount" => "Cantidad",
-    "total_sells1" => "Ventas",
-    "last_sale" => "Última venta",
+    "total_sells1" => "Ventas ($)",
+    "last_sale" => "Última venta ($)",
     "trending_products" => "Productos en tendencia (más vendidos)",
     "today" => "Hoy",
     "this_week" => "Esta semana",
@@ -46,5 +46,6 @@
     'net_earnings' => 'Ganancia neta',
     'average_sales' => 'Promedio de ventas',
     'conected_business' => 'Cambiar de empresa',
-    'implementations' => 'Implementaciones'
+    'implementations' => 'Implementaciones',
+     'trendingProductosNotes' => '* Valores ($) mostrados según su configuración de impuestos.',
 ];

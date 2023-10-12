@@ -769,25 +769,29 @@ class HomeController extends Controller
     }
 
     public function getListTrendingProducts(){
+
+        $products = null;
+
         if (request()->ajax()) {
-            // $start = request()->start;
-            // $end = request()->end;
+            $start = request()->start;
+            $end = request()->end;
+            $location_id = request()->location_id;
             $business_id = request()->session()->get('user.business_id');
-            // if(!empty($end) && !empty($start)){
-            //     $filters['start_date'] = $start;
-            //     $filters['end_date'] = $end;
-            // }
+            if(!empty($end) && !empty($start)){
+             $filters['start_date'] = $start;
+             $filters['end_date'] = $end;
+            }
             $filters['limit'] = 5;
             
             $products = $this->productUtil->getTrendingProducts($business_id, $filters);
             foreach ($products as $product) {
                 $product->product = $product->product;
-                $product->total_unit_sold = round($product->total_unit_sold, 2);
+                $product->total_unit_sold = $this->productUtil->num_f($product->total_unit_sold, false, 2);
                 $product->total_sells = $this->productUtil->num_f($product->total_sells, true, 2);
                 $product->last_sells = $this->productUtil->num_f($product->last_sells, true, 2);
+                $product->message = $product->message;
             }
-
-            return $products;
         }
+        return $products;
     }
 }

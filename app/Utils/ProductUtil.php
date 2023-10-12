@@ -720,6 +720,11 @@ class ProductUtil extends Util
      */
     public function getTrendingProducts($business_id, $filters = [])
     {
+
+        $business = Business::find($business_id);
+        $dashboard_settings = empty($business->dashboard_settings) ? null : json_decode($business->dashboard_settings, true);
+
+
         $query = Transaction::join(
             'transaction_sell_lines as tsl',
             'transactions.id',
@@ -771,14 +776,23 @@ class ProductUtil extends Util
         }
         $sell_return_query .= ')';
 
+        // Evaluamos si se mostraran valores con impuestos o sin impustos
+        if ($dashboard_settings['box_exc_tax']) {
+            $total_sells = "SUM(tsl.unit_price_exc_tax) as total_sells";
+            $last_sells = "tsl.unit_price_exc_tax as last_sells";
+        } else {
+            $total_sells = "SUM(tsl.unit_price_inc_tax) as total_sells";
+            $last_sells = "tsl.unit_price_inc_tax as last_sells";
+        }
+
         $products = $query->select(
             DB::raw("(SUM(tsl.quantity) - COALESCE($sell_return_query, 0)) as total_unit_sold"),
             'p.name as product',
-            DB::raw("SUM(final_total) as total_sells"),
-            DB::raw("final_total as last_sells")
+            DB::raw($total_sells), // Se muestra total de venta - impuestos por producto
+            DB::raw($last_sells) // Se muestra total ultima venta - impuestos por producto
         )
         ->groupBy('tsl.product_id')
-        ->orderBy('total_unit_sold', 'desc')
+        ->orderBy('total_sells', 'desc') // Ordenar los resultados por el monto Vendido en $$$ no en Cantidad
         ->get();
 
         return $products;
