@@ -10,12 +10,13 @@ $(function(){
 
 	var start = $('input[name="date-filter"]:checked').data('start');
 	var end = $('input[name="date-filter"]:checked').data('end');
-	var location_id = $('select#business_location_id').val() == 0 ? 1 : $('select#business_location_id').val();;
+	var location_id = $('select#business_location_id').val() == 0 ? null : $('select#business_location_id').val();;
 	update_statistics(start, end, location_id);
+	
 	$(document).on('change', 'input[name="date-filter"]', function(){
 		var start = $('input[name="date-filter"]:checked').data('start');
 		var end = $('input[name="date-filter"]:checked').data('end');
-		var location_id = $('select#business_location_id').val() == 0 ? 1 : $('select#business_location_id').val();	
+		var location_id = $('select#business_location_id').val() == 0 ? null : $('select#business_location_id').val();	
 		update_statistics(start, end, location_id);
 	});
 
