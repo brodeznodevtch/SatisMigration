@@ -31,9 +31,9 @@
         }
 
         /*
-          WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
-          now override the 3.3 new styles for modern browsers & apply opacity
-          */
+              WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
+              now override the 3.3 new styles for modern browsers & apply opacity
+              */
         @media all and (transform-3d),
         (-webkit-transform-3d) {
 
@@ -80,6 +80,26 @@
         .item:nth-child(3) {
             background: orange;
         }
+
+        .card-custom {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-row {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            column-gap: 10px;
+
+            @media (max-width: 50%) {
+                flex-direction: column;
+            }
+
+            @media (width: 100%) {
+                flex-direction: column;
+            }
+        }
     </style>
     <!-- <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"> -->
 
@@ -90,10 +110,10 @@
     <!-- Content Header (Page header) -->
     <section class="content-header" style="margin-top: -20px;">
         <!-- <div class="row">
-          <div class="col-md-12 col-md-offset-0 ">
-           <img src="{{ asset('img/envex-erp-banner.png') }}" class="img-responsive display-block" alt="EnvexERPBanner" style="height: 100%; width: 100%;">
-          </div>
-         </div> -->
+              <div class="col-md-12 col-md-offset-0 ">
+               <img src="{{ asset('img/envex-erp-banner.png') }}" class="img-responsive display-block" alt="EnvexERPBanner" style="height: 100%; width: 100%;">
+              </div>
+             </div> -->
         <div class="row" style="@if ($images->isEmpty()) {{ 'display:none !important;' }} @endif">
             <div class="col-md-12">
                 <div id="carousel1" class="carousel slide" data-ride="carousel">
@@ -208,7 +228,7 @@
             </div>
             <br>
 
-			<div class="row">
+            <div class="row">
                 {{-- Total sales --}}
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
                     <div class="small-box bg-blue">
@@ -244,7 +264,7 @@
                 </div>
                 <!-- /.col -->
 
-				{{-- Total expense --}}
+                {{-- Total expense --}}
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
@@ -254,20 +274,22 @@
                         <div class="icon">
                             <i class="fa fa-minus-circle"></i>
                         </div>
-						<a href="{{ action('ExpenseController@index') }}" class="small-box-footer">
+                        <a href="{{ action('ExpenseController@index') }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
 
-				{{-- Gross Profit --}}
+                {{-- Gross Profit --}}
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3 class="info-box-number gross_profit"></h3>
-                            <p class="info-box-text" style="color: white; margin-bottom: 12px !important">{{ __('home.gross_profit') }}</p>
-							<h3 class="info-box-number net_earnings"></h3>
-                            <p class="info-box-text" style="color: white; margin: 0px !important">{{ __('home.net_earnings') }}</p>
+                            <p class="info-box-text" style="color: white; margin-bottom: 12px !important">
+                                {{ __('home.gross_profit') }}</p>
+                            <h3 class="info-box-number net_earnings"></h3>
+                            <p class="info-box-text" style="color: white; margin: 0px !important">
+                                {{ __('home.net_earnings') }}</p>
                         </div>
                         <div class="icon">
                             <i class="fa fa-money"></i>
@@ -275,7 +297,7 @@
                     </div>
                 </div>
 
-				{{-- Invoice due --}}
+                {{-- Invoice due --}}
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
                     <div class="small-box bg-olive">
                         <div class="inner">
@@ -316,8 +338,8 @@
                             <p class="info-box-text" style="color: white">{{ __('home.total_stock') }}</p><br>
                         </div>
                         <div class="icon">
-							<i class="fa fa-cube"></i>
-						</div>
+                            <i class="fa fa-cube"></i>
+                        </div>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -335,12 +357,11 @@
                     </div>
                 </div>
             </div>
-            
-			<br>
-			@if (isset($dashboard_settings['sell_and_product']) && $dashboard_settings['sell_and_product'] == 1)
-			<div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <div class="box box-primary">
+
+            <br>
+            @if (isset($dashboard_settings['sell_and_product']) && $dashboard_settings['sell_and_product'] == 1)
+                <div class="custom-row">
+                    <div class="box box-primary col-lg-6 col-md-6 col-sm-12 col-xs-12 card-custom">
                         <div class="box-header">
                             <h3 class="box-title">
                                 {{ __('home.trending_products') }}
@@ -360,21 +381,18 @@
                             </table>
                         </div>
                     </div>
+                    <div class="box box-primary col-lg-6 col-md-6 col-sm-12 col-xs-12 card-custom">
+                        <div class="box-header">
+                            <h3 class="box-title">
+                                {{ __('home.sells') }}
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div id="weekly_sales"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <div class="box box-primary">
-						<div class="box-header">
-							<h3 class="box-title">
-								{{ __('home.sells') }}
-							</h3>
-						</div>
-						<div class="box-body">
-							{!! $sells_chart_line_1->html() !!}
-						</div>
-					</div>
-                </div>
-            </div>
-			@endif
+            @endif
 
 
             {{-- Sales last 30 days --}}
@@ -560,14 +578,10 @@
     @stop
 
     @section('javascript')
-        <script src="{{ asset('js/home.js?v=' . $asset_v) }}"></script>
+        
         <script src="{{ asset('plugins\chart\highchart\highcharts.js?v=' . $asset_v) }}"></script>
         <!-- {!! Charts::assets(['highcharts']) !!} -->
-
-		@if (isset($dashboard_settings['sell_and_product']) && $dashboard_settings['sell_and_product'] == 1)
-			{!! $sells_chart_line_1->script() !!}
-        @endif
-
+        <script src="{{ asset('js/home.js?v=' . $asset_v) }}"></script>
         @if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1)
             {!! $sells_chart_1->script() !!}
         @endif
@@ -591,7 +605,7 @@
         @if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1)
             {!! $stocks_chart_2->script() !!}
         @endif
-        <!-- <script src="jquery.min.js"></script> -->
+        <!-- <script src="jquery.min.js"></> -->
         <!-- <script src="bootstrap/js/bootstrap.min.js"></script> -->
         <script>
             $(document).ready(function() {
