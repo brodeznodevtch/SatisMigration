@@ -33,9 +33,11 @@
           </button>
         @endif
 
-        <a href="http://127.0.0.1:8000/" title="{{ __('rrhh.mark_assistance') }}" class="btn-flat pull-left m-8 hidden-sm btn-sm mt-10">
-          <strong><i class="fa fa-list"></i>&nbsp; @lang("rrhh.mark_assistance")</strong>
-        </a>
+        @can('rrhh_assistance.view')
+          <a href="http://127.0.0.1:8000/" title="{{ __('rrhh.mark_assistance') }}" class="btn-flat pull-left m-8 hidden-sm btn-sm mt-10">
+            <strong><i class="fa fa-list"></i>&nbsp; @lang("rrhh.mark_assistance")</strong>
+          </a>
+        @endcan
 
         @php
           use App\Business;

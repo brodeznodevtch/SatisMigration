@@ -19,7 +19,7 @@
 
                 </div>
             </div>
-            {!! Form::open(['url' => action('ImplementationController@store'), 'method' => 'post', 'files' => true]) !!}
+            {!! Form::open(['url' => action('ImplementationController@store'), 'method' => 'post', 'files' => true, 'id' => 'form_implementation']) !!}
             <div class="box-body">
                 <div class="row">
                     @if (!empty($modules))
@@ -54,10 +54,10 @@
                 </div>
             </div>
             <div class="box-footer text-right">
-                <button type="submit" class="btn btn-primary" id="btn_edit_item">@lang('rrhh.update')</button>
+                <button type="submit" class="btn btn-primary" id="btn_edit_item">@lang('messages.save_changes')</button>
 
                 <a href="{!! URL::to('/home') !!}">
-                    <button id="cancel_product" type="button" class="btn btn-danger">@lang('messages.cancel')</button>
+                    <button type="button" class="btn btn-danger">@lang('messages.cancel')</button>
                 </a>
             </div>
             {!! Form::close() !!}
@@ -67,6 +67,25 @@
 
 @section('javascript')
     <script type="text/javascript">
-        // $('input[type="checkbox"]').removeClass('check_all');
+
+        $(document).on('click', '#btn_edit_item', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: LANG.sure,
+                text: "{{ __('messages.implementation_content') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: "{{ __('messages.accept') }}",
+                cancelButtonText: "{{ __('messages.cancel') }}"
+            }).then((willDelete) => {
+                if (willDelete.value) {
+                    if ($("form#form_implementation").valid()) {
+                        $("form#form_implementation").submit();
+                    }
+                }
+            });
+        });
     </script>
 @endsection

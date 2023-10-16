@@ -52,6 +52,7 @@ return [
     'change_password' => 'Change password',
     'errors' => 'Errors',
     'delete_content' => 'You will not be able to retrieve it again',
+    'implementation_content' => 'Remember that by disabling a module, you would automatically remove access to it from all roles',
     'delete_button_delete' => 'Delete',
     'delete_button_cancel' => 'Cancel',
     'validate' => 'Validate',
@@ -85,4 +86,5 @@ return [
     'message_to_confirm' => 'Enter your password',
     'approve' => 'Approve',
     'pay' => 'Pay',
+    'save_changes' => 'Save changes'
 ];

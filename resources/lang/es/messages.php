@@ -44,7 +44,8 @@
     'profit_margin' => 'Margen de Ganancia %',
     'change_password' => 'Cambiar Contraseña',
     'errors' => 'Errores',
-    'delete_content' => 'No podrá recuperarlo nuevamente',
+    'delete_content' => 'No podrás recuperarlo nuevamente',
+    'implementation_content' => 'Recuerda que al deshabilitar un módulo, le quitarías automáticamente a todos los roles el acceso a este',
     'delete_button_delete' => 'Eliminar',
     'delete_button_cancel' => 'Cancelar',
     'validate' => 'Validar',
@@ -79,4 +80,5 @@
     'approve' => 'Aprobar',
     'pay' => 'Pagar',
     "payment_slips_question" => '¿Está a punto de enviar boletas de pago?',
+    'save_changes' => 'Guardar cambios'
 ];

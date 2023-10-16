@@ -52,7 +52,7 @@ class EmployeesController extends Controller
      */
     public function index() 
     {
-        if(!auth()->user()->can('rrhh_employees.view') && !auth()->user()->can('employees.create')){
+        if(!auth()->user()->can('rrhh_employees.view')){
             abort(403, "Unauthorized action.");
         }
         return view('rrhh.employees.index');

@@ -22,9 +22,14 @@ class ClaimController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('claim.view')) {
+        if (auth()->user()->can('claim.view')) {
+            if(!auth()->user()->can('claim.access')){
+                abort(403, 'Unauthorized action.');
+            }
+        }else{
             abort(403, 'Unauthorized action.');
         }
+        
         $types = ClaimType::select('id', 'name')->get();
         $status = StatusClaim::select('id', 'name')
         ->where('status', 1)

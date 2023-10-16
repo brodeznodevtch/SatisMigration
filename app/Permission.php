@@ -500,7 +500,29 @@ class Permission extends Model
 			['restaurant.create', 'Crear restaurantes', 'Restaurantes'],
 			['restaurant.view', 'Ver restaurantes', 'Restaurantes'],
 			['transaction_payment.create', 'Crear pagos', 'Pagos'],
-			['transaction_payment.view', 'Ver pagos', 'Pagos']
+			['transaction_payment.view', 'Ver pagos', 'Pagos'],
+			['binacle.view', 'Ver bitácora', 'Bitácora'],
+			['alert.view', 'Ver aviso', 'Avisos'],
+			['alert.create', 'Crear avisos', 'Avisos'],
+			['alert.edit', 'Actualizar avisos', 'Avisos'],
+			['alert.delete', 'Eliminar avisos', 'Avisos'],
+			['payment_commitment.view', 'Ver quedan', 'Quedan'],
+			['payment_commitment.create', 'Crear quedan', 'Quedan'],
+			['payment_commitment.edit', 'Actualizar quedan', 'Quedan'],
+			['payment_commitment.delete', 'Eliminar quedan', 'Quedan'],
+			['payment_commitment.annul', 'Anular quedan', 'Quedan'],
+			['debts_to_pay.view', 'Ver informe de cuentas por pagar', 'Compras'],
+			['suggested_purchase.view', 'Ver reporte del sugerido de compra', 'Compras'],
+			['import_expense.view', 'Ver gastos de importación', 'Gastos de importación'],
+			['import_expense.create', 'Crear gastos de importación', 'Gastos de importación'],
+			['import_expense.update', 'Actualizar gastos de importación', 'Gastos de importación'],
+			['import_expense.delete', 'Eliminar gastos de importación', 'Gastos de importación'],
+			['sales_by_seller_report.view', 'Ver ventas por vendedor', 'Reportes'],
+			['connect_report.view', 'Ver reporte Connect', 'Reportes'],
+			['sale_cost_product_report.view', 'Ver reporte de CV por producto', 'Reportes'],
+			['price_lists_report.view', 'Ver reporte de listas de precios', 'Reportes'],
+			['connect_report.view', 'Ver reporte Connect', 'Reportes'],
+			['sale_cost_product_report.view', 'Ver reporte de CV por producto', 'Reportes'],
 		];
 
 		$modules = [
@@ -545,6 +567,10 @@ class Permission extends Model
 			['Restaurante', 'Gestionar restaurantes'],
 			['Tipos de movimientos', 'Gestionar tipos de movimientos'],
 			['Kardex', 'Acceso al kardex'],
+			['Bitácora', 'Acceso a la bitácora'],
+			['Avisos', 'Gestionar avisos'],
+			['Quedan', 'Gestionar quedan'],
+			['Gastos de importación', 'Gestionar gastos de importación'],
 		];
 
 		try {
