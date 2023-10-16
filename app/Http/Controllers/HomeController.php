@@ -703,11 +703,24 @@ class HomeController extends Controller
             $purchase_details = $this->transactionUtil->getPurchaseTotals($business_id, $start, $end, $location_id);
             $expense_details = $this->transactionUtil->getExpenseTotals($business_id, $start, $end, $location_id);
 
-            $details = [
-                'gross_profit' => $sale_details['total_sell_inc_tax'] - $purchase_details['total_purchase_inc_tax'],
-                'net_earnings' => $sale_details['total_sell_inc_tax'] - ($purchase_details['total_purchase_inc_tax'] + $expense_details['total_expense_inc_tax']),
-                'total_expense' => $expense_details['total_expense_inc_tax']
-            ];
+            $business = Business::find($business_id);
+            $dashboard_settings = empty($business->dashboard_settings) ? null : json_decode($business->dashboard_settings, true);
+            $details['box_exc_tax'] = is_null($dashboard_settings) ? 0 : $dashboard_settings['box_exc_tax'];
+
+            
+            if($details['box_exc_tax']){
+                $details = [
+                    'gross_profit' => $sale_details['total_sell_exc_tax'] - $purchase_details['total_purchase_exc_tax'],
+                    'net_earnings' => ($sale_details['total_sell_exc_tax'] - $purchase_details['total_purchase_exc_tax']) - $expense_details['total_expense_exc_tax'],
+                    'total_expense' => $expense_details['total_expense_exc_tax']
+                ];
+            }else{
+                $details = [
+                    'gross_profit' => $sale_details['total_sell_inc_tax'] - $purchase_details['total_purchase_inc_tax'],
+                    'net_earnings' => ($sale_details['total_sell_inc_tax'] - $purchase_details['total_purchase_inc_tax']) - $expense_details['total_expense_inc_tax'],
+                    'total_expense' => $expense_details['total_expense_inc_tax']
+                ];
+            }
             return $details;
         }
     }

@@ -191,7 +191,7 @@ class ManageUserController extends Controller
 
                     }
                     /** send mail notification */
-                    Mail::to($user->email)->send(new NotifyUserCreated($user, $password, 'new_user'));
+                   // Mail::to($user->email)->send(new NotifyUserCreated($user, $password, 'new_user'));
                 }
                 DB::commit();
                 return response()->json([
