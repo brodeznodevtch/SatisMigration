@@ -96,6 +96,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/home/get-stock-expiry-products', 'HomeController@getStockExpiryProducts');
     Route::get('/home/get-total-stock', 'HomeController@getTotalStock');
     Route::post('/home/choose-month', 'HomeController@chooseMonth');
+    Route::get('/home/get-weekly-sales', 'HomeController@getWeekSales');
+    
 
     //Slider options
     Route::get('/carrousel', 'SliderController@index');

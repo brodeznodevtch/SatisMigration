@@ -2890,8 +2890,12 @@ class TransactionUtil extends Util
      *
      * @return Obj
      */
-    public function getSellsByWeek($business_id, $start_date, $end_date)
+    public function getSellsByWeek($business_id, $start_date, $end_date, $location_id = null)
     {
+        if($location_id == 0){
+            $location_id = null;
+        }
+
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
             ->where('status', 'final')
@@ -2902,6 +2906,10 @@ class TransactionUtil extends Util
 
         if ($permitted_locations != 'all') {
             $query->whereIn('transactions.location_id', $permitted_locations);
+        }
+        // Filter by the location
+        if (!empty($location_id)) {
+            $query->where('location_id', $location_id);
         }
 
         $sells = $query->select(
@@ -2922,8 +2930,6 @@ class TransactionUtil extends Util
         } else {
             $sells = $sells->pluck('total_sells', 'number_day');
         }
-
-        \Log::info($sells);
 
         return $sells;
     }
