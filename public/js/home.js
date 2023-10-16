@@ -10,13 +10,14 @@ $(function(){
 
 	var start = $('input[name="date-filter"]:checked').data('start');
 	var end = $('input[name="date-filter"]:checked').data('end');
-	var location_id = $('select#business_location_id').val() == 0 ? null : $('select#business_location_id').val();;
+	var location_id = $('select#business_location_id').val() == null ? 1 : $('select#business_location_id').val();
 	update_statistics(start, end, location_id);
-	
+	update_chart(location_id);
+
 	$(document).on('change', 'input[name="date-filter"]', function(){
 		var start = $('input[name="date-filter"]:checked').data('start');
 		var end = $('input[name="date-filter"]:checked').data('end');
-		var location_id = $('select#business_location_id').val() == 0 ? null : $('select#business_location_id').val();	
+		var location_id = $('select#business_location_id').val() == null ? 1 : $('select#business_location_id').val();	
 		update_statistics(start, end, location_id);
 	});
 
@@ -53,8 +54,78 @@ $(function(){
 		var end = $('input[name="date-filter"]:checked').data('end');
 		var location_id = $("#business_location_id").val();
 		update_statistics(start, end, location_id);
+		update_chart(location_id);
 	});
 });
+
+function update_chart(location_id){
+	console.log(location_id);
+
+	var data = { location_id: location_id };
+	$.ajax({
+		method: 'get',
+		url: '/home/get-weekly-sales',
+		data: data,
+		success: function (data) {
+			console.log(parseFloatToTwoDecimals(data.sell_values_previous_week));
+			var previousWeek = parseFloatToTwoDecimals(data.sell_values_previous_week).map(value => Number(value));
+			var currentWeek = parseFloatToTwoDecimals(data.sell_values_current_week).map(value => Number(value));
+
+			Highcharts.chart(document.getElementById("weekly_sales"), {
+				chart: {
+					type: 'spline'
+				},
+				title:false,
+				xAxis: {
+					categories: data.labels,
+				},
+				yAxis: {
+					title: {
+						text: 'Ventas totales (USD)'
+					}
+				},
+				tooltip: {
+					crosshairs: true,
+					shared: true
+				},
+				plotOptions: {
+					spline: {
+						marker: {
+							radius: 4,
+							lineColor: '#666666',
+							lineWidth: 2
+						}
+					}
+				},
+				series: [{
+					color: '#3AAFFF',
+					name: 'Semana actual (USD)',
+					data: currentWeek
+				}, {
+					color: '#FF5C4F',
+					name: 'Semana pasada (USD)',
+					data: previousWeek
+				}],
+				credits: {
+					enabled: false
+				}
+			});
+		}
+	});
+}
+
+function parseFloatToTwoDecimals(arrayDecimal) {
+	return arrayDecimal.map(value => {
+		const index = value.indexOf(",");
+
+		if (index > -1) {
+			var valor = parseFloat(value.replace(",", ""));
+			return valor.toFixed(2);
+		} else {
+			return parseFloat(value).toFixed(2);
+		}
+	});
+}
 
 function update_statistics( start, end, location_id){
 	var data = { start: start, end: end, location_id: location_id };
@@ -177,3 +248,4 @@ function update_statistics( start, end, location_id){
 		}
 	});
 }
+

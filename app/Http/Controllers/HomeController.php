@@ -40,7 +40,7 @@ class HomeController extends Controller
         TransactionUtil $transactionUtil,
         ProductUtil $productUtil
     ) {
-    
+
         $this->businessUtil = $businessUtil;
         $this->transactionUtil = $transactionUtil;
         $this->productUtil = $productUtil;
@@ -60,11 +60,11 @@ class HomeController extends Controller
         $business_id = request()->session()->get('user.business_id');
         if (!auth()->user()->can('dashboard.data')) {
             $images = Image::where('business_id', $business_id)
-            ->whereRaw('DATE(end_date) >= ?', [date('Y-m-d')])
-            ->orWhere('start_date', null)
-            ->orWhere('end_date', null)
-            ->where('is_active', true)
-            ->get();
+                ->whereRaw('DATE(end_date) >= ?', [date('Y-m-d')])
+                ->orWhere('start_date', null)
+                ->orWhere('end_date', null)
+                ->where('is_active', true)
+                ->get();
             return view('home.index', compact('images'));
         }
 
@@ -84,29 +84,6 @@ class HomeController extends Controller
             $dashboard_settings = $this->businessUtil->defaultDashboardSettings();
         } else {
             $dashboard_settings = json_decode($business->dashboard_settings, true);
-        }
-        
-        $labels = [];
-        // Sells previous week and current week
-        if (isset($dashboard_settings['sell_and_product']) && $dashboard_settings['sell_and_product'] == 1) {
-            $today = Carbon::now();
-
-            // Get start of this week
-            $startOfThisWeek = $today->startOfWeek();
-
-            // Get end of this week
-            $endOfThisWeek = $today->copy()->endOfWeek();
-
-            // Get start of last week
-            $startOfLastWeek = $startOfThisWeek->copy()->subWeek();
-
-            // Get end of last week
-            $endOfLastWeek = $startOfLastWeek->copy()->addDays(6);
-
-            $sells_previous_week = $this->transactionUtil->getSellsByWeek($business_id, $startOfLastWeek, $endOfLastWeek);
-            $sells_current_week = $this->transactionUtil->getSellsByWeek($business_id, $startOfThisWeek, $endOfThisWeek);
-            $sell_values_previous_week = [];
-            $sell_values_current_week = [];
         }
 
         // Sells last 30 days
@@ -221,7 +198,7 @@ class HomeController extends Controller
             $month_number = date('m', $date);
 
             $labels[] = \Carbon::createFromFormat('m-Y', $month_year)
-                            ->format('M-Y');
+                ->format('M-Y');
             $date = strtotime('+1 month', $date);
 
             if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
@@ -306,36 +283,6 @@ class HomeController extends Controller
             '12' => __('accounting.december')
         );
 
-
-        $sells_chart_line_1 = null;
-        $labels = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-        if (!empty($sells_previous_week) || !empty($sells_current_week)) {
-            for ($i=0; $i < 7; $i++) { 
-                if (!empty($sells_previous_week[$i])) {
-                    $sell_values_previous_week[] = $sells_previous_week[$i];
-                } else {
-                    $sell_values_previous_week[] = 0;
-                }
-
-                if (!empty($sells_current_week[$i])) {
-                    $sell_values_current_week[] = $sells_current_week[$i];
-                } else {
-                    $sell_values_current_week[] = 0;
-                }
-            }
-
-            $sells_chart_line_1 = Charts::multi('line', 'highcharts')
-            ->title(__(' '))
-            ->template("blue-material")
-            ->labels($labels)
-            ->dataset('Semana actual', $sell_values_current_week)
-            ->dataset('Semana pasada', $sell_values_previous_week)
-            ->elementLabel(__(
-                'home.total_sells',
-                ['currency' => $currency->code]
-            ))->dimensions(500,300);
-        } 
-             
         $business_locations = BusinessLocation::where('business_id', $business_id)->get();
 
         // Locations
@@ -352,11 +299,10 @@ class HomeController extends Controller
                 $first_location = $id;
             }
 
-        # Access to all locations
+            # Access to all locations
         } else if (auth()->user()->permitted_locations() == 'all') {
             $locations = $locations->prepend(__("kardex.all_2"), 'all');
             $first_location = 'all';
-        
         } else {
             foreach ($locations as $id => $name) {
                 $first_location = $id;
@@ -368,13 +314,11 @@ class HomeController extends Controller
             ->orWhere('start_date', null)
             ->orWhere('end_date', null)
             ->where('is_active', true)
-            ->get(); 
-        
+            ->get();
+
 
         return view('home.index', compact(
             'date_filters',
-            'sells_chart_line_1',
-            //'sells_chart_line_2',
             'sells_chart_1',
             'sells_chart_2',
             'purchases_chart_1',
@@ -458,7 +402,7 @@ class HomeController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $sell_details = $this->transactionUtil->getSellTotals($business_id, $start, $end, $location_id);
-            
+
             return $sell_details;
         }
     }
@@ -481,28 +425,28 @@ class HomeController extends Controller
                 '=',
                 'pv.id'
             )
-                    ->join(
-                        'variations as v',
-                        'variation_location_details.variation_id',
-                        '=',
-                        'v.id'
-                    )
-                    ->join(
-                        'products as p',
-                        'variation_location_details.product_id',
-                        '=',
-                        'p.id'
-                    )
-                    ->leftjoin(
-                        'business_locations as l',
-                        'variation_location_details.location_id',
-                        '=',
-                        'l.id'
-                    )
-                    ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
-                    ->where('p.business_id', $business_id)
-                    ->where('p.enable_stock', 1)
-                    ->whereRaw('variation_location_details.qty_available <= p.alert_quantity');
+                ->join(
+                    'variations as v',
+                    'variation_location_details.variation_id',
+                    '=',
+                    'v.id'
+                )
+                ->join(
+                    'products as p',
+                    'variation_location_details.product_id',
+                    '=',
+                    'p.id'
+                )
+                ->leftjoin(
+                    'business_locations as l',
+                    'variation_location_details.location_id',
+                    '=',
+                    'l.id'
+                )
+                ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
+                ->where('p.business_id', $business_id)
+                ->where('p.enable_stock', 1)
+                ->whereRaw('variation_location_details.qty_available <= p.alert_quantity');
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -514,7 +458,7 @@ class HomeController extends Controller
             if (!empty($location_id)) {
                 $query->where('variation_location_details.location_id', $location_id);
             }
-            
+
             $products =  $query->count('p.id');
             return $products;
 
@@ -535,11 +479,11 @@ class HomeController extends Controller
             $location_id = request()->location_id;
 
             $query = Transaction::join('customers as c', 'transactions.customer_id', 'c.id')
-                    ->join('payment_terms as pt', 'c.payment_terms_id', '=', 'pt.id')   
-                    ->where('transactions.business_id', $business_id)
-                    ->where('transactions.type', 'sell')
-                    ->where('transactions.payment_status', '!=', 'paid')
-                    ->whereRaw("DATEDIFF('$today', DATE_ADD( transactions.transaction_date, INTERVAL pt.days DAY)) > 0");  
+                ->join('payment_terms as pt', 'c.payment_terms_id', '=', 'pt.id')
+                ->where('transactions.business_id', $business_id)
+                ->where('transactions.type', 'sell')
+                ->where('transactions.payment_status', '!=', 'paid')
+                ->whereRaw("DATEDIFF('$today', DATE_ADD( transactions.transaction_date, INTERVAL pt.days DAY)) > 0");
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -570,11 +514,11 @@ class HomeController extends Controller
             $location_id = request()->location_id;
 
             $query = Transaction::join('contacts as c','transactions.contact_id','c.id')
-                ->join('payment_terms as pt', 'c.payment_term_id', '=', 'pt.id')         
+                ->join('payment_terms as pt', 'c.payment_term_id', '=', 'pt.id')
                 ->where('transactions.business_id', $business_id)
                 ->where('transactions.type', 'purchase')
                 ->where('transactions.payment_status', '!=', 'paid')
-                ->whereRaw("DATEDIFF('$today', DATE_ADD( transactions.transaction_date, INTERVAL pt.days DAY)) > 0");                
+                ->whereRaw("DATEDIFF('$today', DATE_ADD( transactions.transaction_date, INTERVAL pt.days DAY)) > 0");
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -586,7 +530,7 @@ class HomeController extends Controller
                 $query->where('transactions.location_id', $location_id);
             }
 
-            $dues =  $query->count('transactions.id');            
+            $dues =  $query->count('transactions.id');
             return $dues;
         }
     }
@@ -634,7 +578,7 @@ class HomeController extends Controller
                 )
                 ->leftjoin('business_locations as l', 't.location_id', '=', 'l.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
-                ->where('t.business_id', $business_id)                
+                ->where('t.business_id', $business_id)
                 ->whereNotNull('exp_date')
                 ->where('p.enable_stock', 1)
                 ->whereRaw('purchase_lines.quantity > purchase_lines.quantity_sold + quantity_adjusted + quantity_returned');
@@ -704,7 +648,7 @@ class HomeController extends Controller
         }
 
         $sells_chart_4 = Charts::create('bar', 'highcharts')
-        ->title(' ')
+            ->title(' ')
             ->template('material')
             ->values($values)
             ->labels($labels)
@@ -738,7 +682,7 @@ class HomeController extends Controller
         }
 
         $sells_chart_3 = Charts::create('bar', 'highcharts')
-        ->title(' ')
+            ->title(' ')
             ->template('material')
             ->values($values)
             ->labels($labels)
@@ -791,7 +735,7 @@ class HomeController extends Controller
             //     $filters['end_date'] = $end;
             // }
             $filters['limit'] = 5;
-            
+
             $products = $this->productUtil->getTrendingProducts($business_id, $filters);
             foreach ($products as $product) {
                 $product->product = $product->product;
@@ -801,6 +745,57 @@ class HomeController extends Controller
             }
 
             return $products;
+        }
+    }
+
+    public function getWeekSales()
+    {
+        if (request()->ajax()) {
+            $location_id = request()->location_id;
+            $business_id = request()->session()->get('user.business_id');            
+            $currency = Currency::where('id', request()->session()->get('business.currency_id'))->first();
+
+            $today = Carbon::now(); //Sells previous week and current week
+            $startOfThisWeek = $today->startOfWeek(); // Get start of this week
+            $endOfThisWeek = $today->copy()->endOfWeek(); // Get end of this week
+            $startOfLastWeek = $startOfThisWeek->copy()->subWeek(); // Get start of last week
+            $endOfLastWeek = $startOfLastWeek->copy()->addDays(6); // Get end of last week
+
+            $sells_previous_week = $this->transactionUtil->getSellsByWeek($business_id, $startOfLastWeek, $endOfLastWeek, $location_id);
+            $sells_current_week = $this->transactionUtil->getSellsByWeek($business_id, $startOfThisWeek, $endOfThisWeek, $location_id);
+            $sell_values_previous_week = [];
+            $sell_values_current_week = [];
+
+            $sells_chart_line_1 = null;
+            $labels = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+            if (!empty($sells_previous_week) || !empty($sells_current_week)) {
+                for ($i = 2; $i <= 7; $i++) {
+                    if (isset($sells_previous_week[$i])) {
+                        $sell_values_previous_week[] = $this->transactionUtil->num_f($sells_previous_week[$i]);
+                    }else{
+                        $sell_values_previous_week[] = $this->transactionUtil->num_f(0);
+                    }
+
+                    if (isset($sells_current_week[$i])) {
+                        $sell_values_current_week[] = $this->transactionUtil->num_f($sells_current_week[$i]);
+                    } else{
+                        $sell_values_current_week[] = $this->transactionUtil->num_f(0);
+                    }
+                }
+                if (isset($sells_previous_week[1])) {
+                    $sell_values_previous_week[6] = $this->transactionUtil->num_f($sells_previous_week[1]);
+                }else{
+                    $sell_values_previous_week[6] = $this->transactionUtil->num_f(0);
+                }
+
+                if (isset($sells_current_week[1])) {
+                    $sell_values_current_week[6] = $this->transactionUtil->num_f($sells_current_week[1]);
+                }else{
+                    $sell_values_current_week[6] = $this->transactionUtil->num_f(0);
+                }
+            }
+
+            return response()->json(['labels' => $labels, 'sell_values_previous_week' => $sell_values_previous_week, 'sell_values_current_week' => $sell_values_current_week]);
         }
     }
 }
