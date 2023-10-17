@@ -10,7 +10,7 @@ use DB;
 class RrhhSettingController extends Controller
 {
     public function index(){
-        if ( !auth()->user()->can('rrhh_assistance.view') ) {
+        if ( !auth()->user()->can('rrhh_setting.access') ) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -20,7 +20,7 @@ class RrhhSettingController extends Controller
     }
 
     public function store(Request $request){
-        if ( !auth()->user()->can('rrhh_employees.create') ) {
+        if ( !auth()->user()->can('rrhh_setting.access') ) {
             abort(403, 'Unauthorized action.');
         }
 

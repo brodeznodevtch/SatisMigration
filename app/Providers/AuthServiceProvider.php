@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -33,8 +34,22 @@ class AuthServiceProvider extends ServiceProvider
                     return true;
                 }
             } else {
-                if ($user->hasRole('Super Admin#' . $user->business_id) || $user->hasRole('Implementaciones#' . $user->business_id)) {
+                if( $user->hasRole('Implementaciones#' . $user->business_id)){
                     return true;
+                }else{
+                    if ($user->hasRole('Super Admin#' . $user->business_id)) {
+                        // $permission = DB::table('permissions as permission')
+                        //     ->leftJoin('modules as module', 'module.id', '=', 'permission.module_id')
+                        //     ->select('permission.*', 'module.name as module')
+                        //     ->where('permission.deleted_at', NULL)
+                        //     ->where('permission.name', $ability)
+                        //     ->where('module.deleted_at', NULL)
+                        //     ->where('module.status', 1)
+                        //     ->get();
+                        // if(count($permission) > 0){
+                            return true;
+                        //}
+                    }
                 }
             }
         });

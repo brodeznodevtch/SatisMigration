@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Business;
 use App\Module;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use DB;
 
 class ImplementationController extends Controller
@@ -30,7 +31,6 @@ class ImplementationController extends Controller
 
         $modules = $avlble_modules;
 
-        //dd($enabled);
         return view('implementations.index', compact('modules', 'enabled'));
     }
 
@@ -51,7 +51,7 @@ class ImplementationController extends Controller
             $enabled_modules = $request->input('enabled_modules');
             $business_details['enabled_modules'] = $enabled_modules;
             $business->fill($business_details);
-            $business->save();
+            $business->save(); 
 
             $modules = Module::all();
             foreach($modules as $module){
@@ -60,20 +60,24 @@ class ImplementationController extends Controller
                 }else{
                     $module->status = 0;
 
-                    $permissions = DB::table('role_has_permissions')
-                        ->join('roles', 'roles.id', '=', 'role_has_permissions.role_id')
-                        ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-                        ->join('modules', 'modules.id', '=', 'permissions.module_id')
-                        ->join('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')
-                        ->join('users', 'users.id', '=', 'model_has_roles.model_id')
-                        ->where('users.business_id', '=', $business_id)
-                        ->where('modules.name', '=', $module->name)
-                        ->where('modules.status', '=', 1)
-                        ->delete();
+                    $roles = Role::where('roles.business_id', '=', $business_id)->get();
+
+                    foreach ($roles as $role) {
+                        if($role->permissions){
+                            foreach ($role->permissions as $permission) {
+                                if($permission->module_id == $module->id){
+                                    if($role->hasPermissionTo($permission)){
+                                        $role->revokePermissionTo($permission);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 $module->update();
             }
 
+                    
             DB::commit();
             
             $output = [

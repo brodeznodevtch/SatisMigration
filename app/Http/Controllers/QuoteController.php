@@ -56,7 +56,11 @@ class QuoteController extends Controller
 
     public function index()
     {
-        if(!auth()->user()->can('quotes.view')){
+        if (auth()->user()->can('quotes.view')) {
+            if(!auth()->user()->can('quotes.access')){
+                abort(403, 'Unauthorized action.');
+            }
+        }else{
             abort(403, 'Unauthorized action.');
         }
         return view("quote.index");
