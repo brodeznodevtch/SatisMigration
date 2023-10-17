@@ -22,9 +22,14 @@ class ManageCreditRequestController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('credit.view')) {
+        if (auth()->user()->can('credit.view')) {
+            if(!auth()->user()->can('credit.access')){
+                abort(403, 'Unauthorized action.');
+            }
+        }else{
             abort(403, 'Unauthorized action.');
         }
+
         return view('manage_credits.index');
     }
 

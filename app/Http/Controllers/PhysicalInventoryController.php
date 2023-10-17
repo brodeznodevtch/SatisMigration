@@ -68,7 +68,7 @@ class PhysicalInventoryController extends Controller
      */
     public function index()
     {
-        if (! auth()->user()->can('physical_inventory.view')) {
+        if (! auth()->user()->can('physical_inventory.view') || ! auth()->user()->can('physical_inventory.create')) {
             abort(403, 'Unauthorized action.');
         }
 

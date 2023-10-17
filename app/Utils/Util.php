@@ -8,6 +8,7 @@ use App\BusinessLocation;
 use App\Cashier;
 use App\TaxGroup;
 use App\CustomerPortfolio;
+use App\Module;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
 use App\ReferenceCount;
@@ -189,16 +190,8 @@ class Util
      */
     public function allModulesEnabled()
     {
-        //$enabled_modules = session()->has('business') ? session('business')['enabled_modules'] : null;
-        if(empty(request()->session()->get('user.business_id'))){
-            $enabled_modules = [];
-        }else{
-            $business = Business::where('id', request()->session()->get('user.business_id'))->first();
-            $enabled_modules = $business->enabled_modules;
-        }
-
-        $enabled_modules = (!empty($enabled_modules) && $enabled_modules != 'null') ? $enabled_modules : [];
-
+        $nameModules = Module::where('status', 1)->orderBy('name', 'ASC')->get()->pluck('name');
+        $enabled_modules = $nameModules->all();
         return $enabled_modules;
         //Module::has('Restaurant');
     }

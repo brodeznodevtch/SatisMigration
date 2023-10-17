@@ -92,8 +92,9 @@ class RrhhTypeIncomeDiscountController extends Controller
         ]);
 
         try {
+            $type = new RrhhTypeIncomeDiscount;
             $input_details = $request->all();
-            $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
+            $payrollColumns = $type->payrollColumns;
             for ($i=0; $i < count($payrollColumns); $i++) { 
                 if($request->payroll_column == $i){
                     $input_details['payroll_column'] = $payrollColumns[$i];
