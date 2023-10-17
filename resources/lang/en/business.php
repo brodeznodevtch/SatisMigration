@@ -176,4 +176,12 @@ return [
     'success_change_business' => 'Success business change',
     'module' => 'Module',
     "settings_updated_module_success" => "The modules have been implemented successfully",
+    "business" => "Business",
+    "manage_business" => "Manage business",
+    "all_business" => "All business",
+    "legal_name" => "Legal Name",
+    "comercial_name" => "Comercial Name",
+    "iva_number" => "IVA",
+    "tax_number" => "NIT",
+    "legal_representative" => "Legal Representative"
 ];

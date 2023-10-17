@@ -56,5 +56,6 @@ return [
     'net_earnings' => 'Net earning',
     'average_sales' => 'Average sales',
     'conected_business' => 'Swap business',
-    'implementations' => 'Implementations'
+    'implementations' => 'Implementations',
+    'business' => 'Business'
 ];

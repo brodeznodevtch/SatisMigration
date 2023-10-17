@@ -1361,6 +1361,12 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/pos/get_graduation_card/{transaction_id}', 'SellPosController@getGraduationCard');
     Route::post('/pos/post_lab_order', 'SellPosController@postLabOrder');
 
+    //Business
+    Route::get('/business', 'BusinessController@getAllBusiness');
+    Route::get('/business/create', 'BusinessController@getCreateBusinessForm');
+    Route::get('/business/{id}/edit', 'BusinessController@getEditBusinessForm');
+    Route::post('/business/update/{id}', 'BusinessController@updateBusinessInformation')->name('business.update');
+
     // --- END OPTICS ROUTES ---
 
     // --- BEGIN WORKSHOP ROUTES ---

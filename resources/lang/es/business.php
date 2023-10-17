@@ -166,4 +166,12 @@ return [
     'success_change_business' => 'Se cambió de empresa exitosamente',
     'module' => 'Módulo',
     "settings_updated_module_success" => "Los módulos se han implementado con éxito",
+    "business" => "Empresas",
+    "manage_business" => "Administrar empresas",
+    "all_business" => "Todas las empresas",
+    "legal_name" => "Razón Social",
+    "comercial_name" => "Nombre comercial",
+    "iva_number" => "IVA",
+    "tax_number" => "NIT",
+    "legal_representative" => "Representante legal"
 ];

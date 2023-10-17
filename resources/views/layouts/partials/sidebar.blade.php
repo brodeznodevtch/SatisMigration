@@ -105,15 +105,45 @@
 
       {{-- modulo de implementaciones --}}
       {{-- @if (auth()->user()->can('business_settings.access_module')) --}}
-      
+
       @if (auth()->user()->hasRole('Super Admin#' . request()->session()->get('user.business_id')) || auth()->user()->hasRole('Implementaciones#' . request()->session()->get('user.business_id')))
-        <li class="{{ $request->segment(1) == 'implementations' ? 'active' : '' }}">
-          <a href="{{action('ImplementationController@index')}}">
-            <i class="fa fa-dashboard"></i> <span>
-              @lang('home.implementations')</span>
-          </a>
-        </li>
+
+      <li class="treeview {{ in_array($request->segment(1), [
+        'implementations',
+        'business'
+      ]) ? 'active active-sub' : '' }}">
+      <a href="#">
+        <i class="fa fa-users"></i>
+        <span class="title">@lang('home.implementations')</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+
+
+          <li class="{{ $request->segment(1) == 'implementations' ? 'active active-sub' : '' }}">
+            <a href="{{action('ImplementationController@index')}}">
+              <i class="fa fa-building"></i>
+              <span class="title">
+                @lang('home.implementations')
+              </span>
+            </a>
+          </li>
+          <li class="{{ $request->segment(1) == 'business' ? 'active active-sub' : '' }}">
+            <a href="{{action('BusinessController@getAllBusiness')}}">
+              <i class="fa fa-dashboard"></i>
+              <span class="title">
+                @lang('home.business')
+              </span>
+            </a>
+          </li>
+      </ul>
+      </li>
+
       @endif
+
+
       {{-- fin modulo de implementaciones --}}
       
       {{-- Inicio Recurso humano --}}
