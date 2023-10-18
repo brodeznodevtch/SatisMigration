@@ -36,8 +36,8 @@ steps:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: | 
-      unzip /var/www/devtech.satiserp.app/releases/$(Build.BuildId).zip;
-      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)storage;
+      unzip /var/www/devtech.satiserp.app/releases/$(Build.BuildId).zip -d /var/www/devtech.satiserp.app/releases/$(Build.BuildId);
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage;
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework;
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/views;
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/sessions;
