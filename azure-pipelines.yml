@@ -26,4 +26,5 @@ steps:
   inputs:
     sshEndpoint: 'AWS_S1'
     contents: '**'
+    targetFolder: '/var/www/devtech.satiserp.app'
     readyTimeout: '20000'
