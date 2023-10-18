@@ -23,17 +23,25 @@ steps:
     php -version
   displayName: 'Use PHP version $(phpVersion)'
 
-- script: composer install --no-interaction --prefer-dist
-  displayName: 'composer install'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
-- script: composer sudo composer self-update --1
-  displayName: 'changing composert to version 1'
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'AWS - DevTech'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: '**'
+    targetFolder: '/var/www/devtech.satiserp.app/'
+    readyTimeout: '20000'
 
-- script: unzip vendor.zip
-  displayName: 'unziping vendor.zip'
-
-- script: mkdir storage && cd storage && mkdir framework && cd framework && mkdir views && mkdir cache && mkdir sessions
-  displayName: 'prearing folder storage'
-
-- script: composer dump-autoload
-  displayName: 'Dumping composer'
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'AWS - DevTech'
+    runOptions: 'inline'
+    inline: 'ls'
+    readyTimeout: '20000'
