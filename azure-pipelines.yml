@@ -59,6 +59,5 @@ steps:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
-      cd /var/www;
-      sudo chmod 755 -R devtech.satiserp.app 
+      sudo chmod 755 -R /var/www/devtech.satiserp.app/
     readyTimeout: '20000'
