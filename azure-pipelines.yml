@@ -23,22 +23,6 @@ steps:
     php -version
   displayName: 'Use PHP version $(phpVersion)'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
-- task: CopyFilesOverSSH@0
-  inputs:
-    sshEndpoint: 'AWS - DevTech'
-    sourceFolder: '$(Build.ArtifactStagingDirectory)'
-    contents: '**'
-    targetFolder: '/var/www/devtech.satiserp.app/'
-    readyTimeout: '20000'
-
 - task: SSH@0
   inputs:
     sshEndpoint: 'AWS - DevTech'
