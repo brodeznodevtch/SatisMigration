@@ -27,5 +27,5 @@ steps:
   inputs:
     sshEndpoint: 'AWS - DevTech'
     runOptions: 'inline'
-    inline: 'ls'
+    inline: 'cd /var/www/demo.satiserp.app && ls -l'
     readyTimeout: '20000'
