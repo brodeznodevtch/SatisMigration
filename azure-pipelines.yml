@@ -50,7 +50,7 @@ steps:
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'inline'
-    inline: 'cd /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && unzip -o vendor.zip && sudo chmod 777 -R  /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && sudo composer self-update --1 && sudo composer dump-autoload && sudo php artisan clear-compiled'
+    inline: 'cd /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && unzip -o vendor.zip && sudo chmod 777 -R  /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && composer self-update --1 && composer dump-autoload && sudo php artisan clear-compiled'
     readyTimeout: '20000'
 
 - task: SSH@0
