@@ -36,7 +36,9 @@ steps:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
-      cd /var/www/devtech.satiserp.app; 
+      cd /var/www/devtech.satiserp.app/releases; 
+      unzip $(Build.BuildId).zip;
+      cd $(Build.BuildId);
       sudo mkdir storage;
       cd storage;
       sudo mkdir framework;
