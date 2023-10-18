@@ -13,12 +13,6 @@ variables:
   phpVersion: 7.4
 
 steps:
-- task: AWSShellScript@1
-  inputs:
-    awsCredentials: 'AWS - DevTech'
-    regionName: 'us-east-2'
-    scriptType: 'filePath'
-    filePath: 'ls -l'
 - task: SSH@0
   inputs:
     sshEndpoint: 'AWS_S1'
