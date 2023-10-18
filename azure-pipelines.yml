@@ -17,7 +17,7 @@ steps:
   displayName: 'Prearing files in ZIP'
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
@@ -36,8 +36,7 @@ steps:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
-      cd /var/www/devtech.satiserp.app/releases/; 
-      ls -l;
+      cd /var/www/devtech.satiserp.app/releases; 
       unzip $(Build.BuildId).zip;
       cd $(Build.BuildId);
       sudo mkdir storage;
