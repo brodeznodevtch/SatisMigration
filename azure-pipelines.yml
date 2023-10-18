@@ -21,7 +21,14 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
-
+- task: SSH@0
+  displayName: 'Open Permissions'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo chmod 777 -R /var/www/devtech.satiserp.app;
+    readyTimeout: '20000'
 - task: CopyFilesOverSSH@0
   displayName: 'Copying ZIP to Server'
   inputs:
