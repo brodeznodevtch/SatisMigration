@@ -1,0 +1,39 @@
+# PHP
+# Test and package your PHP project.
+# Add steps that run tests, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/php
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  phpVersion: 7.4
+
+
+steps:
+- script: |
+    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+    php -version
+  displayName: 'Use PHP version $(phpVersion)'
+
+- script: composer install --no-interaction --prefer-dist
+  displayName: 'composer install'
+
+- script: composer sudo composer self-update --1
+  displayName: 'changing composert to version 1'
+
+- script: unzip vendor.zip
+  displayName: 'unziping vendor.zip'
+
+- script: mkdir storage && cd storage && mkdir framework && cd framework && mkdir views && mkdir cache && mkdir sessions
+  displayName: 'prearing folder storage'
+
+- script: composer dump-autoload
+  displayName: 'Dumping composer'
