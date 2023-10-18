@@ -35,20 +35,20 @@ steps:
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
-    commands: |
-      cd /var/www/devtech.satiserp.app/releases; 
-      unzip $(Build.BuildId).zip;
-      cd $(Build.BuildId);
-      sudo mkdir storage;
-      cd storage;
-      sudo mkdir framework;
-      cd framework;
-      sudo mkdir views;
-      sudo mkdir sessions;
-      sudo mkdir cache;
-      cd /var/www/devtech.satiserp.app; 
-      sudo composer dump-autoload;
-      sudo php artisan clear-compiled;
+    commands: | 
+      unzip /var/www/devtech.satiserp.app/releases/$(Build.BuildId).zip;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)storage;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/views;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/sessions;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/cache;
+    readyTimeout: '20000'
+    
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'inline'
+    inline: 'cd /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && composer dump-autoload && php artisan clear-compiled'
     readyTimeout: '20000'
 
 - task: SSH@0
