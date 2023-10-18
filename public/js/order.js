@@ -101,7 +101,7 @@ $(document).ready(function(){
             {data: 'quote_date', name: 'quote_date'},
             {data: 'customer_name', name: 'customer_name'},
             {data: 'invoiced', name: 'invoiced'},
-            {data: 'final_total', name: 'final_total', className: 'text-right'},
+            {data: 'final_total', name: 'transactions.final_total', className: 'text-right'},
             {data: 'delivery_type', name: 'delivery_type'},
             {data: 'employee_name', name: 'employee_name'},
             {data: 'action', name: 'action'}

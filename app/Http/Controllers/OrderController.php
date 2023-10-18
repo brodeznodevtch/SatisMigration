@@ -96,7 +96,7 @@ class OrderController extends Controller
                     "quotes.delivery_type",
                     "quotes.customer_name",
                     "quotes.location_id",
-                    "quotes.total_final as final_total",
+                    "transactions.final_total",
                     DB::raw("IF(quotes.invoiced = 1, 'yes', 'no') as invoiced"),
                     DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) as employee_name")
                 );
