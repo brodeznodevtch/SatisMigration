@@ -16,7 +16,7 @@ steps:
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: 'AWS_S1'
-    sourceFolder: '$(System.DefaultWorkingDirectory).'
+    sourceFolder: '$(System.DefaultWorkingDirectory)'
     contents: '**'
     targetFolder: '/var/www/devtech.satiserp.app'
     readyTimeout: '20000'
