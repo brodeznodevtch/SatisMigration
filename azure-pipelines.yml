@@ -42,6 +42,8 @@ steps:
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/views;
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/sessions;
       sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/framework/cache;
+      sudo mkdir /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/logs;
+      sudo touch /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/storage/logs/cron.log;
     readyTimeout: '20000'
     
 - task: SSH@0
