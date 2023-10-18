@@ -13,21 +13,29 @@ variables:
   phpVersion: 7.4
 
 steps:
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    sourceFolder: '$(System.DefaultWorkingDirectory).'
+    contents: '**'
+    targetFolder: '/var/www/devtech.satiserp.app'
+    readyTimeout: '20000'
 - task: SSH@0
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
       cd /var/www/devtech.satiserp.app; 
-      mkdir storage;
+      unzip vendor.zip;
+      sudo mkdir storage;
       cd storage;
-      mkdir framework;
+      sudo mkdir framework;
       cd framework;
-      mkdir views;
-      mkdir cache;
-      mkdir sessions;
+      sudo mkdir views;
+      sudo mkdir cache;
+      sudo mkdir sessions;
       cd /var/www/devtech.satiserp.app; 
-      composer dump-autoload;
-      php artisan clear-compiled;
-      php artisan config:cache;
+      sudo composer dump-autoload;
+      sudo php artisan clear-compiled;
+      sudo php artisan config:cache;
     readyTimeout: '20000'
