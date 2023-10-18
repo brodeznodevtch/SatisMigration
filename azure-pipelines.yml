@@ -19,7 +19,7 @@ steps:
     sourceFolder: '$(System.DefaultWorkingDirectory)'
     contents: '**'
     targetFolder: '/var/www/devtech.satiserp.app/'
-    readyTimeout: '20000'
+    readyTimeout: '2000000'
 - task: SSH@0
   inputs:
     sshEndpoint: 'AWS_S1'
