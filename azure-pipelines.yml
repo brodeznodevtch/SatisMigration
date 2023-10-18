@@ -14,6 +14,7 @@ variables:
 
 steps:
 - task: ArchiveFiles@2
+  displayName: 'Prearing files in ZIP'
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)'
     includeRootFolder: true
@@ -22,15 +23,17 @@ steps:
     replaceExistingArchive: true
 
 - task: SSH@0
+  displayName: 'Prepare deploy folder'
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
-      cd /var/www;
-      sudo chmod 777 -R devtech.satiserp.app 
+      cd /var/www/;
+      sudo chmod 777 -R devtech.satiserp.app
     readyTimeout: '20000'
 
 - task: CopyFilesOverSSH@0
+  displayName: 'Copying ZIP to Server'
   inputs:
     sshEndpoint: 'AWS_S1'
     sourceFolder: '$(Build.ArtifactStagingDirectory)'
@@ -38,6 +41,7 @@ steps:
     targetFolder: '/var/www/devtech.satiserp.app'
     readyTimeout: '20000'
 - task: SSH@0
+  displayName: 'Deploying Solution'
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
@@ -56,6 +60,7 @@ steps:
     readyTimeout: '20000'
 
 - task: SSH@0
+  displayName: 'Close Permissions'
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
