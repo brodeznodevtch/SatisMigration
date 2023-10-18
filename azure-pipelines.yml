@@ -48,7 +48,7 @@ steps:
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'inline'
-    inline: 'cd /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && unzip -o vendor.zip && composer dump-autoload && php artisan clear-compiled'
+    inline: 'cd /var/www/devtech.satiserp.app/releases/$(Build.BuildId) && unzip -o vendor.zip && sudo composer self-update --1 && composer dump-autoload && php artisan clear-compiled'
     readyTimeout: '20000'
 
 - task: SSH@0
