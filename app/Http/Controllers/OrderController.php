@@ -188,7 +188,7 @@ class OrderController extends Controller
 
         $employees = $e
             ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"))
-            ->pluck('full_name', 'id');;
+            ->pluck('full_name', 'id');
 
 
         $warehouses = Warehouse::forDropdown($business_id, false);
@@ -751,12 +751,13 @@ class OrderController extends Controller
         /** Orders delivery types */
         $delivery_types = $this->delivery_types;
         /** Orders sellers */
-        $sellers = Employees::where('business_id', $business_id)
-            ->whereIn("position_id", [11, 13])
-            ->select('id',
-                DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as name")
+        $sellers = Employees::where('employees.business_id', $business_id)
+            ->leftJoin('positions', 'employees.position_id', '=', 'positions.id')
+            ->where("positions.name", 'like', '%ven%')
+            ->select('employees.id',
+                DB::raw("CONCAT(COALESCE(employees.first_name,''),' ',COALESCE(employees.last_name,'')) as name")
                 )
-            ->pluck('name', 'id');
+            ->pluck('employees.name', 'employees.id');
 
         return view("order.orders_planner")
             ->with(compact("orders", 'customers', 'status', 'delivery_types', 'sellers'));
@@ -1131,12 +1132,16 @@ class OrderController extends Controller
         if(request()->ajax()){
             $business_id = request()->session()->get("user.business_id");
 
-            $employees = Employees::where("business_id", $business_id)
-                ->where("position_id", 15) //Inventario y bodega
+            $employees = Employees::where("employees.business_id", $business_id)
+                ->whereNotIn('employees.position_id', function ($query) {
+                    $query->select('id')->from('positions')->where("name", 'like', '%ven%');
+                })//Inventario y bodega
+                //->where("positions.name", 'like', '%ven%')
+                ->whereNotNull("employees.position_id") 
                 ->select(
-                    "id",
-                    DB::raw("CONCAT(first_name, ' ', last_name) as name")
-                )->pluck("name", "id");
+                    "employees.id",
+                    DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) as name")
+                )->pluck("employees.name", "id");
             
             return json_encode($employees);
         }

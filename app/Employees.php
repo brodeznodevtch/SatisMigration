@@ -72,7 +72,9 @@ class Employees extends Model
         'business_id',
         'user_id', 
         'short_name',
-        'deleted_at'
+        'deleted_at',
+        'position_id',
+        'location_id'
     ];
 
     public function user() {
