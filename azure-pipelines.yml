@@ -14,18 +14,28 @@ variables:
 
 
 steps:
-- script: |
-    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-    php -version
-  displayName: 'Use PHP version $(phpVersion)'
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'AWS - DevTech'
+    contents: '**'
+    targetFolder: '/var/www/devtech.satiserp.app'
+    readyTimeout: '20000'
 
 - task: SSH@0
   inputs:
     sshEndpoint: 'AWS - DevTech'
-    runOptions: 'inline'
-    inline: 'cd /var/www/demo.satiserp.app && ls -l'
+    runOptions: 'commands'
+    commands: |
+      cd /var/www/devtech.satiserp.app; 
+      mkdir storage;
+      cd storage;
+      mkdir framework;
+      cd framework;
+      mkdir views;
+      mkdir cache;
+      mkdir sessions;
+      cd /var/www/devtech.satiserp.app; 
+      composer dump-autoload;
+      php artisan clear-compiled;
+      php artisan config:cache;
     readyTimeout: '20000'
