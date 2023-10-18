@@ -12,12 +12,10 @@ pool:
 variables:
   phpVersion: 7.4
 
-
 steps:
-
 - task: CopyFilesOverSSH@0
   inputs:
-    sshEndpoint: 'AWS - DevTech'
+    sshEndpoint: 'AWS_S1'
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: '**'
     targetFolder: '/var/www/devtech.satiserp.app'
@@ -26,7 +24,7 @@ steps:
 
 - task: SSH@0
   inputs:
-    sshEndpoint: 'AWS - DevTech'
+    sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
       cd /var/www/devtech.satiserp.app; 
