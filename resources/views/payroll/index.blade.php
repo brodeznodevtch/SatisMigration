@@ -61,6 +61,7 @@
 @endsection
 
 @section('javascript')
+    <script src="{{ asset('js/payroll/payroll_actions.js?v=' . $asset_v) }}"></script>
     <script>
         $(document).ready(function() {
             loadPayrolls();
@@ -126,12 +127,12 @@
                             if (data.statusPayroll == 'Calculada') {
                                 @can('payroll.recalculate')
                                     html += '<li><a href="#" onClick="recalculatePayroll('+data.id+
-                                    ')"><i class="fa fa-plus"></i>{{ __('payroll.recalculate') }}</a></li>';
+                                    ', 0)"><i class="fa fa-plus"></i>{{ __('payroll.recalculate') }}</a></li>';
                                 @endcan
                                 
                                 @can('payroll.approve')
                                     html += '<li><a href="#" onClick="approvePayroll(' + data.id +
-                                    ')"><i class="fa fa-check-square"></i>{{ __('payroll.approve') }}</a></li>';
+                                    ', 0)"><i class="fa fa-check-square"></i>{{ __('payroll.approve') }}</a></li>';
                                 @endcan
                             }
 
@@ -141,7 +142,7 @@
                             @endcan
 
                             if (data.statusPayroll == 'Aprobada') {
-                                html += '<li><a href="#" onClick="payPayroll('+ data.id +')"><i class="fa fa-money"></i>@lang('payroll.pay')</a></li>';
+                                html += '<li><a href="#" onClick="payPayroll('+ data.id +', 0)"><i class="fa fa-money"></i>@lang('payroll.pay')</a></li>';
                             }
 
                             if (data.statusPayroll == 'Aprobada' || data.statusPayroll == 'Pagada') {
@@ -164,52 +165,9 @@
             });
         }
 
-        function recalculatePayroll(id) {
-            route = "/payroll/" + id + "/recalculate";
-            token = $("#token").val();
-
-            $.ajax({
-                url: route,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function(result) {
-                    if (result.success == true) {
-                        Swal.fire({
-                            title: result.msg,
-                            icon: "success",
-                            timer: 1000,
-                            showConfirmButton: false,
-                        });
-                    } else {
-                        Swal.fire({
-                            title: result.msg,
-                            icon: "error",
-                        });
-                    }
-                },
-                error: function(msj) {
-                    errormessages = "";
-                    $.each(msj.responseJSON.errors, function(i, field) {
-                        errormessages += "<li>" + field + "</li>";
-                    });
-                    Swal.fire({
-                        title: LANG.error_list,
-                        icon: "error",
-                        html: "<ul>" + errormessages + "</ul>",
-                    });
-                }
-            });
-        }
-
-
         function sendPaymentSlips(id) {
             Swal.fire({
                 title: "{{ __('messages.payment_slips_question') }}",
-                //text: "{{ __('messages.approve_content') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -268,7 +226,6 @@
         function generatePaymentFiles(id) {
             Swal.fire({
                 title: "{{ __('messages.payment_file_question') }}",
-                //text: "{{ __('messages.approve_content') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -297,229 +254,6 @@
                                     showConfirmButton: false,
                                 });
                                 $("#payroll-table").DataTable().ajax.reload(null, false);
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: result.msg,
-                                    icon: "error",
-                                });
-                            }
-                        },
-                        error: function(msj) {
-                            errormessages = "";
-                            $.each(msj.responseJSON.errors, function(i,
-                                field) {
-                                errormessages += "<li>" + field +
-                                    "</li>";
-                            });
-                            Swal.fire({
-                                title: "@lang('rrhh.error_list')",
-                                icon: "error",
-                                html: "<ul>" + errormessages +
-                                    "</ul>",
-                            });
-                        }
-                    });
-                }
-            })
-        }
-
-
-        function payPayroll(id) {
-            Swal.fire({
-                title: "{{ __('messages.pay_question') }}",
-                text: "{{ __('messages.approve_content') }}",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.yes') }}",
-                cancelButtonText: "{{ __('messages.no') }}",
-            }).then((willDelete) => {
-                if (willDelete.value) {
-
-                    Swal.fire({
-                        title: "{{ __('messages.pay_slips_question') }}",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: "{{ __('messages.yes') }}",
-                        cancelButtonText: "{{ __('messages.no') }}",
-                    }).then((result) => {
-                        var sendEmail = 0;
-                        if (result.isConfirmed) {
-                            sendEmail = 1;
-                            sendPay(id, sendEmail);
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            sendPay(id, sendEmail);
-                        }
-                    })
-                }
-            });
-        }
-
-        function sendPay(id, sendEmail) {
-            Swal.fire({
-                title: "{{ __('messages.confirm_pay') }}",
-                text: "{{ __('messages.message_to_confirm') }}",
-                input: 'password',
-                inputAttributes: {
-                    autocapitalize: 'off'
-                },
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.pay') }}",
-                cancelButtonText: "{{ __('messages.cancel') }}",
-                showLoaderOnConfirm: true,
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "{{ __('messages.password_required') }}"
-                    }
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var route = "{!! URL::to('/payroll/:id/pay') !!}";
-                    route = route.replace(':id', id);
-                    token = $("#token").val();
-
-                    $.ajax({
-                        url: route,
-                        headers: {
-                            'X-CSRF-TOKEN': token
-                        },
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            'password': result.value,
-                            'sendEmail': sendEmail
-                        },
-                        success: function(result) {
-                            if (result.success == true) {
-                                Swal.fire({
-                                    title: result.msg,
-                                    icon: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                                $("#payroll-table").DataTable().ajax.reload(null, false);
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: result.msg,
-                                    icon: "error",
-                                });
-                            }
-                        },
-                        error: function(msj) {
-                            errormessages = "";
-                            $.each(msj.responseJSON.errors, function(i,
-                                field) {
-                                errormessages += "<li>" + field +
-                                    "</li>";
-                            });
-                            Swal.fire({
-                                title: "@lang('rrhh.error_list')",
-                                icon: "error",
-                                html: "<ul>" + errormessages +
-                                    "</ul>",
-                            });
-                        }
-                    });
-                }
-            })
-        }
-
-        function approvePayroll(id) {
-            Swal.fire({
-                title: "{{ __('messages.approve_question') }}",
-                text: "{{ __('messages.approve_content') }}",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.yes') }}",
-                cancelButtonText: "{{ __('messages.no') }}",
-            }).then((willDelete) => {
-                if (willDelete.value) {
-                    Swal.fire({
-                        title: "{{ __('messages.payment_file_question') }}",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: "{{ __('messages.yes') }}",
-                        cancelButtonText: "{{ __('messages.no') }}",
-                    }).then((result) => {
-                        var sendEmail = 0;
-                        if (result.isConfirmed) {
-                            downloadFile = 1;
-                            downloadFlie(id, downloadFile);
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            downloadFlie(id, downloadFile);
-                        }
-                    })
-                }
-            });
-        }
-
-        function downloadFlie(id, downloadFile) {
-            Swal.fire({
-                title: "{{ __('messages.confirm_approval') }}",
-                text: "{{ __('messages.message_to_confirm') }}",
-                input: 'password',
-                inputAttributes: {
-                    autocapitalize: 'off'
-                },
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.approve') }}",
-                cancelButtonText: "{{ __('messages.cancel') }}",
-                showLoaderOnConfirm: true,
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "{{ __('messages.password_required') }}"
-                    }
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var route = "{!! URL::to('/payroll/:id/approve') !!}";
-                    route = route.replace(':id', id);
-                    token = $("#token").val();
-
-                    $.ajax({
-                        url: route,
-                        headers: {
-                            'X-CSRF-TOKEN': token
-                        },
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            'password': result.value,
-                            'downloadFile': downloadFile
-                        },
-                        success: function(result) {
-                            if (result.success == true) {
-                                $("#payroll-table").DataTable().ajax.reload(null, false);
-
-                                if(result.download == true){
-                                    var a = document.createElement('a');
-                                    a.href = "/payroll/" + id +"/generatePaymentFiles";
-                                    a.download = 'your_pdf_name.pdf';
-                                    a.click();
-                                    window.URL.revokeObjectURL(url);
-                                }
-                                
-                                Swal.fire({
-                                    title: result.msg,
-                                    icon: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                                
-                                
                             } else {
                                 Swal.fire({
                                     title: 'Error',
