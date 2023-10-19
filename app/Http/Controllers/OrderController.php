@@ -751,11 +751,16 @@ class OrderController extends Controller
         /** Orders delivery types */
         $delivery_types = $this->delivery_types;
         /** Orders sellers */
-        $sellers = Employees::where('business_id', $business_id)
-            ->whereIn("position_id", [11, 13])
-            ->select('id',
-                DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as name")
+        $sellers = Employees::where('employees.business_id', $business_id)
+            ->leftJoin('rrhh_position_histories as position_history', 'position_history.employee_id', '=', 'employees.id')
+            ->leftJoin('rrhh_datas as position', 'position.id', '=', 'position_history.new_position1_id')
+            //->whereIn("position_id", [11, 13])
+            ->select('employees.id as id',
+                DB::raw("CONCAT(COALESCE(employees.first_name,''),' ',COALESCE(employees.last_name,'')) as name")
                 )
+            ->whereNull('position_history.deleted_at')
+            ->whereNull('position.deleted_at')
+            ->where('position.value', 'Vendedor')
             ->pluck('name', 'id');
 
         return view("order.orders_planner")
