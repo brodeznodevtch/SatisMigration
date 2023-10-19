@@ -988,7 +988,7 @@ class QuoteController extends Controller
         $quote_date = $this->employeeUtil->getDate($quote->quote_date, true);
         $customer_name = ucwords(strtolower($quote->customer_name));
 
-        $pdf = \PDF::loadView('quote.view', compact('quote', 'business', 'quote_date', 'customer_name', 'lines', 'value_letters', 'legend'));
+        $pdf = \PDF::loadView('quote.view', compact('quote', 'business', 'quote_date', 'customer_name', 'lines', 'value_letters', 'legend'))->setOptions(['isRemoteEnabled' => true]);
         return $pdf->stream('quote.pdf');
     }
 
@@ -1617,13 +1617,12 @@ class QuoteController extends Controller
                     'product.tax as tax_id',
                     'product.type as type_product',
                 )
-                ->where('line.service_parent_id', $item->variation_id)
+                ->where('line.variation_id', $item->variation_id)
                 ->where('line.quote_id', $id)
                 ->orderBy('line.id', 'asc')
                 ->get();
 
             $spare_rows = array();
-
             foreach ($spare_rows_q as $spare) {
                 $spare_row_array = array(
                     'quote_line_id' => $spare->id,
@@ -1662,7 +1661,7 @@ class QuoteController extends Controller
             'customer',
             'customer_vehicle',
             'business'
-        ));
+        ))->setOptions(['isRemoteEnabled' => true]);
 
         return $pdf->stream('quote.pdf');
     }
