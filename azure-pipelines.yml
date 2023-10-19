@@ -79,3 +79,25 @@ steps:
       sudo chown -R www-data.www-data /var/www/demo.satiserp.app/current/storage;
       sudo chown -R www-data.www-data /var/www/demo.satiserp.app/current/bootstrap/cache;
     readyTimeout: '20000'
+    
+- task: SSH@0
+  displayName: 'Link to Shared Folder (Public and Storage)'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo rm -rf /var/www/demo.satiserp.app/current/public/uploads;
+      sudo ln -s /var/www/demo.satiserp.app/shared/public/uploads /var/www/demo.satiserp.app/current/public;
+      sudo cp /var/www/demo.satiserp.app/releases/$(Build.BuildId)/public/uploads/index.html /var/www/demo.satiserp.app/current/public/uploads/;
+      sudo mkdir /var/www/demo.satiserp.app/current/public/uploads/files;
+      sudo cp -a /var/www/demo.satiserp.app/releases/$(Build.BuildId)/public/uploads/files/. /var/www/demo.satiserp.app/current/public/uploads/files/;
+    readyTimeout: '20000'
+    
+- task: SSH@0
+  displayName: 'Permissions to Shared'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo chown -R www-data:www-data /var/www/demo.satiserp.app/shared/public/;
+    readyTimeout: '20000'
