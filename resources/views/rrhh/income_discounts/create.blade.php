@@ -187,9 +187,8 @@
         if (total_value != null) {
             let quota_value = total_value / quota;
             $('#quota_value').val(quota_value);
+            calculateDate();
         }
-
-        calculateDate();
     });
 
 

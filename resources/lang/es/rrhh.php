@@ -461,5 +461,7 @@ return[
     'quotas_applied' => 'Cuotas aplicadas',
     'salarial_constances' => 'Constancia salarial',
     'all_salarial_constances' => 'Todas las constancias salariales',
-    'message_salarial_constances' => 'Debe haber una constancia salarial activa para poder descargarla desde el apartado del empleado, sino la opcion respectiva no se mostrará.'
+    'message_salarial_constances' => 'Debe haber una constancia salarial activa para poder descargarla desde el apartado del empleado, sino la opcion respectiva no se mostrará.',
+    'paid' => 'Pagado',
+    'not_paid' => 'No pagado / En proceso',
 ];
