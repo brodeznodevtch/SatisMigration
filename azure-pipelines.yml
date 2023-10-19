@@ -70,7 +70,7 @@ steps:
     readyTimeout: '20000'
 
 - task: SSH@0
-  displayName: 'Set www-data permissions'
+  displayName: 'Set www-data permissions to server'
   inputs:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
