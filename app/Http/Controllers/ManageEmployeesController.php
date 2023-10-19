@@ -57,6 +57,7 @@ class ManageEmployeesController extends Controller
                 'employees.agent_code'
             )->whereNull('employees.deleted_at')
             ->where('employees.business_id', $business_id);
+            //->whereNotNull('employees.position_id');
             
             return DataTables::of($employees)
                 ->filterColumn('full_name', function ($query, $keyword) {
@@ -106,8 +107,6 @@ class ManageEmployeesController extends Controller
         if (!auth()->user()->can('employees.create')){
             abort(403, 'Unauthorized action.');
         }
-
-
             $hasUser_mode = $request->input('chk_has_user');
             $commss_opt = $request->input('commission');
 
@@ -191,8 +190,7 @@ class ManageEmployeesController extends Controller
                     'data' => $employees,
                     'msg' => __("employees.added_success")];
 
-                }catch(\Exception $e)
-                {
+                }catch(\Exception $e){
                     \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                     $outpout = ['error' => false,
@@ -207,17 +205,13 @@ class ManageEmployeesController extends Controller
                     $employees['hired_date'] = $this->moduleUtil->uf_date($employees['hired_date']);
                     $employees['birth_date'] = $this->moduleUtil->uf_date($employees['birth_date']);
                     $employees['fired_date'] = $this->moduleUtil->uf_date($employees['fired_date']);
-                    // \Carbon::createFromFormat( 'Y-m-d H:i:s', $request->input('hired_date'));
-
-                    // return var_dump($employees);
 
                     $employees = Employees::create($employees);
                     
                     $outpout = ['success' => true,
                     'data' => $employees,
                     'msg' => __("employees.added_success")];
-                }catch(\Exception $e)
-                {
+                }catch(\Exception $e){
                     \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                     $outpout = ['success' => false,

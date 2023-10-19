@@ -48,14 +48,16 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             'Finanzas', 
             'Informática', 
             'Contabilidad', 
-            'Marketing'
+            'Marketing',
+            'Ventas'
         ];
 
         $puestosTrabajo = [
             'Auxiliar contable', 
             'Contador', 
             'Desarrollador web', 
-            'Secretaria'
+            'Secretaria',
+            'Vendedor'
         ];
 
         $afps = [

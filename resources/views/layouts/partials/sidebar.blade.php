@@ -39,7 +39,9 @@
             'modules',
             'users',
             'sales-commission-agents',
-            'binnacle'
+            'binnacle',
+            'employees',
+            'positions'
           ]) ? 'active active-sub' : '' }}">
           <a href="#">
             <i class="fa fa-users"></i>
@@ -80,6 +82,32 @@
                     <i class="fa fa-briefcase"></i>
                     <span class="title">
                       @lang('user.modules_permissions')
+                    </span>
+                  </a>
+                </li>
+              @endcan
+            @endif
+
+            @if (in_array('Empleados', $enabled_modules))
+              @can('employees.view' )
+                <li class="{{ $request->segment(1) == 'employees' ? 'active active-sub' : '' }}">
+                  <a href="{{action('ManageEmployeesController@index')}}">
+                    <i class="fa fa-user"></i>
+                    <span class="title">
+                      @lang('employees.employees')
+                    </span>
+                  </a>
+                </li>
+              @endcan 
+            @endif
+
+            @if (in_array('Cargos', $enabled_modules))
+              @can('positions.view')
+                <li class="{{ $request->segment(1) == 'positions' ? 'active active-sub' : '' }}">
+                  <a href="{{action('ManagePositionsController@index')}}">
+                    <i class="fa fa-briefcase"></i>
+                    <span class="title">
+                      @lang('positions.positions')
                     </span>
                   </a>
                 </li>
