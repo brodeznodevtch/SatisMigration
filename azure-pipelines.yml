@@ -1,0 +1,81 @@
+# PHP
+# Test and package your PHP project.
+# Add steps that run tests, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/php
+
+trigger:
+- development
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  phpVersion: 7.2
+
+steps:
+- task: ArchiveFiles@2
+  displayName: 'Prearing files in ZIP'
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+- task: SSH@0
+  displayName: 'Open Permissions'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo chmod 777 -R /var/www/demo.satiserp.app;
+    readyTimeout: '20000'
+- task: CopyFilesOverSSH@0
+  displayName: 'Copying ZIP to Server'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: '**.zip'
+    targetFolder: '/var/www/demo.satiserp.app/releases'
+    readyTimeout: '20000'
+- task: SSH@0
+  displayName: 'Deploying Solution'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: | 
+      unzip /var/www/demo.satiserp.app/releases/$(Build.BuildId).zip -d /var/www/demo.satiserp.app/releases/$(Build.BuildId);
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage;
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/framework;
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/framework/views;
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/framework/sessions;
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/framework/cache;
+      sudo mkdir /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/logs;
+      sudo touch /var/www/demo.satiserp.app/releases/$(Build.BuildId)/storage/logs/cron.log;
+    readyTimeout: '20000'
+    
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'inline'
+    inline: 'cd /var/www/demo.satiserp.app/releases/$(Build.BuildId) && unzip -o vendor.zip && sudo chmod 777 -R  /var/www/demo.satiserp.app/releases/$(Build.BuildId) && php artisan clear-compiled && rm /var/www/demo.satiserp.app/releases/$(Build.BuildId).zip'
+    readyTimeout: '20000'
+
+- task: SSH@0
+  displayName: 'Close Permissions'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo chmod 755 -R /var/www/demo.satiserp.app;
+    readyTimeout: '20000'
+
+- task: SSH@0
+  displayName: 'Set www-data permissions'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'commands'
+    commands: |
+      sudo rsync -a /var/www/demo.satiserp.app/releases/$(Build.BuildId)/. /var/www/demo.satiserp.app/current/;
+      sudo chown -R www-data.www-data /var/www/demo.satiserp.app/current/storage;
+      sudo chown -R www-data.www-data /var/www/demo.satiserp.app/current/bootstrap/cache;
+    readyTimeout: '20000'

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@lang('quote.quote')</title>
     @if($quote->tax_detail == 1)
     @php($message = $legend.' - '.__('quote.iva_included'))
@@ -11,7 +12,7 @@
     <style>
         body
         {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: 'Helvetica', 'Arial', sans-serif, 'DejaVu Sans';
             color: #000000;
             font-size: 9pt;
             margin-top:    1.10cm;
@@ -49,7 +50,7 @@
         }
         .td3
         {
-            border: 1px;            
+            border: 0.25px solid black;            
         }
         td
         {
@@ -108,7 +109,11 @@
         <table class="table1" style="width: 100%;">
             <tr>
                 <td style="width: 50%" class="td2">
-                    <img src="{{ public_path("img/logo - RECIELSA.png") }}" height="85.2px" width="140px" />
+                    @if (! empty($business->logo))
+                        <img src="{{ public_path('uploads/business_logos/' . $business->logo) }}" alt="Logo" style="margin: 0; width: 140px;">
+                    @else
+                        <img src="{{ public_path('img/logo.png') }}" alt="Logo" style="margin: 0; width: 140px; margin-top: -40px;">
+                    @endif
                 </td>
                 <td style="width: 25%" class="td2">
 
@@ -123,12 +128,15 @@
         </table>
         <table class="table1" style="width: 100%;">
             <tr>
-                
                 <td style="width: 70%;" class="td2">
                     <strong>
-                        {{ $customer_name }}<br>
-                        {{ $quote->address }}<br>
-                        {{ $quote->mobile }}<br>
+                        {{ $customer_name }}
+                        @if (!empty($quote->address))
+                            <br>{{ $quote->address }}
+                        @endif
+                        @if (!empty($quote->mobile))
+                            <br>{{ $quote->mobile }}
+                        @endif
                     </strong>
                 </td>
                 <td style="width: 10%" class="td2">
@@ -137,15 +145,11 @@
                 </td>
             </tr>
         </table>
-        <br>
         <p>Estimado(a) {{ $customer_name }}</p>
         <p style="margin-left: 60px;">Sírvase encontrar la siguiente oferta de productos:</p>
 
-        @if(count($lines) <= 3)
-            <div id="div_body">
-        @else
-            <div id="div_body" style="height: 388px;">
-        @endif
+        <div id="div_body">
+        
                 <table class="table1" style="width: 100%;">
                     <tr>
                         <td class="alncenter" style="width: 10%">
@@ -214,12 +218,12 @@
                 </table>
             </div>
 
-            <table class="table1" style="width: 100%;">       
+            <table class="table1" style="width: 100%; margin-top: 0px;">       
                 <tr>
                     @if($quote->tax_detail == 1)
-                    <td style="width: 60%" rowspan="4">{{ $value_letters }}</td>
+                    <td style="width: 61%" rowspan="4">{{ $value_letters }}</td>
                     @else
-                    <td style="width: 60%" rowspan="2">{{ $value_letters }}</td>
+                    <td style="width: 61%" rowspan="2">{{ $value_letters }}</td>
                     @endif
                     @if($quote->discount_type == "fixed")
                     <td style="width: 20%" class="alnleft">{{ mb_strtoupper(__('quote.discount')) }}</td>
@@ -236,8 +240,7 @@
                 </tr>                
                 @if($quote->tax_detail == 1)
                     <tr>
-
-                        <td style="width: 15%" class="alnleft">{{ mb_strtoupper(__('quote.subtotal')) }}</td>
+                        <td style="width: 14%" class="alnleft">{{ mb_strtoupper(__('quote.subtotal')) }}</td>
                         <td style="width: 25%" class="alnright">
                             @if ($business->currency_symbol_placement == 'after')
                                 {{ @num_format($quote->total_before_tax) }} {{ $business->currency->symbol }}
@@ -245,10 +248,9 @@
                                 {{ $business->currency->symbol }} {{ @num_format($quote->total_before_tax) }}
                             @endif
                         </td>
-
                     </tr>
                     <tr>
-                        <td style="width: 15%" class="alnleft">{{ mb_strtoupper(__('quote.iva')) }}</td>
+                        <td style="width: 14%" class="alnleft">{{ mb_strtoupper(__('quote.iva')) }}</td>
                         <td style="width: 25%" class="alnright">
                             @if ($business->currency_symbol_placement == 'after')
                                 {{ @num_format($quote->tax_amount) }} {{ $business->currency->symbol }}
@@ -259,7 +261,7 @@
                     </tr>
                 @endif
                 <tr>
-                    <td style="width: 15%" class="alnleft">{{ mb_strtoupper(__('quote.total')) }}</td>
+                    <td style="width: 14%" class="alnleft">{{ mb_strtoupper(__('quote.total')) }}</td>
                     <td style="width: 25%" class="alnright">
                         @if ($business->currency_symbol_placement == 'after')
                             {{ @num_format($quote->total_final) }} {{ $business->currency->symbol }}
@@ -270,17 +272,16 @@
                 </tr>
             </table>
             <br>
-            <p>
-                <strong>{{ __('quote.conditions') }}:</strong> <br>
-                {{ $quote->terms_conditions }}
+            <p style="margin:0; padding: 0; line-height: 20px !important;">
+                <strong>{{ __('quote.conditions') }}:</strong> {{ $quote->terms_conditions }}
             </p>
-            <p>
+            <p style="margin:0; padding: 0; line-height: 20px !important;">
                 <strong>{{ __('quote.validity_report') }}:</strong> {{ $quote->validity }}
             </p>
-            <p>
+            <p style="margin:0; padding: 0; line-height: 20px !important;">
                 <strong>{{ __('quote.delivery_time') }}:</strong> {{ $quote->delivery_time }}
             </p>
-            <p>
+            <p style="margin:0; padding: 0; line-height: 20px !important;">
                 <strong>{{ __('quote.notes') }}:</strong> {{ $quote->note }}
             </p>
 

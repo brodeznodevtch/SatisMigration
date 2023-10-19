@@ -362,7 +362,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             RrhhTypeIncomeDiscount::firstOrCreate([
                 'type' => 1, 
                 'name' => 'Anticipo de sueldo', 
-                'payroll_column' => 'Otras deducciones', 
+                'payroll_column' => 'Otros ingresos', 
                 'status' => 1, 
                 'business_id' => $item->id,
             ]);
@@ -395,22 +395,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                 'type' => 1, 
                 'name' => 'Comisiones', 
                 'payroll_column' => 'Comisiones', 
-                'status' => 1, 
-                'business_id' => $item->id,
-            ]);
-
-            RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Aguinaldo', 
-                'payroll_column' => 'Aguinaldo', 
-                'status' => 1, 
-                'business_id' => $item->id,
-            ]);
-
-            RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Vacaciones', 
-                'payroll_column' => 'Vacaciones', 
                 'status' => 1, 
                 'business_id' => $item->id,
             ]);

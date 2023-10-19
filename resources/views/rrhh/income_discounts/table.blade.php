@@ -7,8 +7,8 @@
             <th>@lang('rrhh.apply_in')</th>
             <th>@lang('rrhh.total_value')</th>
             <th>@lang('rrhh.quota')</th>
-            <th>@lang('rrhh.quota_value')</th>
             <th>@lang('rrhh.period')</th>
+            <th width="15%">@lang('rrhh.status')</th>
 			@if(!isset($show))
                 <th id="dele">@lang('rrhh.actions')</th>
 			@endif
@@ -35,23 +35,27 @@
                         @endif
                     </td>
                     <td>{{ $item->quota }}</td>
+                    <td>{{ @format_date($item->start_date) }} - {{ @format_date($item->end_date) }}</td>
                     <td>
-                        @if ($business->currency_symbol_placement == 'after')
-                            {{ @num_format($item->quota_value) }} {{ $business->currency->symbol }}
+                        @if ($item->is_paid == 1)
+                            {{ __('rrhh.paid') }}
                         @else
-                            {{ $business->currency->symbol }} {{ @num_format($item->quota_value) }}
+                            {{ __('rrhh.not_paid') }}
                         @endif
                     </td>
-                    <td>{{ @format_date($item->start_date) }} - {{ @format_date($item->end_date) }}</td>
 					@if(!isset($show))
                         <td>
-                            @can('rrhh_income_discount.update')
+                            @can('rrhh_income_discount.view')
                                 <button type="button" onClick='showIncomeDiscount({{ $item->id }})'
-                                    class="btn btn-info btn-xs"><i class="fa fa-eye"></i></button>
+                                class="btn btn-info btn-xs"><i class="fa fa-eye"></i></button>
                             @endcan
                             @can('rrhh_income_discount.update')
-                                <button type="button" onClick='editIncomeDiscount({{ $item->id }})'
-                                    class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></button>
+                                @if ($item->is_paid == 0)
+                                    <button type="button" onClick='editIncomeDiscount({{ $item->id }})'
+                                        class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></button>
+                                @else
+                                    <button type="button" class="btn btn-primary btn-xs" disabled><i class="glyphicon glyphicon-edit"></i></button>
+                                @endif
                             @endcan
                             @can('rrhh_income_discount.delete')
                                 <button type="button" onClick='deleteIncomeDiscount({{ $item->id }})'

@@ -614,33 +614,27 @@ class PayrollController extends Controller
 
                     foreach ($payroll->payrollDetails as $payrollDetail) {
                         $incomeDiscounts = RrhhIncomeDiscount::where('employee_id', $payrollDetail->employee_id)
-                            ->where('start_date', '<=', $payroll->end_date)->get();
+                            ->where('start_date', '<=', $payroll->end_date)
+                            ->where('is_paid', 0)->get();
 
                         foreach ($incomeDiscounts as $incomeDiscount) {
-                            $numIncomeDiscount = $incomeDiscount->paymentPeriod->days * $incomeDiscount->quota;
-                            $numPayroll = $payroll->paymentPeriod->days;
-                            $cantQuota = $numPayroll / $numIncomeDiscount;
-
-                            if ($cantQuota < 1) {
-                                $quotasApplied = $incomeDiscount->quota * $cantQuota;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
+                            $quotasApplied = $payroll->paymentPeriod->days / $incomeDiscount->paymentPeriod->days;
+                            if(($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota){
+                                if($quotasApplied < $incomeDiscount->quotas_applied){
+                                    $quotasApplied = $incomeDiscount->quotas_applied - $quotasApplied;
+                                }else{
+                                    $quotasApplied = $quotasApplied - $incomeDiscount->quotas_applied;
+                                }
+                                $incomeDiscount->quotas_applied += $quotasApplied;
+                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $quotasApplied);
+                                $incomeDiscount->is_paid = 1;
+                            }else{
+                                $quotas = $quotasApplied + $incomeDiscount->quotas_applied;
+                                $incomeDiscount->quotas_applied = $quotas;
+                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $quotasApplied);
+                                \Log::info($quotas.'            '.$incomeDiscount);
                             }
-
-                            if ($cantQuota == 1) {
-                                $quotasApplied = $incomeDiscount->quota * $cantQuota;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
-                            }
-
-                            if ($cantQuota > 1) {
-                                $quotasApplied = $incomeDiscount->quota * 1;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
-                            }
+                            $incomeDiscount->update();
                         }
                     }
 
@@ -827,6 +821,7 @@ class PayrollController extends Controller
                                 ->where('rrhh_income_discounts.employee_id', $employee->id)
                                 ->where('rrhh_income_discounts.start_date', '<=', $payroll->end_date)
                                 ->where('rrhh_income_discounts.deleted_at', null)
+                                ->where('rrhh_income_discounts.is_paid', 0)
                                 ->get();
 
 
@@ -887,7 +882,7 @@ class PayrollController extends Controller
 
                             $details['other_deductions'] = $discountOD - $incomeOD;
                             $details['total_deductions'] = $details['isss'] + $details['afp'] + $details['rent'] + $details['other_deductions'];
-                            $details['total_to_pay'] = bcdiv(($details['total_income'] - $details['total_deductions']), 1, 2);
+                            $details['total_to_pay'] = $details['total_income'] - $details['total_deductions'];
                             $details['employee_id']  = $employee->id;
                             $details['payroll_id']  = $payroll->id;
 
@@ -1102,24 +1097,19 @@ class PayrollController extends Controller
     {
         $incomeOrDiscount = 0;
         if ($incomeDiscount->payroll_column == $payroll_column) {
-            $numIncomeDiscount = $incomeDiscount->paymentPeriod->days * $incomeDiscount->quota;
-            $numPayroll = $payroll->paymentPeriod->days;
-            $cantQuota = $numPayroll / $numIncomeDiscount;
-
-            if ($cantQuota < 1) {
-                $quotasApplied = $incomeDiscount->quota * $cantQuota;
+            $quotasApplied = $payroll->paymentPeriod->days / $incomeDiscount->paymentPeriod->days;
+            if(($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota){
+                if($quotasApplied < $incomeDiscount->quotas_applied){
+                    $quotasApplied = $incomeDiscount->quotas_applied - $quotasApplied;
+                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied; 
+                }else{
+                    $quotasApplied = $quotasApplied - $incomeDiscount->quotas_applied;
+                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied; 
+                }
+                
+            }else{
                 $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
-            }
-
-            if ($cantQuota == 1) {
-                $quotasApplied = $incomeDiscount->quota * $cantQuota;
-                $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
-            }
-
-            if ($cantQuota > 1) {
-                $quotasApplied = $incomeDiscount->quota * 1;
-                $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
-            }
+            }               
         }
 
         return $incomeOrDiscount;

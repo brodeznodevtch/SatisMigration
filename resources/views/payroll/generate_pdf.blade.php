@@ -243,9 +243,9 @@
                     <th>{{ __('payroll.total_withholdings_deductions') }}</th>
                     <th style="text-align: right;">
                         @if ($business->currency_symbol_placement == 'after')
-                            {{ @num_format($payrollDetail->total_discount) }} {{ $business->currency->symbol }}
+                            {{ @num_format($payrollDetail->total_deductions) }} {{ $business->currency->symbol }}
                         @else
-                            {{ $business->currency->symbol }} {{ @num_format($payrollDetail->total_discount) }}
+                            {{ $business->currency->symbol }} {{ @num_format($payrollDetail->total_deductions) }}
                         @endif
                     </th>
                 </tr>

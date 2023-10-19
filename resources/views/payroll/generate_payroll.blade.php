@@ -35,7 +35,7 @@
                         @if(count($payroll->payrollDetails) >= 0)
                             @can('payroll.recalculate')
                                 <a href="#" class="btn btn-info" type="button"
-                                    onClick="recalculatePayroll({{ $payroll->id }})" id="btn_recalculate">
+                                    onClick="recalculatePayroll({{ $payroll->id }}, 1)" id="btn_recalculate">
                                     <i class="fa fa-plus"></i> @lang('payroll.recalculate')
                                 </a>
                             @endcan
@@ -43,7 +43,7 @@
                         @if(count($payroll->payrollDetails) > 0)
                             @can('payroll.approve')
                                 <a href="#" class="btn btn-primary" type="button"
-                                    onClick="approvePayroll({{ $payroll->id }})" id="btn_approve">
+                                    onClick="approvePayroll({{ $payroll->id }}, 1)" id="btn_approve">
                                     <i class="fa fa-check-square"></i> @lang('payroll.approve')
                                 </a>
                             @endcan
@@ -52,7 +52,7 @@
                     @if ($payroll->payrollStatus->name == 'Aprobada' && count($payroll->payrollDetails) > 0)
                         @can('payroll.pay')
                             <a href="#" class="btn btn-primary" type="button"
-                                onClick="payPayroll({{ $payroll->id }})" id="btn_pay">
+                                onClick="payPayroll({{ $payroll->id }}, 1)" id="btn_pay">
                                 <i class="fa fa-check-square"></i> @lang('payroll.pay')
                             </a>
                         @endcan
@@ -90,6 +90,7 @@
 @endsection
 
 @section('javascript')
+    <script src="{{ asset('js/payroll/payroll_actions.js?v=' . $asset_v) }}"></script>
     <script>
         $(document).ready(function() {
             loadPayrolls();
@@ -386,287 +387,6 @@
                 });
             }
         }
-
-
-        function recalculatePayroll(id) {
-            route = "/payroll/" + id + "/recalculate";
-            token = $("#token").val();
-
-            $.ajax({
-                url: route,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function(result) {
-                    if (result.success == true) {
-                        Swal.fire({
-                            title: result.msg,
-                            icon: "success",
-                            timer: 1000,
-                            showConfirmButton: false,
-                        });
-                        $("#payroll-detail-table").DataTable().ajax.reload(null, false);
-                    } else {
-                        Swal.fire({
-                            title: result.msg,
-                            icon: "error",
-                        });
-                    }
-                },
-                error: function(msj) {
-                    errormessages = "";
-                    $.each(msj.responseJSON.errors, function(i, field) {
-                        errormessages += "<li>" + field + "</li>";
-                    });
-                    Swal.fire({
-                        title: LANG.error_list,
-                        icon: "error",
-                        html: "<ul>" + errormessages + "</ul>",
-                    });
-                }
-            });
-        }
-
-
-        function payPayroll(id) {
-            Swal.fire({
-                title: "{{ __('messages.pay_question') }}",
-                text: "{{ __('messages.approve_content') }}",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.yes') }}",
-                cancelButtonText: "{{ __('messages.no') }}",
-            }).then((willDelete) => {
-                if (willDelete.value) {
-
-                    Swal.fire({
-                        title: "{{ __('messages.pay_slips_question') }}",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: "{{ __('messages.yes') }}",
-                        cancelButtonText: "{{ __('messages.no') }}",
-                    }).then((result) => {
-                        var sendEmail = 0;
-                        if (result.isConfirmed) {
-                            sendEmail = 1;
-                            sendPay(id, sendEmail);
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            sendPay(id, sendEmail);
-                        }
-                    })
-                }
-            });
-        }
-
-        function sendPay(id, sendEmail) {
-            Swal.fire({
-                title: "{{ __('messages.confirm_pay') }}",
-                text: "{{ __('messages.message_to_confirm') }}",
-                input: 'password',
-                inputAttributes: {
-                    autocapitalize: 'off'
-                },
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.pay') }}",
-                cancelButtonText: "{{ __('messages.cancel') }}",
-                showLoaderOnConfirm: true,
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "{{ __('messages.password_required') }}"
-                    }
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var route = "{!! URL::to('/payroll/:id/pay') !!}";
-                    var type = $('#type').val();
-                    route = route.replace(':id', id);
-                    token = $("#token").val();
-
-                    $.ajax({
-                        url: route,
-                        headers: {
-                            'X-CSRF-TOKEN': token
-                        },
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            'password': result.value,
-                            'sendEmail': sendEmail
-                        },
-                        success: function(result) {
-                            if (result.success == true) {
-                                Swal.fire({
-                                    title: result.msg,
-                                    icon: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                                $('#btn_pay').hide();
-                                $("#section_content-header").find('h1').remove();
-                                $("#section_content-header").append('<h1>'+type+' <span class="badge" style="background: #367FA9">Pagada</span></h1>');
-                                $("#payroll-detail-table").DataTable().ajax.reload(null, false);
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: result.msg,
-                                    icon: "error",
-                                });
-                            }
-                        },
-                        error: function(msj) {
-                            errormessages = "";
-                            $.each(msj.responseJSON.errors, function(i,
-                                field) {
-                                errormessages += "<li>" + field +
-                                    "</li>";
-                            });
-                            Swal.fire({
-                                title: "@lang('rrhh.error_list')",
-                                icon: "error",
-                                html: "<ul>" + errormessages +
-                                    "</ul>",
-                            });
-                        }
-                    });
-                }
-            })
-        }
-
-
-        /** Approve payroll*/
-        function approvePayroll(id) {
-            Swal.fire({
-                title: "{{ __('messages.approve_question') }}",
-                text: "{{ __('messages.approve_content') }}",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.yes') }}",
-                cancelButtonText: "{{ __('messages.no') }}",
-            }).then((willDelete) => {
-                if (willDelete.value) {
-
-                    Swal.fire({
-                        title: "{{ __('messages.payment_file_question') }}",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: "{{ __('messages.yes') }}",
-                        cancelButtonText: "{{ __('messages.no') }}",
-                    }).then((result) => {
-                        var sendEmail = 0;
-                        if (result.isConfirmed) {
-                            sendEmail = 1;
-                            sendApprove(id, sendEmail);
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            sendApprove(id, sendEmail);
-                        }
-                    })
-                }
-            });
-        }
-
-        function sendApprove(id, sendEmail) {
-            Swal.fire({
-                title: "{{ __('messages.confirm_approval') }}",
-                text: "{{ __('messages.message_to_confirm') }}",
-                input: 'password',
-                inputAttributes: {
-                    autocapitalize: 'off'
-                },
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('messages.approve') }}",
-                cancelButtonText: "{{ __('messages.cancel') }}",
-                showLoaderOnConfirm: true,
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "{{ __('messages.password_required') }}"
-                    }
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var route = "{!! URL::to('/payroll/:id/approve') !!}";
-                    var type = $('#type').val();
-                    route = route.replace(':id', id);
-                    token = $("#token").val();
-
-                    $.ajax({
-                        url: route,
-                        headers: {
-                            'X-CSRF-TOKEN': token
-                        },
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            'password': result.value,
-                            'sendEmail': sendEmail
-                        },
-                        success: function(result) {
-                            if (result.success == true) {
-                                Swal.fire({
-                                    title: result.msg,
-                                    icon: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                                $('#btn_recalculate').hide();
-                                $('#btn_approve').hide();
-                                $("#section_content-header").find('h1').remove();
-                                $("#section_content-header").append('<h1>'+type+' <span class="badge" style="background: #449D44">Aprobada</span></h1>');
-                                $('#div_actions').append('@can('payroll.pay')<a href="#" class="btn btn-primary" type="button" onClick="payPayroll({{ $payroll->id }})" id="btn_pay"> <i class="fa fa-check-square"></i> @lang('payroll.pay')</a> @endcan');
-                                $("#payroll-detail-table").DataTable().ajax.reload(null, false);
-                            } else {
-                                console.log(sendEmail);
-                                if(result.sendEmail == 1){
-                                    var url = "{!! URL::to('/payroll/:id/generatePaymentFiles') !!}";
-                                    url = url.replace(':id', id);
-                                    $.get(url, function(data) {
-                                        Swal.fire({
-                                            title: 'Se generó los archivos de pagos y se aprobó exitosamente la planilla',
-                                            icon: "success",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        });
-                                    });
-                                    
-                                }else{
-                                    Swal.fire({
-                                        title: 'Error',
-                                        text: result.msg,
-                                        icon: "error",
-                                    });
-                                }
-                            }
-                        },
-                        error: function(msj) {
-                            errormessages = "";
-                            $.each(msj.responseJSON.errors, function(i,
-                                field) {
-                                errormessages += "<li>" + field +
-                                    "</li>";
-                            });
-                            Swal.fire({
-                                title: "@lang('rrhh.error_list')",
-                                icon: "error",
-                                html: "<ul>" + errormessages +
-                                    "</ul>",
-                            });
-                        }
-                    });
-                }
-            })
-        }
-
 
         function sum_table_col_name(table, class_name) {
             var sum = 0;
