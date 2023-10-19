@@ -75,8 +75,6 @@ steps:
     sshEndpoint: 'AWS_S1'
     runOptions: 'commands'
     commands: |
-      sudo rm -rf /var/www/devtech.satiserp.app/current;
-      sudo mkdir /var/www/devtech.satiserp.app/current;
       sudo rsync -a /var/www/devtech.satiserp.app/releases/$(Build.BuildId)/. /var/www/devtech.satiserp.app/current/;
       sudo chown -R www-data.www-data /var/www/devtech.satiserp.app/current/storage;
       sudo chown -R www-data.www-data /var/www/devtech.satiserp.app/current/bootstrap/cache;
