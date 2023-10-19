@@ -101,3 +101,11 @@ steps:
     commands: |
       sudo chown -R www-data:www-data /var/www/demo.satiserp.app/shared/public/;
     readyTimeout: '20000'
+    
+- task: SSH@0
+  displayName: 'Execute Migrations'
+  inputs:
+    sshEndpoint: 'AWS_S1'
+    runOptions: 'inline'
+    inline: 'cd /var/www/demo.satiserp.app/current && sudo php artisan migrate'
+    readyTimeout: '20000'
