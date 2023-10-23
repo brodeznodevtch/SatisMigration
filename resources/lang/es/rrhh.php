@@ -467,5 +467,7 @@ return[
     'concept' => 'Concepto',
     'debit' => 'Debe',
     'credit' => 'Haber',
-    'message_accounting' => 'Se debe seleccionar la cuenta contable que será afectada al momento de pagar planilla.'
+    'message_accounting' => 'Se debe seleccionar la cuenta contable que será afectada al momento de pagar planilla.',
+    'paid' => 'Pagado',
+    'not_paid' => 'No pagado / En proceso',
 ];

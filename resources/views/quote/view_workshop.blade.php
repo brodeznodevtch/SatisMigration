@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>@lang('quote.quote')</title>
+    <title>@lang('order.orders')</title>
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -139,10 +139,10 @@
 
     <div class="row alncenter" style="margin-bottom: 0;">
         <div class="col" style="width: 20%;">
-            @if (! empty(Session::get('business.logo')) && file_exists(public_path('uploads/business_logos/' . Session::get('business.logo'))))
-            <img src="{{ public_path('/uploads/business_logos/' . Session::get('business.logo')) }}" alt="Logo" style="margin: 0; width: 130px;">
+            @if (! empty($business->logo))
+                <img src="{{ public_path('uploads/business_logos/' . $business->logo) }}" alt="Logo" style="margin: 0; width: 140px;">
             @else
-                <img src="{{ public_path('img/logo.png') }}" alt="Logo" style="margin: 0; width: 130px; margin-top: -40px;">
+                <img src="{{ public_path('img/logo.png') }}" alt="Logo" style="margin: 0; width: 140px; margin-top: -40px;">
             @endif
         </div>
 
@@ -208,57 +208,59 @@
         <strong>{{ mb_strtoupper(__('quote.budget')) }}: {{ $quote->quote_ref_no }}</strong>
     </p>
 
-    <p style="text-align: center; font-size: 8pt; margin-top: 15px; margin-bottom: 5px;">
-        <strong>
-            {{ mb_strtoupper('Identificación de cliente y vehículo') }}
-        </strong>
-    </p>
+    @if (config("app.business") == "workshop")
+        <p style="text-align: center; font-size: 8pt; margin-top: 15px; margin-bottom: 5px;">
+            <strong>
+                {{ mb_strtoupper('Identificación de cliente y vehículo') }}
+            </strong>
+        </p>
 
-    <table class="table1" style="width: 100%;">
-        <tr>
-            <td>
-                <strong>{{ mb_strtoupper(__('contact.customer')) }}: </strong>
-                {{ $customer->business_name ?? $customer->name }}
-            </td>
-            <td>
-                <strong>{{ mb_strtoupper(__('customer.license_plate_short')) }}: </strong>
-                {{ $customer_vehicle->license_plate }}
-            </td>
-        </tr>
+        <table class="table1" style="width: 100%;">
+            <tr>
+                <td>
+                    <strong>{{ mb_strtoupper(__('contact.customer')) }}: </strong>
+                    {{ $customer->business_name ?? $customer->name }}
+                </td>
+                <td>
+                    <strong>{{ mb_strtoupper(__('customer.license_plate_short')) }}: </strong>
+                    {{ $customer_vehicle->license_plate }}
+                </td>
+            </tr>
 
-        <tr>
-            <td>
-                <strong>{{ mb_strtoupper(__('brand.brand')) }}: </strong>
-                {{ $customer_vehicle->brand->name }}
-            </td>
-            <td>
-                <strong>{{ mb_strtoupper(__('card_pos.model')) }}: </strong>
-                {{ $customer_vehicle->model }}
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <strong>{{ mb_strtoupper(__('brand.brand')) }}: </strong>
+                    {{ $customer_vehicle->brand->name }}
+                </td>
+                <td>
+                    <strong>{{ mb_strtoupper(__('card_pos.model')) }}: </strong>
+                    {{ $customer_vehicle->model }}
+                </td>
+            </tr>
 
-        <tr>
-            <td>
-                <strong>{{ mb_strtoupper(__('accounting.year')) }}: </strong>
-                {{ $customer_vehicle->year }}
-            </td>
-            <td>
-                <strong>{{ mb_strtoupper(__('customer.mi_km')) }}: </strong>
-                {{ $customer_vehicle->mi_km }}
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <strong>{{ mb_strtoupper(__('accounting.year')) }}: </strong>
+                    {{ $customer_vehicle->year }}
+                </td>
+                <td>
+                    <strong>{{ mb_strtoupper(__('customer.mi_km')) }}: </strong>
+                    {{ $customer_vehicle->mi_km }}
+                </td>
+            </tr>
 
-        <tr>
-            <td>
-                <strong>{{ mb_strtoupper(__('customer.engine')) }}: </strong>
-                {{ $customer_vehicle->engine_number }}
-            </td>
-            <td>
-                <strong>{{ mb_strtoupper(__('customer.chassis')) }}: </strong>
-                {{ $customer_vehicle->vin_chassis }}
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td>
+                    <strong>{{ mb_strtoupper(__('customer.engine')) }}: </strong>
+                    {{ $customer_vehicle->engine_number }}
+                </td>
+                <td>
+                    <strong>{{ mb_strtoupper(__('customer.chassis')) }}: </strong>
+                    {{ $customer_vehicle->vin_chassis }}
+                </td>
+            </tr>
+        </table>
+    @endif
 
     <p style="text-align: center; font-size: 8pt; margin-top: 15px; margin-bottom: 5px;">
         <strong>

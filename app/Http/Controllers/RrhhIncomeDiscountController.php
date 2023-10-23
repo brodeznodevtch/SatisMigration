@@ -164,7 +164,7 @@ class RrhhIncomeDiscountController extends Controller
      */
     public function show($id)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.show') ) {
+        if ( !auth()->user()->can('rrhh_income_discount.view') ) {
             abort(403, 'Unauthorized action.');
         }
 

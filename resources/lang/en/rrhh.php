@@ -456,5 +456,7 @@ return[
     'concept' => 'Concept',
     'debit' => 'Debe',
     'credit' => 'Haber',
-    'message_accounting' => 'You must select the accounting account that will be affected when paying the return.'
+    'message_accounting' => 'You must select the accounting account that will be affected when paying the return.',
+    'paid' => 'Paid',
+    'not_paid' => 'Not paid / In process',
 ];

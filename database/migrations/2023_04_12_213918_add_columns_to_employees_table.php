@@ -14,8 +14,8 @@ class AddColumnsToEmployeesTable extends Migration
     public function up()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->dropForeign(['position_id']);
-            $table->dropColumn('position_id');
+            // $table->dropForeign(['position_id']);
+            // $table->dropColumn('position_id');
 
             $table->string('gender')->nullable()->after('last_name');
 
@@ -38,7 +38,7 @@ class AddColumnsToEmployeesTable extends Migration
             $table->string('afp_number')->nullable()->after('afp_id');
             $table->date('date_admission')->nullable()->after('afp_number');
             
-            $table->string('photo')->nullable()->after('position_id');
+            $table->string('photo')->nullable()->after('mobile');
             $table->boolean('status')->default(1)->after('photo');
 
             $table->integer('country_id')->unsigned()->nullable()->after('status');

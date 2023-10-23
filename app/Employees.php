@@ -73,7 +73,9 @@ class Employees extends Model
         'user_id', 
         'location_id', 
         'short_name',
-        'deleted_at'
+        'deleted_at',
+        'position_id',
+        'location_id'
     ];
 
     public function businessLocation() {

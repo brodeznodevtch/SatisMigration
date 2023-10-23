@@ -57,27 +57,25 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('birth_date', __('employees.birth_date') . ' : ') !!}
                         {!! Form::text('birth_date', @format_date('now'), ['class' => 'form-control', 'required']) !!}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('hired_date', __('employees.hired_date') . ' : ') !!}
                         {!! Form::text('hired_date', @format_date('now'), ['class' => 'form-control', 'required']) !!}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('fired_date', __('employees.fired_date') . ' : ') !!}
                         {!! Form::text('fired_date', @format_date('now'), ['class' => 'form-control', 'readonly']) !!}
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('short_name', __('employees.short_name') . ' : ') !!}
                         {!! Form::text('short_name', null, ['class' => 'form-control']) !!}
