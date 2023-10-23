@@ -71,9 +71,14 @@ class Employees extends Model
         'created_by',
         'business_id',
         'user_id', 
+        'location_id', 
         'short_name',
         'deleted_at'
     ];
+
+    public function businessLocation() {
+        return $this->belongsTo(\App\BusinessLocation::class, 'location_id');
+    }
 
     public function user() {
         return $this->belongsTo('App\User');

@@ -17,7 +17,7 @@
 							</button>
 						@endcan
 					</div>
-					@include('rrhh.income_discounts.table')
+				@include('rrhh.income_discounts.table')
 				</div>				
 			</div>
 		</div>

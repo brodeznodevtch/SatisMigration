@@ -36,6 +36,55 @@
                     </select>
                 </div>
             </div>
+            <hr>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>{{ __('role.accounting') }} @show_tooltip(__('rrhh.message_accounting'))</h4> 
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>@lang('accounting.description')</label> <span class="text-danger">*</span>
+                    <input type="text" name="concept" id="concept" class="form-control" placeholder="@lang('accounting.description')">
+                </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>@lang('rrhh.accounting_account')</label> <span class="text-danger">*</span>
+                    <select id="catalogue_id" name="catalogue_id" class="form-control select2" style="width: 100%;">
+                        <option value="0" disabled selected>@lang('messages.please_select')</option>
+                        @foreach($accounts as $account)
+                        <option value="{{ $account->id }}">{{ $account->code }} {{ $account->name }}=>{{$account->padre->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <table class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sucursales</th>
+                            <th>@lang('rrhh.accounting_account')</label> <span class="text-danger">*</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($locations as $item)
+                        <tr>
+                            <td>
+                                {{ $item->name }}
+                                <input type="hidden" name="locations[]" value="{{ $item->id }}">
+                            </td>
+                            <td>
+                                <select id="catalogue_id" name="catalogues[]" class="form-control select2" style="width: 100%;">
+                                    <option value="0" disabled selected>@lang('messages.please_select')</option>
+                                    @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}">{{ $account->code }} {{ $account->name }}=>{{$account->padre->name}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div> --}}
         </div>
     </form>
 </div>
@@ -51,6 +100,7 @@
         $('.select2').select2();
     });
 
+ 
     $("#btn_add_type_wages").click(function() {
         route = "/rrhh-types-income-discounts";
         datastring = $("#form_add").serialize();

@@ -90,11 +90,11 @@
                                         <td style="width: 34%;">
                                             <strong>@lang('rrhh.status'):</strong>
                                             @if( !empty($employee->status))
-                                            @if($employee->status == 1)
-                                            @lang('rrhh.active')
-                                            @else
-                                            @lang('rrhh.inactive')
-                                            @endif
+                                                @if($employee->status == 1)
+                                                @lang('rrhh.active')
+                                                @else
+                                                @lang('rrhh.inactive')
+                                                @endif
                                             @else
                                             N/A
                                             @endif
@@ -156,11 +156,18 @@
                                             @else
                                             N/A
                                             @endif
-                                        </td>
-                                        <td>
+                                            <br>
                                             <strong>@lang('rrhh.mobile_phone'):</strong><br>
                                             @if( !empty($employee->mobile))
                                             {{ $employee->mobile }}
+                                            @else
+                                            N/A
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <strong>@lang('business.location'):</strong><br>
+                                            @if( !empty($employee->location_id))
+                                            {{ $employee->businessLocation->name }}
                                             @else
                                             N/A
                                             @endif

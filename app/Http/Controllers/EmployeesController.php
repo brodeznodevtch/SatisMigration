@@ -10,6 +10,7 @@ use App\RrhhSalaryHistory;
 use App\RrhhPositionHistory;
 use App\Bank;
 use App\Business;
+use App\BusinessLocation;
 use App\RrhhAbsenceInability;
 use App\RrhhContract;
 use App\Notifications\NewNotification;
@@ -130,6 +131,9 @@ class EmployeesController extends Controller
             ->orderBy('roles.name', 'asc')
             ->pluck('rol', 'id');
 
+        $locations = BusinessLocation::select("name", "id")->where('business_id', $business_id)
+            ->pluck("name", "id");
+
         return view('rrhh.employees.create', compact(
             'nationalities',
             'civil_statuses',
@@ -145,7 +149,8 @@ class EmployeesController extends Controller
             'countries',
             'states',
             'cities',
-            'types'
+            'types',
+            'locations'
         ));
     }
 
@@ -174,6 +179,7 @@ class EmployeesController extends Controller
             'civil_status_id'        => 'required', 
             'department_id'          => 'required',
             'position1_id'           => 'required', 
+            'location_id'            => 'required',
             'salary'                 => 'required|numeric|min:1',
             'payment_id'             => 'required',
             'afp_number'             => 'nullable|regex:/^[0-9]+$/',
@@ -257,7 +263,8 @@ class EmployeesController extends Controller
                 'state_id',
                 'city_id',
                 'profession_id',
-                'type_id'
+                'type_id',
+                'location_id'
             ]);
             if($request->approved){
                 $input_details['approved'] = 1;
@@ -412,8 +419,7 @@ class EmployeesController extends Controller
             ->get();
     
         $current_date = Carbon::now()->format('Y-m-d');
-    
-        
+
         foreach ($contracts as $contract) {
             if ($contract->contract_status == 'Vigente') {
                 if ($contract->contract_end_date != null) {
@@ -427,7 +433,20 @@ class EmployeesController extends Controller
 
         $show = true;
 
-        return view('rrhh.employees.show', compact('employee', 'route', 'show', 'documents', 'positions', 'salaries', 'business', 'studies', 'economicDependences', 'absenceInabilities', 'personnelActions', 'contracts'));
+        return view('rrhh.employees.show', compact(
+            'employee', 
+            'route', 
+            'show', 
+            'documents', 
+            'positions', 
+            'salaries', 
+            'business', 
+            'studies', 
+            'economicDependences', 
+            'absenceInabilities', 
+            'personnelActions', 
+            'contracts'
+        ));
     }
 
     /**
@@ -481,6 +500,9 @@ class EmployeesController extends Controller
             }
         }
     
+        $locations = BusinessLocation::select("name", "id")->where('business_id', $business_id)
+            ->pluck("name", "id");
+
         return view('rrhh.employees.edit', compact(
             'employee',
             'nationalities',
@@ -498,7 +520,8 @@ class EmployeesController extends Controller
             'documents',
             'type_documents',
             'position',
-            'salary'
+            'salary',
+            'locations'
         ));        
     }
 
@@ -545,7 +568,8 @@ class EmployeesController extends Controller
             'email'                  => 'required|email',
             'date_admission'         => 'required',
             'nationality_id'         => 'required', 
-            'civil_status_id'        => 'required', 
+            'civil_status_id'        => 'required',
+            'location_id'            => 'required', 
             'department_id'          => $requiredDepartment,
             'position1_id'           => $requiredPosition, 
             'salary'                 => $requiredSalary,
@@ -584,7 +608,8 @@ class EmployeesController extends Controller
                 'bank_id',
                 'bank_account',
                 'state_id',
-                'city_id'
+                'city_id',
+                'location_id'
             ]);
             if($request->input('approved')){
                 $input_details['approved'] = 1;

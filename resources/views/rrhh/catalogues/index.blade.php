@@ -682,6 +682,7 @@
             {data: 'type'},
             {data: 'name'},
             {data: 'payroll_column'},
+            {data: 'concept'},
             {data: 'status'},
             {data: null, render: function(data){
 

@@ -1735,7 +1735,7 @@
       {{-- Inicio compras --}}
       @if(in_array('Compras', $enabled_modules) 
       || in_array('Proveedores', $enabled_modules) 
-      || in_array('Retaceos', $enabled_modules) 
+      || in_array('Retaceo', $enabled_modules) 
       || in_array('Gastos de importación', $enabled_modules) 
       || in_array('Quedan', $enabled_modules)  
       )
@@ -1783,7 +1783,7 @@
                   </li>
                 @endif
               @endif
-              @if(in_array('Retaceos', $enabled_modules))
+              @if(in_array('Retaceo', $enabled_modules))
                 {{-- Apportionment --}}
                 @if (auth()->user()->can('apportionment.view') || auth()->user()->can('apportionment.create'))
                   <li class="{{ $request->segment(1) == 'apportionments' ? 'active' : '' }}">

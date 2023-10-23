@@ -360,7 +360,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             RrhhTypeIncomeDiscount::firstOrCreate([
                 'type' => 1, 
                 'name' => 'Anticipo de sueldo', 
-                'payroll_column' => 'Otras deducciones', 
+                'payroll_column' => 'Otros ingresos', 
                 'status' => 1, 
                 'business_id' => $item->id,
             ]);

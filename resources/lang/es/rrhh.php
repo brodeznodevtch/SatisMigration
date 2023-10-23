@@ -461,5 +461,11 @@ return[
     'quotas_applied' => 'Cuotas aplicadas',
     'salarial_constances' => 'Constancia salarial',
     'all_salarial_constances' => 'Todas las constancias salariales',
-    'message_salarial_constances' => 'Debe haber una constancia salarial activa para poder descargarla desde el apartado del empleado, sino la opcion respectiva no se mostrará.'
+    'message_salarial_constances' => 'Debe haber una constancia salarial activa para poder descargarla desde el apartado del empleado, sino la opcion respectiva no se mostrará.',
+    'accounting_account' => 'Cuenta contable',
+    'account_type' => 'Tipo de cuenta',
+    'concept' => 'Concepto',
+    'debit' => 'Debe',
+    'credit' => 'Haber',
+    'message_accounting' => 'Se debe seleccionar la cuenta contable que será afectada al momento de pagar planilla.'
 ];

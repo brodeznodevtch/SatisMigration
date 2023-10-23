@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\AccountingEntrie;
+use App\AccountingEntriesDetail;
 use App\Bank;
+use App\BankAccount;
 use App\BonusCalculation;
 use App\Business;
 use App\BusinessLocation;
@@ -33,10 +36,15 @@ use Excel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\PaymentSplisNotification;
+use App\PayrollPayment;
+use App\RrhhData;
 use App\RrhhSetting;
 use App\RrhhTypeIncomeDiscount;
+use App\RrhhTypeIncomeDiscountLocation;
+use App\TypeEntrie;
 use App\Utils\EmployeeUtil;
 use App\Utils\PayrollUtil;
+use Spatie\Backup\Tasks\Cleanup\Period;
 
 class PayrollController extends Controller
 {
@@ -160,9 +168,22 @@ class PayrollController extends Controller
             ->where('name', '<>', 'Anual') //Anual
             ->where('name', '<>', 'Personalizado') //Personalizado
             ->get();
-
-
-        return view('payroll.create', compact('paymentPeriods', 'payrollTypes', 'isrTables'));
+        $bank_accounts_ddl = BankAccount::select('name', 'id')
+            ->where('business_id', $business_id)
+            ->get();
+        $payments = DB::table('rrhh_datas')
+            ->where('rrhh_header_id', 8)
+            ->where('business_id', $business_id)
+            ->where('status', 1)
+            ->orderBy('value', 'DESC')
+            ->get();
+        $checkbooks = DB::table('bank_checkbooks as checkbook')
+            ->select('id', 'name')
+            ->where('checkbook.business_id', $business_id)
+            ->where('status', 1)
+            ->get();
+    
+        return view('payroll.create', compact('paymentPeriods', 'payrollTypes', 'isrTables', 'bank_accounts_ddl', 'payments', 'checkbooks'));
     }
 
     /**
@@ -188,6 +209,7 @@ class PayrollController extends Controller
                     'days'            => 'required',
                     'start_date'      => 'required',
                     'end_date'        => 'required',
+                    'payment'         => 'required'
                 ]);
             } else {
                 $request->validate([
@@ -196,6 +218,7 @@ class PayrollController extends Controller
                     'month'           => 'required',
                     'start_date'      => 'required',
                     'end_date'        => 'required',
+                    'payment'         => 'required'
                 ]);
             }
         } else {
@@ -206,6 +229,7 @@ class PayrollController extends Controller
                         'year'     => 'required',
                         'isr_id'   => 'required',
                         'end_date' => 'required',
+                        'payment'         => 'required'
                     ]);
                 } else {
                     $request->validate([
@@ -214,6 +238,7 @@ class PayrollController extends Controller
                         'month'             => 'required',
                         'start_date'        => 'required',
                         'end_date'          => 'required',
+                        'payment'         => 'required'
                     ]);
                 }
             } else {
@@ -224,6 +249,7 @@ class PayrollController extends Controller
                     'month'             => 'required',
                     'start_date'        => 'required',
                     'end_date'          => 'required',
+                    'payment'         => 'required'
                 ]);
             }
         }
@@ -269,6 +295,39 @@ class PayrollController extends Controller
             DB::beginTransaction();
 
             $payroll = Payroll::create($input_details);
+            $payments = DB::table('rrhh_datas')
+            ->where('rrhh_header_id', 8)
+            ->where('business_id', $business_id)
+            ->where('status', 1)
+            ->orderBy('value', 'DESC')
+            ->get();
+
+            foreach($payments as $payment){
+                if($payment->value == 'Transferencia bancaria'){
+                    $payroll_payment = new PayrollPayment();
+                    $payroll_payment->bank_account_id = $request->input('bank-account');
+                    $payroll_payment->reference = $request->input('reference');
+                    $payroll_payment->payment_id = $payment->id;
+                    $payroll_payment->payroll_id = $payroll->id;
+                    $payroll_payment->save();
+                }else{
+                    $checkbook = DB::table('bank_checkbooks as checkbook')
+                    ->select('id', 'name', 'bank_account_id')
+                    ->where('checkbook.business_id', $business_id)
+                    ->where('status', 1)
+                    ->where('id', $request->input('bank_checkbooks'))
+                    ->first();
+
+                    $payroll_payment = new PayrollPayment();
+                    $payroll_payment->check_number = $request->input('check-number');
+                    $payroll_payment->bank_checkbook_id = $request->input('bank_checkbooks');
+                    $payroll_payment->bank_account_id = $checkbook->bank_account_id;
+                    $payroll_payment->payment_id = $payment->id;
+                    $payroll_payment->payroll_id = $payroll->id;
+                    $payroll_payment->save();
+                }
+            }
+            
             if ($request->input('calculate') == 1) {
                 $this->calculate($payroll);
             }
@@ -284,7 +343,7 @@ class PayrollController extends Controller
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => $e->getMessage()
             ];
         }
 
@@ -607,42 +666,12 @@ class PayrollController extends Controller
                 $user = User::findOrFail($user_id);
 
                 if (Hash::check($request->input('password'), $user->password)) {
+                    $this->pagar($payroll, $business_id);                
+
                     $status = PayrollStatus::where('name', 'Pagada')->where('business_id', $business_id)->first();
                     $payroll->payroll_status_id = $status->id;
                     $payroll->pay_date = Carbon::now();
                     $payroll->update();
-
-                    foreach ($payroll->payrollDetails as $payrollDetail) {
-                        $incomeDiscounts = RrhhIncomeDiscount::where('employee_id', $payrollDetail->employee_id)
-                            ->where('start_date', '<=', $payroll->end_date)->get();
-
-                        foreach ($incomeDiscounts as $incomeDiscount) {
-                            $numIncomeDiscount = $incomeDiscount->paymentPeriod->days * $incomeDiscount->quota;
-                            $numPayroll = $payroll->paymentPeriod->days;
-                            $cantQuota = $numPayroll / $numIncomeDiscount;
-
-                            if ($cantQuota < 1) {
-                                $quotasApplied = $incomeDiscount->quota * $cantQuota;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
-                            }
-
-                            if ($cantQuota == 1) {
-                                $quotasApplied = $incomeDiscount->quota * $cantQuota;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
-                            }
-
-                            if ($cantQuota > 1) {
-                                $quotasApplied = $incomeDiscount->quota * 1;
-                                $incomeDiscount->quotas_applied = $quotasApplied;
-                                $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
-                                $incomeDiscount->update();
-                            }
-                        }
-                    }
 
                     if ($request->input('sendEmail') == 1) {
                         $this->sendEmailPaymentSlips($payroll);
@@ -669,10 +698,287 @@ class PayrollController extends Controller
                 \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
                 $output = [
                     'success' => 0,
-                    'msg' => __('rrhh.error')
+                    'msg' => $e->getMessage()
                 ];
             }
             return $output;
+        }
+    }
+
+
+    public function pagar($payroll, $business_id){
+        //$current_date = Carbon::now();
+        $typeEntrie = TypeEntrie::where('name', 'like', '%egreso%')->first();            
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $date = Carbon::parse($payroll->end_date);
+        $mdate = $date->month;
+        $ydate = $date->year;
+                    
+        $period = DB::table('accounting_periods')
+            ->join('fiscal_years', 'fiscal_years.id', '=', 'accounting_periods.fiscal_year_id')
+            ->select('accounting_periods.*')
+            ->where('accounting_periods.business_id', $business_id)
+            ->where('status', 1)
+            ->where('name', 'like', '%'.$meses[$mdate - 1].'/'.$ydate)
+            ->first();
+        
+        $formas = RrhhData::where('rrhh_header_id', 8)->where('business_id', $business_id)->get();
+        $locations = BusinessLocation::select("name", "id")->where('business_id', $business_id)->get();
+        foreach ($formas as $forma) {
+            foreach($locations as $location){
+                $payrollDetails = PayrollDetail::select('payroll_details.*', 'employees.location_id as location_id', 'employees.first_name as first_name', 'employees.last_name as last_name')
+                ->leftJoin('employees', 'employees.id', '=', 'payroll_details.employee_id')
+                ->leftJoin('rrhh_datas', 'rrhh_datas.id', '=', 'employees.payment_id')
+                ->where('rrhh_datas.id', $forma->id)
+                ->where('employees.location_id', $location->id)
+                ->where('payroll_details.payroll_id', $payroll->id)
+                ->get();
+
+                if(count($payrollDetails) > 0){
+                    $types = RrhhTypeIncomeDiscount::where('business_id', $business_id)->get();
+                    $entrie = $this->payrollUtil->createAccountingEntrie($location->id, $location->name, $business_id, $payroll, $typeEntrie, $period->id, $mdate, $ydate);
+
+                    if($payroll->payrollType->name == "Planilla de sueldos"){
+                        $valueAFP = 0;
+                        $valueISSS = 0;
+                        $valueRenta = 0;
+                        $valueTotal = 0;
+                        $value = [0,0,0];
+                        $concept = ['','',''];
+                        $account = ['','',''];
+                        $typeID = [0,0,0];
+                        foreach($payrollDetails as $payrollDetail){                         
+                            foreach($types as $type){
+                                // $type_location = RrhhTypeIncomeDiscountLocation::where('rrhh_type_income_discount_id', $type->id)
+                                // ->where('business_location_id', $payrollDetail->employee->location_id)
+                                // ->first();
+                                if($type->name == 'AFP'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->afp, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $valueAFP += $payrollDetail->afp;
+                                    $value[0] = $valueAFP;
+                                    $concept[0] = $type->concept;
+                                    $account[0] = $type->catalogue_id;
+                                    $type[0] = $type->type;
+                                }
+            
+                                if($type->name == 'ISSS'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->isss, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $valueISSS += $payrollDetail->isss;
+                                    $value[1] = $valueISSS;
+                                    $concept[1] = $type->concept;
+                                    $account[1] = $type->catalogue_id;
+                                    $type[1] = $type->type;
+                                }
+            
+                                if($type->name == 'Renta'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->rent, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $valueRenta += $payrollDetail->rent;
+                                    $value[2] = $valueRenta;
+                                    $concept[2] = $type->concept;
+                                    $account[2] = $type->catalogue_id;
+                                    $type[2] = $type->type;
+                                }
+            
+                                if($type->name == 'Salario'){
+                                    $conceptSalario = $type->concept.' - '.$payrollDetail->employee->first_name.' '.$payrollDetail->employee->last_name;
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->regular_salary, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $type->catalogue_id, $payrollDetail->regular_salary, $conceptSalario, $type->type);
+                                }
+                            } 
+
+                            $valueTotal += $payrollDetail->total_to_pay;
+    
+                            $incomeDiscounts = RrhhIncomeDiscount::where('employee_id', $payrollDetail->employee_id)
+                                ->where('start_date', '<=', $payroll->end_date)
+                                ->get();
+                            foreach ($incomeDiscounts as $incomeDiscount) {
+                                $numIncomeDiscount = $incomeDiscount->paymentPeriod->days * $incomeDiscount->quota;
+                                $numPayroll = $payroll->paymentPeriod->days;
+                                $cantQuota = $numPayroll / $numIncomeDiscount;
+                
+                                if ($cantQuota < 1) {
+                                    $quotasApplied = $incomeDiscount->quota * $cantQuota;
+                                    $incomeDiscount->quotas_applied = $quotasApplied;
+                                    $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
+                                    $incomeDiscount->update();
+                                }
+                
+                                if ($cantQuota == 1) {
+                                    $quotasApplied = $incomeDiscount->quota * $cantQuota;
+                                    $incomeDiscount->quotas_applied = $quotasApplied;
+                                    $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
+                                    $incomeDiscount->update();
+                                }
+                
+                                if ($cantQuota > 1) {
+                                    $quotasApplied = $incomeDiscount->quota * 1;
+                                    $incomeDiscount->quotas_applied = $quotasApplied;
+                                    $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $incomeDiscount->quotas_applied);
+                                    $incomeDiscount->update();
+                                }
+                            }
+
+                            if($forma->value != 'Transferencia bancaria'){
+                                foreach($payroll->payrollPayments as $payrollPayment){
+                                    if($payrollPayment->payment_id == $forma->id){
+                                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $payrollPayment->bankAccount->catalogue_id, $payrollDetail->total_to_pay, $payrollPayment->bankAccount->name, 2);
+                                        $this->payrollUtil->createBankTransaction($entrie->id, $payrollDetail->total_to_pay, $payroll, $payrollPayment, $business_id);
+                                    }
+                                }
+                            }
+                        } 
+
+                        for ($i = 0; $i < 3; $i++) {
+                            $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $account[$i], $value[$i], $concept[$i], $typeID[$i]);
+                        } 
+                    }
+
+                    if($payroll->payrollType->name == "Planilla de honorarios"){
+                        $valueTotal = 0;
+                        $value = 0;
+                        $account = '';
+                        $concept = '';
+                        $typeID = 0;
+                        foreach($payrollDetails as $payrollDetail){
+                            foreach($types as $type){
+                                if($type->name == 'Renta'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->rent, $payroll, $type->name, $payrollDetail->employee_id);
+                                    
+                                    $value += $payrollDetail->rent;
+                                    $concept = $type->concept;
+                                    $account = $type->catalogue_id;
+                                    $typeID = $type->type;
+                                }
+            
+                                if($type->name == 'Salario'){
+                                    $conceptSalario = $type->concept.' - '.$payrollDetail->employee->first_name.' '.$payrollDetail->employee->last_name;
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->regular_salary, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $type->catalogue_id, $payrollDetail->regular_salary, $conceptSalario, $type->type);
+                                }
+                            } 
+                            $valueTotal += $payrollDetail->total_to_pay;
+
+                            if($forma->value != 'Transferencia bancaria'){
+                                foreach($payroll->payrollPayments as $payrollPayment){
+                                    if($payrollPayment->payment_id == $forma->id){
+                                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $payrollPayment->bankAccount->catalogue_id, $payrollDetail->total_to_pay, $payrollPayment->bankAccount->name, 2);
+                                        $this->payrollUtil->createBankTransaction($entrie->id, $payrollDetail->total_to_pay, $payroll, $payrollPayment, $business_id);
+                                    }
+                                }
+                            }
+                        } 
+                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $account, $value, $concept, $typeID);
+                    }
+
+                    if($payroll->payrollType->name == "Planilla de aguinaldos"){
+                        $valueTotal = 0;
+                        $value = 0;
+                        $account = '';
+                        $concept = '';
+                        $type = '';
+                        $valueBonus = 0;
+                        $valueRenta = 0;
+                        $valueTotal = 0;
+                        $value = [0,0,0];
+                        $concept = ['','',''];
+                        $account = ['','',''];
+                        $typeID = [0,0,0];
+                        foreach($payrollDetails as $payrollDetail){
+                            foreach($types as $type){
+                                if($type->name == 'Renta'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->rent, $payroll, $type->name, $payrollDetail->employee_id);
+
+                                    $valueRenta += $payrollDetail->rent;
+                                    $value[0] = $valueRenta;
+                                    $concept[0] = $type->concept;
+                                    $account[0] = $type->catalogue_id;
+                                    $typeID[0] = $type->type;  
+                                }
+
+                                if($type->name == 'Aguinaldo'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->bonus, $payroll, $type->name, $payrollDetail->employee_id);
+                                    
+                                    $valueBonus += $payrollDetail->bonus;
+                                    $value[1] = $valueBonus;
+                                    $concept[1] = $type->concept;
+                                    $account[1] = $type->catalogue_id;
+                                    $typeID[1] = $type->type;                                  
+                                }
+            
+                                if($type->name == 'Salario'){
+                                    $conceptSalario = $type->concept.' - '.$payrollDetail->employee->first_name.' '.$payrollDetail->employee->last_name;
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->regular_salary, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $type->catalogue_id, $payrollDetail->regular_salary, $conceptSalario, $type->type);
+                                }
+                            } 
+
+                            $valueTotal += $payrollDetail->total_to_pay;
+                            
+                            if($forma->value != 'Transferencia bancaria'){
+                                foreach($payroll->payrollPayments as $payrollPayment){
+                                    if($payrollPayment->payment_id == $forma->id){
+                                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $payrollPayment->bankAccount->catalogue_id, $payrollDetail->total_to_pay, $payrollPayment->bankAccount->name, 2);
+                                        $this->payrollUtil->createBankTransaction($entrie->id, $payrollDetail->total_to_pay, $payroll, $payrollPayment, $business_id);
+                                    }
+                                }
+                            }
+                        } 
+
+                        for ($i = 0; $i < 2; $i++) {
+                            $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $account[$i], $value[$i], $concept[$i], $typeID[$i]);
+                        } 
+                    }
+
+                    if($payroll->payrollType->name == "Planilla de vacaciones"){
+                        $valueTotal = 0;
+                        $value = 0;
+                        $account = '';
+                        $concept = '';
+                        $typeID = 0;
+                        foreach($payrollDetails as $payrollDetail){
+                            foreach($types as $type){
+                                if($type->name == 'Vacaciones'){
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->vacation_bonus, $payroll, $type->name, $payrollDetail->employee_id);
+                                    
+                                    $value += $payrollDetail->vacation_bonus;
+                                    $concept = $type->concept;
+                                    $account = $type->catalogue_id;
+                                    $typeID = $type->type;
+                                }
+            
+                                if($type->name == 'Salario'){
+                                    $conceptSalario = $type->concept.' - '.$payrollDetail->employee->first_name.' '.$payrollDetail->employee->last_name;
+                                    $this->payrollUtil->createIncomeDiscount($payrollDetail->regular_salary, $payroll, $type->name, $payrollDetail->employee_id);
+                                    $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $type->catalogue_id, $payrollDetail->regular_salary, $conceptSalario, $type->type);
+                                }
+                            } 
+
+                            if($forma->value != 'Transferencia bancaria'){
+                                foreach($payroll->payrollPayments as $payrollPayment){
+                                    if($payrollPayment->payment_id == $forma->id){
+                                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $payrollPayment->bankAccount->catalogue_id, $payrollDetail->total_to_pay, $payrollPayment->bankAccount->name, 2);
+                                        $this->payrollUtil->createBankTransaction($entrie->id, $payrollDetail->total_to_pay, $payroll, $payrollPayment, $business_id);
+                                    }
+                                }
+                            }
+
+                            $valueTotal += $payrollDetail->total_to_pay;
+                        } 
+
+                        $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $account, $value, $concept, $typeID);
+                    }
+
+                    
+                    if($forma->value == 'Transferencia bancaria'){
+                        foreach($payroll->payrollPayments as $payrollPayment){
+                            if($payrollPayment->payment_id == $forma->id){
+                                $this->payrollUtil->createAccountingEntriesDetail($entrie->id, $payrollPayment->bankAccount->catalogue_id, $valueTotal, $payrollPayment->bankAccount->name, 2);
+                                $this->payrollUtil->createBankTransaction($entrie->id, $valueTotal, $payroll, $payrollPayment, $business_id);
+                            }
+                        }
+                    }
+                }             
+            }   
         }
     }
 

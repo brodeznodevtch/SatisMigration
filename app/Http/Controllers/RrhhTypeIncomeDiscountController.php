@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessLocation;
+use App\Catalogue;
 use App\RrhhIncomeDiscount;
 use Illuminate\Http\Request;
 use App\RrhhTypeIncomeDiscount;
+use App\RrhhTypeIncomeDiscountLocation;
 use DB;
 use DataTables;
 
@@ -28,8 +31,8 @@ class RrhhTypeIncomeDiscountController extends Controller
         $business_id =  request()->session()->get('user.business_id');
         $data = DB::table('rrhh_type_income_discounts')
         ->select('rrhh_type_income_discounts.*')
-        ->where('business_id', $business_id)
-        ->where('deleted_at', null);
+        ->where('rrhh_type_income_discounts.business_id', $business_id)
+        ->where('rrhh_type_income_discounts.deleted_at', null);
 
         return DataTables::of($data)
         ->addColumn(
@@ -71,7 +74,17 @@ class RrhhTypeIncomeDiscountController extends Controller
         }        
 
         $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
-        return view('rrhh.catalogues.types_income_discounts.create', compact('payrollColumns'));
+        $business_id = request()->session()->get('user.business_id');
+
+        $accounts = Catalogue::with('padre')
+            ->where('business_id', $business_id)
+            ->where('status', 1)
+            ->whereNOTIn('id', [DB::raw("select parent from catalogues")])
+            ->orderBy('code', 'asc')
+            ->get();
+        $locations = BusinessLocation::select("name", "id")->where('business_id', $business_id)->get();
+
+        return view('rrhh.catalogues.types_income_discounts.create', compact('payrollColumns', 'accounts', 'locations'));
     }
 
     /**
@@ -86,15 +99,19 @@ class RrhhTypeIncomeDiscountController extends Controller
         }
 
         $request->validate([
-            'name' => 'required',     
-            'type' => 'required',
-            'payroll_column' => 'required',           
+            'name'           => 'required',     
+            'type'           => 'required',
+            'payroll_column' => 'required',  
+            //'catalogues'     => 'required', 
+            //'locations'      => 'required', 
+            'catalogue_id'   => 'required',
+            'concept'        => 'required',          
         ]);
 
+        
         try {
-            $type = new RrhhTypeIncomeDiscount;
             $input_details = $request->all();
-            $payrollColumns = $type->payrollColumns;
+            $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
             for ($i=0; $i < count($payrollColumns); $i++) { 
                 if($request->payroll_column == $i){
                     $input_details['payroll_column'] = $payrollColumns[$i];
@@ -103,7 +120,17 @@ class RrhhTypeIncomeDiscountController extends Controller
 
             $input_details['business_id'] =  request()->session()->get('user.business_id');
 
-            RrhhTypeIncomeDiscount::create($input_details);
+            $type = RrhhTypeIncomeDiscount::create($input_details);
+
+            // $locations = $request->input('locations');
+            // $catalogues = $request->input('catalogues');
+            // for($i = 0; $i < count($locations); $i++){
+            //     $details['rrhh_type_income_discount_id'] = $type->id;
+            //     $details['business_location_id'] = $locations[$i];
+            //     $details['catalogue_id'] = $catalogues[$i];
+            //     RrhhTypeIncomeDiscountLocation::create($details);
+            // }
+
             $output = [
                 'success' => true,
                 'msg' => __('rrhh.added_successfully')
@@ -143,8 +170,19 @@ class RrhhTypeIncomeDiscountController extends Controller
 
         $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
         $item = RrhhTypeIncomeDiscount::findOrFail($id);
+        $business_id = request()->session()->get('user.business_id');
 
-        return view('rrhh.catalogues.types_income_discounts.edit', compact('payrollColumns', 'item'));
+        $accounts = Catalogue::with('padre')
+            ->where('business_id', $business_id)
+            ->where('status', 1)
+            ->whereNOTIn('id', [DB::raw("select parent from catalogues")])
+            ->orderBy('code', 'asc')
+            ->get();
+        
+    
+        $locations = BusinessLocation::select("name", "id")->where('business_id', $business_id)->get();
+        
+        return view('rrhh.catalogues.types_income_discounts.edit', compact('payrollColumns', 'item', 'accounts', 'locations'));
     }
 
     /**
@@ -162,7 +200,11 @@ class RrhhTypeIncomeDiscountController extends Controller
         $request->validate([
             'name' => 'required',     
             'type' => 'required',
-            'payroll_column' => 'required',           
+            'payroll_column' => 'required',  
+            // 'catalogues'     => 'required', 
+            // 'locations'      => 'required',
+            'catalogue_id'   => 'required', 
+            'concept'        => 'required',         
         ]);
 
         try {
@@ -176,6 +218,16 @@ class RrhhTypeIncomeDiscountController extends Controller
 
             $item = RrhhTypeIncomeDiscount::findOrFail($id);
             $item->update($input_details);
+
+            // $locations = $request->input('locations');
+            // $catalogues = $request->input('catalogues');
+            // for($i = 0; $i < count($locations); $i++){
+            //     $details['rrhh_type_income_discount_id'] = $item->id;
+            //     $details['business_location_id'] = $locations[$i];
+            //     $details['catalogue_id'] = $catalogues[$i];
+            //     RrhhTypeIncomeDiscountLocation::create($details);
+            // }
+
             $output = [
                 'success' => true,
                 'msg' => __('rrhh.updated_successfully')
@@ -184,7 +236,7 @@ class RrhhTypeIncomeDiscountController extends Controller
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => __('rrhh.error')
             ];
         }
         return $output;
@@ -204,8 +256,7 @@ class RrhhTypeIncomeDiscountController extends Controller
         if (request()->ajax()) {
 
             try {
-                $business_id = request()->session()->get('user.business_id');
-                $count = RrhhIncomeDiscount::where('rrhh_type_income_discount_id', $id)->where('business_id', $business_id)->count();
+                $count = RrhhIncomeDiscount::where('rrhh_type_income_discount_id', $id)->count();
 
                 if ($count > 0) {
                     $output = [
@@ -225,10 +276,30 @@ class RrhhTypeIncomeDiscountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => $e->getMessage()
                 ];
             }
             return $output;
         }
+    }
+
+    public function getAccountingAccount()
+    {
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+
+            $business_id = request()->session()->get('user.business_id');
+            
+                $cities = City::where('business_id', $business_id)
+                ->where('name', 'LIKE', '%'.$term.'%')
+                ->select('id','name as text')
+                ->get();
+    
+                return json_encode($cities);
+            
+        }        
     }
 }

@@ -450,5 +450,11 @@ return[
     'quotas_applied' => 'Quotas applied',
     'salarial_constances' => 'Salarial constances',
     'all_salarial_constances' => 'All salarial constances',
-    'message_salarial_constances' => 'There must be an active salary certificate to be able to download it from the employee section, otherwise the respective option will not be displayed.'
+    'message_salarial_constances' => 'There must be an active salary certificate to be able to download it from the employee section, otherwise the respective option will not be displayed.',
+    'accounting_account' => 'Accounting account',
+    'account_type' => 'Account type',
+    'concept' => 'Concept',
+    'debit' => 'Debe',
+    'credit' => 'Haber',
+    'message_accounting' => 'You must select the accounting account that will be affected when paying the return.'
 ];

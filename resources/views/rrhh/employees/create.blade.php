@@ -271,7 +271,12 @@
                                     ]) !!}
                                 </div>
                             </div>
-
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    {!! Form::label("location", __("business.location")) !!} <span class="text-danger">*</span>
+                                    {!! Form::select("location_id", $locations, null, ["class" => "form-control form-control-sm select2", 'placeholder' => __('business.location'), "required"]) !!}
+                                </div>
+                            </div>
                             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label>@lang('rrhh.department')</label> <span class="text-danger">*</span>
@@ -284,7 +289,6 @@
                                     ]) !!}
                                 </div>
                             </div>
-
                             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label>@lang('rrhh.position')</label> <span class="text-danger">*</span>

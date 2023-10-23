@@ -99,7 +99,51 @@
 			</select>
 		</div>
 	</div>
-
+	<hr>
+	<div class="col-md-12">
+		<table class="table">
+			<tbody>
+				@foreach ($payments as $payment)
+					<tr>
+						<th colspan="2" class="text-center">
+							{{ $payment->value }}
+							<input type="hidden" name="payment[]" id="payment" value="{{ $payment->value }}">
+						</th>
+					</tr>
+					<tr>
+						@if ($payment->value == 'Transferencia bancaria')
+							<td>
+								<label for="bank-account">@lang('accounting.bank_account')</label>
+								<select name="bank-account" id="bank-account" class="form-control select2" style="width: 100%;">
+									@foreach($bank_accounts_ddl as $item)
+									<option value="{{ $item->id }}">{{ $item->name }}</option>
+									@endforeach
+								</select>
+							</td>
+							<td>
+								<label for="reference">@lang('accounting.reference')</label>
+								<input type="text" id="reference" name="reference" class="form-control" placeholder="@lang('accounting.reference')..." required>
+							</td>
+						@else
+							<td>
+								<label>@lang('accounting.checkbook')</label>
+								<select name="bank_checkbooks" id="bank_checkbooks" class="form-control select2" style="width: 100%">
+									<option value="0" disabled selected>@lang('messages.please_select')</option>
+									@foreach($checkbooks as $item)
+									<option value="{{ $item->id }}">{{ $item->name }}</option>
+									@endforeach
+								</select>
+							</td>
+							<td>
+								<label>@lang('accounting.check_number')</label>
+								<input type="text" name="check-number" id="check-number" class="form-control" required readonly>
+							</td>
+						@endif
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>
   </div>
 </div>
 <div class="modal-footer">
@@ -111,3 +155,14 @@
 </div>
 {!! Form::close() !!}
 <script src="{{ asset('js/payroll/payroll.js?v=' . $asset_v) }}"></script>
+<script>
+	$("#bank_checkbooks").change(function(){
+		id = $("#bank_checkbooks").val();
+		if (id != null) {
+			var route = "/banks/getCheckNumber/"+id;
+			$.get(route, function(res){
+				$("#check-number").val(res.number);
+			});
+		}
+	});
+</script>

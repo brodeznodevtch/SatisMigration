@@ -40,6 +40,30 @@
                     </select>
                 </div>
             </div>
+            <hr>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>{{ __('role.accounting') }} @show_tooltip(__('rrhh.message_accounting'))</h4> 
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>@lang('accounting.description')</label> <span class="text-danger">*</span>
+                    <input type="text" name="concept" id="concept" class="form-control" placeholder="@lang('accounting.description')" value={{ $item->concept }}>
+                </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>@lang('rrhh.accounting_account')</label> <span class="text-danger">*</span>
+                    <select id="catalogue_id" name="catalogue_id" class="form-control select2" style="width: 100%;">
+                        @foreach($accounts as $account)
+                        @if ($account->id == $item->catalogue_id)
+                        <option value="{{ $account->id }}" checked>{{ $account->code }} {{ $account->name }}=>{{$account->padre->name}}</option>
+                        @else
+                        <option value="{{ $account->id }}">{{ $account->code }} {{ $account->name }}=>{{$account->padre->name}}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
     </form>
 </div>

@@ -1702,7 +1702,8 @@ class ReporterController extends Controller
 		
 		$date_from = Carbon::parse($request->input('from_result'));
 		$date_to = Carbon::parse($request->input('to_result'));
-		$date_initial_year = Carbon::parse($request->input('from_result'))->startOfYear();
+		//$date_initial_year = Carbon::parse($request->input('from_result'))->startOfYear();
+		$date_initial_year = $date_from; //Delimitando el estado de resultado para las fechas que se seleccionan en los input
 		$size = $request->input('size_result');
 
 

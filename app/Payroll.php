@@ -44,6 +44,10 @@ class Payroll extends Model
         return $this->hasMany('App\PayrollDetail');
     }
 
+    public function payrollPayments(){
+        return $this->hasMany('App\PayrollPayment');
+    }
+
     public function business(){
         return $this->belongsTo('App\Business');
     }

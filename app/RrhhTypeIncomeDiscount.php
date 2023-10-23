@@ -13,6 +13,8 @@ class RrhhTypeIncomeDiscount extends Model
         'type', 
         'name', 
         'payroll_column', 
+        'concept',
+        'catalogue_id',
         'status', 
         'business_id', 
         'deleted_at'
@@ -22,16 +24,21 @@ class RrhhTypeIncomeDiscount extends Model
         return $this->hasMany('App\RrhhIncomeDiscount');
     }
 
+    public function rrhhTypeIncomeDiscountLocations() {
+        return $this->hasMany('App\RrhhTypeIncomeDiscountLocation');
+    }
+
     public static $payrollColumns = [
+        'Salario',
         'Horas extras',
         'Comisiones',
         'Otros ingresos',
         'Otras deducciones',
-        //'Aguinaldo',
-        //'Vacaciones',
+        'Aguinaldo',
+        'Vacaciones',
         'Bonificaciones',
-        // 'ISSS',
-        // 'AFP',
-        // 'Renta',
+        'ISSS',
+        'AFP',
+        'Renta',
     ];
 }
