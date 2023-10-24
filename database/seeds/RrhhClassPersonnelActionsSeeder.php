@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\RrhhClassPersonnelAction;
 use Illuminate\Database\Seeder;
-use App\RrhhClassPersonnelAction;
 
 class RrhhClassPersonnelActionsSeeder extends Seeder
 {

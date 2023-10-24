@@ -19,8 +19,8 @@ return [
 
     'email' => 'thewebfosters@gmail.com',
 
-    'app_version' => "2.11.4",
+    'app_version' => '2.11.4',
     'app_envato_personal_token' => 'ftXs1UtOgdtJFYo7ZcHHv46KH3PgLgch',
     'app_envato_username' => 'thewebfosters',
-    'app_envato_product_code' => 21216332
+    'app_envato_product_code' => 21216332,
 ];

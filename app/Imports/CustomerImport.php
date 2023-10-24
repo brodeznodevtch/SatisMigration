@@ -2,9 +2,9 @@
 
 namespace App\Imports;
 
-use App\Customer;
-use Maatwebsite\Excel\Concerns\ToModel;
+use App\Models\Customer;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
@@ -13,19 +13,20 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
     use Importable;
 
     protected $business_id = null;
+
     protected $user_id = null;
+
     private $row_no = 2;
 
-    public function __construct($business_id, $user_id) {
+    public function __construct($business_id, $user_id)
+    {
         $this->business_id = $business_id;
         $this->user_id = $user_id;
     }
 
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
 

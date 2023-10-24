@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\FollowQuote::class, function (Faker $faker) {
+$factory->define(App\Models\FollowQuote::class, function (Faker $faker) {
     return [
         //
     ];

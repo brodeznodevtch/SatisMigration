@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
+use App\Models\Business;
 use App\Exports\AnnualPayrollSummaryExport;
-use Illuminate\Http\Request;
-use App\Payroll;
+use App\Models\Payroll;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
-use DB;
 use DataTables;
+use DB;
 use Excel;
+use Illuminate\Http\Request;
 
 class PayrollReportController extends Controller
 {
     protected $moduleUtil;
+
     protected $employeeUtil;
 
     /**
      * Constructor
      *
-     * @param ModuleUtil $moduleUtil
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil, EmployeeUtil $employeeUtil)
@@ -29,22 +29,23 @@ class PayrollReportController extends Controller
         $this->employeeUtil = $employeeUtil;
     }
 
-    public function annualSummary(){
+    public function annualSummary()
+    {
         if (! auth()->user()->can('payroll.report-annual-summary')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
 
-        $year= Payroll::select('id', 'year')->distinct('year')->get();
+        $year = Payroll::select('id', 'year')->distinct('year')->get();
         $years = $year->unique('year');
 
-        if(request()->ajax()){
+        if (request()->ajax()) {
             // Set maximum php execution time
             if (request()->get('length') == -1) {
                 ini_set('max_execution_time', 0);
             }
-            
+
             // Parameters
             $params = [
                 // Filters
@@ -54,44 +55,45 @@ class PayrollReportController extends Controller
                 'start_record' => request()->get('start'),
                 'page_size' => request()->get('length'),
                 'search' => request()->get('search'),
-                'order' => request()->get('order')
+                'order' => request()->get('order'),
             ];
 
             // Payrolls
             $payrolls = collect($this->getAnnualSummaryData($params));
 
             $datatable = DataTables::of($payrolls['data'])
-                ->addColumn('period', function ($row) { 
-                    if($row->start_date != null){
+                ->addColumn('period', function ($row) {
+                    if ($row->start_date != null) {
                         return $this->moduleUtil->format_date($row->start_date).' - '.$this->moduleUtil->format_date($row->end_date);
-                    }else{
+                    } else {
                         return 'Fecha de ingreso - '.$this->moduleUtil->format_date($row->end_date);
                     }
                 })->editColumn('status', function ($row) {
                     $html = '';
                     if ($row->status == 'Aprobada') {
-                        $html = '<span class="badge" style="background: #449D44">' . $row->status . '</span>';
+                        $html = '<span class="badge" style="background: #449D44">'.$row->status.'</span>';
                     }
                     if ($row->status == 'Calculada') {
-                        $html = '<span class="badge" style="background: #00A6DC">' . $row->status . '</span>';
+                        $html = '<span class="badge" style="background: #00A6DC">'.$row->status.'</span>';
                     }
                     if ($row->status == 'Pagada') {
-                        $html = '<span class="badge" style="background: #367FA9">' . $row->status . '</span>';
+                        $html = '<span class="badge" style="background: #367FA9">'.$row->status.'</span>';
                     }
                     if ($row->status == 'Iniciada') {
-                        $html = '<span class="badge">' . $row->status . '</span>';
+                        $html = '<span class="badge">'.$row->status.'</span>';
                     }
-                    return $html;             
+
+                    return $html;
                 })->editColumn('isr', function ($row) {
-                    if($row->isr_id != null){
+                    if ($row->isr_id != null) {
                         return $row->isr;
-                    }              
+                    }
                 })->editColumn('payment_period', function ($row) {
-                    if($row->payment_period_id != null){
+                    if ($row->payment_period_id != null) {
                         return $row->payment_period;
-                    }else{
-                        return "N/A";
-                    }                
+                    } else {
+                        return 'N/A';
+                    }
                 });
 
             $datatable = $datatable->rawColumns(['payrollType', 'payrollName', 'payment_period', 'period', 'isr', 'status'])
@@ -99,7 +101,7 @@ class PayrollReportController extends Controller
                 ->setFilteredRecords($payrolls['count'])
                 ->skipPaging()
                 ->toJson();
-            
+
             return $datatable;
         }
 
@@ -108,7 +110,7 @@ class PayrollReportController extends Controller
 
     /**
      * Get annual summary data.
-     * 
+     *
      * @param  array  $params
      * @return array
      */
@@ -134,11 +136,11 @@ class PayrollReportController extends Controller
         // Count payrolls
         $count = DB::select(
             'CALL count_all_payroll(?, ?, ?)',
-            array(
+            [
                 $business_id,
                 $year,
-                $search
-            )
+                $search,
+            ]
         );
 
         // Payrolls
@@ -149,17 +151,17 @@ class PayrollReportController extends Controller
             $start_record,
             $page_size,
             $order[0]['column'],
-            $order[0]['dir']
+            $order[0]['dir'],
         ];
 
         $payrolls = DB::select(
             'CALL get_all_payrolls(?, ?, ?, ?, ?, ?, ?)',
             $parameters
         );
-        
+
         $result = [
             'data' => $payrolls,
-            'count' => $count[0]->count
+            'count' => $count[0]->count,
         ];
 
         return $result;
@@ -181,14 +183,14 @@ class PayrollReportController extends Controller
             } else {
                 $year = 0;
             }
-            
-            if($year != 0){
-                $fileName = 'Resumen anual - ' . $year . '.xlsx';
+
+            if ($year != 0) {
+                $fileName = 'Resumen anual - '.$year.'.xlsx';
 
                 // Payrolls
                 $parameters = [
                     $business_id,
-                    $year
+                    $year,
                 ];
 
                 $summaries = DB::select(
@@ -200,8 +202,8 @@ class PayrollReportController extends Controller
                     new AnnualPayrollSummaryExport($summaries, $business, $year, $this->moduleUtil),
                     $fileName
                 );
-            }else{
-                $year= Payroll::select('id', 'year')->distinct('year')->get();
+            } else {
+                $year = Payroll::select('id', 'year')->distinct('year')->get();
                 $years = $year->unique('year');
 
                 // Definir el nombre del archivo zip y crear una nueva instancia de ZipArchive
@@ -209,17 +211,17 @@ class PayrollReportController extends Controller
                 $zip = new \ZipArchive();
 
                 //Crear archivo zip y abrirlo
-                \Storage::disk('local')->put($zip_file,  $zip);
-                $zip->open(public_path('uploads/'.$zip_file),\ZipArchive::CREATE);
-                    
+                \Storage::disk('local')->put($zip_file, $zip);
+                $zip->open(public_path('uploads/'.$zip_file), \ZipArchive::CREATE);
+
                 // Recorrer el array con un foreach
                 foreach ($years as $year) {
-                    $fileName = 'Resumen anual - ' . $year->year . '.xlsx';
-                    
+                    $fileName = 'Resumen anual - '.$year->year.'.xlsx';
+
                     // Payrolls
                     $parameters = [
                         $business_id,
-                        $year->year
+                        $year->year,
                     ];
 
                     $summaries = DB::select(
@@ -233,7 +235,7 @@ class PayrollReportController extends Controller
                     );
 
                     // Añadir el archivo excel al archivo zip
-                    $zip->addFile(public_path('uploads/'.$fileName), $fileName);                
+                    $zip->addFile(public_path('uploads/'.$fileName), $fileName);
                 }
 
                 // Cerrar el archivo zip
@@ -246,14 +248,12 @@ class PayrollReportController extends Controller
                 return $response;
             }
 
-            
-        
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 

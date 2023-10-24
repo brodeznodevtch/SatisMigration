@@ -1,4 +1,5 @@
 <?php
+
 return [
     'retention' => 'Retención',
     'retentions' => 'Retenciones',

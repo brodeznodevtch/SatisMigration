@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Apportionment;
-use App\ApportionmentHasImportExpense;
-use App\ApportionmentHasTransaction;
-use App\Business;
-use App\Kardex;
-use App\PurchaseLine;
-use App\Transaction;
-use App\TransactionHasImportExpense;
-use App\TransactionSellLine;
+use App\Models\Apportionment;
+use App\Models\ApportionmentHasImportExpense;
+use App\Models\ApportionmentHasTransaction;
+use App\Models\Business;
+use App\Models\Kardex;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\TransactionHasImportExpense;
+use App\Models\TransactionSellLine;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
@@ -28,7 +28,7 @@ class ApportionmentController extends Controller
     /**
      * Constructor
      *
-     * @param  \App\TransactionUtil $transactionUtil
+     * @param  \App\TransactionUtil  $transactionUtil
      * @param  \App\TaxUtil  $taxUtil
      * @param  \App\ProductUtil  $productUtil
      * @return void
@@ -48,12 +48,12 @@ class ApportionmentController extends Controller
     public function index()
     {
         if (! auth()->user()->can('apportionment.view') && ! auth()->user()->can('apportionment.create')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = $business_id = request()->session()->get('user.business_id');
-            
+
             $apportionments = Apportionment::where('business_id', $business_id)
                 ->select('name', 'reference', 'is_finished', 'apportionment_date', 'id');
 
@@ -61,8 +61,8 @@ class ApportionmentController extends Controller
                 ->addColumn(
                     'action',
                     '<div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' .
-                            __("messages.actions") .
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">'.
+                            __('messages.actions').
                             '&nbsp;<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -131,7 +131,6 @@ class ApportionmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -159,7 +158,7 @@ class ApportionmentController extends Controller
             if ($request->get('submit_type') == 'save_and_process') {
                 // Edit avarage cost
                 $enable_editing_avg_cost = $request->session()->get('business.enable_editing_avg_cost_from_purchase');
-    
+
                 // Calculate average cost
                 if ($enable_editing_avg_cost == 1) {
                     $this->calculateAvgCost($apportionment->id);
@@ -175,17 +174,17 @@ class ApportionmentController extends Controller
             $output = [
                 'success' => true,
                 'data' => $apportionment,
-                'msg' => __('apportionment.added_success')
+                'msg' => __('apportionment.added_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -218,13 +217,13 @@ class ApportionmentController extends Controller
             ->where('apportionment_has_transactions.apportionment_id', $id);
 
         $purchases = $transactions->select(
-                't.ref_no',
-                'c.name',
-                DB::raw("SUM(IF(pl.initial_purchase_price IS NULL, pl.purchase_price * pl.quantity, pl.initial_purchase_price * pl.quantity)) as total"),
-                't.id',
-                'apportionment_has_transactions.id as aht_id',
-                'dt.document_name'
-            )
+            't.ref_no',
+            'c.name',
+            DB::raw('SUM(IF(pl.initial_purchase_price IS NULL, pl.purchase_price * pl.quantity, pl.initial_purchase_price * pl.quantity)) as total'),
+            't.id',
+            'apportionment_has_transactions.id as aht_id',
+            'dt.document_name'
+        )
             ->groupBy('t.id')
             ->get();
 
@@ -275,14 +274,14 @@ class ApportionmentController extends Controller
                     ->join('purchase_lines as pl', 'pl.transaction_id', 'transactions.id')
                     ->where('transactions.id', $line->transaction_id)
                     ->select(
-                        DB::raw("(SELECT SUM(initial_purchase_price * quantity) FROM purchase_lines WHERE transaction_id = transactions.id) as total_purchase"),
-                        DB::raw("(SELECT SUM(amount) FROM transaction_has_import_expenses WHERE transaction_id = transactions.id) as total_import_expenses")
+                        DB::raw('(SELECT SUM(initial_purchase_price * quantity) FROM purchase_lines WHERE transaction_id = transactions.id) as total_purchase'),
+                        DB::raw('(SELECT SUM(amount) FROM transaction_has_import_expenses WHERE transaction_id = transactions.id) as total_import_expenses')
                     )
                     ->groupBy('transactions.id')
                     ->first();
-    
+
                 $all_lines[] = $line;
-                
+
                 $purchases_p[$line->id] = $purchase;
 
                 $product_vat = $this->taxUtil->getTaxes($line->tax_id);
@@ -304,7 +303,7 @@ class ApportionmentController extends Controller
             ->whereIn('transaction_has_import_expenses.transaction_id', $purchase_ids)
             ->select(
                 'ie.name',
-                DB::raw("SUM(transaction_has_import_expenses.amount) as amount")
+                DB::raw('SUM(transaction_has_import_expenses.amount) as amount')
             )
             ->groupBy('transaction_has_import_expenses.import_expense_id')
             ->get();
@@ -349,12 +348,12 @@ class ApportionmentController extends Controller
             ->where('apportionment_has_transactions.apportionment_id', $id);
 
         $purchases = $transactions->select(
-                't.ref_no',
-                'c.name',
-                DB::raw("SUM(IF(pl.initial_purchase_price IS NULL, pl.purchase_price * pl.quantity, pl.initial_purchase_price * pl.quantity)) as total"),
-                't.id',
-                'apportionment_has_transactions.id as aht_id'
-            )
+            't.ref_no',
+            'c.name',
+            DB::raw('SUM(IF(pl.initial_purchase_price IS NULL, pl.purchase_price * pl.quantity, pl.initial_purchase_price * pl.quantity)) as total'),
+            't.id',
+            'apportionment_has_transactions.id as aht_id'
+        )
             ->groupBy('t.id')
             ->get();
 
@@ -384,14 +383,14 @@ class ApportionmentController extends Controller
                     ->join('purchase_lines as pl', 'pl.transaction_id', 'transactions.id')
                     ->where('transactions.id', $line->transaction_id)
                     ->select(
-                        DB::raw("(SELECT SUM(initial_purchase_price * quantity) FROM purchase_lines WHERE transaction_id = transactions.id) as total_purchase"),
-                        DB::raw("(SELECT SUM(amount) FROM transaction_has_import_expenses WHERE transaction_id = transactions.id) as total_import_expenses")
+                        DB::raw('(SELECT SUM(initial_purchase_price * quantity) FROM purchase_lines WHERE transaction_id = transactions.id) as total_purchase'),
+                        DB::raw('(SELECT SUM(amount) FROM transaction_has_import_expenses WHERE transaction_id = transactions.id) as total_import_expenses')
                     )
                     ->groupBy('transactions.id')
                     ->first();
-    
+
                 $product_vat = $this->taxUtil->getTaxes($line->tax_id);
-    
+
                 $lines[] = $line;
                 $purchases_p[$line->id] = $purchase;
                 $products_vat[$line->id] = $product_vat;
@@ -422,8 +421,7 @@ class ApportionmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -451,7 +449,7 @@ class ApportionmentController extends Controller
             if ($request->get('submit_type') == 'save_and_process') {
                 // Edit avarage cost
                 $enable_editing_avg_cost = $request->session()->get('business.enable_editing_avg_cost_from_purchase');
-    
+
                 // Calculate average cost
                 if ($enable_editing_avg_cost == 1) {
                     $this->calculateAvgCost($apportionment->id);
@@ -467,17 +465,17 @@ class ApportionmentController extends Controller
             $output = [
                 'success' => true,
                 'data' => $apportionment,
-                'msg' => __('apportionment.updated_success')
+                'msg' => __('apportionment.updated_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-        
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -487,7 +485,7 @@ class ApportionmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -505,15 +503,15 @@ class ApportionmentController extends Controller
 
                     // Update purchases
                     $transaction_ids = ApportionmentHasTransaction::where('apportionment_id', $id)->pluck('transaction_id');
-    
+
                     // Delete import expenses related to apportionment
                     DB::table('apportionment_has_import_expenses')->where('apportionment_id', $id)->delete();
-    
+
                     // Delete transactions related to apportionment
                     DB::table('apportionment_has_transactions')->where('apportionment_id', $id)->delete();
-    
+
                     $apportionment->delete();
-    
+
                     if (! empty($transaction_ids)) {
                         foreach ($transaction_ids as $transaction_id) {
                             // Update purchase lines
@@ -532,34 +530,34 @@ class ApportionmentController extends Controller
 
                             // Update import data
                             $this->transactionUtil->updateImportData($transaction_id);
-    
+
                             // Update transaction payment status
                             $this->transactionUtil->updatePaymentStatus($transaction_id);
                         }
                     }
-    
+
                     $output = [
                         'success' => true,
-                        'msg' => __('apportionment.deleted_success')
+                        'msg' => __('apportionment.deleted_success'),
                     ];
 
                     DB::commit();
 
                 } catch (\Exception $e) {
                     DB::rollBack();
-    
-                    \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+                    \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                     $output = [
                         'success' => false,
-                        'msg' => __('messages.something_went_wrong')
+                        'msg' => __('messages.something_went_wrong'),
                     ];
                 }
 
             } else {
                 $output = [
                     'success' => false,
-                    'msg' => __('apportionment.deleted_error')
+                    'msg' => __('apportionment.deleted_error'),
                 ];
             }
 
@@ -636,12 +634,12 @@ class ApportionmentController extends Controller
 
     /**
      * Save lines of import expenses, purchases and products.
-     * 
-     * @param  \App\Apportionment  $apportionment
-     * @param  \Illuminate\Http\Request  $request
+     *
+     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
-    public function save($apportionment, Request $request) {
+    public function save($apportionment, Request $request)
+    {
         // Save import expenses
         $expenses = $request->input('import_expenses');
         $import_expenses = [];
@@ -650,7 +648,7 @@ class ApportionmentController extends Controller
             foreach ($expenses as $expense) {
                 $new_expense = [
                     'amount' => $this->productUtil->num_uf($expense['import_expense_amount']),
-                    'import_expense_id' => $expense['import_expense_id']
+                    'import_expense_id' => $expense['import_expense_id'],
                 ];
 
                 $import_expenses[] = $new_expense;
@@ -666,7 +664,7 @@ class ApportionmentController extends Controller
         if (! empty($purchases)) {
             foreach ($purchases as $purchase) {
                 $new_purchase = [
-                    'transaction_id' => $purchase['transaction_id']
+                    'transaction_id' => $purchase['transaction_id'],
                 ];
 
                 $transactions[] = $new_purchase;
@@ -708,12 +706,12 @@ class ApportionmentController extends Controller
 
     /**
      * Update lines of import expenses, purchases and products.
-     * 
-     * @param  \App\Apportionment  $apportionment
-     * @param  \Illuminate\Http\Request  $request
+     *
+     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
-    public function updateApportionment($apportionment, Request $request) {
+    public function updateApportionment($apportionment, Request $request)
+    {
         // Save import expenses
         $expenses = $request->input('import_expenses');
 
@@ -732,7 +730,7 @@ class ApportionmentController extends Controller
                     $new_expense = ApportionmentHasImportExpense::create([
                         'amount' => $this->productUtil->num_uf($expense['import_expense_amount']),
                         'import_expense_id' => $expense['import_expense_id'],
-                        'apportionment_id' => $apportionment->id
+                        'apportionment_id' => $apportionment->id,
                     ]);
 
                     $saved_ids[] = $new_expense->id;
@@ -767,7 +765,7 @@ class ApportionmentController extends Controller
                 } else {
                     $new_purchase = ApportionmentHasTransaction::create([
                         'transaction_id' => $purchase['transaction_id'],
-                        'apportionment_id' => $apportionment->id
+                        'apportionment_id' => $apportionment->id,
                     ]);
 
                     $saved_ids[] = $new_purchase->id;
@@ -818,7 +816,7 @@ class ApportionmentController extends Controller
 
     /**
      * Calculate the average cost of all prorated products.
-     * 
+     *
      * @param  int  $apportionment_id
      * @return void
      */
@@ -838,7 +836,7 @@ class ApportionmentController extends Controller
             $hour = substr($transaction_date, 11, 18);
 
             if ($hour == '00:00:00' || $hour == '') {
-                $transaction_date = substr($transaction_date, 0, 10) . ' ' . substr($purchase->transaction->created_at, 11, 18);
+                $transaction_date = substr($transaction_date, 0, 10).' '.substr($purchase->transaction->created_at, 11, 18);
             }
 
             foreach ($purchase_lines as $purchase_line) {
@@ -856,7 +854,7 @@ class ApportionmentController extends Controller
                 $additional_data = [
                     'purchase_line_id' => $purchase_line->id,
                     'transaction_date' => $transaction_date,
-                    'flag_line' => $flag_line
+                    'flag_line' => $flag_line,
                 ];
 
                 $this->productUtil->updateAverageCost(

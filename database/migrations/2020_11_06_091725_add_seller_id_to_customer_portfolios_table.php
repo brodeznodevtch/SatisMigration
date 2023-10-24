@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddSellerIdToCustomerPortfoliosTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddSellerIdToCustomerPortfoliosTable extends Migration
      */
     public function up()
     {
-        Schema::table('customer_portfolios', function(Blueprint $table){
+        Schema::table('customer_portfolios', function (Blueprint $table) {
             $table->integer('seller_id')->unsigned()->nullable()->after('description');
             $table->foreign('seller_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
         });

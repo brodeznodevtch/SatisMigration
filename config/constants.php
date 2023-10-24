@@ -1,8 +1,8 @@
 <?php
 
 return [
-    
-     /*
+
+    /*
     |--------------------------------------------------------------------------
     | App Constants
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     ],
 
     'langs_rtl' => ['ar'],
-    
+
     'document_size_limit' => '12000000', //in Bytes,
 
     'asset_version' => 31,
@@ -30,13 +30,13 @@ return [
     'disable_expiry' => false,
 
     'disable_purchase_in_other_currency' => true,
-    
+
     'iraqi_selling_price_adjustment' => false,
 
     'currency_precision' => 2,
 
     'product_img_path' => 'img',
-    
+
     'employee_img_path' => 'img/employee',
 
     'image_size_limit' => '500000', //in Bytes

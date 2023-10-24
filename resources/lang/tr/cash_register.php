@@ -30,7 +30,7 @@ return [
     'close_register' => 'Kasayı Kapat',
     'total_card_slips' => 'Toplam Kart Slipleri',
     'total_cheques' => 'Toplam Çekler',
-    'closing_note' =>'Kapanış Notu',
+    'closing_note' => 'Kapanış Notu',
     'close_success' => 'Kasa başarıyla kapatıldı',
     'open' => 'Aç',
     'close' => 'Kapat',

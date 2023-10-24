@@ -5,7 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ExceptionOccured extends Mailable
 {
@@ -36,6 +35,6 @@ class ExceptionOccured extends Mailable
     public function build()
     {
         return $this->view('emails.exception')
-                ->with('content', $this->content);
+            ->with('content', $this->content);
     }
 }

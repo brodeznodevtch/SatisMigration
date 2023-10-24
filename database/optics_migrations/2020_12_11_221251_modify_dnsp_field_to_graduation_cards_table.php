@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyDnspFieldToGraduationCardsTable extends Migration
 {
@@ -14,8 +14,8 @@ class ModifyDnspFieldToGraduationCardsTable extends Migration
     public function up()
     {
         Schema::table('graduation_cards', function (Blueprint $table) {
-            DB::statement("ALTER TABLE graduation_cards MODIFY COLUMN dnsp_os VARCHAR(191)");
-            DB::statement("ALTER TABLE graduation_cards MODIFY COLUMN dnsp_od VARCHAR(191)");
+            DB::statement('ALTER TABLE graduation_cards MODIFY COLUMN dnsp_os VARCHAR(191)');
+            DB::statement('ALTER TABLE graduation_cards MODIFY COLUMN dnsp_od VARCHAR(191)');
         });
     }
 

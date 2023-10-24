@@ -4,19 +4,21 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class PaymentNoteReportExport implements FromView, WithEvents, WithTitle
 {
     private $payments;
+
     private $size;
+
     private $business;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $payments
      * @param  int  $size
      * @param  \App\Business  $business
@@ -24,37 +26,33 @@ class PaymentNoteReportExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($payments, $size, $business)
     {
-    	$this->payments = $payments;
+        $this->payments = $payments;
         $this->size = $size;
         $this->business = $business;
     }
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.payment_note_report');
+        return __('report.payment_note_report');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:H15000', 'Calibri');
-    			$event->sheet->setFontSize('A1:H15000', 10);
+                $event->sheet->setFontFamily('A1:H15000', 'Calibri');
+                $event->sheet->setFontSize('A1:H15000', 10);
 
-    			$event->sheet->mergeCells('A1:H1');
-    			$event->sheet->mergeCells('A2:H2');
+                $event->sheet->mergeCells('A1:H1');
+                $event->sheet->mergeCells('A2:H2');
 
                 $event->sheet->horizontalAlign('A1:H2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet->horizontalAlign('A4:H4', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -76,15 +74,13 @@ class PaymentNoteReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.payment_note_report_excel', [
-    		'payments' => $this->payments,
-    		'size' => $this->size,
-    		'business' => $this->business,
+        return view('reports.payment_note_report_excel', [
+            'payments' => $this->payments,
+            'size' => $this->size,
+            'business' => $this->business,
         ]);
     }
 }

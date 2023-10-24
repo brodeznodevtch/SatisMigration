@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-use App\Customer;
-use App\CustomerVehicle;
+use App\Models\Brands;
+use App\Models\Customer;
+use App\Models\CustomerVehicle;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
@@ -30,12 +30,12 @@ class CustomerVehicleController extends Controller
         if ($zip_loaded === false) {
             $output = [
                 'success' => 0,
-                'msg' => __('messages.install_enable_zip')
+                'msg' => __('messages.install_enable_zip'),
             ];
 
             return view('customer.import_vehicles')->with([
                 'notification' => $output,
-                'errors' => $errors
+                'errors' => $errors,
             ]);
 
         } else {
@@ -86,7 +86,7 @@ class CustomerVehicleController extends Controller
                     if (count($value) != 12) {
                         $error_line = [
                             'row' => 'N/A',
-                            'msg' => __('purchase.number_of_columns_mismatch') . ' (' . count($value) . ')'
+                            'msg' => __('purchase.number_of_columns_mismatch').' ('.count($value).')',
                         ];
 
                         array_push($error_msg, $error_line);
@@ -120,7 +120,7 @@ class CustomerVehicleController extends Controller
                         'responsible' => $responsible,
                         'engine_number' => $engine_number,
                         'vin_chassis' => $vin_chassis,
-                        'mi_km' => $mi_km
+                        'mi_km' => $mi_km,
                     ];
 
                     // COLUMN A, B AND L
@@ -129,7 +129,7 @@ class CustomerVehicleController extends Controller
                     if (empty($dni) && empty($nit) && empty($id)) {
                         $error_line = [
                             'row' => $row_no,
-                            'msg' => __('customer.dni_nit_empty')
+                            'msg' => __('customer.dni_nit_empty'),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -167,7 +167,7 @@ class CustomerVehicleController extends Controller
                     if (is_null($vehicle['customer_id'])) {
                         $error_line = [
                             'row' => $row_no,
-                            'msg' => __('customer.customer_does_not_exist')
+                            'msg' => __('customer.customer_does_not_exist'),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -179,7 +179,7 @@ class CustomerVehicleController extends Controller
                     if (empty($license_plate)) {
                         $error_line = [
                             'row' => $row_no,
-                            'msg' => __('customer.license_plate_empty')
+                            'msg' => __('customer.license_plate_empty'),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -195,9 +195,9 @@ class CustomerVehicleController extends Controller
                         if ($year <= 0) {
                             $error_line = [
                                 'row' => $row_no,
-                                'msg' => __('customer.year_greater_equal_zero')
+                                'msg' => __('customer.year_greater_equal_zero'),
                             ];
-    
+
                             array_push($error_msg, $error_line);
 
                         } else {
@@ -211,7 +211,7 @@ class CustomerVehicleController extends Controller
 
             $status = [
                 'success' => 1,
-                'msg' => __('customer.successful_verified_file')
+                'msg' => __('customer.successful_verified_file'),
             ];
 
         } catch (\Exception $e) {
@@ -219,16 +219,16 @@ class CustomerVehicleController extends Controller
 
             $error_line = [
                 'row' => 'N/A',
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
 
             array_push($error_msg, $error_line);
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $status = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
@@ -281,7 +281,7 @@ class CustomerVehicleController extends Controller
 
                         $vehicle['brand_id'] = $brand->id;
                     }
-                    
+
                     CustomerVehicle::create($vehicle);
                 }
             }
@@ -290,17 +290,17 @@ class CustomerVehicleController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('customer.vehicles_add_success')
+                'msg' => __('customer.vehicles_add_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 

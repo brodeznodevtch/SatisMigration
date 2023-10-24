@@ -1,10 +1,10 @@
 <?php
 
-use App\DocumentCorrelative;
-use App\Transaction;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\DocumentCorrelative;
+use App\Models\Transaction;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddDocumentCorrelativeIdColumnToTransactionsTable extends Migration
 {
@@ -17,7 +17,7 @@ class AddDocumentCorrelativeIdColumnToTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->unsignedInteger('document_correlative_id')->nullable()->after('document_types_id');
-            $table->foreign("document_correlative_id")->references("id")->on("document_correlatives");
+            $table->foreign('document_correlative_id')->references('id')->on('document_correlatives');
         });
 
         $sales = Transaction::where('type', 'sell')
@@ -32,7 +32,7 @@ class AddDocumentCorrelativeIdColumnToTransactionsTable extends Migration
                     ->whereRaw('CONVERT(initial, UNSIGNED INTEGER) <= ?', [$sale->correlative])
                     ->whereRaw('CONVERT(final, UNSIGNED INTEGER) >= ?', [$sale->correlative])
                     ->first();
-    
+
                 $sale->document_correlative_id = ! empty($document_correlative) ? $document_correlative->id : null;
                 $sale->save();
             }

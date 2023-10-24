@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveRolIdColumnToEmployeesTable extends Migration
 {
@@ -13,7 +13,7 @@ class RemoveRolIdColumnToEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function(Blueprint $table){
+        Schema::table('employees', function (Blueprint $table) {
             $table->dropForeign('employees_rol_id_foreign');
             $table->dropColumn('rol_id');
         });

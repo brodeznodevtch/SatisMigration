@@ -2,27 +2,18 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use DB;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
-use Yajra\DataTables\Facades\DataTables;
-use Spatie\Permission\Models\Role;
-
 use App\Restaurant\ResTable;
-
-use App\BusinessLocation;
-use App\Transaction;
-use App\User;
-
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\Util;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Spatie\Permission\Models\Role;
 
 class DataController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $commonUtil;
 
@@ -41,23 +32,23 @@ class DataController extends Controller
         if (request()->ajax()) {
             $business_id = $request->session()->get('user.business_id');
             $location_id = $request->get('location_id');
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $transaction_id = $request->get('transaction_id', null);
-                if (!empty($transaction_id)) {
+                if (! empty($transaction_id)) {
                     $transaction = Transaction::find($transaction_id);
                     $view_data = ['res_table_id' => $transaction->res_table_id,
-                            'res_waiter_id' => $transaction->res_waiter_id,
-                        ];
+                        'res_waiter_id' => $transaction->res_waiter_id,
+                    ];
                 } else {
                     $view_data = ['res_table_id' => null, 'res_waiter_id' => null];
                 }
 
                 //Get all service staff roles
                 $service_staff_roles = Role::where('business_id', $business_id)
-                                        ->where('is_service_staff', 1)
-                                        ->get()
-                                        ->pluck('name')
-                                        ->toArray();
+                    ->where('is_service_staff', 1)
+                    ->get()
+                    ->pluck('name')
+                    ->toArray();
 
                 $waiters_enabled = false;
                 $tables_enabled = false;
@@ -68,15 +59,15 @@ class DataController extends Controller
                     $waiters = [];
 
                     //Get all users of service staff roles
-                    if (!empty($service_staff_roles)) {
+                    if (! empty($service_staff_roles)) {
                         $waiters = User::where('business_id', $business_id)->role($service_staff_roles)->get()->pluck('first_name', 'id');
                     }
                 }
                 if ($this->commonUtil->isModuleEnabled('tables')) {
                     $tables_enabled = true;
                     $tables = ResTable::where('business_id', $business_id)
-                            ->where('location_id', $location_id)
-                            ->pluck('name', 'id');
+                        ->where('location_id', $location_id)
+                        ->pluck('name', 'id');
                 }
             } else {
                 $tables = [];
@@ -87,7 +78,7 @@ class DataController extends Controller
             }
 
             return view('restaurant.partials.pos_table_dropdown')
-                    ->with(compact('tables', 'waiters', 'view_data', 'waiters_enabled', 'tables_enabled'));
+                ->with(compact('tables', 'waiters', 'view_data', 'waiters_enabled', 'tables_enabled'));
         }
     }
 

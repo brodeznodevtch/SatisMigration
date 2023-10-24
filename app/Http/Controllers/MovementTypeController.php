@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\MovementType;
+use App\Models\MovementType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -15,13 +15,13 @@ class MovementTypeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('movement_type.view') && !auth()->user()->can('movement_type.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('movement_type.view') && ! auth()->user()->can('movement_type.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = $business_id = request()->session()->get('user.business_id');
-            
+
             $movement_types = MovementType::where('business_id', $business_id)->select(['name', 'description', 'type', 'id']);
 
             return Datatables::of($movement_types)
@@ -64,7 +64,7 @@ class MovementTypeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('movement_type.create')) {
+        if (! auth()->user()->can('movement_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -74,12 +74,11 @@ class MovementTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('movement_type.create')) {
+        if (! auth()->user()->can('movement_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -94,17 +93,17 @@ class MovementTypeController extends Controller
             $output = [
                 'success' => true,
                 'data' => $movement_type,
-                'msg' => __("movement_type.added_success")
+                'msg' => __('movement_type.added_success'),
             ];
 
-            \Log::info('Movement type ' . $movement_type->id . ' successfully added by ' . $request->session()->get('user.id'));
+            \Log::info('Movement type '.$movement_type->id.' successfully added by '.$request->session()->get('user.id'));
 
         } catch (\Exception $e) {
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -114,7 +113,6 @@ class MovementTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\MovementType  $movementType
      * @return \Illuminate\Http\Response
      */
     public function show(MovementType $movementType)
@@ -130,7 +128,7 @@ class MovementTypeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('movement_type.update')) {
+        if (! auth()->user()->can('movement_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -144,13 +142,12 @@ class MovementTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('movement_type.update')) {
+        if (! auth()->user()->can('movement_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -164,17 +161,17 @@ class MovementTypeController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("movement_type.updated_success")
+                    'msg' => __('movement_type.updated_success'),
                 ];
 
-                \Log::info('Movement type ' . $movement_type->id . ' successfully updated by ' . $request->session()->get('user.id'));
+                \Log::info('Movement type '.$movement_type->id.' successfully updated by '.$request->session()->get('user.id'));
 
             } catch (\Exception $e) {
-                \Log::emergency("File: " . $e->getFile(). " Line: " . $e->getLine(). " Message: " . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -185,13 +182,12 @@ class MovementTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
     {
-        if (!auth()->user()->can('movement_type.delete')) {
+        if (! auth()->user()->can('movement_type.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -203,17 +199,17 @@ class MovementTypeController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("movement_type.deleted_success")
+                    'msg' => __('movement_type.deleted_success'),
                 ];
 
-                \Log::info('Movement type ' . $id . ' successfully deleted by ' . $request->session()->get('user.id'));
+                \Log::info('Movement type '.$id.' successfully deleted by '.$request->session()->get('user.id'));
 
             } catch (\Exception $e) {
-                \Log::emergency("File: " . $e->getFile(). " Line: " . $e->getLine(). " Message: " . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

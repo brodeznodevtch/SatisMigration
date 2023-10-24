@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\CashDetail;
-use DB;
-use App\Cashier;
-use App\Transaction;
-use App\CashRegister;
-use App\CashierClosure;
-use App\CashRegisterTransaction;
+use App\Models\CashDetail;
+use App\Models\Cashier;
+use App\Models\CashierClosure;
+use App\Models\CashRegister;
+use App\Models\CashRegisterTransaction;
+use App\Models\DocumentCorrelative;
+use App\Models\Transaction;
 use App\Utils\CashierUtil;
-use App\Utils\ProductUtil;
-use App\DocumentCorrelative;
-use Illuminate\Http\Request;
 use App\Utils\CashRegisterUtil;
+use App\Utils\ProductUtil;
+use DB;
+use Illuminate\Http\Request;
 
 class CashRegisterController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $cashRegisterUtil;
+
     protected $productUtil;
+
     protected $cashierUtil;
 
     /**
      * Constructor
      *
-     * @param CashRegisterUtil $cashRegisterUtil
      * @return void
      */
     public function __construct(
@@ -85,7 +85,6 @@ class CashRegisterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -101,7 +100,6 @@ class CashRegisterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function storeCashier(Request $request)
@@ -137,23 +135,23 @@ class CashRegisterController extends Controller
 
             /** get correlative */
             $document =
-                DocumentCorrelative::join("document_types as dt", "dt.id", "document_correlatives.document_type_id")
+                DocumentCorrelative::join('document_types as dt', 'dt.id', 'document_correlatives.document_type_id')
                     ->where('dt.business_id', $cashier->business_id)
-                    ->where("dt.is_active", 1)
+                    ->where('dt.is_active', 1)
                     ->where('document_correlatives.location_id', $cashier->business_location_id)
                     ->where('dt.short_name', 'Ticket')
                     ->where('document_correlatives.status', 'active')
                     ->select('document_correlatives.*')
                     ->first();
             /** Asign and increment correlative */
-            if(!empty($document)){
-                if($document->actual < $document->final){
+            if (! empty($document)) {
+                if ($document->actual < $document->final) {
                     $cashier_closure->open_correlative = $document->actual;
 
                     $document->actual += 1;
                     $document->save();
 
-                } else if($document->actual == $document->final){
+                } elseif ($document->actual == $document->final) {
                     $cashier_closure->open_correlative = $document->actual;
 
                     $document->status = 'inactive';
@@ -168,14 +166,14 @@ class CashRegisterController extends Controller
             $cashier_closure_id = $cashier_closure->id;
 
             DB::commit();
-            
+
         } catch (\Exception $e) {
             DB::rollback();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
         }
 
-        if($opening_receipt){
+        if ($opening_receipt) {
             return redirect()->action('SellPosController@create', ['cashier_closure_id' => $cashier_closure_id]);
         } else {
             return redirect()->action('SellPosController@create');
@@ -185,7 +183,6 @@ class CashRegisterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function storeCashRegister(Request $request)
@@ -206,7 +203,7 @@ class CashRegisterController extends Controller
             $data = [
                 'business_id' => $business_id,
                 'cashier_id' => $cashier_id,
-                'status' => 'open'
+                'status' => 'open',
             ];
 
             $today = \Carbon::now()->toDateString();
@@ -244,7 +241,7 @@ class CashRegisterController extends Controller
                 $crt->amount = $initial_amount;
                 $crt->save();
 
-            // Open cash register for the first time
+                // Open cash register for the first time
             } else {
                 $data['user_id'] = $user_id;
 
@@ -262,7 +259,7 @@ class CashRegisterController extends Controller
                     'amount' => $initial_amount,
                     'pay_method' => 'cash',
                     'type' => 'credit',
-                    'transaction_type' => 'initial'
+                    'transaction_type' => 'initial',
                 ]);
             }
 
@@ -271,7 +268,7 @@ class CashRegisterController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
         }
 
         return redirect()->action('SellPosController@create');
@@ -284,23 +281,23 @@ class CashRegisterController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {   
+    {
         $cash_register = CashRegister::where('id', $id)
             ->first();
-        
+
         $cashier_id = $cash_register->cashier_id;
         $close_date = $cash_register->date;
         $closing_note = $cash_register->closing_note;
         $user_id = $cash_register->user_id;
 
-        $start = $cash_register->date . " 00:01:00";
-        $end = $cash_register->date . " 23:59:00";
+        $start = $cash_register->date.' 00:01:00';
+        $end = $cash_register->date.' 23:59:00';
 
         $opening_date = date_format(date_create($start), 'Y-m-d H:i:s');
         $closing_date = date_format(date_create($end), 'Y-m-d H:i:s');
 
         // Sales
-        $register_details =  $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $close_date);
+        $register_details = $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $close_date);
 
         // Payments and entries
         $payment_details = $this->cashRegisterUtil->getRegisterDetailsWithPayments($cashier_id, $opening_date, $closing_date);
@@ -331,7 +328,7 @@ class CashRegisterController extends Controller
     public function getRegisterDetails()
     {
 
-        $register_details =  $this->cashRegisterUtil->getRegisterDetails(null, null, null, null);
+        $register_details = $this->cashRegisterUtil->getRegisterDetails(null, null, null, null);
 
         $user_id = auth()->user()->id;
         $open_time = $register_details['open_time'];
@@ -357,14 +354,14 @@ class CashRegisterController extends Controller
 
         $trans_date = substr($close_date, 0, 10); // Get date only
         $close_date = $this->productUtil->uf_date($trans_date, false);
-        $start = $trans_date . " 00:01";
-        $end = $trans_date . " 23:59";
-        
+        $start = $trans_date.' 00:01';
+        $end = $trans_date.' 23:59';
+
         $opening_date = $this->productUtil->uf_date($start, true);
         $closing_date = $this->productUtil->uf_date($end, true);
 
         // Sales
-        $register_details =  $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $close_date);
+        $register_details = $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $close_date);
 
         // Payments and entries
         $payment_details = $this->cashRegisterUtil->getRegisterDetailsWithPayments($cashier_id, $opening_date, $closing_date);
@@ -426,7 +423,6 @@ class CashRegisterController extends Controller
     /**
      * Closes currently opened register.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function postCloseRegister(Request $request)
@@ -436,19 +432,19 @@ class CashRegisterController extends Controller
             if (config('app.env') == 'demo') {
                 $output = [
                     'success' => 0,
-                    'msg' => 'Feature disabled in demo!!'
+                    'msg' => 'Feature disabled in demo!!',
                 ];
 
                 return redirect()->action('HomeController@index')->with('status', $output);
             }
-            
+
             $input = $request->only([
                 'total_amount_cash',
                 'total_amount_card',
                 'total_amount_check',
                 'total_amount_transfer',
                 'total_amount_credit',
-                'closing_note'
+                'closing_note',
             ]);
 
             $input['total_amount_cash'] = $this->cashRegisterUtil->num_uf($input['total_amount_cash']);
@@ -460,7 +456,7 @@ class CashRegisterController extends Controller
             $trans_date = substr($request->input('close_date'), 0, 10);
             $input['date'] = $this->productUtil->uf_date($trans_date, false);
             $input['status'] = 'close';
-            
+
             $cashier_id = $request->input('cashier_id');
             $business_id = $request->session()->get('user.business_id');
             $user_id = $request->session()->get('user.id');
@@ -470,7 +466,7 @@ class CashRegisterController extends Controller
                 ->where('business_id', $business_id)
                 ->where('status', 'open')
                 ->first();
-            
+
             // Create or update cash register
             if (! empty($cash_register)) {
                 // Clone record before action
@@ -491,7 +487,7 @@ class CashRegisterController extends Controller
                 $input['business_id'] = $business_id;
                 $input['cashier_id'] = $cashier_id;
                 $input['user_id'] = auth()->user()->id;
-                
+
                 $cash_register = CashRegister::create($input);
 
                 // Store binnacle
@@ -521,7 +517,7 @@ class CashRegisterController extends Controller
                 'ten_dollars',
                 'twenty_dollars',
                 'fifty_dollars',
-                'one_hundred_dollars'
+                'one_hundred_dollars',
             ]);
 
             $cash_detail = CashDetail::where('cash_register_id', $cash_register->id)
@@ -538,21 +534,21 @@ class CashRegisterController extends Controller
                 $cash_detail_input['cashier_id'] = $cashier_id;
                 $cash_detail_input['business_id'] = $business_id;
                 $cash_detail_input['location_id'] = $location_id;
-                
+
                 $cash_detail = CashDetail::create($cash_detail_input);
             }
 
             $output = [
                 'success' => 1,
-                'msg' => __('cash_register.close_success')
+                'msg' => __('cash_register.close_success'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 

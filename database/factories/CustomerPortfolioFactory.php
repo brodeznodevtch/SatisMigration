@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\CustomerPortfolio::class, function (Faker $faker) {
+$factory->define(App\Models\CustomerPortfolio::class, function (Faker $faker) {
     return [
         //
     ];

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyPaymentMethodsOnTransactionPayments extends Migration
 {
@@ -16,12 +16,12 @@ class ModifyPaymentMethodsOnTransactionPayments extends Migration
         DB::statement("ALTER TABLE `transaction_payments` CHANGE `method` `method`
             ENUM('cash','card','check','bank_transfer','credit')
             CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;");
-        DB::statement("ALTER TABLE `transaction_payments` CHANGE
+        DB::statement('ALTER TABLE `transaction_payments` CHANGE
             `bank_account_number` `check_account` VARCHAR(191)
-            CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;");
-        DB::statement("ALTER TABLE `transaction_payments` CHANGE `card_holder_name`
+            CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;');
+        DB::statement('ALTER TABLE `transaction_payments` CHANGE `card_holder_name`
             `card_holder_name` VARCHAR(191) CHARACTER SET utf8mb4
-            COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `transaction_no`");
+            COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `transaction_no`');
 
         Schema::table('transaction_payments', function (Blueprint $table) {
             /** Drop useless columns */
@@ -44,7 +44,7 @@ class ModifyPaymentMethodsOnTransactionPayments extends Migration
             $table->foreign('check_bank')
                 ->references('id')
                 ->on('banks');
-            
+
             /** TRANSFER */
             $table->string('transfer_ref_no')
                 ->nullable()
@@ -69,7 +69,7 @@ class ModifyPaymentMethodsOnTransactionPayments extends Migration
             $table->foreign('transfer_receiving_bank')
                 ->references('id')
                 ->on('banks');
-            
+
             /** CARD */
             $table->string('card_authotization_number')
                 ->nullable()

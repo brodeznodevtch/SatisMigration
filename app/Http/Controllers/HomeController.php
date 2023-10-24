@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Charts;
-use App\User;
-use App\Image;
-use Datatables;
-use App\Product;
-use App\Business;
-use App\Currency;
-use App\Transaction;
-use App\PurchaseLine;
-use App\BusinessLocation;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Currency;
+use App\Models\Image;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ProductUtil;
-use Illuminate\Http\Request;
 use App\Utils\TransactionUtil;
-use App\VariationLocationDetails;
+use App\Models\VariationLocationDetails;
 use Carbon\Carbon;
+use Charts;
+use DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $businessUtil;
+
     protected $transactionUtil;
+
     protected $productUtil;
 
     /**
@@ -58,13 +57,14 @@ class HomeController extends Controller
     public function index()
     {
         $business_id = request()->session()->get('user.business_id');
-        if (!auth()->user()->can('dashboard.data')) {
+        if (! auth()->user()->can('dashboard.data')) {
             $images = Image::where('business_id', $business_id)
                 ->whereRaw('DATE(end_date) >= ?', [date('Y-m-d')])
                 ->orWhere('start_date', null)
                 ->orWhere('end_date', null)
                 ->where('is_active', true)
                 ->get();
+
             return view('home.index', compact('images'));
         }
 
@@ -110,7 +110,7 @@ class HomeController extends Controller
             $labels[] = date('j M Y', strtotime($date));
 
             if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1) {
-                if (!empty($sells_last_30_days[$date])) {
+                if (! empty($sells_last_30_days[$date])) {
                     $sell_values[] = $sells_last_30_days[$date];
                 } else {
                     $sell_values[] = 0;
@@ -126,7 +126,7 @@ class HomeController extends Controller
             }
 
             if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1) {
-                if (!empty($stock_last_30_days[$date])) {
+                if (! empty($stock_last_30_days[$date])) {
                     $stock_values[] = $stock_last_30_days[$date];
                 } else {
                     $stock_values[] = 0;
@@ -139,7 +139,7 @@ class HomeController extends Controller
         if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1) {
             $sells_chart_1 = Charts::create('bar', 'highcharts')
                 ->title(' ')
-                ->template("material")
+                ->template('material')
                 ->values($sell_values)
                 ->labels($labels)
                 ->elementLabel(__('home.total_sells', ['currency' => $currency->code]))
@@ -190,7 +190,7 @@ class HomeController extends Controller
 
         $months = [];
         $date = strtotime($fy['start']);
-        $last   = date('m-Y', strtotime($fy['end']));
+        $last = date('m-Y', strtotime($fy['end']));
 
         do {
             $month_year = date('m-Y', $date);
@@ -202,7 +202,7 @@ class HomeController extends Controller
             $date = strtotime('+1 month', $date);
 
             if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
-                if (!empty($sells_this_fy[$month_year])) {
+                if (! empty($sells_this_fy[$month_year])) {
                     $sell_values[] = $sells_this_fy[$month_year];
                 } else {
                     $sell_values[] = 0;
@@ -210,7 +210,7 @@ class HomeController extends Controller
             }
 
             if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
-                if (!empty($purchases_this_fy[$month_year])) {
+                if (! empty($purchases_this_fy[$month_year])) {
                     $purchase_values[] = $purchases_this_fy[$month_year];
                 } else {
                     $purchase_values[] = 0;
@@ -218,7 +218,7 @@ class HomeController extends Controller
             }
 
             if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
-                if (!empty($stocks_this_fy[$month_year])) {
+                if (! empty($stocks_this_fy[$month_year])) {
                     $stock_values[] = $stocks_this_fy[$month_year];
                 } else {
                     $stock_values[] = 0;
@@ -231,7 +231,7 @@ class HomeController extends Controller
         if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
             $sells_chart_2 = Charts::create('bar', 'highcharts')
                 ->title(__(' '))
-                ->template("material")
+                ->template('material')
                 ->values($sell_values)
                 ->labels($labels)
                 ->elementLabel(__(
@@ -268,7 +268,7 @@ class HomeController extends Controller
                 ));
         }
 
-        $months = array(
+        $months = [
             '01' => __('accounting.january'),
             '02' => __('accounting.february'),
             '03' => __('accounting.march'),
@@ -280,8 +280,8 @@ class HomeController extends Controller
             '09' => __('accounting.september'),
             '10' => __('accounting.october'),
             '11' => __('accounting.november'),
-            '12' => __('accounting.december')
-        );
+            '12' => __('accounting.december'),
+        ];
 
         $business_locations = BusinessLocation::where('business_id', $business_id)->get();
 
@@ -292,16 +292,16 @@ class HomeController extends Controller
 
         $default_location = null;
 
-        # Access only to one locations
+        // Access only to one locations
         if (count($locations) == 1) {
             foreach ($locations as $id => $name) {
                 $default_location = $id;
                 $first_location = $id;
             }
 
-            # Access to all locations
-        } else if (auth()->user()->permitted_locations() == 'all') {
-            $locations = $locations->prepend(__("kardex.all_2"), 'all');
+            // Access to all locations
+        } elseif (auth()->user()->permitted_locations() == 'all') {
+            $locations = $locations->prepend(__('kardex.all_2'), 'all');
             $first_location = 'all';
         } else {
             foreach ($locations as $id => $name) {
@@ -315,7 +315,6 @@ class HomeController extends Controller
             ->orWhere('end_date', null)
             ->where('is_active', true)
             ->get();
-
 
         return view('home.index', compact(
             'date_filters',
@@ -338,7 +337,7 @@ class HomeController extends Controller
 
     /**
      * Get totals for dashboard cards according to selected month.
-     * 
+     *
      * @return array
      */
     public function chooseMonth()
@@ -347,22 +346,22 @@ class HomeController extends Controller
             $year = request()->get('year_modal');
             $month = request()->get('month_modal');
 
-            $start = date($year . '-' . $month . '-01');
+            $start = date($year.'-'.$month.'-01');
             $last_day = date('t', strtotime($start));
-            $end = date($year . '-' . $month . '-' . $last_day);
+            $end = date($year.'-'.$month.'-'.$last_day);
 
             $output = [
                 'success' => true,
                 'start' => $start,
-                'end' => $end
+                'end' => $end,
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -455,11 +454,12 @@ class HomeController extends Controller
             }
 
             //Filter by the location
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $query->where('variation_location_details.location_id', $location_id);
             }
 
-            $products =  $query->count('p.id');
+            $products = $query->count('p.id');
+
             return $products;
 
         }
@@ -474,7 +474,7 @@ class HomeController extends Controller
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
-            $today = \Carbon::now()->format("Y-m-d H:i:s");
+            $today = \Carbon::now()->format('Y-m-d H:i:s');
 
             $location_id = request()->location_id;
 
@@ -491,11 +491,12 @@ class HomeController extends Controller
                 $query->whereIn('transactions.location_id', $permitted_locations);
             }
             //Filter by the location
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $query->where('transactions.location_id', $location_id);
             }
 
-            $dues =  $query->count('transactions.id');
+            $dues = $query->count('transactions.id');
+
             return $dues;
         }
     }
@@ -509,11 +510,11 @@ class HomeController extends Controller
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
-            $today = \Carbon::now()->format("Y-m-d H:i:s");
+            $today = \Carbon::now()->format('Y-m-d H:i:s');
 
             $location_id = request()->location_id;
 
-            $query = Transaction::join('contacts as c','transactions.contact_id','c.id')
+            $query = Transaction::join('contacts as c', 'transactions.contact_id', 'c.id')
                 ->join('payment_terms as pt', 'c.payment_term_id', '=', 'pt.id')
                 ->where('transactions.business_id', $business_id)
                 ->where('transactions.type', 'purchase')
@@ -526,11 +527,12 @@ class HomeController extends Controller
                 $query->whereIn('transactions.location_id', $permitted_locations);
             }
             //Filter by the location
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $query->where('transactions.location_id', $location_id);
             }
 
-            $dues =  $query->count('transactions.id');
+            $dues = $query->count('transactions.id');
+
             return $dues;
         }
     }
@@ -542,7 +544,7 @@ class HomeController extends Controller
      */
     public function getStockExpiryProducts(Request $request)
     {
-        if (!auth()->user()->can('stock_expiry_report.view')) {
+        if (! auth()->user()->can('stock_expiry_report.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -590,7 +592,7 @@ class HomeController extends Controller
             }
 
             //Filter by the location
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $query->where('t.location_id', $location_id);
             }
 
@@ -624,7 +626,7 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours by month chart.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function getPeakSalesHoursByMonthChart()
@@ -636,14 +638,14 @@ class HomeController extends Controller
 
         $location = request()->get('location_month');
 
-        # Peak sales hours
+        // Peak sales hours
         $sales = $this->transactionUtil->getPeakSalesHours($business_id, $location, $date_initial, $date_final);
 
         $labels = [];
         $values = [];
 
         foreach ($sales as $hour => $sale) {
-            $labels[] = $this->transactionUtil->format_time($hour . ':00:00');
+            $labels[] = $this->transactionUtil->format_time($hour.':00:00');
             $values[] = $sale;
         }
 
@@ -659,7 +661,7 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours chart.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function getPeakSalesHoursChart()
@@ -670,14 +672,14 @@ class HomeController extends Controller
 
         $location = request()->get('location');
 
-        # Peak sales hours
+        // Peak sales hours
         $sales = $this->transactionUtil->getPeakSalesHours($business_id, $location, $fiscal_year['start'], $fiscal_year['end']);
 
         $labels = [];
         $values = [];
 
         foreach ($sales as $hour => $sale) {
-            $labels[] = $this->transactionUtil->format_time($hour . ':00:00');
+            $labels[] = $this->transactionUtil->format_time($hour.':00:00');
             $values[] = $sale;
         }
 
@@ -707,25 +709,26 @@ class HomeController extends Controller
             $dashboard_settings = empty($business->dashboard_settings) ? null : json_decode($business->dashboard_settings, true);
             $details['box_exc_tax'] = is_null($dashboard_settings) ? 0 : $dashboard_settings['box_exc_tax'];
 
-            
-            if($details['box_exc_tax']){
+            if ($details['box_exc_tax']) {
                 $details = [
                     'gross_profit' => $sale_details['total_sell_exc_tax'] - $purchase_details['total_purchase_exc_tax'],
                     'net_earnings' => ($sale_details['total_sell_exc_tax'] - $purchase_details['total_purchase_exc_tax']) - $expense_details['total_expense_exc_tax'],
-                    'total_expense' => $expense_details['total_expense_exc_tax']
+                    'total_expense' => $expense_details['total_expense_exc_tax'],
                 ];
-            }else{
+            } else {
                 $details = [
                     'gross_profit' => $sale_details['total_sell_inc_tax'] - $purchase_details['total_purchase_inc_tax'],
                     'net_earnings' => ($sale_details['total_sell_inc_tax'] - $purchase_details['total_purchase_inc_tax']) - $expense_details['total_expense_inc_tax'],
-                    'total_expense' => $expense_details['total_expense_inc_tax']
+                    'total_expense' => $expense_details['total_expense_inc_tax'],
                 ];
             }
+
             return $details;
         }
     }
 
-    public function getListTrendingProducts(){
+    public function getListTrendingProducts()
+    {
         if (request()->ajax()) {
             // $start = request()->start;
             // $end = request()->end;
@@ -752,7 +755,7 @@ class HomeController extends Controller
     {
         if (request()->ajax()) {
             $location_id = request()->location_id;
-            $business_id = request()->session()->get('user.business_id');            
+            $business_id = request()->session()->get('user.business_id');
             $currency = Currency::where('id', request()->session()->get('business.currency_id'))->first();
 
             $today = Carbon::now(); //Sells previous week and current week
@@ -768,29 +771,29 @@ class HomeController extends Controller
 
             $sells_chart_line_1 = null;
             $labels = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-            if (!empty($sells_previous_week) || !empty($sells_current_week)) {
+            if (! empty($sells_previous_week) || ! empty($sells_current_week)) {
                 for ($i = 2; $i <= 7; $i++) {
                     if (isset($sells_previous_week[$i])) {
                         $sell_values_previous_week[] = $this->transactionUtil->num_f($sells_previous_week[$i]);
-                    }else{
+                    } else {
                         $sell_values_previous_week[] = $this->transactionUtil->num_f(0);
                     }
 
                     if (isset($sells_current_week[$i])) {
                         $sell_values_current_week[] = $this->transactionUtil->num_f($sells_current_week[$i]);
-                    } else{
+                    } else {
                         $sell_values_current_week[] = $this->transactionUtil->num_f(0);
                     }
                 }
                 if (isset($sells_previous_week[1])) {
                     $sell_values_previous_week[6] = $this->transactionUtil->num_f($sells_previous_week[1]);
-                }else{
+                } else {
                     $sell_values_previous_week[6] = $this->transactionUtil->num_f(0);
                 }
 
                 if (isset($sells_current_week[1])) {
                     $sell_values_current_week[6] = $this->transactionUtil->num_f($sells_current_week[1]);
-                }else{
+                } else {
                     $sell_values_current_week[6] = $this->transactionUtil->num_f(0);
                 }
             }

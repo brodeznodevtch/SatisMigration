@@ -2,20 +2,16 @@
 
 namespace App\Utils;
 
+use App\Models\Contact;
+use App\Models\Customer;
 use DB;
-
-use App\Contact;
-use App\Customer;
-use App\CustomerGroup;
 
 class ContactUtil
 {
-
     /**
      * Returns Walk In Customer for a Business
      *
-     * @param int $business_id
-     *
+     * @param  int  $business_id
      * @return array/false
      */
     public function getWalkInCustomer($business_id)
@@ -38,7 +34,7 @@ class ContactUtil
             )->first()
             ->toArray();
 
-        if (!empty($contact)) {
+        if (! empty($contact)) {
             return $contact;
         } else {
             return false;
@@ -48,8 +44,7 @@ class ContactUtil
     /**
      * Returns Walk In Customer for a Business
      *
-     * @param int $business_id
-     *
+     * @param  int  $business_id
      * @return array/false
      */
     public function getDefaultCustomer($business_id)
@@ -71,7 +66,7 @@ class ContactUtil
             )->first()
             ->toArray();
 
-        if (!empty($contact)) {
+        if (! empty($contact)) {
             return $contact;
         } else {
             return false;
@@ -81,9 +76,8 @@ class ContactUtil
     /**
      * Returns the customer group
      *
-     * @param int $business_id
-     * @param int $customer_id
-     *
+     * @param  int  $business_id
+     * @param  int  $customer_id
      * @return array
      */
     public function getCustomerGroup($business_id, $customer_id)
@@ -105,22 +99,25 @@ class ContactUtil
 
     /**
      * Get customer's employee asigned name
-     * @param int $customer_id
+     *
+     * @param  int  $customer_id
      * @return string
      */
-    public function getCustomerEmployeeName($customer_id){
-        if(!$customer_id) return "";
+    public function getCustomerEmployeeName($customer_id)
+    {
+        if (! $customer_id) {
+            return '';
+        }
 
-        $employee_name = "";
+        $employee_name = '';
 
-        $customer_employeeName = Customer::
-            join("customer_portfolios as cp", "customers.customer_portfolio_id", "cp.id")
-            ->join("employees as e", "cp.seller_id", "e.id")
-            ->where("customers.id", $customer_id)
-            ->select(DB::raw("CONCAT(e.first_name, ' ', e.last_name) as name"))
-            ->first();
-        
-        if(!empty($customer_employeeName)){
+        $customer_employeeName = Customer::join('customer_portfolios as cp', 'customers.customer_portfolio_id', 'cp.id')
+                ->join('employees as e', 'cp.seller_id', 'e.id')
+                ->where('customers.id', $customer_id)
+                ->select(DB::raw("CONCAT(e.first_name, ' ', e.last_name) as name"))
+                ->first();
+
+        if (! empty($customer_employeeName)) {
             $employee_name = $customer_employeeName->name;
         }
 
@@ -130,9 +127,12 @@ class ContactUtil
     /**
      * Get information taxes from contacts
      */
-    public function getTaxInfo($contact_id){
+    public function getTaxInfo($contact_id)
+    {
 
-        if(empty($contact_id)) { return null; }
+        if (empty($contact_id)) {
+            return null;
+        }
 
         $contact = Contact::leftJoin('tax_rate_tax_group AS trtg', 'contacts.tax_group_id', 'trtg.tax_group_id')
             ->leftJoin('tax_rates as tr', 'trtg.tax_rate_id', 'tr.id')
@@ -143,7 +143,7 @@ class ContactUtil
                 'tr.min_amount',
                 'tr.max_amount'
             )->first();
-        
-        return !empty($contact) ? $contact : null;
+
+        return ! empty($contact) ? $contact : null;
     }
 }

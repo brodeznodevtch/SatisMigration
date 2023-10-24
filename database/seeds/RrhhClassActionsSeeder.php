@@ -1,8 +1,7 @@
 <?php
 
+use App\Models\RrhhClassAction;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use App\RrhhClassAction;
 
 class RrhhClassActionsSeeder extends Seeder
 {

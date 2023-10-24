@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\ClaimTypeHasUser::class, function (Faker $faker) {
+$factory->define(App\Models\ClaimTypeHasUser::class, function (Faker $faker) {
     return [
         //
     ];

@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhIncomeDiscount;
-use App\RrhhTypeIncomeDiscount;
-use App\PaymentPeriod;
-use App\Business;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Carbon\Carbon;
-use Storage;
+use App\Models\Business;
+use App\Models\Employees;
+use App\Models\PaymentPeriod;
+use App\Models\RrhhIncomeDiscount;
+use App\Models\RrhhTypeIncomeDiscount;
 use App\Utils\ModuleUtil;
+use DB;
+use Illuminate\Http\Request;
+use Storage;
 
 class RrhhIncomeDiscountController extends Controller
 {
@@ -21,13 +19,14 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil)
     {
         $this->moduleUtil = $moduleUtil;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,15 +36,16 @@ class RrhhIncomeDiscountController extends Controller
     {
         //
     }
-    public function getByEmployee($id) 
+
+    public function getByEmployee($id)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.view') ) {
+        if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
         $employee = Employees::where('id', $id)->where('business_id', $business_id)->with('rrhhIncomeDiscounts')->first();
-        
+
         return view('rrhh.income_discounts.index', compact('employee', 'business'));
     }
 
@@ -54,14 +54,14 @@ class RrhhIncomeDiscountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
         //
     }
 
-    function createIncomeDiscount($id) 
+    public function createIncomeDiscount($id)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.create') ) {
+        if (! auth()->user()->can('rrhh_income_discount.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -85,71 +85,70 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.create') ) {
+        if (! auth()->user()->can('rrhh_income_discount.create')) {
             abort(403, 'Unauthorized action.');
         }
-        if($request->type == 1){//income
+        if ($request->type == 1) {//income
             $request->validate([
-                'payment_period_id'     => 'required',
-                'type'                  => 'required',
-                'rrhh_type_income_id'   => 'required',
-                'employee_id'           => 'required',
-                'total_value'           => 'required',
-                'quota'                 => 'required',
-                'quota_value'           => 'required',
-                'start_date'            => 'required',
-                'end_date'              => 'required',
+                'payment_period_id' => 'required',
+                'type' => 'required',
+                'rrhh_type_income_id' => 'required',
+                'employee_id' => 'required',
+                'total_value' => 'required',
+                'quota' => 'required',
+                'quota_value' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
             ]);
-        }else{//discount
+        } else {//discount
             $request->validate([
-                'payment_period_id'     => 'required',
-                'type'                  => 'required',
+                'payment_period_id' => 'required',
+                'type' => 'required',
                 'rrhh_type_discount_id' => 'required',
-                'employee_id'           => 'required',
-                'total_value'           => 'required',
-                'quota'                 => 'required',
-                'quota_value'           => 'required',
-                'start_date'            => 'required',
-                'end_date'              => 'required',
+                'employee_id' => 'required',
+                'total_value' => 'required',
+                'quota' => 'required',
+                'quota_value' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
             ]);
-        }        
+        }
 
         try {
             $input_details = $request->all();
-            if($request->type == 1){
+            if ($request->type == 1) {
                 $input_details['rrhh_type_income_discount_id'] = $request->rrhh_type_income_id;
             }
 
-            if($request->type == 2){
+            if ($request->type == 2) {
                 $input_details['rrhh_type_income_discount_id'] = $request->rrhh_type_discount_id;
             }
-            
+
             $input_details['start_date'] = $this->moduleUtil->uf_date($request->input('start_date'));
             $input_details['end_date'] = $this->moduleUtil->uf_date($request->input('end_date'));
             $input_details['quotas_applied'] = 0;
             $input_details['balance_to_date'] = $input_details['total_value'];
 
             DB::beginTransaction();
-    
+
             RrhhIncomeDiscount::create($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -159,12 +158,12 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.view') ) {
+        if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -179,12 +178,12 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) 
+    public function edit($id)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.edit') ) {
+        if (! auth()->user()->can('rrhh_income_discount.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -209,75 +208,75 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
-    public function updateIncomeDiscount(Request $request) 
+    public function updateIncomeDiscount(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_income_discount.edit') ) {
+        if (! auth()->user()->can('rrhh_income_discount.edit')) {
             abort(403, 'Unauthorized action.');
         }
-        if($request->type == 1){//income
+        if ($request->type == 1) {//income
             $request->validate([
-                'payment_period_id'     => 'required',
-                'type'                  => 'required',
-                'rrhh_type_income_id'   => 'required',
-                'total_value'           => 'required',
-                'quota'                 => 'required',
-                'quota_value'           => 'required',
-                'start_date'            => 'required',
-                'end_date'              => 'required',
+                'payment_period_id' => 'required',
+                'type' => 'required',
+                'rrhh_type_income_id' => 'required',
+                'total_value' => 'required',
+                'quota' => 'required',
+                'quota_value' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
             ]);
-        }else{//discount
+        } else {//discount
             $request->validate([
-                'payment_period_id'     => 'required',
-                'type'                  => 'required',
+                'payment_period_id' => 'required',
+                'type' => 'required',
                 'rrhh_type_discount_id' => 'required',
-                'total_value'           => 'required',
-                'quota'                 => 'required',
-                'quota_value'           => 'required',
-                'start_date'            => 'required',
-                'end_date'              => 'required',
+                'total_value' => 'required',
+                'quota' => 'required',
+                'quota_value' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
             ]);
-        }        
+        }
 
         try {
             $input_details = $request->all();
-            if($request->type == 1){
+            if ($request->type == 1) {
                 $input_details['rrhh_type_income_discount_id'] = $request->rrhh_type_income_id;
             }
 
-            if($request->type == 2){
+            if ($request->type == 2) {
                 $input_details['rrhh_type_income_discount_id'] = $request->rrhh_type_discount_id;
             }
-            
+
             $input_details['start_date'] = $this->moduleUtil->uf_date($request->input('start_date'));
             $input_details['end_date'] = $this->moduleUtil->uf_date($request->input('end_date'));
             $input_details['quotas_applied'] = 0;
             $input_details['balance_to_date'] = $input_details['total_value'];
 
             DB::beginTransaction();
-    
+
             $item = RrhhIncomeDiscount::findOrFail($request->id);
             $item->update($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -287,12 +286,13 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
-        if (!auth()->user()->can('rrhh_income_discount.delete')) {
+        if (! auth()->user()->can('rrhh_income_discount.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -300,18 +300,16 @@ class RrhhIncomeDiscountController extends Controller
             try {
                 $item = RrhhIncomeDiscount::findOrFail($id);
                 $item->forceDelete();
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }                
-
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyColumnsFromCashRegistersTable extends Migration
 {
@@ -14,18 +14,18 @@ class ModifyColumnsFromCashRegistersTable extends Migration
     public function up()
     {
         Schema::table('cash_registers', function (Blueprint $table) {
-            $table->dropColumn("closing_amount");
-            $table->dropColumn("total_card_slips");
-            $table->dropColumn("total_cheques");
+            $table->dropColumn('closing_amount');
+            $table->dropColumn('total_card_slips');
+            $table->dropColumn('total_cheques');
 
             $table->decimal('total_amount_cash', 10, 4)
-                ->after("status")
+                ->after('status')
                 ->default(0.0000);
             $table->decimal('total_amount_card', 10, 4)
-                ->after("total_amount_cash")
+                ->after('total_amount_cash')
                 ->default(0.0000);
             $table->decimal('total_amount_check', 10, 4)
-                ->after("total_amount_card")
+                ->after('total_amount_card')
                 ->default(0.0000);
         });
     }

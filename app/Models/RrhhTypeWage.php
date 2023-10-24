@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class RrhhTypeWage extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = ['name', 'isss', 'afp', 'type', 'business_id', 'deleted_at'];
+
+    public function employees()
+    {
+        return $this->hasMany(\App\Models\Employees::class, 'type_id');
+    }
+}

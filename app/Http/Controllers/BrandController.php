@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-
-use DB;
+use App\Models\Brands;
 use App\Utils\ProductUtil;
-use Yajra\DataTables\Facades\DataTables;
+use DB;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class BrandController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     private $clone_product;
 
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ProductUtil $productUtil)
@@ -39,7 +38,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('brand.view') && !auth()->user()->can('brand.create')) {
+        if (! auth()->user()->can('brand.view') && ! auth()->user()->can('brand.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -47,7 +46,7 @@ class BrandController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $brands = Brands::where('business_id', $business_id)
-                        ->select(['name', 'description', 'id']);
+                ->select(['name', 'description', 'id']);
 
             return Datatables::of($brands)
                 ->addColumn(
@@ -75,28 +74,27 @@ class BrandController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('brand.create')) {
+        if (! auth()->user()->can('brand.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $quick_add = false;
-        if (!empty(request()->input('quick_add'))) {
+        if (! empty(request()->input('quick_add'))) {
             $quick_add = true;
         }
 
         return view('brand.create')
-                ->with(compact('quick_add'));
+            ->with(compact('quick_add'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('brand.create')) {
+        if (! auth()->user()->can('brand.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -121,16 +119,16 @@ class BrandController extends Controller
             DB::commit();
 
             $output = ['success' => true,
-                            'data' => $brand,
-                            'msg' => __("brand.added_success")
-                        ];
+                'data' => $brand,
+                'msg' => __('brand.added_success'),
+            ];
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -155,7 +153,7 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('brand.update')) {
+        if (! auth()->user()->can('brand.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -171,13 +169,12 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('brand.update')) {
+        if (! auth()->user()->can('brand.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -212,16 +209,16 @@ class BrandController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("brand.updated_success")
+                    'msg' => __('brand.updated_success'),
                 ];
 
             } catch (\Exception $e) {
                 DB::rollback();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -236,7 +233,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('brand.delete')) {
+        if (! auth()->user()->can('brand.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -252,24 +249,24 @@ class BrandController extends Controller
 
                 /** sync brand */
                 if ($this->clone_product) {
-                    $this->productUtil->syncBrand($brand->id, "", $old_brand);
+                    $this->productUtil->syncBrand($brand->id, '', $old_brand);
                 }
 
                 DB::commit();
 
                 $output = [
                     'success' => true,
-                    'msg' => __("brand.deleted_success")
-                    
+                    'msg' => __('brand.deleted_success'),
+
                 ];
 
             } catch (\Exception $e) {
                 DB::rollback();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

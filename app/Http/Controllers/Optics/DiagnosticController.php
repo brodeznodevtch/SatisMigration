@@ -16,16 +16,16 @@ class DiagnosticController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('diagnostic.view') && !auth()->user()->can('diagnostic.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('diagnostic.view') && ! auth()->user()->can('diagnostic.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
 
             $diagnostics = Diagnostic::where('business_id', $business_id)
-                    ->select(['name', 'id']);
-            
+                ->select(['name', 'id']);
+
             return Datatables::of($diagnostics)
                 ->addColumn(
                     'action',
@@ -52,7 +52,7 @@ class DiagnosticController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('diagnostic.create')) {
+        if (! auth()->user()->can('diagnostic.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -62,12 +62,11 @@ class DiagnosticController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('diagnostic.create')) {
+        if (! auth()->user()->can('diagnostic.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -78,16 +77,16 @@ class DiagnosticController extends Controller
             $input['business_id'] = $business_id;
 
             $diagnostic = Diagnostic::create($input);
-    
+
             $output = ['success' => true,
                 'data' => $diagnostic,
-                'msg' => __("diagnostic.added_success")
+                'msg' => __('diagnostic.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -113,7 +112,7 @@ class DiagnosticController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('diagnostic.update')) {
+        if (! auth()->user()->can('diagnostic.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -129,32 +128,31 @@ class DiagnosticController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('diagnostic.update')) {
+        if (! auth()->user()->can('diagnostic.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             try {
                 $input = $request->only(['name']);
-                
+
                 $diagnostic = Diagnostic::findOrFail($id);
                 $diagnostic->fill($input);
                 $diagnostic->save();
 
                 $output = ['success' => true,
-                    'msg' => __("diagnostic.updated_success")
+                    'msg' => __('diagnostic.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -170,7 +168,7 @@ class DiagnosticController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('diagnostic.delete')) {
+        if (! auth()->user()->can('diagnostic.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -180,13 +178,13 @@ class DiagnosticController extends Controller
                 $diagnostic->delete();
 
                 $output = ['success' => true,
-                    'msg' => __("diagnostic.deleted_success")
+                    'msg' => __('diagnostic.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

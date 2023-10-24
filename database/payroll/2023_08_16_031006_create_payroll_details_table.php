@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePayrollDetailsTable extends Migration
 {
@@ -20,7 +20,7 @@ class CreatePayrollDetailsTable extends Migration
             $table->integer('days');
             $table->boolean('proportional')->nullable();
             $table->integer('hours')->nullable();
-            
+
             $table->decimal('montly_salary', 10, 2);
             $table->decimal('regular_salary', 10, 2)->nullable();
             $table->decimal('commissions', 10, 2)->nullable();
@@ -33,7 +33,7 @@ class CreatePayrollDetailsTable extends Migration
             $table->decimal('isss', 10, 2)->nullable();
             $table->decimal('afp', 10, 2)->nullable();
             $table->decimal('rent', 10, 2)->nullable();
-            
+
             $table->decimal('other_deductions', 10, 2)->nullable();
             $table->decimal('total_deductions', 10, 2)->nullable();
             $table->decimal('total_to_pay', 10, 2)->nullable();

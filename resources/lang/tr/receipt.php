@@ -24,5 +24,5 @@ return [
     'receipt_settings_mgs' => 'Bu şube için fişle ilgili tüm ayarlar',
     'print_receipt_on_invoice' => 'Otomatik fatura yazdırılsın',
     'receipt_printer_type' => 'Fiş Yazıcısı Tipi',
-    'receipt_settings_updated' => 'Fiş Ayarı başarıyla güncellendi'
+    'receipt_settings_updated' => 'Fiş Ayarı başarıyla güncellendi',
 ];

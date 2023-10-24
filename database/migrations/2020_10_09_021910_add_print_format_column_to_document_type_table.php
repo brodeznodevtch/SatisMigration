@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddPrintFormatColumnToDocumentTypeTable extends Migration
 {
@@ -14,9 +14,9 @@ class AddPrintFormatColumnToDocumentTypeTable extends Migration
     public function up()
     {
         Schema::table('document_types', function (Blueprint $table) {
-            $table->string("print_format", 30)
-                ->after("short_name")
-                ->default("");
+            $table->string('print_format', 30)
+                ->after('short_name')
+                ->default('');
         });
     }
 
@@ -28,7 +28,7 @@ class AddPrintFormatColumnToDocumentTypeTable extends Migration
     public function down()
     {
         Schema::table('document_types', function (Blueprint $table) {
-            $table->dropColumn("print_format");
+            $table->dropColumn('print_format');
         });
     }
 }

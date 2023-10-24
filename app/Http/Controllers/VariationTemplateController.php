@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\VariationTemplate;
-use App\VariationValueTemplate;
-use App\ProductVariation;
-use App\Variation;
-
-use Illuminate\Http\Request;
-
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\ProductVariation;
+use App\Models\Variation;
+use App\Models\VariationTemplate;
+use App\Models\VariationValueTemplate;
 use DB;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class VariationTemplateController extends Controller
 {
@@ -25,8 +23,8 @@ class VariationTemplateController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $variations = VariationTemplate::where('business_id', $business_id)
-                        ->with(['values'])
-                        ->select('id', 'name', DB::raw("(SELECT COUNT(id) FROM product_variations WHERE product_variations.variation_template_id=variation_templates.id) as total_pv"));
+                ->with(['values'])
+                ->select('id', 'name', DB::raw('(SELECT COUNT(id) FROM product_variations WHERE product_variations.variation_template_id=variation_templates.id) as total_pv'));
 
             return Datatables::of($variations)
                 ->addColumn(
@@ -42,6 +40,7 @@ class VariationTemplateController extends Controller
                     foreach ($data->values as $attr) {
                         $values_arr[] = $attr->name;
                     }
+
                     return implode(', ', $values_arr);
                 })
                 ->removeColumn('id')
@@ -66,7 +65,6 @@ class VariationTemplateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -75,29 +73,29 @@ class VariationTemplateController extends Controller
             $input = $request->only(['name']);
             $input['business_id'] = $request->session()->get('user.business_id');
             $variation = VariationTemplate::create($input);
-            
+
             //craete variation values
-            if (!empty($request->input('variation_values'))) {
+            if (! empty($request->input('variation_values'))) {
                 $values = $request->input('variation_values');
                 $data = [];
                 foreach ($values as $value) {
-                    if (!empty($value)) {
-                        $data[] = [ 'name' => $value];
+                    if (! empty($value)) {
+                        $data[] = ['name' => $value];
                     }
                 }
                 $variation->values()->createMany($data);
             }
-            
+
             $output = ['success' => true,
-                            'data' => $variation,
-                            'msg' => 'Variation added succesfully'
-                        ];
+                'data' => $variation,
+                'msg' => 'Variation added succesfully',
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                'msg' => 'Something went wrong, please try again',
+            ];
         }
 
         return $output;
@@ -106,7 +104,6 @@ class VariationTemplateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\VariationTemplate  $variationTemplate
      * @return \Illuminate\Http\Response
      */
     public function show(VariationTemplate $variationTemplate)
@@ -117,7 +114,7 @@ class VariationTemplateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int  $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -125,7 +122,7 @@ class VariationTemplateController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $variation = VariationTemplate::where('business_id', $business_id)
-                            ->with(['values'])->find($id);
+                ->with(['values'])->find($id);
 
             return view('variation.edit')
                 ->with(compact('variation'));
@@ -135,7 +132,6 @@ class VariationTemplateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -153,15 +149,15 @@ class VariationTemplateController extends Controller
                     $variation->save();
 
                     ProductVariation::where('variation_template_id', $variation->id)
-                                ->update(['name' => $variation->name]);
+                        ->update(['name' => $variation->name]);
                 }
-                
+
                 //update variation
                 $data = [];
-                if (!empty($request->input('edit_variation_values'))) {
+                if (! empty($request->input('edit_variation_values'))) {
                     $values = $request->input('edit_variation_values');
                     foreach ($values as $key => $value) {
-                        if (!empty($value)) {
+                        if (! empty($value)) {
                             $variation_val = VariationValueTemplate::find($key);
 
                             if ($variation_val->name != $value) {
@@ -174,25 +170,25 @@ class VariationTemplateController extends Controller
                     }
                     $variation->values()->saveMany($data);
                 }
-                if (!empty($request->input('variation_values'))) {
+                if (! empty($request->input('variation_values'))) {
                     $values = $request->input('variation_values');
                     foreach ($values as $value) {
-                        if (!empty($value)) {
-                            $data[] = new VariationValueTemplate([ 'name' => $value]);
+                        if (! empty($value)) {
+                            $data[] = new VariationValueTemplate(['name' => $value]);
                         }
                     }
                 }
                 $variation->values()->saveMany($data);
 
                 $output = ['success' => true,
-                            'msg' => 'Variation updated succesfully'
-                            ];
+                    'msg' => 'Variation updated succesfully',
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                    'msg' => 'Something went wrong, please try again',
+                ];
             }
 
             return $output;
@@ -215,14 +211,14 @@ class VariationTemplateController extends Controller
                 $variation->delete();
 
                 $output = ['success' => true,
-                            'msg' => 'Category deleted succesfully'
-                            ];
+                    'msg' => 'Category deleted succesfully',
+                ];
             } catch (\Eexception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                    'msg' => 'Something went wrong, please try again',
+                ];
             }
 
             return $output;

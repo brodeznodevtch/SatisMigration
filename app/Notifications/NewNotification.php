@@ -3,15 +3,15 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class NewNotification extends Notification
 {
     use Queueable;
+
     protected $password;
- 
+
     /**
      * Create a new notification instance.
      *
@@ -48,15 +48,16 @@ class NewNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('Credenciales de acceso a Envex ERP')
-        ->greeting('Hola '.$notifiable->first_name.' '.$notifiable->last_name.'')
-        ->line('Estas son tus credenciales de acceso al sistema!')
-        ->line('Usuario: '. $notifiable->username)
-        ->line('Contraseña: '. $this->password)
-        ->line('Te invitamos a que ingreses al sistema')
-        ->action('Iniciar sesión', url(config('app.url')))
-        ->line('Gracias por usar nuestra aplicación!');
+            ->subject('Credenciales de acceso a Envex ERP')
+            ->greeting('Hola '.$notifiable->first_name.' '.$notifiable->last_name.'')
+            ->line('Estas son tus credenciales de acceso al sistema!')
+            ->line('Usuario: '.$notifiable->username)
+            ->line('Contraseña: '.$this->password)
+            ->line('Te invitamos a que ingreses al sistema')
+            ->action('Iniciar sesión', url(config('app.url')))
+            ->line('Gracias por usar nuestra aplicación!');
     }
+
     /**
      * Get the array representation of the notification.
      *

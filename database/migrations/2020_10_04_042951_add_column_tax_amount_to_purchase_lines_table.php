@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnTaxAmountToPurchaseLinesTable extends Migration
 {
@@ -14,8 +14,8 @@ class AddColumnTaxAmountToPurchaseLinesTable extends Migration
     public function up()
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
-            $table->decimal("tax_amount", 8, 4)
-                ->after("tax_id")
+            $table->decimal('tax_amount', 8, 4)
+                ->after('tax_id')
                 ->nullable();
         });
     }
@@ -28,7 +28,7 @@ class AddColumnTaxAmountToPurchaseLinesTable extends Migration
     public function down()
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
-            $table->dropColumn("tax_amount");
+            $table->dropColumn('tax_amount');
         });
     }
 }

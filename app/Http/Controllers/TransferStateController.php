@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\TransferState;
+use App\Models\TransferState;
 use Illuminate\Http\Request;
 
 class TransferStateController extends Controller
@@ -30,7 +30,6 @@ class TransferStateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class TransferStateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\TransferState  $transferState
      * @return \Illuminate\Http\Response
      */
     public function show(TransferState $transferState)
@@ -52,7 +50,6 @@ class TransferStateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\TransferState  $transferState
      * @return \Illuminate\Http\Response
      */
     public function edit(TransferState $transferState)
@@ -63,8 +60,6 @@ class TransferStateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\TransferState  $transferState
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TransferState $transferState)
@@ -75,7 +70,6 @@ class TransferStateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\TransferState  $transferState
      * @return \Illuminate\Http\Response
      */
     public function destroy(TransferState $transferState)

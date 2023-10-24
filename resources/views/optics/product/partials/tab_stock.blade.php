@@ -81,7 +81,7 @@
   <!-- critical stock -->
   {{--
   @php
-    $stock_ = \App\Product::getStock($product->id)['stock']
+    $stock_ = \App\Models\Product::getStock($product->id)['stock']
   @endphp
   <div class="col-md-4">
     @if ($stock_ <= $product->alert_quantity)

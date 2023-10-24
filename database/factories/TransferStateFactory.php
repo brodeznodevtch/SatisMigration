@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\TransferState::class, function (Faker $faker) {
+$factory->define(App\Models\TransferState::class, function (Faker $faker) {
     return [
         //
     ];

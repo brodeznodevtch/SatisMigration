@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRrhhTypeWagesTable extends Migration
 {
@@ -22,7 +22,7 @@ class CreateRrhhTypeWagesTable extends Migration
             $table->string('type');
             $table->integer('business_id')->unsigned()->nullable();
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

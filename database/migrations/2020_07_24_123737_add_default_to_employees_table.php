@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddDefaultToEmployeesTable extends Migration
 {
@@ -13,8 +13,8 @@ class AddDefaultToEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function(Blueprint $table){
-            $table->integer('default')->unsigned()->nullable()->after('business_id');;
+        Schema::table('employees', function (Blueprint $table) {
+            $table->integer('default')->unsigned()->nullable()->after('business_id');
         });
     }
 

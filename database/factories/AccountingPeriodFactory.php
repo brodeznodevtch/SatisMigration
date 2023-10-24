@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\AccountingPeriod::class, function (Faker $faker) {
+$factory->define(App\Models\AccountingPeriod::class, function (Faker $faker) {
     return [
         //
     ];

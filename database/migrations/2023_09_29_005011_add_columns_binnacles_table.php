@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnsBinnaclesTable extends Migration
 {
@@ -33,9 +33,9 @@ class AddColumnsBinnaclesTable extends Migration
     public function down()
     {
         Schema::table('binnacles', function (Blueprint $table) {
-            $table->dropColumn('realized_in'); 
-            $table->dropColumn('machine_name'); 
-            $table->dropColumn('realized_in'); 
+            $table->dropColumn('realized_in');
+            $table->dropColumn('machine_name');
+            $table->dropColumn('realized_in');
             $table->dropColumn('ip');
             $table->dropColumn('city');
             $table->dropColumn('country');

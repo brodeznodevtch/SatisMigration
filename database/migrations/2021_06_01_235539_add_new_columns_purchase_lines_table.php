@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddNewColumnsPurchaseLinesTable extends Migration
 {
@@ -43,7 +43,7 @@ class AddNewColumnsPurchaseLinesTable extends Migration
                 'dai_amount',
                 'external_storage',
                 'local_freight_amount',
-                'customs_procedure_amount'
+                'customs_procedure_amount',
             ]);
         });
     }

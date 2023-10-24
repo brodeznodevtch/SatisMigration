@@ -26,5 +26,5 @@ return [
     'stock_adjustment_added_successfully' => 'Stok ayarı başarıyla eklendi',
     'search_products' => 'Ürün ara',
     'delete_success' => 'Stok ayarı başarıyla silindi',
-    'view_details' => 'Stok ayarı ayrıntılarını gör'
+    'view_details' => 'Stok ayarı ayrıntılarını gör',
 ];

@@ -1,41 +1,40 @@
 <?php
+
 namespace App\Utils;
 
-use DB;
+use App\Models\AccountingEntrie;
+use App\Models\AccountingEntriesDetail;
+use App\Models\AccountingPeriod;
+use App\Models\BankTransaction;
+use App\Models\Business;
+use App\Models\FiscalYear;
+use App\Models\TypeBankTransaction;
 use Carbon;
-use App\Business;
-use App\FiscalYear;
-use App\TypeEntrie;
-use App\BankTransaction;
-use App\AccountingPeriod;
-use App\AccountingEntrie;
-use App\TypeBankTransaction;
-use App\AccountingEntriesDetail;
 
-Class AccountingUtil extends Util {
+class AccountingUtil extends Util
+{
     /**
      * Create a new Accounting Entry
-     * @param 
-     * 
      */
-    public function createAccountingEntry($entry, $entry_lines, $transaction_date){
+    public function createAccountingEntry($entry, $entry_lines, $transaction_date)
+    {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
         $date = Carbon::parse($entry['date']);
         $number = $this->getEntryNumber($transaction_date);
-        
+
         /** Validate fiscal year */
-        $fiscal_year = FiscalYear::where("year", $date->year)->first();
-        if(!empty($fiscal_year)) {
-            
+        $fiscal_year = FiscalYear::where('year', $date->year)->first();
+        if (! empty($fiscal_year)) {
+
             /** Validate period */
             $period =
-                AccountingPeriod::where("fiscal_year_id", $fiscal_year->id)
-                    ->where("month", $date->month)
-                    ->where("status", 1)
+                AccountingPeriod::where('fiscal_year_id', $fiscal_year->id)
+                    ->where('month', $date->month)
+                    ->where('status', 1)
                     ->first();
-            
-            if(!empty($period)){
+
+            if (! empty($period)) {
                 $entry['accounting_period_id'] = $period->id;
                 $entry['business_id'] = $business_id;
                 $entry['number'] = $number;
@@ -43,8 +42,7 @@ Class AccountingUtil extends Util {
                 if ($business->enable_validation_entries == 1) {
                     $entry['status'] = 0;
                     $entry['correlative'] = 0;
-                }
-                else {
+                } else {
                     $entry['status'] = 1;
                     $entry['correlative'] = $number;
                 }
@@ -54,7 +52,7 @@ Class AccountingUtil extends Util {
 
                 /** Create accounting entry lines for products */
                 foreach ($entry_lines as $el) {
-                    if($el['amount'] > 0){
+                    if ($el['amount'] > 0) {
                         AccountingEntriesDetail::create([
                             'entrie_id' => $accounting_entry->id,
                             'account_id' => $el['catalogue_id'],
@@ -67,27 +65,28 @@ Class AccountingUtil extends Util {
 
                 return [
                     'success' => true,
-                    'msg' => __("accounting.accounting_entry_generated_success"),
-                    'id' => $accounting_entry->id
+                    'msg' => __('accounting.accounting_entry_generated_success'),
+                    'id' => $accounting_entry->id,
                 ];
 
             } else {
                 return [
                     'success' => false,
-                    'msg' => __("accounting.period_invalid")
+                    'msg' => __('accounting.period_invalid'),
                 ];
             }
         } else {
             return [
                 'success' => false,
-                'msg' => __("accounting.period_invalid")
+                'msg' => __('accounting.period_invalid'),
             ];
         }
     }
 
     /**
      * Get accounting entry number
-     * @param Date $date
+     *
+     * @param  Date  $date
      * @return int
      */
     public function getEntryNumber($date)
@@ -101,24 +100,22 @@ Class AccountingUtil extends Util {
             Business::where('id', $business_id)
                 ->value('entries_numeration_mode');
 
-        if($mode_numeration == 'month'){
+        if ($mode_numeration == 'month') {
             $count = AccountingEntrie::where('status', 1)
                 ->whereMonth('date', $month)
-                ->max("number");
-            if($count == null){
+                ->max('number');
+            if ($count == null) {
                 $code = 1;
-            }
-            else {
+            } else {
                 $code = $count + 1;
             }
-        } else if($mode_numeration == 'year'){
+        } elseif ($mode_numeration == 'year') {
             $count = AccountingEntrie::where('status', 1)
                 ->whereYear('date', $year)
-                ->max("number");
-            if($count == null){
+                ->max('number');
+            if ($count == null) {
                 $code = 1;
-            }
-            else {
+            } else {
                 $code = $count + 1;
             }
         } else {
@@ -130,23 +127,29 @@ Class AccountingUtil extends Util {
 
     /**
      * create bank transaction entry
-     * @param Array $remittance_entry
-     * @return boolean
+     *
+     * @param  array  $remittance_entry
+     * @return bool
      */
-    public function createBankTransactionEntry($remittance_entry){
-        if(empty($remittance_entry['bank_account_id']) ||
+    public function createBankTransactionEntry($remittance_entry)
+    {
+        if (empty($remittance_entry['bank_account_id']) ||
             empty($remittance_entry['accounting_entrie_id']) ||
             empty($remittance_entry['reference']) ||
             empty($remittance_entry['date']) ||
-            empty($remittance_entry['amount'])) { return false; }
-        
+            empty($remittance_entry['amount'])) {
+            return false;
+        }
+
         /** get type bank transacion for remittance */
         $type_bank_transaction =
             TypeBankTransaction::whereRaw('LCASE(name) = "remesa"')
                 ->select('id')
                 ->first();
 
-        if(empty($type_bank_transaction)) return false;
+        if (empty($type_bank_transaction)) {
+            return false;
+        }
 
         BankTransaction::create([
             'bank_account_id' => $remittance_entry['bank_account_id'],
@@ -159,7 +162,7 @@ Class AccountingUtil extends Util {
             'description' => $remittance_entry['description'],
             'headline' => null,
             'check_number' => null,
-            'status' => 1
+            'status' => 1,
         ]);
 
         return true;

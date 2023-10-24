@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRrhhContractsTable extends Migration
 {
@@ -32,7 +32,7 @@ class CreateRrhhContractsTable extends Migration
             $table->string('business_state')->nullable();
             $table->string('current_date_letters');
             $table->text('template');
-            
+
             $table->integer('employee_id')->unsigned();
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('rrhh_type_contract_id')->unsigned();

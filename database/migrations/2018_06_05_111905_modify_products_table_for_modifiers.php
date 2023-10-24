@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +13,7 @@ class ModifyProductsTableForModifiers extends Migration
     public function up()
     {
         DB::statement("ALTER TABLE products MODIFY COLUMN type ENUM('single','variable', 'modifier')");
-        DB::statement("ALTER TABLE products MODIFY COLUMN unit_id INT(11) UNSIGNED DEFAULT NULL");
+        DB::statement('ALTER TABLE products MODIFY COLUMN unit_id INT(11) UNSIGNED DEFAULT NULL');
     }
 
     /**

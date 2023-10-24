@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use DataTables;
-use App\Customer;
-use App\Employees;
+use App\Models\CreditDocuments;
+use App\Models\Customer;
+use App\Models\DocumentType;
+use App\Models\Employees;
+use App\Models\SupportDocuments;
+use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
-use App\Transaction;
-use App\DocumentType;
-use App\CreditDocuments;
-use App\SupportDocuments;
+use DataTables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CreditDocumentsController extends Controller
 {
@@ -24,10 +24,11 @@ class CreditDocumentsController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('cdocs.view') && !auth()->user()->can('cdocs.create')) {
+        if (! auth()->user()->can('cdocs.view') && ! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = Auth::user()->business_id;
+
         return view('credit_documents.index');
     }
 
@@ -38,7 +39,7 @@ class CreditDocumentsController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('cdocs.create')) {
+        if (! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -46,6 +47,7 @@ class CreditDocumentsController extends Controller
         $document_types = DocumentType::forDropDown($business_id);
         $supprt_docs = SupportDocuments::forDropDown($business_id);
         $employees = Employees::forDropdown($business_id);
+
         return view('credit_documents.create')
             ->with(compact('document_types', 'supprt_docs', 'employees'));
     }
@@ -64,7 +66,7 @@ class CreditDocumentsController extends Controller
                     ->where('type', 'sell')
                     ->first();
 
-                if (!empty($invoice_data)) {
+                if (! empty($invoice_data)) {
 
                     $customer = Customer::where('id', $invoice_data->customer_id)
                         ->where('business_id', $business_id)
@@ -77,31 +79,32 @@ class CreditDocumentsController extends Controller
                         'date' => $invoice_data->transaction_date,
                         'customer' => $customer->name,
                         'id' => $invoice_data->id,
-                        'inv' => true
+                        'inv' => true,
                     ];
                 } else {
                     $outpout = [
                         'success' => true,
                         'found' => 0,
                         'msg' => __('cxc.invoice_does_not_exist'),
-                        'inv' => true
+                        'inv' => true,
                     ];
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $outpout = [
                     'success' => false,
                     'inv' => false,
                     'msg' => $e->getMessage(),
                 ];
             }
+
             return $outpout;
         }
     }
 
     public function getCDocsData()
     {
-        if (!auth()->user()->can('cdocs.view') && !auth()->user()->can('cdocs.create')) {
+        if (! auth()->user()->can('cdocs.view') && ! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -121,32 +124,32 @@ class CreditDocumentsController extends Controller
             )
             ->get();
 
-
         return DataTables::of($creditDocuments)
             ->addColumn(
                 'action',
                 function ($row) {
                     $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('cdocs.reception')) {
-                        $html .= '<li><a href="#" data-href="' . action('CreditDocumentsController@reception', [$row->id]) . '" class="reception_cdocs_button"><i class="glyphicon glyphicon-copy"></i> ' . __("cxc.add_reception") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@reception', [$row->id]).'" class="reception_cdocs_button"><i class="glyphicon glyphicon-copy"></i> '.__('cxc.add_reception').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.custodian')) {
-                        $html .= '<li><a href="#" data-href="' . action('CreditDocumentsController@custodian', [$row->id]) . '" class="custodian_cdocs_button"><i class="glyphicon glyphicon-lock"></i> ' . __("cxc.add_custodian") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@custodian', [$row->id]).'" class="custodian_cdocs_button"><i class="glyphicon glyphicon-lock"></i> '.__('cxc.add_custodian').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.view')) {
-                        $html .= '<li><a href="#" data-href="' . action('CreditDocumentsController@show', [$row->id]) . '" class="show_cdocs_button"><i class="glyphicon glyphicon-search"></i> ' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@show', [$row->id]).'" class="show_cdocs_button"><i class="glyphicon glyphicon-search"></i> '.__('messages.view').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.update')) {
-                        $html .= '<li><a href="#" data-href="' . action('CreditDocumentsController@edit', [$row->id]) . '" class="edit_cdocs_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@edit', [$row->id]).'" class="edit_cdocs_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.delete')) {
-                        $html .= '<li><a href="#" onClick="deleteCreditDocuments(' . $row->id . ')" class="delete_cdocs_button"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="deleteCreditDocuments('.$row->id.')" class="delete_cdocs_button"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';
+
                     return $html;
                 }
             )
@@ -158,12 +161,11 @@ class CreditDocumentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('cdocs.create')) {
+        if (! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -176,24 +178,25 @@ class CreditDocumentsController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $creditDocuments,
-                'msg' => __('crm.added_success')
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
+
         return $outpout;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if (!auth()->user()->can('cdocs.view')) {
+        if (! auth()->user()->can('cdocs.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -209,7 +212,6 @@ class CreditDocumentsController extends Controller
             $reason = SupportDocuments::where('id', $credit_document->reason_id)->select('name')->first();
             $courier = Employees::where('id', $credit_document->courier_id)->select('first_name', 'last_name')->first();
 
-
             return view('credit_documents.show')
                 ->with(compact('credit_document', 'credit_document', 'document_type', 'reason', 'courier'));
         }
@@ -217,7 +219,7 @@ class CreditDocumentsController extends Controller
 
     public function reception($id)
     {
-        if (!auth()->user()->can('cdocs.reception')) {
+        if (! auth()->user()->can('cdocs.reception')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -227,6 +229,7 @@ class CreditDocumentsController extends Controller
             $supprt_docs = SupportDocuments::forDropDown($business_id);
             $employees = User::forDropdown($business_id);
             $cdocs = CreditDocuments::where('business_id', $business_id)->find($id);
+
             return view('credit_documents.reception')
                 ->with(compact('supprt_docs', 'employees', 'user_id', 'cdocs'));
         }
@@ -234,7 +237,7 @@ class CreditDocumentsController extends Controller
 
     public function custodian($id)
     {
-        if (!auth()->user()->can('cdocs.custodian')) {
+        if (! auth()->user()->can('cdocs.custodian')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -242,6 +245,7 @@ class CreditDocumentsController extends Controller
             $business_id = Auth::user()->business_id;
             $custodians = User::CustodiansDropdown($business_id);
             $cdocs = CreditDocuments::where('business_id', $business_id)->find($id);
+
             return view('credit_documents.custodian')
                 ->with(compact('custodians', 'cdocs'));
         }
@@ -249,7 +253,7 @@ class CreditDocumentsController extends Controller
 
     public function saveReception(Request $request, $id)
     {
-        if (!auth()->user()->can('cdocs.reception')) {
+        if (! auth()->user()->can('cdocs.reception')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -268,19 +272,20 @@ class CreditDocumentsController extends Controller
                 $outpout = [
                     'success' => true,
                     'data' => $reception,
-                    'msg' => __('cxc.reception_added')
+                    'msg' => __('cxc.reception_added'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $outpout = ['success' => false, 'msg' => $e->getMessage()];
             }
+
             return $outpout;
         }
     }
 
     public function saveCustodian(Request $request, $id)
     {
-        if (!auth()->user()->can('cdocs.custodian')) {
+        if (! auth()->user()->can('cdocs.custodian')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -291,7 +296,7 @@ class CreditDocumentsController extends Controller
 
                 $custodian = CreditDocuments::where('business_id', $business_id)->findOrFail($id);
 
-                if (!empty($custodian->document_number) || !empty($custodian->document_type_received)) {
+                if (! empty($custodian->document_number) || ! empty($custodian->document_type_received)) {
                     $custodian->custodian_id = $input['custodian_id'];
                     $custodian->custodian_receive_date = Carbon::now();
                     $custodian->save();
@@ -299,19 +304,20 @@ class CreditDocumentsController extends Controller
                     $outpout = [
                         'success' => true,
                         'data' => $custodian,
-                        'msg' => __('cxc.custodian_added')
+                        'msg' => __('cxc.custodian_added'),
                     ];
                 } else {
                     $outpout = [
                         'success' => false,
                         'data' => $custodian,
-                        'msg' => __('cxc.doc_does_not_received')
+                        'msg' => __('cxc.doc_does_not_received'),
                     ];
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $outpout = ['success' => false, 'msg' => $e->getMessage()];
             }
+
             return $outpout;
         }
     }
@@ -319,13 +325,13 @@ class CreditDocumentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
 
-        if (!auth()->user()->can('cdocs.update')) {
+        if (! auth()->user()->can('cdocs.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -339,7 +345,6 @@ class CreditDocumentsController extends Controller
             ->where('credit_documents.id', $id)
             ->first();
 
-
         return view('credit_documents.edit')
             ->with(compact('document_types', 'supprt_docs', 'employees', 'credit_document'));
     }
@@ -347,18 +352,17 @@ class CreditDocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('cdocs.update')) {
+        if (! auth()->user()->can('cdocs.update')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if ($id == null || $id == "") {
-            return "problemas con el id";
+        if ($id == null || $id == '') {
+            return 'problemas con el id';
         }
         try {
             $credit_array = $request->only(['transaction_id', 'reason_id', 'courier_id']);
@@ -371,39 +375,40 @@ class CreditDocumentsController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $creditDocuments,
-                'msg' => __('crm.added_success')
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
+
         return $outpout;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('cdocs.delete')) {
+        if (! auth()->user()->can('cdocs.delete')) {
             abort(403, 'Unauthorized action.');
         }
-
 
         try {
             $creditDocuments = CreditDocuments::findOrFail($id)->delete();
             $outpout = [
                 'success' => true,
                 'data' => $creditDocuments,
-                'msg' => __('crm.added_success')
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
+
         return $outpout;
     }
 }

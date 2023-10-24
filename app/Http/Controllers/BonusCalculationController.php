@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\CalculationType;
-use App\InstitutionLaw;
-use App\BonusCalculation;
-use Illuminate\Http\Request;
-use DB;
+use App\Models\BonusCalculation;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class BonusCalculationController extends Controller
 {
-        /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        if(!auth()->user()->can('payroll-catalogues.view')){
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('payroll-catalogues.view')) {
+            abort(403, 'Unauthorized action.');
         }
+
         return view('payroll.catalogues.bonus_calculation.index');
     }
 
-    public function getBonusCalculations(){
-        if ( !auth()->user()->can('payroll-catolgues.view') ) {
+    public function getBonusCalculations()
+    {
+        if (! auth()->user()->can('payroll-catolgues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -38,15 +37,15 @@ class BonusCalculationController extends Controller
             ->get();
 
         return DataTables::of($data)->editColumn('proportional', function ($data) {
-            if($data->proportional == 1){
+            if ($data->proportional == 1) {
                 return __('messages.yes');
-            }else{
+            } else {
                 return __('messages.no');
             }
         })->editColumn('status', function ($data) {
-            if($data->status == 1){
+            if ($data->status == 1) {
                 return __('rrhh.active');
-            }else{
+            } else {
                 return __('rrhh.inactive');
             }
         })->toJson();
@@ -59,53 +58,53 @@ class BonusCalculationController extends Controller
      */
     public function create()
     {
-        if ( !auth()->user()->can('payroll-catalogues.create') ) {
+        if (! auth()->user()->can('payroll-catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
+
         return view('payroll.catalogues.bonus_calculation.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if ( !auth()->user()->can('payroll-catalogues.create') ) {
+        if (! auth()->user()->can('payroll-catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'from'         => 'required|numeric',
-            'until'        => 'required|numeric',
-            'days'         => 'required|integer|min:0',
+            'from' => 'required|numeric',
+            'until' => 'required|numeric',
+            'days' => 'required|integer|min:0',
             'proportional' => 'required|boolean',
         ]);
 
         try {
             $input_details = $request->all();
             $input_details['business_id'] = request()->session()->get('user.business_id');
-            
+
             DB::beginTransaction();
-            
+
             BonusCalculation::create($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -131,56 +130,56 @@ class BonusCalculationController extends Controller
      */
     public function edit($id)
     {
-        if ( !auth()->user()->can('payroll-catalogues.edit') ) {
+        if (! auth()->user()->can('payroll-catalogues.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $bonusCalculation = BonusCalculation::where('id', $id)->where('business_id', $business_id)->first();
+
         return view('payroll.catalogues.bonus_calculation.edit', compact('bonusCalculation'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if ( !auth()->user()->can('payroll-catalogues.edit') ) {
+        if (! auth()->user()->can('payroll-catalogues.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'from'         => 'required|numeric',
-            'until'        => 'required|numeric',
-            'days'         => 'required|integer|min:0',
+            'from' => 'required|numeric',
+            'until' => 'required|numeric',
+            'days' => 'required|integer|min:0',
             'proportional' => 'required|boolean',
         ]);
 
         try {
             $input_details = $request->all();
             $input_details['business_id'] = request()->session()->get('user.business_id');
-            
+
             DB::beginTransaction();
             $business_id = request()->session()->get('user.business_id');
             $item = BonusCalculation::where('id', $id)->where('business_id', $business_id)->first();
             $bonusCalculation = $item->update($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -195,7 +194,7 @@ class BonusCalculationController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('payroll-catalogues.delete')) {
+        if (! auth()->user()->can('payroll-catalogues.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -204,23 +203,20 @@ class BonusCalculationController extends Controller
                 $business_id = request()->session()->get('user.business_id');
                 $item = BonusCalculation::where('id', $id)->where('business_id', $business_id)->first();
                 $item->forceDelete();
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }                
-
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
 
             return $output;
         }
     }
-
 }

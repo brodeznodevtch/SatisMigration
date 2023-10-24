@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\State;
-use App\City;
-use App\Country;
-use App\RrhhData;
-use App\RrhhPositionHistory;
-use App\RrhhSalaryHistory;
-use App\RrhhTypeWage;
-use App\Employees;
-use Illuminate\Http\Request;
+use App\Models\Bank;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Employees;
+use App\Models\RrhhData;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalaryHistory;
+use App\Models\RrhhTypeWage;
+use App\Models\State;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
-use Excel;
 use DB;
-use Carbon\Carbon;
+use Excel;
+use Illuminate\Http\Request;
 
 class RrhhImportEmployeesController extends Controller
 {
-
     /**
      * Constructor
      *
-     * @param ModuleUtil $moduleUtil
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil, EmployeeUtil $employeeUtil)
@@ -32,20 +29,19 @@ class RrhhImportEmployeesController extends Controller
         $this->moduleUtil = $moduleUtil;
         $this->employeeUtil = $employeeUtil;
     }
-    
+
     public function create()
     {
-        if (!auth()->user()->can('rrhh_import_employees.create')) {
+        if (! auth()->user()->can('rrhh_import_employees.create')) {
             abort(403, 'Unauthorized action.');
         }
-    
+
         return view('rrhh.import_employees.create');
     }
 
     /**
      * Check file to importer.
-     * 
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function checkFile(Request $request)
@@ -76,7 +72,6 @@ class RrhhImportEmployeesController extends Controller
                  * EMPLOYEE SHEET
                  * ------------------------------------------------------------
                  */
-
                 $imported_data = Excel::toArray('', $file->getRealPath(), null, \Maatwebsite\Excel\Excel::XLSX)[1];
 
                 // Removing the header
@@ -96,7 +91,7 @@ class RrhhImportEmployeesController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('rrhh.employees'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -152,7 +147,7 @@ class RrhhImportEmployeesController extends Controller
 
             $status = [
                 'success' => 1,
-                'msg' => __('customer.successful_verified_file')
+                'msg' => __('customer.successful_verified_file'),
             ];
 
         } catch (\Exception $e) {
@@ -160,20 +155,20 @@ class RrhhImportEmployeesController extends Controller
 
             $error_line = [
                 'row' => 'N/A',
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
 
             array_push($error_msg, $error_line);
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $status = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
-        // Session variables 
+        // Session variables
         session(['employees' => $employees]);
 
         $errors = $error_msg;
@@ -199,7 +194,7 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Check row data.
-     * 
+     *
      * @param  array  $row
      * @param  int  $row_no
      * @param  array  $default_data
@@ -250,7 +245,7 @@ class RrhhImportEmployeesController extends Controller
         if (empty($row['first_name'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.first_name_empty')
+                'msg' => __('rrhh.first_name_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -259,22 +254,21 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['first_name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.first_name_length')
+                    'msg' => __('rrhh.first_name_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['first_name'] = $row['first_name'];
             }
         }
-
 
         // ---------- LAST NAME ----------
         // Check empty
         if (empty($row['last_name'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.last_name_empty')
+                'msg' => __('rrhh.last_name_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -283,22 +277,21 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['last_name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.last_name_length')
+                    'msg' => __('rrhh.last_name_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['last_name'] = $row['last_name'];
             }
         }
-
 
         // ---------- GENDER ----------
         // Check empty
         if (empty($row['gender'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.gender_empty')
+                'msg' => __('rrhh.gender_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -309,26 +302,25 @@ class RrhhImportEmployeesController extends Controller
             if (in_array($gender, ['f', 'F', 'm', 'M'])) {
                 if (in_array($gender, ['f', 'F'])) {
                     $employee['gender'] = 'F';
-                } else if (in_array($gender, ['m', 'M'])) {
+                } elseif (in_array($gender, ['m', 'M'])) {
                     $employee['gender'] = 'M';
-                } 
+                }
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.gender_invalid')
+                    'msg' => __('rrhh.gender_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
             }
         }
 
-
         // ---------- NATIONALITY ----------
         // Check empty
         if (empty($row['nationality'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.nationality_empty')
+                'msg' => __('rrhh.nationality_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -337,11 +329,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['nationality']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.nationality_length')
+                    'msg' => __('rrhh.nationality_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $nationality = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 6)
@@ -353,23 +345,22 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($nationality)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.nationality_exist')
+                        'msg' => __('rrhh.nationality_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['nationality_id'] = $nationality->id;
                 }
-            }   
+            }
         }
-
 
         // ---------- BIRTH DATE ----------
         // Check empty
         if (empty($row['birth_date'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.birth_date_empty')
+                'msg' => __('rrhh.birth_date_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -378,96 +369,93 @@ class RrhhImportEmployeesController extends Controller
             if (date('d-m-Y', strtotime($row['birth_date'])) != $row['birth_date']) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.birth_date_valid')
+                    'msg' => __('rrhh.birth_date_valid'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
-                $row['birth_date'] = str_replace("-", "/", $row['birth_date']);
+            } else {
+                $row['birth_date'] = str_replace('-', '/', $row['birth_date']);
                 $employee['birth_date'] = $this->moduleUtil->uf_date($row['birth_date']);
             }
         }
-
 
         // ---------- DNI ----------
         // Check empty
         if (empty($row['dni'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.dni_empty')
+                'msg' => __('rrhh.dni_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format dni
             $formatDni = "/^\d{8}-\d$/";
-            if(!preg_match($formatDni, $row['dni'])){
+            if (! preg_match($formatDni, $row['dni'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.dni_valid')
+                    'msg' => __('rrhh.dni_valid'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check unique
                 $is_exist = Employees::where('business_id', $business_id)
-                ->where('dni', [$row['dni']])
-                ->exists();
+                    ->where('dni', [$row['dni']])
+                    ->exists();
 
                 if ($is_exist) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.dni_unique')
+                        'msg' => __('rrhh.dni_unique'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['dni'] = $row['dni'];
                 }
             }
         }
-
 
         // ---------- TAX NUMBER ----------
         // Check empty
         if (empty($row['tax_number'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.tax_number_empty')
+                'msg' => __('rrhh.tax_number_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format tax number
-            if(strlen($row['tax_number']) > 18){
+            if (strlen($row['tax_number']) > 18) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.tax_number_length')
+                    'msg' => __('rrhh.tax_number_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['tax_number'])){
+                if (! preg_match($format, $row['tax_number'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.tax_number_valid')
+                        'msg' => __('rrhh.tax_number_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['tax_number'] = $row['tax_number'];
                 }
             }
         }
-
 
         // ---------- CIVIL STATUS ----------
         // Check empty
         if (empty($row['civil_status'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.civil_status_empty')
+                'msg' => __('rrhh.civil_status_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -476,11 +464,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['civil_status']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.civil_status_length')
+                    'msg' => __('rrhh.civil_status_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $civil_status = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 1)
@@ -492,148 +480,142 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($civil_status)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.civil_status_exist')
+                        'msg' => __('rrhh.civil_status_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['civil_status_id'] = $civil_status->id;
                 }
             }
         }
-      
 
         // ---------- PHONE ----------
         // Check is not empty
-        if (!empty($row['phone'])) {
+        if (! empty($row['phone'])) {
             // Check format tax number
-            if(strlen($row['phone']) > 9){
+            if (strlen($row['phone']) > 9) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.phone_length')
+                    'msg' => __('rrhh.phone_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['phone'])){
+                if (! preg_match($format, $row['phone'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.phone_valid')
+                        'msg' => __('rrhh.phone_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['phone'] = $row['phone'];
                 }
-            }   
+            }
         }
-
 
         // ---------- MOBILE ----------
         // Check is not empty
-        if (!empty($row['mobile'])) {
+        if (! empty($row['mobile'])) {
             // Check format tax number
-            if(strlen($row['mobile']) > 9){
+            if (strlen($row['mobile']) > 9) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.mobile_length')
+                    'msg' => __('rrhh.mobile_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['mobile'])){
+                if (! preg_match($format, $row['mobile'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.mobile_valid')
+                        'msg' => __('rrhh.mobile_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['mobile'] = $row['mobile'];
                 }
-            }   
+            }
         }
-        
 
         // ---------- EMAIL ----------
         // Check empty
         if (empty($row['email'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.email_empty')
+                'msg' => __('rrhh.email_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format tax number
-            if(strlen($row['email']) > 191){
+            if (strlen($row['email']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.email_length')
+                    'msg' => __('rrhh.email_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['email'] = $row['email'];
             }
         }
 
-
         // ---------- INSTITUTIONAL EMAIL ----------
         // Check is not empty
-        if (!empty($row['institutional_email'])) {
+        if (! empty($row['institutional_email'])) {
             // Check length
-            if(strlen($row['institutional_email']) > 191){
+            if (strlen($row['institutional_email']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.institutional_email_length')
+                    'msg' => __('rrhh.institutional_email_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['institutional_email'] = $row['institutional_email'];
             }
         }
-
 
         // ---------- ADDRESS ----------
         // Check empty
         if (empty($row['address'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.address_empty')
+                'msg' => __('rrhh.address_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check length
-            if(strlen($row['address']) > 191){
+            if (strlen($row['address']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.address_length')
+                    'msg' => __('rrhh.address_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['address'] = $row['address'];
             }
         }
 
-
         // ---------- COUNTRY ----------
         // Check is not empty
-        if (!empty($row['country'])) {
+        if (! empty($row['country'])) {
             // Check length
             if (strlen($row['country']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.country_length')
+                    'msg' => __('rrhh.country_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
 
                 // Check exist
                 $country = Country::where('business_id', $business_id)
@@ -644,31 +626,30 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($country)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.country_exist')
+                        'msg' => __('rrhh.country_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $country_error = true;
-                }else {
+                } else {
                     $employee['country_id'] = $country->id;
                 }
             }
         }
 
-
         // ---------- STATE ----------
         // Check is not empty
-        if (!empty($row['state'])) {
+        if (! empty($row['state'])) {
             // Check length
             if (strlen($row['state']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.state_length')
+                    'msg' => __('rrhh.state_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $state = State::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -678,29 +659,28 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($state)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.state_exist')
+                        'msg' => __('rrhh.state_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['state_id'] = $state->id;
                 }
             }
         }
 
-
         // ---------- CITY ----------
         // Check is not empty
-        if (!empty($row['city'])) {
+        if (! empty($row['city'])) {
             // Check length
             if (strlen($row['city']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.city_length')
+                    'msg' => __('rrhh.city_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $city = City::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -710,58 +690,56 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($city)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.city_exist')
+                        'msg' => __('rrhh.city_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['city_id'] = $city->id;
                 }
             }
         }
 
-
         // ---------- ISSS ----------
         // Check is not empty
-        if (!empty($row['isss'])) {
+        if (! empty($row['isss'])) {
             // Check length
-            if(strlen($row['isss']) > 21){
+            if (strlen($row['isss']) > 21) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.isss_length')
+                    'msg' => __('rrhh.isss_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 //Check format
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['isss'])){
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['isss'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.isss_valid')
+                        'msg' => __('rrhh.isss_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['social_security_number'] = $row['isss'];
                 }
             }
 
         }
 
-
         // ---------- AFP ----------
         // Check is not empty
-        if (!empty($row['afp'])) {
+        if (! empty($row['afp'])) {
             // Check length
             if (strlen($row['afp']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.afp_length')
+                    'msg' => __('rrhh.afp_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $afp = RrhhData::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -771,51 +749,49 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($afp)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.afp_exist')
+                        'msg' => __('rrhh.afp_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['afp_id'] = $afp->id;
-                }
-            }            
-        }
-
-
-        // ---------- AFP NUMBER ----------
-        // Check is not empty
-        if (!empty($row['afp_number'])) {
-            // Check length
-            if(strlen($row['afp_number']) > 26){
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.afp_number_length')
-                ];
-
-                array_push($error_msg, $error_line);
-            }else{
-                //Check format
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['afp_number'])){
-                    $error_line = [
-                        'row' => $row_no,
-                        'msg' => __('rrhh.afp_number_valid')
-                    ];
-        
-                    array_push($error_msg, $error_line);
-                }else{
-                    $employee['afp_number'] = $row['afp_number'];
                 }
             }
         }
 
+        // ---------- AFP NUMBER ----------
+        // Check is not empty
+        if (! empty($row['afp_number'])) {
+            // Check length
+            if (strlen($row['afp_number']) > 26) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.afp_number_length'),
+                ];
+
+                array_push($error_msg, $error_line);
+            } else {
+                //Check format
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['afp_number'])) {
+                    $error_line = [
+                        'row' => $row_no,
+                        'msg' => __('rrhh.afp_number_valid'),
+                    ];
+
+                    array_push($error_msg, $error_line);
+                } else {
+                    $employee['afp_number'] = $row['afp_number'];
+                }
+            }
+        }
 
         // ---------- DATE ADMISSION ----------
         // Check empty
         if (empty($row['date_admission'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.date_admission_empty')
+                'msg' => __('rrhh.date_admission_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -824,23 +800,22 @@ class RrhhImportEmployeesController extends Controller
             if (date('d-m-Y', strtotime($row['date_admission'])) != $row['date_admission']) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.date_admission_valid')
+                    'msg' => __('rrhh.date_admission_valid'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
-                $row['date_admission'] = str_replace("-", "/", $row['date_admission']);
+            } else {
+                $row['date_admission'] = str_replace('-', '/', $row['date_admission']);
                 $employee['date_admission'] = $this->moduleUtil->uf_date($row['date_admission']);
             }
         }
-
 
         // ---------- DEPARTMENT ----------
         // Check empty
         if (empty($row['department'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.department_empty')
+                'msg' => __('rrhh.department_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -849,11 +824,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['department']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.department_length')
+                    'msg' => __('rrhh.department_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $department = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 2)
@@ -865,23 +840,22 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($department)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.department_exist')
+                        'msg' => __('rrhh.department_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['department_id'] = $department->id;
                 }
             }
         }
-
 
         // ---------- POSITION ----------
         // Check empty
         if (empty($row['position'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.position_empty')
+                'msg' => __('rrhh.position_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -890,11 +864,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['position']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.position_length')
+                    'msg' => __('rrhh.position_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $position = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 3)
@@ -906,29 +880,28 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($position)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.position_exist')
+                        'msg' => __('rrhh.position_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['position_id'] = $position->id;
                 }
             }
         }
 
-
         // ---------- TYPE ----------
         // Check is not empty
-        if (!empty($row['type'])) {
+        if (! empty($row['type'])) {
             // Check length
             if (strlen($row['type']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.type_length')
+                    'msg' => __('rrhh.type_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $type = RrhhTypeWage::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -938,25 +911,24 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($type)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.type_exist')
+                        'msg' => __('rrhh.type_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $type_error = true;
-                }else {
+                } else {
                     $employee['type_id'] = $type->id;
                 }
-            } 
+            }
         }
-
 
         // ---------- SALARY ----------
         // Check empty
         if (empty($row['salary'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.salary_empty')
+                'msg' => __('rrhh.salary_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -965,18 +937,18 @@ class RrhhImportEmployeesController extends Controller
             if (! is_numeric($row['salary'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.salary_numeric')
+                    'msg' => __('rrhh.salary_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
             } else {
                 // Check zero
                 if ($row['salary'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.salary_zero')
+                        'msg' => __('rrhh.salary_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
 
                 } else {
@@ -985,19 +957,18 @@ class RrhhImportEmployeesController extends Controller
             }
         }
 
-
         // ---------- PROFESSION ----------
         // Check is not empty
-        if (!empty($row['profession'])) {
+        if (! empty($row['profession'])) {
             // Check length
             if (strlen($row['profession']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.profession_length')
+                    'msg' => __('rrhh.profession_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $profession = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 7)
@@ -1009,23 +980,22 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($profession)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.profession_exist')
+                        'msg' => __('rrhh.profession_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['profession_id'] = $profession->id;
                 }
             }
         }
-
 
         // ---------- PAYMENT ----------
         // Check empty
         if (empty($row['payment'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.payment_empty')
+                'msg' => __('rrhh.payment_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1034,11 +1004,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['payment']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.payment_length')
+                    'msg' => __('rrhh.payment_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $payment = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 8)
@@ -1050,102 +1020,98 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($payment)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.payment_exist')
+                        'msg' => __('rrhh.payment_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $payment_error = true;
-                }else {
+                } else {
                     $employee['payment_id'] = $payment->id;
                 }
-            } 
+            }
         }
-
 
         // ---------- BANK ----------
         // Check empty
         if (empty($row['bank'])) {
-            if(mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')){
+            if (mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.bank_empty')
-                ];
-    
-                array_push($error_msg, $error_line);
-            }
-        }else{
-            // Check length
-            if (strlen($row['bank']) > 191) {
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.bank_length')
+                    'msg' => __('rrhh.bank_empty'),
                 ];
 
-                array_push($error_msg, $error_line);
-            }else{
-                // Check exist
-                $bank = Bank::where('business_id', $business_id)
-                ->where(function ($query) use ($row) {
-                    $query->whereRaw('UPPER(name) = UPPER(?)', [$row['bank']]);
-                })->first();
-
-                if (empty($bank)) {
-                    $error_line = [
-                        'row' => $row_no,
-                        'msg' => __('rrhh.bank_exist')
-                    ];
-
-                    array_push($error_msg, $error_line);
-                }else{
-                    $employee['bank_id'] = $bank->id;
-                }
-            }
-        }
-       
-        
-        // ---------- BANK ACCOUNT ----------
-        // Check empty
-        if (empty($row['bank_account'])) {
-            if(mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')){
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.bank_account_empty')
-                ];
-    
                 array_push($error_msg, $error_line);
             }
         } else {
             // Check length
-            if(strlen($row['bank_account']) > 191){
+            if (strlen($row['bank']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.bank_account_length')
+                    'msg' => __('rrhh.bank_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['bank_account'])){
+            } else {
+                // Check exist
+                $bank = Bank::where('business_id', $business_id)
+                    ->where(function ($query) use ($row) {
+                        $query->whereRaw('UPPER(name) = UPPER(?)', [$row['bank']]);
+                    })->first();
+
+                if (empty($bank)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.bank_account_valid')
+                        'msg' => __('rrhh.bank_exist'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
-                    $employee['bank_account'] = $row['bank_account'];
+                } else {
+                    $employee['bank_id'] = $bank->id;
                 }
             }
         }
 
+        // ---------- BANK ACCOUNT ----------
+        // Check empty
+        if (empty($row['bank_account'])) {
+            if (mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.bank_account_empty'),
+                ];
+
+                array_push($error_msg, $error_line);
+            }
+        } else {
+            // Check length
+            if (strlen($row['bank_account']) > 191) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.bank_account_length'),
+                ];
+
+                array_push($error_msg, $error_line);
+            } else {
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['bank_account'])) {
+                    $error_line = [
+                        'row' => $row_no,
+                        'msg' => __('rrhh.bank_account_valid'),
+                    ];
+
+                    array_push($error_msg, $error_line);
+                } else {
+                    $employee['bank_account'] = $row['bank_account'];
+                }
+            }
+        }
 
         // ----- BUSINESS ID -----
         $employee['business_id'] = $business_id;
 
         // ----- CREATED BY -----
         $employee['created_by'] = $user_id;
-
 
         $result = [
             'employees' => $employee,
@@ -1158,7 +1124,6 @@ class RrhhImportEmployeesController extends Controller
     /**
      * Imports the uploaded file to database.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function import(Request $request)
@@ -1174,7 +1139,7 @@ class RrhhImportEmployeesController extends Controller
 
             if (! empty($employees)) {
                 foreach ($employees as $data) {
-                    
+
                     $new_employee = [
                         'agent_code' => $this->employeeUtil->generateCorrelative($data['date_admission'], $data['business_id']),
                         'first_name' => $data['first_name'],
@@ -1183,7 +1148,7 @@ class RrhhImportEmployeesController extends Controller
                         'nationality_id' => $data['nationality_id'],
                         'birth_date' => $data['birth_date'],
                         'dni' => $data['dni'],
-                        'approved' => ($data['dni'] == $data['tax_number'])? 1 : 0,
+                        'approved' => ($data['dni'] == $data['tax_number']) ? 1 : 0,
                         'tax_number' => $data['tax_number'],
                         'civil_status_id' => $data['civil_status_id'],
                         'phone' => $data['phone'],
@@ -1211,16 +1176,16 @@ class RrhhImportEmployeesController extends Controller
                     $employee = Employees::create($new_employee);
 
                     RrhhPositionHistory::insert([
-                        'new_department_id' => $data['department_id'], 
-                        'new_position1_id' => $data['position_id'], 
-                        'employee_id' => $employee->id, 
-                        'current' => 1
+                        'new_department_id' => $data['department_id'],
+                        'new_position1_id' => $data['position_id'],
+                        'employee_id' => $employee->id,
+                        'current' => 1,
                     ]);
-        
+
                     RrhhSalaryHistory::insert([
-                        'employee_id' => $employee->id, 
-                        'new_salary' => $data['salary'], 
-                        'current' => 1
+                        'employee_id' => $employee->id,
+                        'new_salary' => $data['salary'],
+                        'current' => 1,
                     ]);
                 }
             }
@@ -1229,17 +1194,17 @@ class RrhhImportEmployeesController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('product.file_imported_successfully')
+                'msg' => __('product.file_imported_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -1256,15 +1221,13 @@ class RrhhImportEmployeesController extends Controller
         if (! auth()->user()->can('rrhh_import_employees.update')) {
             abort(403, 'Unauthorized action.');
         }
-  
+
         return view('rrhh.import_employees.edit');
     }
 
-
     /**
      * Check file to importer.
-     * 
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function checkEditFile(Request $request)
@@ -1295,7 +1258,6 @@ class RrhhImportEmployeesController extends Controller
                  * EMPLOYEE SHEET
                  * ------------------------------------------------------------
                  */
-
                 $imported_data = Excel::toArray('', $file->getRealPath(), null, \Maatwebsite\Excel\Excel::XLSX)[1];
 
                 // Removing the header
@@ -1315,7 +1277,7 @@ class RrhhImportEmployeesController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('rrhh.employees'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -1371,7 +1333,7 @@ class RrhhImportEmployeesController extends Controller
 
             $status = [
                 'success' => 1,
-                'msg' => __('customer.successful_verified_file')
+                'msg' => __('customer.successful_verified_file'),
             ];
 
         } catch (\Exception $e) {
@@ -1379,20 +1341,20 @@ class RrhhImportEmployeesController extends Controller
 
             $error_line = [
                 'row' => 'N/A',
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
 
             array_push($error_msg, $error_line);
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $status = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
-        // Session variables 
+        // Session variables
         session(['employees' => $employees]);
 
         $errors = $error_msg;
@@ -1416,11 +1378,9 @@ class RrhhImportEmployeesController extends Controller
         return redirect('rrhh-import-employees')->with('status', $status);
     }
 
-
-
-/**
+    /**
      * Check row data.
-     * 
+     *
      * @param  array  $row
      * @param  int  $row_no
      * @param  array  $default_data
@@ -1467,14 +1427,12 @@ class RrhhImportEmployeesController extends Controller
         $business_id = request()->session()->get('user.business_id');
         $user_id = request()->session()->get('user.id');
 
-
-
         // ---------- FIRST NAME ----------
         // Check empty
         if (empty($row['first_name'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.first_name_empty')
+                'msg' => __('rrhh.first_name_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1483,22 +1441,21 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['first_name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.first_name_length')
+                    'msg' => __('rrhh.first_name_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['first_name'] = $row['first_name'];
             }
         }
-
 
         // ---------- LAST NAME ----------
         // Check empty
         if (empty($row['last_name'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.last_name_empty')
+                'msg' => __('rrhh.last_name_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1507,22 +1464,21 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['last_name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.last_name_length')
+                    'msg' => __('rrhh.last_name_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['last_name'] = $row['last_name'];
             }
         }
-
 
         // ---------- GENDER ----------
         // Check empty
         if (empty($row['gender'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.gender_empty')
+                'msg' => __('rrhh.gender_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1533,26 +1489,25 @@ class RrhhImportEmployeesController extends Controller
             if (in_array($gender, ['f', 'F', 'm', 'M'])) {
                 if (in_array($gender, ['f', 'F'])) {
                     $employee['gender'] = 'F';
-                } else if (in_array($gender, ['m', 'M'])) {
+                } elseif (in_array($gender, ['m', 'M'])) {
                     $employee['gender'] = 'M';
-                } 
+                }
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.gender_invalid')
+                    'msg' => __('rrhh.gender_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
             }
         }
 
-
         // ---------- NATIONALITY ----------
         // Check empty
         if (empty($row['nationality'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.nationality_empty')
+                'msg' => __('rrhh.nationality_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1561,11 +1516,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['nationality']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.nationality_length')
+                    'msg' => __('rrhh.nationality_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $nationality = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 6)
@@ -1577,66 +1532,64 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($nationality)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.nationality_exist')
+                        'msg' => __('rrhh.nationality_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['nationality'] = $nationality->id;
                 }
-            }   
+            }
         }
-
 
         // ---------- BIRTH DATE ----------
         // Check empty
         if (empty($row['birth_date'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.birth_date_empty')
+                'msg' => __('rrhh.birth_date_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format date
-            $row['birth_date'] = str_replace("-", "/", $row['birth_date']);
+            $row['birth_date'] = str_replace('-', '/', $row['birth_date']);
             if (date('d/m/Y', strtotime($row['birth_date'])) != $row['birth_date'] || strlen($row['birth_date']) > 11) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.birth_date_valid')
+                    'msg' => __('rrhh.birth_date_valid'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['birth_date'] = $this->moduleUtil->uf_date($row['birth_date']);
             }
         }
-
 
         // ---------- DNI ----------
         // Check empty
         if (empty($row['dni'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.dni_empty')
+                'msg' => __('rrhh.dni_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format dni
             $formatDni = "/^\d{8}-\d$/";
-            if(!preg_match($formatDni, $row['dni'])){
+            if (! preg_match($formatDni, $row['dni'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.dni_valid')
+                    'msg' => __('rrhh.dni_valid'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check unique
                 $is_exist = Employees::where('business_id', $business_id)
-                ->where('dni', [$row['dni']])
-                ->exists();
+                    ->where('dni', [$row['dni']])
+                    ->exists();
 
                 if ($is_exist) {
                     // $error_line = [
@@ -1647,53 +1600,51 @@ class RrhhImportEmployeesController extends Controller
                     // array_push($error_msg, $error_line);
                     $employee['dni'] = $row['dni'];
                     $employee['id'] = $is_exist->id;
-                }else{
+                } else {
                     $employee['dni'] = $row['dni'];
                 }
             }
         }
-
 
         // ---------- TAX NUMBER ----------
         // Check empty
         if (empty($row['tax_number'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.tax_number_empty')
+                'msg' => __('rrhh.tax_number_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format tax number
-            if(strlen($row['tax_number']) > 18){
+            if (strlen($row['tax_number']) > 18) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.tax_number_length')
+                    'msg' => __('rrhh.tax_number_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['tax_number'])){
+                if (! preg_match($format, $row['tax_number'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.tax_number_valid')
+                        'msg' => __('rrhh.tax_number_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['tax_number'] = $row['tax_number'];
                 }
             }
         }
-
 
         // ---------- CIVIL STATUS ----------
         // Check empty
         if (empty($row['civil_status'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.civil_status_empty')
+                'msg' => __('rrhh.civil_status_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1702,11 +1653,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['civil_status']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.civil_status_length')
+                    'msg' => __('rrhh.civil_status_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $civil_status = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 1)
@@ -1718,148 +1669,142 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($civil_status)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.civil_status_exist')
+                        'msg' => __('rrhh.civil_status_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['civil_status_id'] = $civil_status->id;
                 }
             }
         }
-      
 
         // ---------- PHONE ----------
         // Check is not empty
-        if (!empty($row['phone'])) {
+        if (! empty($row['phone'])) {
             // Check format tax number
-            if(strlen($row['phone']) > 9){
+            if (strlen($row['phone']) > 9) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.phone_length')
+                    'msg' => __('rrhh.phone_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['phone'])){
+                if (! preg_match($format, $row['phone'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.phone_valid')
+                        'msg' => __('rrhh.phone_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['phone'] = $row['phone'];
                 }
-            }   
+            }
         }
-
 
         // ---------- MOBILE ----------
         // Check is not empty
-        if (!empty($row['mobile'])) {
+        if (! empty($row['mobile'])) {
             // Check format tax number
-            if(strlen($row['mobile']) > 9){
+            if (strlen($row['mobile']) > 9) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.mobile_length')
+                    'msg' => __('rrhh.mobile_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $format = "/^[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9\+_\-{1}]+[0-9]$/";
-                if (!preg_match($format, $row['mobile'])){
+                if (! preg_match($format, $row['mobile'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.mobile_valid')
+                        'msg' => __('rrhh.mobile_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['mobile'] = $row['mobile'];
                 }
-            }   
+            }
         }
-        
 
         // ---------- EMAIL ----------
         // Check empty
         if (empty($row['email'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.email_empty')
+                'msg' => __('rrhh.email_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format tax number
-            if(strlen($row['email']) > 191){
+            if (strlen($row['email']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.email_length')
+                    'msg' => __('rrhh.email_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['email'] = $row['email'];
             }
         }
 
-
         // ---------- INSTITUTIONAL EMAIL ----------
         // Check is not empty
-        if (!empty($row['institutional_email'])) {
+        if (! empty($row['institutional_email'])) {
             // Check length
-            if(strlen($row['institutional_email']) > 191){
+            if (strlen($row['institutional_email']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.institutional_email_length')
+                    'msg' => __('rrhh.institutional_email_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['institutional_email'] = $row['institutional_email'];
             }
         }
-
 
         // ---------- ADDRESS ----------
         // Check empty
         if (empty($row['address'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.address_empty')
+                'msg' => __('rrhh.address_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check length
-            if(strlen($row['address']) > 191){
+            if (strlen($row['address']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.address_length')
+                    'msg' => __('rrhh.address_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['address'] = $row['address'];
             }
         }
 
-
         // ---------- COUNTRY ----------
         // Check is not empty
-        if (!empty($row['country'])) {
+        if (! empty($row['country'])) {
             // Check length
             if (strlen($row['country']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.country_length')
+                    'msg' => __('rrhh.country_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
 
                 // Check exist
                 $country = Country::where('business_id', $business_id)
@@ -1870,31 +1815,30 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($country)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.country_exist')
+                        'msg' => __('rrhh.country_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $country_error = true;
-                }else {
+                } else {
                     $employee['country_id'] = $country->id;
                 }
             }
         }
 
-
         // ---------- STATE ----------
         // Check is not empty
-        if (!empty($row['state'])) {
+        if (! empty($row['state'])) {
             // Check length
             if (strlen($row['state']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.state_length')
+                    'msg' => __('rrhh.state_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $state = State::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -1904,29 +1848,28 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($state)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.state_exist')
+                        'msg' => __('rrhh.state_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['state_id'] = $state->id;
                 }
             }
         }
 
-
         // ---------- CITY ----------
         // Check is not empty
-        if (!empty($row['city'])) {
+        if (! empty($row['city'])) {
             // Check length
             if (strlen($row['city']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.city_length')
+                    'msg' => __('rrhh.city_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $city = City::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -1936,58 +1879,56 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($city)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.city_exist')
+                        'msg' => __('rrhh.city_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['city_id'] = $city->id;
                 }
             }
         }
 
-
         // ---------- ISSS ----------
         // Check is not empty
-        if (!empty($row['isss'])) {
+        if (! empty($row['isss'])) {
             // Check length
-            if(strlen($row['isss']) > 21){
+            if (strlen($row['isss']) > 21) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.isss_length')
+                    'msg' => __('rrhh.isss_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 //Check format
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['isss'])){
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['isss'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.isss_valid')
+                        'msg' => __('rrhh.isss_valid'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
+                } else {
                     $employee['social_security_number'] = $row['isss'];
                 }
             }
 
         }
 
-
         // ---------- AFP ----------
         // Check is not empty
-        if (!empty($row['afp'])) {
+        if (! empty($row['afp'])) {
             // Check length
             if (strlen($row['afp']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.afp_length')
+                    'msg' => __('rrhh.afp_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $afp = RrhhData::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -1997,76 +1938,73 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($afp)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.afp_exist')
+                        'msg' => __('rrhh.afp_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['afp_id'] = $afp->id;
-                }
-            }            
-        }
-
-
-        // ---------- AFP NUMBER ----------
-        // Check is not empty
-        if (!empty($row['afp_number'])) {
-            // Check length
-            if(strlen($row['afp_number']) > 26){
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.afp_number_length')
-                ];
-
-                array_push($error_msg, $error_line);
-            }else{
-                //Check format
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['afp_number'])){
-                    $error_line = [
-                        'row' => $row_no,
-                        'msg' => __('rrhh.afp_number_valid')
-                    ];
-        
-                    array_push($error_msg, $error_line);
-                }else{
-                    $employee['afp_number'] = $row['afp_number'];
                 }
             }
         }
 
+        // ---------- AFP NUMBER ----------
+        // Check is not empty
+        if (! empty($row['afp_number'])) {
+            // Check length
+            if (strlen($row['afp_number']) > 26) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.afp_number_length'),
+                ];
+
+                array_push($error_msg, $error_line);
+            } else {
+                //Check format
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['afp_number'])) {
+                    $error_line = [
+                        'row' => $row_no,
+                        'msg' => __('rrhh.afp_number_valid'),
+                    ];
+
+                    array_push($error_msg, $error_line);
+                } else {
+                    $employee['afp_number'] = $row['afp_number'];
+                }
+            }
+        }
 
         // ---------- DATE ADMISSION ----------
         // Check empty
         if (empty($row['date_admission'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.date_admission_empty')
+                'msg' => __('rrhh.date_admission_empty'),
             ];
 
             array_push($error_msg, $error_line);
         } else {
             // Check format date
-            $row['date_admission'] = str_replace("-", "/", $row['date_admission']);
+            $row['date_admission'] = str_replace('-', '/', $row['date_admission']);
             if (date('d/m/Y', strtotime($row['date_admission'])) != $row['date_admission'] || strlen($row['date_admission']) > 11) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.date_admission_valid')
+                    'msg' => __('rrhh.date_admission_valid'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 $employee['date_admission'] = $this->moduleUtil->uf_date($row['date_admission']);
             }
         }
-
 
         // ---------- DEPARTMENT ----------
         // Check empty
         if (empty($row['department'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.department_empty')
+                'msg' => __('rrhh.department_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -2075,11 +2013,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['department']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.department_length')
+                    'msg' => __('rrhh.department_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $department = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 2)
@@ -2091,23 +2029,22 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($department)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.department_exist')
+                        'msg' => __('rrhh.department_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['department_id'] = $department->id;
                 }
             }
         }
-
 
         // ---------- POSITION ----------
         // Check empty
         if (empty($row['position'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.position_empty')
+                'msg' => __('rrhh.position_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -2116,11 +2053,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['position']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.position_length')
+                    'msg' => __('rrhh.position_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $position = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 3)
@@ -2132,29 +2069,28 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($position)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.position_exist')
+                        'msg' => __('rrhh.position_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['position_id'] = $position->id;
                 }
             }
         }
 
-
         // ---------- TYPE ----------
         // Check is not empty
-        if (!empty($row['type'])) {
+        if (! empty($row['type'])) {
             // Check length
             if (strlen($row['type']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.type_length')
+                    'msg' => __('rrhh.type_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $type = RrhhTypeWage::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -2164,25 +2100,24 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($type)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.type_exist')
+                        'msg' => __('rrhh.type_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $type_error = true;
-                }else {
+                } else {
                     $employee['type_id'] = $type->id;
                 }
-            } 
+            }
         }
-
 
         // ---------- SALARY ----------
         // Check empty
         if (empty($row['salary'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.salary_empty')
+                'msg' => __('rrhh.salary_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -2191,18 +2126,18 @@ class RrhhImportEmployeesController extends Controller
             if (! is_numeric($row['salary'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.salary_numeric')
+                    'msg' => __('rrhh.salary_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
             } else {
                 // Check zero
                 if ($row['salary'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.salary_zero')
+                        'msg' => __('rrhh.salary_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
 
                 } else {
@@ -2211,19 +2146,18 @@ class RrhhImportEmployeesController extends Controller
             }
         }
 
-
         // ---------- PROFESSION ----------
         // Check is not empty
-        if (!empty($row['profession'])) {
+        if (! empty($row['profession'])) {
             // Check length
             if (strlen($row['profession']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.profession_length')
+                    'msg' => __('rrhh.profession_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $profession = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 7)
@@ -2235,23 +2169,22 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($profession)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.profession_exist')
+                        'msg' => __('rrhh.profession_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
-                }else {
+                } else {
                     $employee['profession_id'] = $profession->id;
                 }
             }
         }
-
 
         // ---------- PAYMENT ----------
         // Check empty
         if (empty($row['payment'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('rrhh.payment_empty')
+                'msg' => __('rrhh.payment_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -2260,11 +2193,11 @@ class RrhhImportEmployeesController extends Controller
             if (strlen($row['payment']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.payment_length')
+                    'msg' => __('rrhh.payment_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
+            } else {
                 // Check exist
                 $payment = RrhhData::where('business_id', $business_id)
                     ->where('rrhh_header_id', 8)
@@ -2276,102 +2209,98 @@ class RrhhImportEmployeesController extends Controller
                 if (empty($payment)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.payment_exist')
+                        'msg' => __('rrhh.payment_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $payment_error = true;
-                }else {
+                } else {
                     $employee['payment_id'] = $payment->id;
                 }
-            } 
+            }
         }
-
 
         // ---------- BANK ----------
         // Check empty
         if (empty($row['bank'])) {
-            if(mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')){
+            if (mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.bank_empty')
-                ];
-    
-                array_push($error_msg, $error_line);
-            }
-        }else{
-            // Check length
-            if (strlen($row['bank']) > 191) {
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.bank_length')
+                    'msg' => __('rrhh.bank_empty'),
                 ];
 
-                array_push($error_msg, $error_line);
-            }else{
-                // Check exist
-                $bank = Bank::where('business_id', $business_id)
-                ->where(function ($query) use ($row) {
-                    $query->whereRaw('UPPER(name) = UPPER(?)', [$row['bank']]);
-                })->first();
-
-                if (empty($bank)) {
-                    $error_line = [
-                        'row' => $row_no,
-                        'msg' => __('rrhh.bank_exist')
-                    ];
-
-                    array_push($error_msg, $error_line);
-                }else{
-                    $employee['bank_id'] = $bank->id;
-                }
-            }
-        }
-       
-        
-        // ---------- BANK ACCOUNT ----------
-        // Check empty
-        if (empty($row['bank_account'])) {
-            if(mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')){
-                $error_line = [
-                    'row' => $row_no,
-                    'msg' => __('rrhh.bank_account_empty')
-                ];
-    
                 array_push($error_msg, $error_line);
             }
         } else {
             // Check length
-            if(strlen($row['bank_account']) > 191){
+            if (strlen($row['bank']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('rrhh.bank_account_length')
+                    'msg' => __('rrhh.bank_length'),
                 ];
 
                 array_push($error_msg, $error_line);
-            }else{
-                $format = "/^[0-9]+$/";
-                if (!preg_match($format, $row['bank_account'])){
+            } else {
+                // Check exist
+                $bank = Bank::where('business_id', $business_id)
+                    ->where(function ($query) use ($row) {
+                        $query->whereRaw('UPPER(name) = UPPER(?)', [$row['bank']]);
+                    })->first();
+
+                if (empty($bank)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('rrhh.bank_account_valid')
+                        'msg' => __('rrhh.bank_exist'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-                }else{
-                    $employee['bank_account'] = $row['bank_account'];
+                } else {
+                    $employee['bank_id'] = $bank->id;
                 }
             }
         }
 
+        // ---------- BANK ACCOUNT ----------
+        // Check empty
+        if (empty($row['bank_account'])) {
+            if (mb_strtolower($row['payment']) == mb_strtolower('Transferencia bancaria')) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.bank_account_empty'),
+                ];
+
+                array_push($error_msg, $error_line);
+            }
+        } else {
+            // Check length
+            if (strlen($row['bank_account']) > 191) {
+                $error_line = [
+                    'row' => $row_no,
+                    'msg' => __('rrhh.bank_account_length'),
+                ];
+
+                array_push($error_msg, $error_line);
+            } else {
+                $format = '/^[0-9]+$/';
+                if (! preg_match($format, $row['bank_account'])) {
+                    $error_line = [
+                        'row' => $row_no,
+                        'msg' => __('rrhh.bank_account_valid'),
+                    ];
+
+                    array_push($error_msg, $error_line);
+                } else {
+                    $employee['bank_account'] = $row['bank_account'];
+                }
+            }
+        }
 
         // ----- BUSINESS ID -----
         $employee['business_id'] = $business_id;
 
         // ----- CREATED BY -----
         $employee['created_by'] = $user_id;
-
 
         $result = [
             'employees' => $employee,
@@ -2380,8 +2309,6 @@ class RrhhImportEmployeesController extends Controller
 
         return $result;
     }
-
-
 
     /**
      * Imports the uploaded file to database.
@@ -2416,7 +2343,7 @@ class RrhhImportEmployeesController extends Controller
                         'nationality_id' => is_null($data['nationality_id']) ? $employee->nationality_id : $data['nationality_id'],
                         'birth_date' => is_null($data['birth_date']) ? $employee->birth_date : $data['birth_date'],
                         'dni' => is_null($data['dni']) ? $employee->dni : $data['dni'],
-                        'approved' =>  ($data['dni'] == $data['tax_number'])? 1 : 0, //Falta
+                        'approved' => ($data['dni'] == $data['tax_number']) ? 1 : 0, //Falta
 
                         'tax_number' => is_null($data['tax_number']) ? $employee->tax_number : $data['tax_number'],
                         'civil_status_id' => is_null($data['civil_status_id']) ? $employee->civil_status_id : $data['civil_status_id'],
@@ -2440,38 +2367,37 @@ class RrhhImportEmployeesController extends Controller
                         'bank_acount' => is_null($data['bank_acount']) ? $employee->bank_acount : $data['bank_acount'],
                     ];
 
-                    if($data['id'] == null){
+                    if ($data['id'] == null) {
                         //Create new employee
                         $employee = Employees::create($new_employee);
-                    }else{
+                    } else {
                         //Update employee
                         $employee->update($dataEmployee);
                     }
                     $position = RrhhPositionHistory::where('employee_id', $employee->id)->where('current', 1)->count();
                     $salary = RrhhSalaryHistory::where('employee_id', $employee->id)->where('current', 1)->count();
 
-
-                    if($position != 0){
+                    if ($position != 0) {
                         $position = RrhhPositionHistory::where('employee_id', $employee->id)->where('current', 1)->orderBy('id', 'DESC')->first();
                         $position->delete();
                     }
-                    
+
                     RrhhPositionHistory::insert([
-                        'new_department_id' => $data['department_id'], 
-                        'new_position1_id' => $data['position_id'], 
-                        'employee_id' => $employee->id, 
-                        'current' => 1
+                        'new_department_id' => $data['department_id'],
+                        'new_position1_id' => $data['position_id'],
+                        'employee_id' => $employee->id,
+                        'current' => 1,
                     ]);
-        
-                    if($salary != 0){
+
+                    if ($salary != 0) {
                         $salary = RrhhSalaryHistory::where('employee_id', $employee->id)->where('current', 1)->orderBy('id', 'DESC')->first();
                         $salary->delete();
                     }
 
                     RrhhSalaryHistory::insert([
-                        'employee_id' => $employee->id, 
-                        'new_salary' => $data['salary'], 
-                        'current' => 1
+                        'employee_id' => $employee->id,
+                        'new_salary' => $data['salary'],
+                        'current' => 1,
                     ]);
                 }
             }
@@ -2480,17 +2406,17 @@ class RrhhImportEmployeesController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('product.file_imported_successfully')
+                'msg' => __('product.file_imported_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 

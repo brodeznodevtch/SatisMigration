@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Business;
+use App\Models\NotificationTemplate;
 use Illuminate\Database\Migrations\Migration;
-use App\Business;
-use App\NotificationTemplate;
 
 class AddDefaultNotificationTemplatesToDatabase extends Migration
 {

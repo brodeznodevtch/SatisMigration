@@ -15,6 +15,6 @@ return [
 
     'title' => 'Descuento personalizado',
     'discount_text' => 'Descuento por pago con tarjeta.',
-    'discounts_name'  => 'Nombre del Descuento',
-    'value'     =>      'Valor',
+    'discounts_name' => 'Nombre del Descuento',
+    'value' => 'Valor',
 ];

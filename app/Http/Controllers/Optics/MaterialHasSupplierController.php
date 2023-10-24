@@ -31,7 +31,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -64,7 +63,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\MaterialHasSupplier  $materialHasSupplier
      * @return \Illuminate\Http\Response
      */

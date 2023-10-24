@@ -2,35 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\TaxRate;
-use App\TaxGroup;
-use App\Transaction;
-use DB;
-
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Http\Request;
-
+use App\Models\TaxRate;
+use App\Models\Transaction;
 use App\Utils\TaxUtil;
+use DB;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class TaxRateController extends Controller
 {
-
     /**
      * All Utils instance.
-     *
      */
     protected $taxUtil;
 
     /**
      * Constructor
      *
-     * @param TaxUtil $taxUtil
      * @return void
      */
     public function __construct(TaxUtil $taxUtil)
     {
         $this->taxUtil = $taxUtil;
-        $this->type = ["purchase", "sell"];
+        $this->type = ['purchase', 'sell'];
     }
 
     /**
@@ -40,7 +34,7 @@ class TaxRateController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('tax_rate.view') && !auth()->user()->can('tax_rate.create')) {
+        if (! auth()->user()->can('tax_rate.view') && ! auth()->user()->can('tax_rate.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -79,24 +73,23 @@ class TaxRateController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('tax_rate.create')) {
+        if (! auth()->user()->can('tax_rate.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $type = $this->type;
 
-        return view('tax_rate.create', compact("type"));
+        return view('tax_rate.create', compact('type'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('tax_rate.create')) {
+        if (! auth()->user()->can('tax_rate.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -109,15 +102,15 @@ class TaxRateController extends Controller
             $tax_rate = TaxRate::create($input);
 
             $output = ['success' => true,
-                            'data' => $tax_rate,
-                            'msg' => __("tax_rate.added_success")
-                        ];
+                'data' => $tax_rate,
+                'msg' => __('tax_rate.added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -142,7 +135,7 @@ class TaxRateController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('tax_rate.update')) {
+        if (! auth()->user()->can('tax_rate.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -160,13 +153,12 @@ class TaxRateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('tax_rate.update')) {
+        if (! auth()->user()->can('tax_rate.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -180,38 +172,38 @@ class TaxRateController extends Controller
                 /** Get group ids associated to tax rate */
                 $tax_group_id = [];
                 foreach ($tax_rate->tax_groups as $tg) {
-                    $tax_group_id [] = $tg->pivot->tax_group_id;
+                    $tax_group_id[] = $tg->pivot->tax_group_id;
                 }
 
                 $trans = Transaction::whereIn('tax_id', $tax_group_id)->get();
 
-                if(!$trans->count()) {
+                if (! $trans->count()) {
                     $tax_rate->name = $input['name'];
                     $tax_rate->type = $input['type'];
                     $tax_rate->percent = $this->taxUtil->num_uf($input['percent']);
-                    $tax_rate->min_amount = !empty($input['min_amount']) ? $input['min_amount'] : null;
-                    $tax_rate->max_amount = !empty($input['max_amount']) ? $input['max_amount'] : null;
-                    
+                    $tax_rate->min_amount = ! empty($input['min_amount']) ? $input['min_amount'] : null;
+                    $tax_rate->max_amount = ! empty($input['max_amount']) ? $input['max_amount'] : null;
+
                     $tax_rate->save();
 
                     $output = ['success' => true,
-                            'msg' => __("tax_rate.updated_success")
-                            ];
+                        'msg' => __('tax_rate.updated_success'),
+                    ];
 
                 } else {
                     DB::rollBack();
 
                     $output = ['success' => false,
-                        'msg' => __("tax_rate.tax_group_has_assoc_trans")
+                        'msg' => __('tax_rate.tax_group_has_assoc_trans'),
                     ];
                 }
 
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -226,7 +218,7 @@ class TaxRateController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('tax_rate.delete')) {
+        if (! auth()->user()->can('tax_rate.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -236,25 +228,25 @@ class TaxRateController extends Controller
                 $tax_rate = TaxRate::where('business_id', $business_id)->findOrFail($id);
 
                 /** Has no associated groups? */
-                if(!$tax_rate->tax_groups->count()) {
+                if (! $tax_rate->tax_groups->count()) {
                     $tax_rate->delete();
 
                     $output = ['success' => true,
-                            'msg' => __("tax_rate.updated_success")
-                            ];
+                        'msg' => __('tax_rate.updated_success'),
+                    ];
                 } else {
                     DB::rollBack();
 
                     $output = ['success' => false,
-                        'msg' => __("tax_rate.tax_rate_has_assoc_group")
+                        'msg' => __('tax_rate.tax_rate_has_assoc_group'),
                     ];
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

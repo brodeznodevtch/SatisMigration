@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Module;
-use App\Warehouse;
-use App\Permission;
-use App\Catalogue;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\Module;
+use App\Models\Permission;
 use App\Utils\Util;
+use App\Models\Warehouse;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -26,8 +26,8 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('warehouse.view') && !auth()->user()->can('warehouse.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('warehouse.view') && ! auth()->user()->can('warehouse.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -62,7 +62,7 @@ class WarehouseController extends Controller
                     @else
                     <span class="badge" style="background-color: #d9534f;">{{ __("cashier.".$status) }}</span>
                     @endif'
-                    )
+                )
                 ->removeColumn('id')
                 ->rawColumns([4, 5])
                 ->make(false);
@@ -78,7 +78,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('warehouse.create')) {
+        if (! auth()->user()->can('warehouse.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -92,12 +92,11 @@ class WarehouseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('warehouse.create')) {
+        if (! auth()->user()->can('warehouse.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -110,14 +109,13 @@ class WarehouseController extends Controller
             $warehouse = Warehouse::create($input);
 
             //Create a new permission related to the created warehouse
-            if (Module::where('name', 'Bodegas')->first())
-            {
+            if (Module::where('name', 'Bodegas')->first()) {
                 $module = Module::where('name', 'Bodegas')->first();
-                $permission = Permission::where('name', 'warehouse.' . $warehouse->id)->select('name')->first();
+                $permission = Permission::where('name', 'warehouse.'.$warehouse->id)->select('name')->first();
                 if (empty($permission)) {
                     Permission::create([
-                        'name' => 'warehouse.' . $warehouse->id,
-                        'description' => 'Bodega ' . $warehouse->name,
+                        'name' => 'warehouse.'.$warehouse->id,
+                        'description' => 'Bodega '.$warehouse->name,
                         'guard_name' => 'web',
                         'module_id' => $module->id,
                     ]);
@@ -127,14 +125,14 @@ class WarehouseController extends Controller
             $output = [
                 'success' => true,
                 'data' => $warehouse,
-                'msg' => __("warehouse.added_success")
+                'msg' => __('warehouse.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -144,7 +142,6 @@ class WarehouseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function show(Warehouse $warehouse)
@@ -155,12 +152,12 @@ class WarehouseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('warehouse.update')) {
+        if (! auth()->user()->can('warehouse.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -171,7 +168,7 @@ class WarehouseController extends Controller
             $warehouse = Warehouse::find($id);
 
             $catalogue = null;
-            if($warehouse->catalogue_id){
+            if ($warehouse->catalogue_id) {
                 $catalogue = Catalogue::find($warehouse->catalogue_id);
             }
 
@@ -179,25 +176,26 @@ class WarehouseController extends Controller
         }
     }
 
-    public function getWarehouseByLocation($id){
+    public function getWarehouseByLocation($id)
+    {
         $business_id = request()->session()->get('user.business_id');
         $warehouses = Warehouse::where('business_id', $business_id)
-        ->where('business_location_id', $id)
-        ->where('status', 'active')
-        ->get();
+            ->where('business_location_id', $id)
+            ->where('status', 'active')
+            ->get();
+
         return response()->json($warehouses);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('warehouse.update')) {
+        if (! auth()->user()->can('warehouse.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -210,7 +208,7 @@ class WarehouseController extends Controller
                     'business_location_id',
                     'catalogue_id',
                     'description',
-                    'status'
+                    'status',
                 ]);
 
                 $warehouse = Warehouse::findOrFail($id);
@@ -221,33 +219,33 @@ class WarehouseController extends Controller
                 $module = Module::where('name', 'Bodegas')->first();
 
                 if (! empty($module)) {
-                    $permission = Permission::where('name', 'warehouse.' . $warehouse->id)->first();
+                    $permission = Permission::where('name', 'warehouse.'.$warehouse->id)->first();
 
                     if (empty($permission)) {
                         Permission::create([
-                            'name' => 'warehouse.' . $warehouse->id,
-                            'description' => 'Bodega ' . $warehouse->name,
+                            'name' => 'warehouse.'.$warehouse->id,
+                            'description' => 'Bodega '.$warehouse->name,
                             'guard_name' => 'web',
                             'module_id' => $module->id,
                         ]);
 
                     } else {
-                        $permission->description = 'Bodega ' . $warehouse->name;
+                        $permission->description = 'Bodega '.$warehouse->name;
                         $permission->save();
                     }
                 }
 
                 $output = [
                     'success' => true,
-                    'msg' => __("warehouse.updated_success")
+                    'msg' => __('warehouse.updated_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -258,12 +256,12 @@ class WarehouseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('warehouse.delete')) {
+        if (! auth()->user()->can('warehouse.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -273,13 +271,13 @@ class WarehouseController extends Controller
                 $warehouse->delete();
 
                 $output = ['success' => true,
-                    'msg' => __("warehouse.deleted_success")
+                    'msg' => __('warehouse.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -289,20 +287,22 @@ class WarehouseController extends Controller
 
     /**
      * Return location_id from a warehouse
-     * @param int $warehouse_id
+     *
+     * @param  int  $warehouse_id
      * @return int
      */
-    public function getLocation($warehouse_id){
-        if(empty($warehouse_id)){
+    public function getLocation($warehouse_id)
+    {
+        if (empty($warehouse_id)) {
             return null;
         }
 
         $location_id = null;
         $location = Warehouse::find($warehouse_id);
 
-        if(!empty($location)){
+        if (! empty($location)) {
             $location_id = $location->business_location_id;
-        } else{
+        } else {
             return null;
         }
 
@@ -311,7 +311,7 @@ class WarehouseController extends Controller
 
     /**
      * Create or update permission related to the warehouse.
-     * 
+     *
      * @return string
      */
     public function createPermissions()
@@ -328,21 +328,21 @@ class WarehouseController extends Controller
                     'guard_name' => 'web',
                     'module_id' => $module->id,
                 ]);
-    
+
                 Permission::create([
                     'name' => 'warehouse.create',
                     'description' => 'Crear bodegas',
                     'guard_name' => 'web',
                     'module_id' => $module->id,
                 ]);
-    
+
                 Permission::create([
                     'name' => 'warehouse.update',
                     'description' => 'Actualizar bodegas',
                     'guard_name' => 'web',
                     'module_id' => $module->id,
                 ]);
-    
+
                 Permission::create([
                     'name' => 'warehouse.delete',
                     'description' => 'Eliminar bodegas',
@@ -353,18 +353,18 @@ class WarehouseController extends Controller
                 $warehouses = Warehouse::all();
 
                 foreach ($warehouses as $warehouse) {
-                    $permission = Permission::where('name', 'warehouse.' . $warehouse->id)->first();
+                    $permission = Permission::where('name', 'warehouse.'.$warehouse->id)->first();
 
                     if (empty($permission)) {
                         Permission::create([
-                            'name' => 'warehouse.' . $warehouse->id,
-                            'description' => 'Bodega ' . $warehouse->name,
+                            'name' => 'warehouse.'.$warehouse->id,
+                            'description' => 'Bodega '.$warehouse->name,
                             'guard_name' => 'web',
                             'module_id' => $module->id,
                         ]);
 
                     } else {
-                        $permission->description = 'Bodega ' . $warehouse->name;
+                        $permission->description = 'Bodega '.$warehouse->name;
                         $permission->save();
                     }
                 }
@@ -376,8 +376,8 @@ class WarehouseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = 'FAIL';
         }

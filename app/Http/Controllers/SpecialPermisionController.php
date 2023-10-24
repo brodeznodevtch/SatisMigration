@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SpecialPermision;
+use App\Models\SpecialPermision;
 use Illuminate\Http\Request;
 
 class SpecialPermisionController extends Controller
@@ -30,7 +30,6 @@ class SpecialPermisionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class SpecialPermisionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SpecialPermision  $specialPermision
      * @return \Illuminate\Http\Response
      */
     public function show(SpecialPermision $specialPermision)
@@ -52,7 +50,6 @@ class SpecialPermisionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\SpecialPermision  $specialPermision
      * @return \Illuminate\Http\Response
      */
     public function edit(SpecialPermision $specialPermision)
@@ -63,8 +60,6 @@ class SpecialPermisionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SpecialPermision  $specialPermision
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, SpecialPermision $specialPermision)
@@ -75,7 +70,6 @@ class SpecialPermisionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SpecialPermision  $specialPermision
      * @return \Illuminate\Http\Response
      */
     public function destroy(SpecialPermision $specialPermision)

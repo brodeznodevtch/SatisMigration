@@ -2,26 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\DocumentCorrelative;
-use App\System;
-use App\DocumentType;
-use App\BusinessLocation;
-use App\Notifications\NewNotification;
-
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\BusinessLocation;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
 use App\Utils\ModuleUtil;
-
 use DB;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class DocumentCorrelativeController extends Controller
 {
-
     /**
      * Constructor
      *
-     * @param Util $commonUtil
+     * @param  Util  $commonUtil
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil)
@@ -32,7 +26,7 @@ class DocumentCorrelativeController extends Controller
         $this->status_list = [
             'all' => __('kardex.all'),
             'active' => __('cashier.active'),
-            'inactive' => __('cashier.inactive')
+            'inactive' => __('cashier.inactive'),
         ];
     }
 
@@ -43,8 +37,8 @@ class DocumentCorrelativeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('correlatives.view') && !auth()->user()->can('correlatives.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.view') && ! auth()->user()->can('correlatives.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -59,15 +53,15 @@ class DocumentCorrelativeController extends Controller
             foreach ($locations as $id => $name) {
                 $default_location = $id;
             }
-            
-        // Access to all locations
-        } else if (auth()->user()->permitted_locations() == 'all') {
-            $locations = $locations->prepend(__("kardex.all_2"), 'all');
+
+            // Access to all locations
+        } elseif (auth()->user()->permitted_locations() == 'all') {
+            $locations = $locations->prepend(__('kardex.all_2'), 'all');
         }
 
         // Document types
         $document_types = DocumentType::forDropdown($business_id, false, false);
-        $document_types = $document_types->prepend(__("kardex.all"), 'all');
+        $document_types = $document_types->prepend(__('kardex.all'), 'all');
 
         // Payment status
         $status_list = $this->status_list;
@@ -84,8 +78,8 @@ class DocumentCorrelativeController extends Controller
     // Mostrar lista de Correlativos
     public function getCorrelativesData()
     {
-        if (!auth()->user()->can('correlatives.view') && !auth()->user()->can('correlatives.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.view') && ! auth()->user()->can('correlatives.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -143,19 +137,19 @@ class DocumentCorrelativeController extends Controller
                 'action', function ($row) {
                     $html = '
                         <div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' .
-                                __("messages.actions") .
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">'.
+                                __('messages.actions').
                                 '<span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (auth()->user()->can('correlatives.update')) {
-                        $html .= '<li><a href="#" data-href="' . action('DocumentCorrelativeController@edit', [$row->id]) . '" class="edit_correlatives_button"><i class="glyphicon glyphicon-edit"></i>' . __("messages.edit") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('DocumentCorrelativeController@edit', [$row->id]).'" class="edit_correlatives_button"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('correlatives.delete')) {
-                        $html .= '<li><a href="#" data-href="' . action('DocumentCorrelativeController@destroy', [$row->id]) . '" class="delete_correlatives_button"><i class="fa fa-trash"></i>' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('DocumentCorrelativeController@destroy', [$row->id]).'" class="delete_correlatives_button"><i class="fa fa-trash"></i>'.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';
@@ -183,8 +177,8 @@ class DocumentCorrelativeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('correlatives.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -199,13 +193,12 @@ class DocumentCorrelativeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('correlatives.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         try {
@@ -217,12 +210,13 @@ class DocumentCorrelativeController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $correlatives,
-                'msg' => __("correlatives.added_success")
+                'msg' => __('correlatives.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
+
         return $outpout;
     }
 
@@ -245,8 +239,8 @@ class DocumentCorrelativeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('correlatives.update')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.update')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -263,14 +257,13 @@ class DocumentCorrelativeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('correlatives.update')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.update')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -290,7 +283,7 @@ class DocumentCorrelativeController extends Controller
 
                 $outpout = ['success' => true, 'data' => $correlatives, 'msg' => __('correlatives.updated_success')];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $outpout = ['success' => false, 'msg' => $e->getMessage()];
             }
 
@@ -306,8 +299,8 @@ class DocumentCorrelativeController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('correlatives.delete')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('correlatives.delete')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -317,7 +310,7 @@ class DocumentCorrelativeController extends Controller
                 $correlatives->delete();
                 $outpout = ['success' => true, 'data' => $correlatives, 'msg' => __('correlatives.deleted_success')];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $outpout = ['success' => false, 'msg' => $e->getMessage()];
             }
 

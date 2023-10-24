@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\Transaction;
+use App\Models\Customer;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class RetentionController extends Controller
     /**
      * Constructor.
      *
-     * @param  \App\TransactionUtil $transactionUtil
+     * @param  \App\TransactionUtil  $transactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil)
@@ -35,7 +35,7 @@ class RetentionController extends Controller
     public function index()
     {
         if (! auth()->user()->can('retentions.view') && ! auth()->user()->can('retentions.create')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -58,8 +58,8 @@ class RetentionController extends Controller
                 ->addColumn(
                     'action',
                     '<div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' .
-                            __("messages.actions") .
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">'.
+                            __('messages.actions').
                             '&nbsp;<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -84,9 +84,9 @@ class RetentionController extends Controller
                 )
                 ->editColumn('transaction_date', '{{ @format_date($transaction_date) }}')
                 ->editColumn('retention_type', '{{ __("retention." . $retention_type) }}')
-                ->editColumn('final_total', function($row) {
-                        return '<span class="display_currency" data-currency_symbol="true">' . $row->final_total . '</span>';
-                    }
+                ->editColumn('final_total', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">'.$row->final_total.'</span>';
+                }
                 )
                 ->rawColumns(['action', 'final_total'])
                 ->toJson();
@@ -112,7 +112,6 @@ class RetentionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -132,7 +131,7 @@ class RetentionController extends Controller
                 'ref_no',
                 'serie',
                 'additional_notes',
-                'final_total'
+                'final_total',
             ]);
 
             $business_id = $request->session()->get('user.business_id');
@@ -152,17 +151,17 @@ class RetentionController extends Controller
             $output = [
                 'success' => true,
                 'data' => $retention,
-                'msg' => __('retention.added_success')
+                'msg' => __('retention.added_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -203,7 +202,6 @@ class RetentionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -225,7 +223,7 @@ class RetentionController extends Controller
                     'ref_no',
                     'serie',
                     'additional_notes',
-                    'final_total'
+                    'final_total',
                 ]);
 
                 $input['transaction_date'] = $this->transactionUtil->uf_date($input['transaction_date']);
@@ -239,17 +237,17 @@ class RetentionController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('retention.updated_success')
+                    'msg' => __('retention.updated_success'),
                 ];
 
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -281,17 +279,17 @@ class RetentionController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('retention.deleted_success')
+                    'msg' => __('retention.deleted_success'),
                 ];
 
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

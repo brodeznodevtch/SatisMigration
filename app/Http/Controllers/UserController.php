@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-
+use App\Models\User;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -15,7 +13,7 @@ class UserController extends Controller
     | UserController
     |--------------------------------------------------------------------------
     |
-    | This controller handles the manipualtion of user 
+    | This controller handles the manipualtion of user
     |
     */
 
@@ -32,11 +30,12 @@ class UserController extends Controller
         $config_languages = config('constants.langs');
         $languages = [];
         foreach ($config_languages as $key => $value) {
-           $languages[$key] = $value['full_name'];
+            $languages[$key] = $value['full_name'];
         }
 
         return view('user.profile', compact('user', 'languages'));
     }
+
     public function getFirstSession()
     {
         $user_id = request()->session()->get('user.id');
@@ -45,7 +44,7 @@ class UserController extends Controller
         $config_languages = config('constants.langs');
         $languages = [];
         foreach ($config_languages as $key => $value) {
-           $languages[$key] = $value['full_name'];
+            $languages[$key] = $value['full_name'];
         }
 
         return view('auth.start', compact('user', 'languages'));
@@ -61,8 +60,9 @@ class UserController extends Controller
         //Redirect back if demo application
         if (config('app.env') == 'demo') {
             $output = ['success' => 0,
-                            'msg' => 'This feature is disabled in demo'
-                        ];
+                'msg' => 'This feature is disabled in demo',
+            ];
+
             return redirect('user/profile')->with('status', $output);
         }
 
@@ -78,18 +78,19 @@ class UserController extends Controller
             session()->put('user', $input);
 
             $output = ['success' => 1,
-                                'msg' => 'Profile updated successfully'
-                            ];
+                'msg' => 'Profile updated successfully',
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                'msg' => 'Something went wrong, please try again',
+            ];
         }
+
         return redirect('user/profile')->with('status', $output);
     }
-    
+
     /**
      * updates user password
      *
@@ -100,68 +101,73 @@ class UserController extends Controller
         //Redirect back if demo application
         if (config('app.env') == 'demo') {
             $output = ['success' => 0,
-                            'msg' => 'This feature is disabled in demo'
-                        ];
+                'msg' => 'This feature is disabled in demo',
+            ];
+
             return redirect('user/profile')->with('status', $output);
         }
 
         try {
             $user_id = $request->session()->get('user.id');
             $user = User::where('id', $user_id)->first();
-            
+
             if (Hash::check($request->input('current_password'), $user->password)) {
                 $user->password = bcrypt($request->input('new_password'));
                 $user->save();
                 $output = ['success' => 1,
-                                'msg' => 'Password updated successfully'
-                            ];
+                    'msg' => 'Password updated successfully',
+                ];
             } else {
                 $output = ['success' => 0,
-                                'msg' => 'You have entered wrong password'
-                            ];
+                    'msg' => 'You have entered wrong password',
+                ];
             }
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                'msg' => 'Something went wrong, please try again',
+            ];
         }
+
         return redirect('user/profile')->with('status', $output);
     }
+
     public function updatePasswordFirst(Request $request)
     {
         //Redirect back if demo application
         if (config('app.env') == 'demo') {
             $output = ['success' => 0,
-                            'msg' => 'This feature is disabled in demo'
-                        ];
+                'msg' => 'This feature is disabled in demo',
+            ];
+
             return redirect('user/profile')->with('status', $output);
         }
 
         try {
             $user_id = $request->session()->get('user.id');
             $user = User::where('id', $user_id)->first();
-            
+
             if (Hash::check($request->input('current_password'), $user->password)) {
                 $user->password = bcrypt($request->input('new_password'));
                 $user->status = 'active';
                 $user->save();
                 $output = ['success' => 1,
-                                'msg' => 'Password updated successfully'
-                            ];
+                    'msg' => 'Password updated successfully',
+                ];
             } else {
                 $output = ['success' => 0,
-                                'msg' => 'You have entered wrong password'
-                            ];
+                    'msg' => 'You have entered wrong password',
+                ];
             }
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => 'Something went wrong, please try again'
-                        ];
+                'msg' => 'Something went wrong, please try again',
+            ];
         }
+
         return redirect('home')->with('status', $output);
     }
 }

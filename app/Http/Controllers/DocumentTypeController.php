@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\DocumentClass;
-use App\DocumentType;
-use App\Transaction;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Http\Request;
-
+use App\Models\DocumentClass;
+use App\Models\DocumentType;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
-
 use DB;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class DocumentTypeController extends Controller
 {
     protected $transactionUtil;
+
     /**
      * Constructor
-     * @param TransactionUtil $transactionUtil;
+     *
+     * @param  TransactionUtil  $transactionUtil;
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil)
@@ -27,7 +27,7 @@ class DocumentTypeController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->can('document_type.view') && !auth()->user()->can('document_type.create')) {
+        if (! auth()->user()->can('document_type.view') && ! auth()->user()->can('document_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -44,7 +44,7 @@ class DocumentTypeController extends Controller
                     DB::raw('IF(is_document_sale = 1, "yes", "no") as is_document_sale'),
                     DB::raw('IF(is_document_purchase = 1, "yes", "no") as is_document_purchase'),
                     DB::raw('IF(is_return_document = 1, "yes", "no") as is_return_document'),
-                    DB::raw('IF(is_default = 1, "yes", "no") as is_default')
+                    DB::raw('IF(is_default = 1, "yes", "no") as is_default'),
                 ]);
 
             return Datatables::of($category)
@@ -74,15 +74,14 @@ class DocumentTypeController extends Controller
         return view('document_types.index');
     }
 
-
     public function verifyDefault()
     {
         $default = DocumentType::where('is_default', 1)
             ->where('is_document_sale', 1)
             ->select('id', 'document_name')->first();
+
         return response()->json($default);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -91,7 +90,7 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('document_type.create')) {
+        if (! auth()->user()->can('document_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -99,18 +98,17 @@ class DocumentTypeController extends Controller
         $document_classes = DocumentClass::pluck('name', 'id');
 
         return view('document_types.create')
-            ->with(compact("print_formats", "document_classes"));
+            ->with(compact('print_formats', 'document_classes'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('document_type.create')) {
+        if (! auth()->user()->can('document_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -119,40 +117,37 @@ class DocumentTypeController extends Controller
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
             $input['print_format'] = $request->input('print_format');
-            $input['is_active'] = !empty($request->input('is_active')) ? 1 : 0;
-            $input['tax_inc'] = !empty($request->input('tax_inc')) ? 1 : 0;
-            $input['tax_exempt'] = !empty($request->input('tax_exempt')) ? 1 : 0;
-            $input['is_document_sale'] = !empty($request->input('is_document_sale')) ? 1 : 0;
-            $input['is_document_purchase'] = !empty($request->input('is_document_purchase')) ? 1 : 0;
-            $input['is_return_document'] = !empty($request->input('is_return_document')) ? 1 : 0;
-            $input['is_default'] = !empty($request->input('is_default')) ? 1 : 0;
+            $input['is_active'] = ! empty($request->input('is_active')) ? 1 : 0;
+            $input['tax_inc'] = ! empty($request->input('tax_inc')) ? 1 : 0;
+            $input['tax_exempt'] = ! empty($request->input('tax_exempt')) ? 1 : 0;
+            $input['is_document_sale'] = ! empty($request->input('is_document_sale')) ? 1 : 0;
+            $input['is_document_purchase'] = ! empty($request->input('is_document_purchase')) ? 1 : 0;
+            $input['is_return_document'] = ! empty($request->input('is_return_document')) ? 1 : 0;
+            $input['is_default'] = ! empty($request->input('is_default')) ? 1 : 0;
 
             if ($request->get('document_id') != 0) {
-                $doc =  DocumentType::find($request->get('document_id'));
+                $doc = DocumentType::find($request->get('document_id'));
                 $doc->is_default = 0;
                 $doc->update();
             }
-
 
             $documents = DocumentType::create($input);
             $output = [
                 'success' => true,
                 'data' => $documents,
-                'msg' => __("document_type.added_success")
+                'msg' => __('document_type.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
         return $output;
     }
-
-
 
     /**
      * Display the specified resource.
@@ -173,7 +168,7 @@ class DocumentTypeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('document_type.update')) {
+        if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -187,17 +182,15 @@ class DocumentTypeController extends Controller
         }
     }
 
-
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('document_type.update')) {
+        if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -207,22 +200,22 @@ class DocumentTypeController extends Controller
                 $business_id = $request->session()->get('user.business_id');
 
                 $doc_type = DocumentType::where('business_id', $business_id)->findOrFail($id);
-                $doc_type->document_name  = $input['document_name'];
-                $doc_type->short_name   = $input['short_name'];
-                $doc_type->print_format   = $input['print_format'];
-                $doc_type->is_active = !empty($request->input('is_active')) ? 1 : 0;
-                $doc_type->tax_inc = !empty($request->input('tax_inc')) ? 1 : 0;
-                $doc_type->tax_exempt = !empty($request->input('tax_exempt')) ? 1 : 0;
-                $doc_type->is_document_purchase = !empty($request->input('is_document_purchase')) ? 1 : 0;
-                $doc_type->is_document_sale = !empty($request->input('is_document_sale')) ? 1 : 0;
-                $doc_type->is_return_document = !empty($request->input('is_return_document')) ? 1 : 0;
-                $doc_type->is_default = !empty($request->input('is_default')) ? 1 : 0;
+                $doc_type->document_name = $input['document_name'];
+                $doc_type->short_name = $input['short_name'];
+                $doc_type->print_format = $input['print_format'];
+                $doc_type->is_active = ! empty($request->input('is_active')) ? 1 : 0;
+                $doc_type->tax_inc = ! empty($request->input('tax_inc')) ? 1 : 0;
+                $doc_type->tax_exempt = ! empty($request->input('tax_exempt')) ? 1 : 0;
+                $doc_type->is_document_purchase = ! empty($request->input('is_document_purchase')) ? 1 : 0;
+                $doc_type->is_document_sale = ! empty($request->input('is_document_sale')) ? 1 : 0;
+                $doc_type->is_return_document = ! empty($request->input('is_return_document')) ? 1 : 0;
+                $doc_type->is_default = ! empty($request->input('is_default')) ? 1 : 0;
                 $doc_type->max_operation = $input['max_operation'];
                 $doc_type->document_class_id = $input['document_class_id'];
                 $doc_type->document_type_number = $input['document_type_number'];
 
                 if ($request->get('document_id') != 0) {
-                    $doc =  DocumentType::find($request->get('document_id'));
+                    $doc = DocumentType::find($request->get('document_id'));
                     $doc->is_default = 0;
                     $doc->update();
                 }
@@ -231,21 +224,20 @@ class DocumentTypeController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("document_type.updated_success")
+                    'msg' => __('document_type.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
             return $output;
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -255,7 +247,7 @@ class DocumentTypeController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('document_type.delete')) {
+        if (! auth()->user()->can('document_type.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -270,32 +262,33 @@ class DocumentTypeController extends Controller
 
                 DB::beginTransaction();
 
-                if (!count($trans)) {
+                if (! count($trans)) {
                     $documenttype = DocumentType::where('business_id', $business_id)->findOrFail($id);
                     $documenttype->delete();
 
                     $output = [
                         'success' => true,
-                        'msg' => __("document_type.deleted_success")
+                        'msg' => __('document_type.deleted_success'),
                     ];
 
                     DB::commit();
                 } else {
                     $output = [
                         'success' => false,
-                        'msg' => __("document_type.document_type_has_assoc_trans")
+                        'msg' => __('document_type.document_type_has_assoc_trans'),
                     ];
 
                     DB::rollBack();
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }

@@ -2,23 +2,28 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
 {
     private $report_name;
+
     private $date_range;
+
     private $accounts_debit;
+
     private $accounts_credit;
+
     private $account_from;
+
     private $account_to;
+
     private $business_name;
+
     private $enable_empty_values;
 
     public function __construct($report_name, $date_range, $accounts_debit, $accounts_credit, $account_from, $account_to, $business_name, $enable_empty_values)
@@ -34,9 +39,8 @@ class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
-
+     * @return \Illuminate\Support\Collection
+     */
     public function title(): string
     {
         return __('accounting.comprobation_balance');
@@ -44,8 +48,8 @@ class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
 
     public function registerEvents(): array
     {
-        return [            
-            AfterSheet::class    => function(AfterSheet $event) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
                 $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
                 $event->sheet->setFontFamily('A1:F1500', 'Calibri');
                 $event->sheet->columnWidth('A', 11);
@@ -55,14 +59,13 @@ class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
                 $event->sheet->columnWidth('E', 13);
                 $event->sheet->columnWidth('F', 13);
 
-                
                 $event->sheet->setFormat('C6:F1500', \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING_USD);
                 $event->sheet->setRowsToRepeatAtTopByStartAndEnd(1, 5);
-                
+
             },
         ];
     }
-    
+
     public function view(): View
     {
         return view('reports.balance_comprobation_excel', [
@@ -76,5 +79,4 @@ class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
             'enable_empty_values' => $this->enable_empty_values,
         ]);
     }
-    
 }

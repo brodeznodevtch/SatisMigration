@@ -10,7 +10,7 @@ return [
     | The following language lines are used for Brand CRUD operations.
     |
     */
-    "inventory" => "Inventory control",
+    'inventory' => 'Inventory control',
     'sale' => 'Sell',
     'sells' => 'Sales',
     'list_sale' => 'List Sales',
@@ -20,7 +20,7 @@ return [
     'invoice_added' => 'Invoice added successfully',
     'item' => 'Items',
     'total' => 'Total',
-    "total_no_vat" => "Total no VAT",
+    'total_no_vat' => 'Total no VAT',
     'subtotal' => 'Subtotal',
     'order_tax' => 'Order Tax',
     'discount' => 'Discount',

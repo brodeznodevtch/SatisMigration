@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\ExpenseCategory;
+use App\Models\ExpenseCategory;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
@@ -13,14 +13,12 @@ class ExpenseCategoryController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $util;
 
     /**
      * Constructor
      *
-     * @param \App\Utils\Util $util
      * @return void
      */
     public function __construct(Util $util)
@@ -36,7 +34,7 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -74,7 +72,7 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -84,12 +82,11 @@ class ExpenseCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -99,20 +96,20 @@ class ExpenseCategoryController extends Controller
 
             $expense_category = ExpenseCategory::create($input);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->util->registerBinnacle($user_id, $this->module_name, 'create', $expense_category);
 
             $output = ['success' => true,
-                            'msg' => __("expense.added_success")
-                        ];
+                'msg' => __('expense.added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -121,7 +118,6 @@ class ExpenseCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
     public function show(ExpenseCategory $expenseCategory)
@@ -137,7 +133,7 @@ class ExpenseCategoryController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -146,20 +142,19 @@ class ExpenseCategoryController extends Controller
             $expense_category = ExpenseCategory::where('business_id', $business_id)->find($id);
 
             return view('optics.expense_category.edit')
-                    ->with(compact('expense_category'));
+                ->with(compact('expense_category'));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -170,27 +165,27 @@ class ExpenseCategoryController extends Controller
 
                 $expense_category = ExpenseCategory::where('business_id', $business_id)->findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $expense_category_old = clone $expense_category;
 
                 $expense_category->name = $input['name'];
                 // $expense_category->code = $input['code'];
                 $expense_category->save();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = $request->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'update', $expense_category_old, $expense_category);
 
                 $output = ['success' => true,
-                            'msg' => __("expense.updated_success")
-                            ];
+                    'msg' => __('expense.updated_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -205,7 +200,7 @@ class ExpenseCategoryController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -215,25 +210,25 @@ class ExpenseCategoryController extends Controller
 
                 $expense_category = ExpenseCategory::where('business_id', $business_id)->findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $expense_category_old = clone $expense_category;
 
                 $expense_category->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'delete', $expense_category_old);
 
                 $output = ['success' => true,
-                            'msg' => __("expense.deleted_success")
-                            ];
+                    'msg' => __('expense.deleted_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

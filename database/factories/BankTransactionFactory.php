@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\BankTransaction::class, function (Faker $faker) {
+$factory->define(App\Models\BankTransaction::class, function (Faker $faker) {
     return [
         //
     ];

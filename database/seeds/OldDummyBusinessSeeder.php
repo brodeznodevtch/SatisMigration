@@ -1,15 +1,10 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-
 use Illuminate\Support\Facades\DB;
-
-use Illuminate\Database\Eloquent\Model;
-
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
-use App\User;
+use Spatie\Permission\Models\Role;
 
 class OldDummyBusinessSeeder extends Seeder
 {
@@ -30,10 +25,10 @@ class OldDummyBusinessSeeder extends Seeder
         $last_15th_day = \Carbon::now()->subDays(15)->format('Y-m-d H:i:s');
         $last_month = \Carbon::now()->subDays(30)->format('Y-m-d H:i:s');
 
-        DB::statement("SET FOREIGN_KEY_CHECKS = 0");
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
         $shortcuts = '{"pos":{"express_checkout":"shift+e","pay_n_ckeckout":"shift+p","draft":"shift+d","cancel":"shift+c","edit_discount":"shift+i","edit_order_tax":"shift+t","add_payment_row":"shift+r","finalize_payment":"shift+f","recent_product_quantity":"f2","add_new_product":"f4"}}';
-        
+
         DB::insert("INSERT INTO business (id, name, currency_id, start_date, tax_number_1, tax_label_1, 
         			tax_number_2, tax_label_2, default_sales_tax, default_profit_percent, owner_id, 
         			time_zone, fy_start_month, accounting_method, default_sales_discount, 
@@ -124,9 +119,9 @@ class OldDummyBusinessSeeder extends Seeder
 					(3, 1, 'SGST@8%', 8.00, 0, 1, '2018-01-04 08:11:13', '2018-01-04 08:11:13'),
 					(4, 1, 'GST@18%', 18.00, 1, 1, '2018-01-04 08:12:19', '2018-01-04 08:12:19')");
 
-        DB::insert("INSERT INTO group_sub_taxes (group_tax_id, tax_id) VALUES
+        DB::insert('INSERT INTO group_sub_taxes (group_tax_id, tax_id) VALUES
 					(4, 2),
-					(4, 3)");
+					(4, 3)');
 
         DB::insert("INSERT INTO invoice_schemes (id, business_id, name, scheme_type, prefix, 
         			start_number, invoice_count, total_digits, is_default, created_at, updated_at) VALUES
@@ -384,17 +379,16 @@ class OldDummyBusinessSeeder extends Seeder
 					(8, 21, 23, 64, 1, '140.00', '2018-01-06 12:33:12', '2018-01-06 12:37:45'),
 					(9, 27, 29, 70, 1, '470.00', '2018-01-06 12:35:26', '2018-01-06 12:36:32')");
 
-        $admin_role = Role::create([ 'name' => 'Admin#1',
-                                'business_id' => 1,
-                                'guard_name' => 'web',
-                                'is_default' => 1
-                            ]);
-        $cashier_role = Role::create([ 'name' => 'Cashier#1',
-                                'business_id' => 1,
-                                'guard_name' => 'web',
-                                'is_default' => 1
-                            ]);
-        
+        $admin_role = Role::create(['name' => 'Admin#1',
+            'business_id' => 1,
+            'guard_name' => 'web',
+            'is_default' => 1,
+        ]);
+        $cashier_role = Role::create(['name' => 'Cashier#1',
+            'business_id' => 1,
+            'guard_name' => 'web',
+            'is_default' => 1,
+        ]);
 
         $cashier_role->syncPermissions(['sell.view', 'sell.create', 'sell.update', 'sell.delete',
             'access_all_locations', 'dashboard.data']);
@@ -408,7 +402,7 @@ class OldDummyBusinessSeeder extends Seeder
         $demo_user->assignRole('Admin#1');
         Permission::insert(['name' => 'location.1', 'guard_name' => 'web', 'created_at' => \Carbon::now()->toDateTimeString()]);
 
-        DB::statement("SET FOREIGN_KEY_CHECKS = 1");
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
         DB::commit();
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ApportionmentHasImportExpense;
+use App\Models\ApportionmentHasImportExpense;
 use Illuminate\Http\Request;
 
 class ApportionmentHasImportExpenseController extends Controller
@@ -30,7 +30,6 @@ class ApportionmentHasImportExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class ApportionmentHasImportExpenseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ApportionmentHasImportExpense  $apportionmentHasImportExpense
      * @return \Illuminate\Http\Response
      */
     public function show(ApportionmentHasImportExpense $apportionmentHasImportExpense)
@@ -52,7 +50,6 @@ class ApportionmentHasImportExpenseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ApportionmentHasImportExpense  $apportionmentHasImportExpense
      * @return \Illuminate\Http\Response
      */
     public function edit(ApportionmentHasImportExpense $apportionmentHasImportExpense)
@@ -63,8 +60,6 @@ class ApportionmentHasImportExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ApportionmentHasImportExpense  $apportionmentHasImportExpense
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ApportionmentHasImportExpense $apportionmentHasImportExpense)
@@ -75,7 +70,6 @@ class ApportionmentHasImportExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ApportionmentHasImportExpense  $apportionmentHasImportExpense
      * @return \Illuminate\Http\Response
      */
     public function destroy(ApportionmentHasImportExpense $apportionmentHasImportExpense)

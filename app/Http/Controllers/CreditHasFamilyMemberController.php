@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditHasFamilyMember;
+use App\Models\CreditHasFamilyMember;
 use Illuminate\Http\Request;
 
 class CreditHasFamilyMemberController extends Controller
@@ -30,7 +30,6 @@ class CreditHasFamilyMemberController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class CreditHasFamilyMemberController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CreditHasFamilyMember  $creditHasFamilyMember
      * @return \Illuminate\Http\Response
      */
     public function show(CreditHasFamilyMember $creditHasFamilyMember)
@@ -52,7 +50,6 @@ class CreditHasFamilyMemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CreditHasFamilyMember  $creditHasFamilyMember
      * @return \Illuminate\Http\Response
      */
     public function edit(CreditHasFamilyMember $creditHasFamilyMember)
@@ -63,8 +60,6 @@ class CreditHasFamilyMemberController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CreditHasFamilyMember  $creditHasFamilyMember
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CreditHasFamilyMember $creditHasFamilyMember)
@@ -75,7 +70,6 @@ class CreditHasFamilyMemberController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CreditHasFamilyMember  $creditHasFamilyMember
      * @return \Illuminate\Http\Response
      */
     public function destroy(CreditHasFamilyMember $creditHasFamilyMember)

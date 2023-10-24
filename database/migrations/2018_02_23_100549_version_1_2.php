@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
 
@@ -16,17 +14,17 @@ class Version12 extends Migration
     {
         $now = \Carbon::now()->toDateTimeString();
         Permission::insert([
-                [
-                    'name' => 'profit_loss_report.view',
-                    'guard_name' => 'web',
-                    'created_at' => $now
-                ],
-                [
-                    'name' => 'direct_sell.access',
-                    'guard_name' => 'web',
-                    'created_at' => $now
-                ]
-            ]);
+            [
+                'name' => 'profit_loss_report.view',
+                'guard_name' => 'web',
+                'created_at' => $now,
+            ],
+            [
+                'name' => 'direct_sell.access',
+                'guard_name' => 'web',
+                'created_at' => $now,
+            ],
+        ]);
     }
 
     /**

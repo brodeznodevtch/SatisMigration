@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Country;
-use App\State;
-use App\Zone;
-use Illuminate\Http\Request;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\Zone;
 use DataTables;
+use Illuminate\Http\Request;
 use Storage;
-use DB;
 
 class CountryController extends Controller
 {
@@ -24,6 +23,7 @@ class CountryController extends Controller
         $countries = Country::select('id', 'name', 'flag')->where('business_id', $business_id)->get();
         $zones = Zone::select('id', 'name')->where('business_id', $business_id)->get();
         $states = State::select('id', 'name')->where('business_id', $business_id)->get();
+
         return view('geography.index', compact('countries', 'zones', 'states'));
     }
 
@@ -40,7 +40,6 @@ class CountryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -50,8 +49,7 @@ class CountryController extends Controller
                 'name' => 'required|unique:countries',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $country_details = $request->only(['name', 'short_name', 'code']);
@@ -60,23 +58,24 @@ class CountryController extends Controller
                 if ($request->hasFile('flag')) {
                     $file = $request->file('flag');
                     $name = time().$file->getClientOriginalName();
-                    Storage::disk('flags')->put($name,  \File::get($file));
+                    Storage::disk('flags')->put($name, \File::get($file));
                     $country_details['flag'] = $name;
                 }
 
                 $country = Country::create($country_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.country_added')
+                    'msg' => __('geography.country_added'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -84,32 +83,33 @@ class CountryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $country = Country::findOrFail($id);
+
         return response()->json($country);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $country = Country::findOrFail($id);
+
         return response()->json($country);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -120,38 +120,37 @@ class CountryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         if (request()->ajax()) {
             $country = Country::findOrFail($id);
-            try{
+            try {
 
                 $states = State::where('country_id', $country->id)->count();
 
-                if($states > 0){
+                if ($states > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('geography.country_has_states')
+                        'msg' => __('geography.country_has_states'),
                     ];
-                }
-                else{
+                } else {
                     $country->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('geography.country_deleted')
+                        'msg' => __('geography.country_deleted'),
                     ];
                 }
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -160,18 +159,20 @@ class CountryController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $countries = Country::where('business_id', $business_id);
+
         return DataTables::of($countries)
-        ->addColumn('img', function ($row) {
-            return '<img src="'.asset("flags/".$row->flag).'" width="50" height="25">';
-        })
-        ->rawColumns(['img'])
-        ->toJson();
+            ->addColumn('img', function ($row) {
+                return '<img src="'.asset('flags/'.$row->flag).'" width="50" height="25">';
+            })
+            ->rawColumns(['img'])
+            ->toJson();
     }
 
     public function getCountries()
     {
         $business_id = request()->session()->get('user.business_id');
         $countries = Country::where('business_id', $business_id)->get();
+
         return response()->json($countries);
     }
 
@@ -184,8 +185,7 @@ class CountryController extends Controller
                 'ename' => 'required|unique:countries,name,'.$country->id,
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $country->name = $request->input('ename');
@@ -195,23 +195,24 @@ class CountryController extends Controller
                 if ($request->hasFile('eflag')) {
                     $file = $request->file('eflag');
                     $name = time().$file->getClientOriginalName();
-                    Storage::disk('flags')->put($name,  \File::get($file));
+                    Storage::disk('flags')->put($name, \File::get($file));
                     $country->flag = $name;
                 }
                 $country->save();
 
                 $output = [
                     'success' => true,
-                    'msg' => __("geography.country_updated")
+                    'msg' => __('geography.country_updated'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePayrollsTable extends Migration
 {
@@ -25,7 +25,7 @@ class CreatePayrollsTable extends Migration
             $table->date('end_date');
             $table->date('approval_date')->nullable();
             $table->date('pay_date')->nullable();
-            
+
             $table->integer('payroll_status_id')->unsigned();
             $table->foreign('payroll_status_id')->references('id')->on('payroll_statuses')->onDelete('cascade')->onUpdate('cascade');
 
@@ -34,7 +34,7 @@ class CreatePayrollsTable extends Migration
 
             $table->integer('payment_period_id')->unsigned()->nullable();
             $table->foreign('payment_period_id')->references('id')->on('payment_periods')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->integer('business_id')->unsigned()->nullable();
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->timestamps();

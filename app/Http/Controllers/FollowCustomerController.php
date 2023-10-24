@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\FollowCustomer;
-use App\FollowCustomersHasProduct;
-use Illuminate\Http\Request;
-
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\Category;
-use App\Contact;
-use App\Country;
-
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\FollowCustomer;
+use App\Models\FollowCustomersHasProduct;
 use DataTables;
 use DB;
+use Illuminate\Http\Request;
 
 class FollowCustomerController extends Controller
 {
@@ -34,7 +32,7 @@ class FollowCustomerController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('follow_customer.create')) {
+        if (! auth()->user()->can('follow_customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -47,7 +45,7 @@ class FollowCustomerController extends Controller
         $known_by = CRMContactMode::forDropdown($business_id);
 
         //Llenar select de Contact Mode
-        $contactmode = CRMContactMode::where('name', 'not like', "%cliente%")->pluck('name', 'id');
+        $contactmode = CRMContactMode::where('name', 'not like', '%cliente%')->pluck('name', 'id');
 
         //Llenar select de Category
         $categories = Category::forDropdown($business_id);
@@ -58,13 +56,13 @@ class FollowCustomerController extends Controller
         $countries = Country::forDropdown($business_id);
 
         $products = DB::table('variations')
-        ->join('products', 'products.id', '=', 'variations.product_id')
-        ->select('products.name as name_product', 'variations.name as name_variation', 'variations.id', 'variations.sub_sku', 'products.sku')
-        ->where('business_id', $business_id)
-        ->where('products.clasification', '<>', 'kits')
-        ->where('products.clasification', '<>', 'service')
-        ->where('products.status', 'active')
-        ->get();
+            ->join('products', 'products.id', '=', 'variations.product_id')
+            ->select('products.name as name_product', 'variations.name as name_variation', 'variations.id', 'variations.sub_sku', 'products.sku')
+            ->where('business_id', $business_id)
+            ->where('products.clasification', '<>', 'kits')
+            ->where('products.clasification', '<>', 'service')
+            ->where('products.status', 'active')
+            ->get();
 
         return view('customer.follow_customers.create')
             ->with(compact('contactreason', 'known_by', 'categories', 'clients', 'contactmode', 'countries', 'products'));
@@ -73,12 +71,11 @@ class FollowCustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('follow_customer.create')) {
+        if (! auth()->user()->can('follow_customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -92,20 +89,20 @@ class FollowCustomerController extends Controller
 
             $follow_customer_details['register_by'] = $request->session()->get('user.id');
 
-            if($chk_not_found){
+            if ($chk_not_found) {
                 $follow_customer_details['products_not_found_desc'] = $request->input('products_not_found_desc');
                 $follow_customer_details['product_not_found'] = 1;
-            }else{
+            } else {
                 $follow_customer_details['product_not_found'] = 0;
                 $follow_customer_details['product_cat_id'] = $request->input('product_cat_id');
             }
 
-            if($chk_not_stock){
+            if ($chk_not_stock) {
                 $follow_customer_details['product_not_stock'] = 1;
-                
-            }else{
+
+            } else {
                 $follow_customer_details['product_not_stock'] = 0;
-                
+
             }
 
             DB::beginTransaction();
@@ -115,11 +112,9 @@ class FollowCustomerController extends Controller
             $quantity = $request->input('quantity');
             $required_quantity = $request->input('required_quantity');
 
-            if (!empty($variation_ids))
-            {
-                $cont = 0;                
-                while($cont < count($variation_ids))
-                {
+            if (! empty($variation_ids)) {
+                $cont = 0;
+                while ($cont < count($variation_ids)) {
                     $detail = new FollowCustomersHasProduct;
                     $detail->follow_customer_id = $follow_customer->id;
                     $detail->variation_id = $variation_ids[$cont];
@@ -127,17 +122,17 @@ class FollowCustomerController extends Controller
                     $detail->required_quantity = $required_quantity[$cont];
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
             DB::commit();
             $outpout = [
                 'success' => true,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $outpout = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $outpout = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $outpout;
@@ -146,12 +141,12 @@ class FollowCustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if (!auth()->user()->can('follow_customer.view')) {
+        if (! auth()->user()->can('follow_customer.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -170,12 +165,12 @@ class FollowCustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('follow_customer.update')) {
+        if (! auth()->user()->can('follow_customer.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -187,13 +182,12 @@ class FollowCustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('follow_customer.update')) {
+        if (! auth()->user()->can('follow_customer.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -210,20 +204,20 @@ class FollowCustomerController extends Controller
             $follow_customer_details['contact_mode_id'] = $request->input('econtact_mode_id');
             $follow_customer_details['date'] = $request->input('edate');
 
-            if($chk_not_found){
+            if ($chk_not_found) {
                 $follow_customer_details['products_not_found_desc'] = $request->input('eeproducts_not_found_desc');
                 $follow_customer_details['product_not_found'] = 1;
-            }else{
+            } else {
                 $follow_customer_details['product_not_found'] = 0;
                 $follow_customer_details['product_cat_id'] = $request->input('eeproduct_cat_id');
             }
 
-            if($chk_not_stock){
+            if ($chk_not_stock) {
                 $follow_customer_details['product_not_stock'] = 1;
-                
-            }else{
+
+            } else {
                 $follow_customer_details['product_not_stock'] = 0;
-                
+
             }
 
             DB::beginTransaction();
@@ -235,12 +229,10 @@ class FollowCustomerController extends Controller
             $required_quantity = $request->input('required_quantity');
 
             FollowCustomersHasProduct::where('follow_customer_id', $id)->forceDelete();
-            
-            if (!empty($variation_ids))
-            {
-                $cont = 0;                
-                while($cont < count($variation_ids))
-                {
+
+            if (! empty($variation_ids)) {
+                $cont = 0;
+                while ($cont < count($variation_ids)) {
                     $detail = new FollowCustomersHasProduct;
                     $detail->follow_customer_id = $followCustomer->id;
                     $detail->variation_id = $variation_ids[$cont];
@@ -248,17 +240,17 @@ class FollowCustomerController extends Controller
                     $detail->required_quantity = $required_quantity[$cont];
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
             DB::commit();
             $outpout = [
                 'success' => true,
-                'msg' => __("crm.updated_success")
+                'msg' => __('crm.updated_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $outpout = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $outpout = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $outpout;
@@ -267,33 +259,34 @@ class FollowCustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('follow_customer.delete')) {
+        if (! auth()->user()->can('follow_customer.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
 
             $follow = FollowCustomer::findOrFail($id);
-            
+
             $follow->delete();
             $output = [
                 'success' => true,
-                'msg' => __("crm.deleted_success")
+                'msg' => __('crm.deleted_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
     }
 
-    public function getFollowsbyCustomer($id){
+    public function getFollowsbyCustomer($id)
+    {
         $follow_customers = DB::table('follow_customers as follow')
             ->join('customers as c', 'follow.customer_id', '=', 'c.id')
             ->leftJoin('crm_contact_reasons as reason', 'follow.contact_reason_id', '=', 'reason.id')
@@ -315,7 +308,7 @@ class FollowCustomerController extends Controller
             ->select('follow.*', 'variation.name as name_variation', 'variation.sub_sku', 'product.sku', 'product.name as name_product')
             ->where('follow.follow_customer_id', $id)
             ->get();
-        
+
         return response()->json($items);
     }
 }

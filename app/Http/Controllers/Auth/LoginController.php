@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Binnacle;
-use App\Business;
-use App\User;
+use App\Models\Business;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Utils\BusinessUtil;
+use App\Utils\Util;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
-use App\Utils\BusinessUtil;
-use App\Utils\Util;
 
 class LoginController extends Controller
 {
@@ -32,9 +28,9 @@ class LoginController extends Controller
 
     /**
      * All Utils instance.
-     *
      */
     protected $businessUtil;
+
     protected $util;
 
     /**
@@ -74,16 +70,18 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $business = Business::where('is_active', 1)->pluck('name', 'id');
+
         return view('auth.login')->with(compact('business'));
     }
 
-    public function postLogin(Request $request){
+    public function postLogin(Request $request)
+    {
         $credenciales = $this->validate(request(), [
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        if(Auth::attempt($credenciales)){
+        if (Auth::attempt($credenciales)) {
             $user = User::where('username', $request->input('username'))->first();
             $user->deleteSessionsFromOtherDevices();
             $action = 'login';
@@ -98,12 +96,12 @@ class LoginController extends Controller
         ]);
     }
 
-
     public function logout()
     {
         request()->session()->invalidate();
         request()->session()->flush();
         \Auth::logout();
+
         return redirect('/');
     }
 
@@ -111,32 +109,32 @@ class LoginController extends Controller
      * The user has been authenticated.
      * Check if the business is active or not.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->business->is_active){
+        if (! $user->business->is_active) {
             return redirect('/login')
-            ->with(
-              'status',
-              ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
-          );
-        } elseif (($user->status == 'inactive') || ($user->status == 'terminated') || (!in_array($request->input('business_id'), $user->permittedBusiness()))){
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
+                );
+        } elseif (($user->status == 'inactive') || ($user->status == 'terminated') || (! in_array($request->input('business_id'), $user->permittedBusiness()))) {
             \Auth::logout();
+
             return redirect('/login')
-            ->with(
-              'status',
-              ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
-          );
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
+                );
         }
     }
 
     protected function redirectTo()
     {
         $user = \Auth::user();
-        if (!$user->can('dashboard.data') && $user->can('sell.create')) {
+        if (! $user->can('dashboard.data') && $user->can('sell.create')) {
             return '/pos/create';
         }
 
@@ -146,7 +144,6 @@ class LoginController extends Controller
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     protected function credentials(Request $request)

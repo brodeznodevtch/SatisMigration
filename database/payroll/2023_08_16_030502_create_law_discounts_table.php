@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateLawDiscountsTable extends Migration
 {
@@ -22,13 +22,13 @@ class CreateLawDiscountsTable extends Migration
             $table->decimal('employee_percentage', 10, 2);
             $table->decimal('employer_value', 10, 2);
             $table->boolean('status')->default(1);
-            
+
             $table->integer('institution_law_id')->unsigned()->nullable();
             $table->foreign('institution_law_id')->references('id')->on('institution_laws')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->integer('payment_period_id')->unsigned();
             $table->foreign('payment_period_id')->references('id')->on('payment_periods')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->integer('business_id')->unsigned()->nullable();
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->timestamps();

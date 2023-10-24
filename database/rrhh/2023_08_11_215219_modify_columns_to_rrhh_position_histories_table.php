@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyColumnsToRrhhPositionHistoriesTable extends Migration
 {
@@ -42,13 +42,13 @@ class ModifyColumnsToRrhhPositionHistoriesTable extends Migration
         Schema::table('rrhh_position_histories', function (Blueprint $table) {
             $table->dropForeign('previous_department_id');
             $table->dropColumn('previous_department_id');
-            
+
             $table->dropForeign('previous_position1_id');
             $table->dropColumn('previous_position1_id');
 
             $table->dropForeign('new_department_id');
             $table->dropColumn('new_department_id');
-            
+
             $table->dropForeign('new_position1_id');
             $table->dropColumn('new_position1_id');
             $table->dropColumn('deleted_at');

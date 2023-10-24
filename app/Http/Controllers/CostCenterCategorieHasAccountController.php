@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CostCenterCategorieHasAccount;
+use App\Models\CostCenterCategorieHasAccount;
 use Illuminate\Http\Request;
 
 class CostCenterCategorieHasAccountController extends Controller
@@ -30,7 +30,6 @@ class CostCenterCategorieHasAccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class CostCenterCategorieHasAccountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CostCenterCategorieHasAccount  $costCenterCategorieHasAccount
      * @return \Illuminate\Http\Response
      */
     public function show(CostCenterCategorieHasAccount $costCenterCategorieHasAccount)
@@ -52,7 +50,6 @@ class CostCenterCategorieHasAccountController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CostCenterCategorieHasAccount  $costCenterCategorieHasAccount
      * @return \Illuminate\Http\Response
      */
     public function edit(CostCenterCategorieHasAccount $costCenterCategorieHasAccount)
@@ -63,8 +60,6 @@ class CostCenterCategorieHasAccountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CostCenterCategorieHasAccount  $costCenterCategorieHasAccount
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CostCenterCategorieHasAccount $costCenterCategorieHasAccount)
@@ -75,7 +70,6 @@ class CostCenterCategorieHasAccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CostCenterCategorieHasAccount  $costCenterCategorieHasAccount
      * @return \Illuminate\Http\Response
      */
     public function destroy(CostCenterCategorieHasAccount $costCenterCategorieHasAccount)

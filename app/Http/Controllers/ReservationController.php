@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\Brands;
-use App\BusinessLocation;
-use App\Category;
-use App\Customer;
-use App\CustomerGroup;
-use App\DocumentCorrelative;
-use App\DocumentType;
-use App\Employees;
-use App\KitHasProduct;
-use App\Pos;
-use App\Product;
-use App\Quote;
-use App\QuoteLine;
-use App\SellingPriceGroup;
-use App\TaxRate;
-use App\TransactionPayment;
-use App\User;
+use App\Models\Bank;
+use App\Models\Brands;
+use App\Models\BusinessLocation;
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
+use App\Models\Employees;
+use App\Models\KitHasProduct;
+use App\Models\Pos;
+use App\Models\Product;
+use App\Models\Quote;
+use App\Models\QuoteLine;
+use App\Models\SellingPriceGroup;
+use App\Models\TaxRate;
+use App\Models\TransactionPayment;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ContactUtil;
@@ -29,31 +29,37 @@ use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use App\Utils\Util;
-use App\Variation;
-use App\VariationLocationDetails;
-use Illuminate\Http\Request;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
 use DB;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReservationController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $contactUtil;
+
     protected $productUtil;
+
     protected $businessUtil;
+
     protected $transactionUtil;
+
     protected $taxUtil;
+
     protected $cashRegisterUtil;
+
     protected $moduleUtil;
+
     protected $notificationUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(
@@ -94,23 +100,23 @@ class ReservationController extends Controller
             'transfer_destination_account' => '',
             'transfer_receiving_bank' => null,
             'credit_payment_term' => null, /** Credit */
-            'is_return' => 0
+            'is_return' => 0,
         ];
 
         // Business types
         $this->business_type = ['small_business', 'medium_business', 'large_business'];
-        
+
         // Payment conditions
         $this->payment_conditions = ['cash', 'credit'];
-        
+
         // Payment note short name
         $this->note_name = 'NA';
 
         // Payment status
         $this->payment_status = [
-            'all' => __("kardex.all"),
+            'all' => __('kardex.all'),
             'paid' => __('sale.paid'),
-            'pending' => __('sale.pending')
+            'pending' => __('sale.pending'),
         ];
 
         // Binnacle data
@@ -144,7 +150,7 @@ class ReservationController extends Controller
                     'quotes.total_final',
                     DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) as employee_name"),
                     'quotes.id',
-                    DB::raw("(SELECT SUM(tp1.amount) FROM transaction_payments AS tp1 WHERE tp1.quote_id = quotes.id) as amount_paid"),
+                    DB::raw('(SELECT SUM(tp1.amount) FROM transaction_payments AS tp1 WHERE tp1.quote_id = quotes.id) as amount_paid'),
                     DB::raw("(SELECT GROUP_CONCAT(DISTINCT tp2.note ORDER BY tp2.note SEPARATOR ', ') FROM transaction_payments AS tp2 WHERE tp2.quote_id = quotes.id) as note")
                 );
 
@@ -155,7 +161,7 @@ class ReservationController extends Controller
                 if (! empty($location_id)) {
                     if ($location_id != 'all') {
                         $reservations->where('quotes.location_id', $location_id);
-                    }   
+                    }
                 }
             }
 
@@ -180,18 +186,18 @@ class ReservationController extends Controller
                         if ($payment_status == 'paid') {
                             $reservations->where('quotes.total_final', 'amount_paid');
 
-                        // Reservations pending payment
+                            // Reservations pending payment
                         } else {
                             $reservations->where('quotes.total_final', '>', 'amount_paid');
                         }
-                    }   
+                    }
                 }
             }
 
             // Date filter
             if (! empty(request()->start_date) && ! empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end =  request()->end_date;
+                $end = request()->end_date;
                 $reservations->whereDate('quotes.quote_date', '>=', $start)
                     ->whereDate('quotes.quote_date', '<=', $end);
             }
@@ -199,17 +205,17 @@ class ReservationController extends Controller
             $reservations->groupBy('quotes.id');
 
             return Datatables::of($reservations)
-                ->filterColumn('employee_name', function($query, $keyword) {
+                ->filterColumn('employee_name', function ($query, $keyword) {
                     $query->whereRaw('CONCAT(employees.first_name, " ", employees.last_name) LIKE ?', ['{$keyword}']);
                 })
-                ->filterColumn('amount_paid', function($query, $keyword) {
+                ->filterColumn('amount_paid', function ($query, $keyword) {
                     $query->whereRaw('(SELECT SUM(tp1.amount) FROM transaction_payments AS tp1 WHERE tp1.quote_id = quotes.id) LIKE ?', ['{$keyword}']);
                 })
                 ->addColumn('action',
-                '<div class="btn-group">
+                    '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                        data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") .
-                        ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                        data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').
+                            ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         @can("reservation.view")
@@ -251,15 +257,15 @@ class ReservationController extends Controller
             foreach ($locations as $id => $name) {
                 $default_location = $id;
             }
-            
-        // Access to all locations
-        } else if (auth()->user()->permitted_locations() == 'all') {
-            $locations = $locations->prepend(__("kardex.all_2"), 'all');
+
+            // Access to all locations
+        } elseif (auth()->user()->permitted_locations() == 'all') {
+            $locations = $locations->prepend(__('kardex.all_2'), 'all');
         }
 
         // Document types
         $document_types = DocumentType::forDropdown($business_id, false, false);
-        $document_types = $document_types->prepend(__("kardex.all"), 'all');
+        $document_types = $document_types->prepend(__('kardex.all'), 'all');
 
         // Payment status
         $payment_status = $this->payment_status;
@@ -281,7 +287,6 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -300,15 +305,15 @@ class ReservationController extends Controller
                 $commsn_agnt_setting = $request->session()->get('business.sales_cmsn_agnt');
 
                 DB::beginTransaction();
-                
+
                 // Date
                 if (empty($request->input('transaction_date'))) {
-                    $input['quote_date'] =  \Carbon::now();
+                    $input['quote_date'] = \Carbon::now();
 
                 } else {
                     $quot_time = session('business.time_format') == 12 ? date('h:i A') : date('H:i');
                     $quot_date = substr($request->input('transaction_date'), 0, 10);
-                    $quote_date = $quot_date . ' ' . $quot_time;
+                    $quote_date = $quot_date.' '.$quot_time;
                     $input['quote_date'] = $this->productUtil->uf_date($quote_date, true);
                 }
 
@@ -326,17 +331,17 @@ class ReservationController extends Controller
                 if ($request->has('price_group')) {
                     $input['selling_price_group_id'] = $request->input('price_group') != 0 ? $request->input('price_group') : null;
                 }
-                
+
                 // Document type
                 if ($request->has('documents')) {
-                     $input['document_type_id']  = $request->input('documents');
-                     $input['correlative'] = $request->input('correlatives');
+                    $input['document_type_id'] = $request->input('documents');
+                    $input['correlative'] = $request->input('correlatives');
                 }
 
                 // Customer
                 if (! empty($request->input('customer_id'))) {
                     $customer = Customer::find($request->input('customer_id'));
-                    
+
                     if (! empty($customer) && $customer->is_default != 1) {
                         $input['customer_name'] = $customer->name;
                     }
@@ -373,7 +378,7 @@ class ReservationController extends Controller
                         $payment_note_correlative->actual += 1;
                         $payment_note_correlative->save();
 
-                    }  else if ($payment_note_correlative->actual == $payment_note_correlative->final) {
+                    } elseif ($payment_note_correlative->actual == $payment_note_correlative->final) {
                         $payment_note_correlative->status = 'inactive';
                         $payment_note_correlative->save();
                     }
@@ -387,7 +392,7 @@ class ReservationController extends Controller
                 if (! empty($request->input('is_direct_sale'))) {
                     $is_direct_sale = true;
                 }
-                
+
                 if (! $is_direct_sale) {
                     // Add change return
                     $change_return = $this->dummyPaymentLine;
@@ -429,7 +434,7 @@ class ReservationController extends Controller
                             );
                         }
 
-                    } else if ($clasification == 'product' || $clasification == 'material') {
+                    } elseif ($clasification == 'product' || $clasification == 'material') {
                         $this->productUtil->increaseReservedQuantity(
                             $product['product_id'],
                             $product['variation_id'],
@@ -462,7 +467,7 @@ class ReservationController extends Controller
                 }
 
                 DB::commit();
-                
+
                 $msg = __('lang_v1.reservation_added_successfully');
 
                 $show_modal = true;
@@ -472,13 +477,13 @@ class ReservationController extends Controller
                     'msg' => $msg,
                     // 'receipt' => $receipt,
                     'transaction_id' => 0,
-                    'show_modal' => $show_modal
+                    'show_modal' => $show_modal,
                 ];
 
             } else {
                 $output = [
                     'success' => 0,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -489,14 +494,14 @@ class ReservationController extends Controller
                 $msg = $e->getMessage();
 
             } else {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $msg = __('messages.something_went_wrong');
             }
 
             $output = [
                 'success' => 0,
-                'msg' => 'File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage()
+                'msg' => 'File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage(),
             ];
         }
 
@@ -511,7 +516,7 @@ class ReservationController extends Controller
      */
     public function show($id)
     {
-        if (! auth()->user()->can("reservation.view")) {
+        if (! auth()->user()->can('reservation.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -551,10 +556,10 @@ class ReservationController extends Controller
         foreach ($quote_lines as $ql) {
             $ql->tax_percent = $this->taxUtil->getTaxPercent($ql->tax_id);
         }
-        
+
         $discount_types = [
             'fixed' => __('lang_v1.fixed'),
-            'percentage' => __('lang_v1.percentage')
+            'percentage' => __('lang_v1.percentage'),
         ];
 
         return view('reservation.show')
@@ -581,7 +586,7 @@ class ReservationController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $walk_in_customer = $this->contactUtil->getDefaultCustomer($business_id);
-        
+
         $business_details = $this->businessUtil->getDetails($business_id);
 
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
@@ -589,7 +594,7 @@ class ReservationController extends Controller
         $payment_types = $this->productUtil->payment_types();
 
         $transaction = Quote::where('id', $id)->where('type', 'reservation')->first();
-        
+
         $customer = Customer::find($transaction->customer_id);
 
         // $patient = Patient::join('lab_orders as lo', 'lo.patient_id', 'patients.id')
@@ -606,7 +611,7 @@ class ReservationController extends Controller
             ->join('products AS p', 'variations.product_id', 'p.id')
             ->join('product_variations AS pv', 'variations.product_variation_id', 'pv.id')
             ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
-                    $join->on('variations.id', '=', 'vld.variation_id')
+                $join->on('variations.id', '=', 'vld.variation_id')
                     ->where('vld.location_id', '=', $location_id);
             })
             ->leftjoin('units', 'units.id', '=', 'p.unit_id')
@@ -656,7 +661,7 @@ class ReservationController extends Controller
                         $lot_number_obj = $this->transactionUtil->getLotNumbersFromVariation($value->variation_id, $business_id, $location_id, true);
 
                         foreach ($lot_number_obj as $lot_number) {
-                            # If lot number is selected added ordered quantity to lot quantity available
+                            // If lot number is selected added ordered quantity to lot quantity available
                             if ($value->lot_no_line_id == $lot_number->purchase_line_id) {
                                 $lot_number->qty_available += $value->quantity_ordered;
                             }
@@ -671,9 +676,9 @@ class ReservationController extends Controller
                     if ($this->transactionUtil->isModuleEnabled('modifiers')) {
                         // Add modifier details to sel line details
                         $sell_line_modifiers = TransactionSellLine::where('parent_sell_line_id', $sell_details[$key]->transaction_sell_lines_id)->get();
-                        
+
                         $modifiers_ids = [];
-                        
+
                         if (count($sell_line_modifiers) > 0) {
                             $sell_details[$key]->modifiers = $sell_line_modifiers;
 
@@ -711,7 +716,7 @@ class ReservationController extends Controller
 
         if ($commsn_agnt_setting == 'user') {
             $commission_agent = User::forDropdown($business_id, false);
-        } else if ($commsn_agnt_setting == 'cmsn_agnt') {
+        } elseif ($commsn_agnt_setting == 'cmsn_agnt') {
             $commission_agent = User::saleCommissionAgentsDropdown($business_id, false);
         }
 
@@ -741,27 +746,27 @@ class ReservationController extends Controller
 
         // Employees (sellers)
         $employees_sales = Employees::forDropdown(($business_id));
-        
+
         // Accounts
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
-        
+
         // Selling price group
         $price_groups = SellingPriceGroup::forDropdown($business_id);
-        
+
         // Tax groups
         $tax_groups = $this->taxUtil->getTaxGroups($business_id, 'contacts');
-        
+
         // Business type
         $business_type = $this->business_type;
-        
+
         // Payment conditions
         $payment_conditions = $this->payment_conditions;
 
         // Document types
-        $documents =  DocumentType::where('business_id',$business_id)
+        $documents = DocumentType::where('business_id', $business_id)
             ->where('is_active', 1)
-           ->select('short_name', 'tax_inc', 'id')
-           ->get();
+            ->select('short_name', 'tax_inc', 'id')
+            ->get();
 
         // Banks
         $banks = Bank::where('business_id', $business_id)
@@ -779,7 +784,7 @@ class ReservationController extends Controller
 
         // Check if user is admin
         $user = User::find(request()->user()->id);
-        $is_admin = $user->hasRole('Super Admin#' . $business_id);
+        $is_admin = $user->hasRole('Super Admin#'.$business_id);
 
         // Document data
         $doc_tax_inc = $transaction->tax_inc;
@@ -788,7 +793,7 @@ class ReservationController extends Controller
         // Number of decimals in sales
         $product_settings = empty($business_details->product_settings) ? $this->businessUtil->defaultProductSettings() : json_decode($business_details->product_settings, true);
         $decimals_in_sales = $product_settings['decimals_in_sales'];
-        
+
         return view('sale_pos.edit')
             ->with(compact(
                 'business_details',
@@ -829,7 +834,6 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -838,7 +842,7 @@ class ReservationController extends Controller
         if (! auth()->user()->can('reservation.update')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         try {
             $input = $request->except('_token');
 
@@ -864,13 +868,13 @@ class ReservationController extends Controller
 
                 if (! empty($request->input('transaction_date'))) {
                     $trans_time = session('business.time_format') == 12 ? date('h:i A') : date('H:i');
-                    $trans_date = substr($request->input('transaction_date'), 0, 10); # Get date only
-                    $transaction_date = $trans_date . ' ' . $trans_time;
+                    $trans_date = substr($request->input('transaction_date'), 0, 10); // Get date only
+                    $transaction_date = $trans_date.' '.$trans_time;
                     $input['transaction_date'] = $this->productUtil->uf_date($transaction_date, true);
                 }
 
                 $input['commission_agent'] = ! empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
-                
+
                 if ($commsn_agnt_setting == 'logged_in_user') {
                     $input['commission_agent'] = $user_id;
                 }
@@ -883,7 +887,7 @@ class ReservationController extends Controller
                 $customer_id = $request->get('customer_id', null);
                 $cg = $this->contactUtil->getCustomerGroup($business_id, $customer_id);
                 $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
-                
+
                 // Set selling price group id
                 if ($request->has('price_group')) {
                     $input['selling_price_group_id'] = $request->input('price_group');
@@ -896,7 +900,7 @@ class ReservationController extends Controller
 
                 // Set documents
                 if ($request->has('documents')) {
-                    $input['document_type_id']  = $request->input('documents');
+                    $input['document_type_id'] = $request->input('documents');
                     $input['correlative'] = $request->input('correlatives');
                 }
 
@@ -953,7 +957,7 @@ class ReservationController extends Controller
                 }
 
                 DB::commit();
-                    
+
                 $msg = trans('reservation.reservation_update_success');
                 $receipt = '';
                 $show_modal = false;
@@ -962,24 +966,24 @@ class ReservationController extends Controller
                     'success' => 1,
                     'msg' => $msg,
                     'receipt' => $receipt,
-                    'show_modal' => $show_modal
+                    'show_modal' => $show_modal,
                 ];
 
             } else {
                 $output = [
                     'success' => 0,
-                    'msg' => trans('messages.something_went_wrong')
+                    'msg' => trans('messages.something_went_wrong'),
                 ];
             }
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -994,7 +998,7 @@ class ReservationController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('reservation.delete')) {
+        if (! auth()->user()->can('reservation.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1014,7 +1018,7 @@ class ReservationController extends Controller
                 if (! empty($quote)) {
                     $deleted_quote_lines = $quote->quote_lines;
                     $deleted_quote_lines_ids = $deleted_quote_lines->pluck('id')->toArray();
-                    
+
                     $this->transactionUtil->deleteQuoteLines(
                         $deleted_quote_lines_ids,
                         $quote->location_id,
@@ -1033,18 +1037,18 @@ class ReservationController extends Controller
                         $quote_old
                     );
                 }
-            
+
                 DB::commit();
 
                 $output = [
                     'success' => true,
-                    'msg' => __('reservation.reservation_delete_success')
+                    'msg' => __('reservation.reservation_delete_success'),
                 ];
 
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output['success'] = false;
                 $output['msg'] = trans('messages.something_went_wrong');
@@ -1078,10 +1082,10 @@ class ReservationController extends Controller
                 // ->whereIn("quotes.status", ['opened']);
                 ->where('quotes.location_id', $location_id);
 
-            if (!empty($term)) {
+            if (! empty($term)) {
                 $quotes->where(function ($query) use ($term) {
-                    $query->where('quotes.customer_name', 'like', '%' . $term .'%')
-                    ->orWhere("quotes.quote_ref_no", 'like', '%' . $term . '%');
+                    $query->where('quotes.customer_name', 'like', '%'.$term.'%')
+                        ->orWhere('quotes.quote_ref_no', 'like', '%'.$term.'%');
                 });
             }
 
@@ -1103,7 +1107,7 @@ class ReservationController extends Controller
                 // 'quotes.id as order_id',
                 // 'quotes.customer_name'
             )->with(['quote_lines', 'payment_lines'])
-            ->get();
+                ->get();
 
             return json_encode($quotes);
         }
@@ -1191,7 +1195,7 @@ class ReservationController extends Controller
 
             if (request()->session()->get('business.enable_lot_number') == 1 || request()->session()->get('business.enable_product_expiry') == 1) {
                 $lot_number_obj = $this->transactionUtil->getLotNumbersFromVariation($variation_id, $business_id, $location_id, true);
-                
+
                 foreach ($lot_number_obj as $lot_number) {
                     $lot_number->qty_formated = $this->productUtil->num_f($lot_number->qty_available);
                     $lot_numbers[] = $lot_number;
@@ -1206,7 +1210,7 @@ class ReservationController extends Controller
 
             // Check if user is admin
             $user = User::find(request()->user()->id);
-            $is_admin = $user->hasRole('Super Admin#' . $business_id);
+            $is_admin = $user->hasRole('Super Admin#'.$business_id);
 
             // Number of decimals in sales
             $product_settings = empty($business_details->product_settings) ? $this->businessUtil->defaultProductSettings() : json_decode($business_details->product_settings, true);
@@ -1224,9 +1228,9 @@ class ReservationController extends Controller
                     'decimals_in_sales'
                 ))
                 ->render();
-            
+
         } catch (\Exception $e) {
-            \Log::emergency("File: " . $e->getFile(). " Line: " . $e->getLine(). " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output['success'] = false;
             $output['msg'] = __('lang_v1.item_out_of_stock');
@@ -1247,12 +1251,12 @@ class ReservationController extends Controller
             $payment_line = TransactionPayment::where('id', $payment_id)
                 ->first()
                 ->toArray();
-            
+
             $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
-            
+
             $banks = Bank::where('business_id', $business_id)
                 ->pluck('name', 'id');
-            
+
             $pos = Pos::where('business_id', $business_id)
                 ->pluck('name', 'id');
 
@@ -1264,9 +1268,9 @@ class ReservationController extends Controller
                 ->with(compact('business_id', 'payment_types', 'payment_line', 'accounts', 'banks', 'pos',
                     'removable', 'row_index', 'show_note', 'show_multiple_notes'))
                 ->render();
-            
+
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output['success'] = false;
             $output['msg'] = __('lang_v1.item_out_of_stock');

@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 require 'recipe/laravel.php';
@@ -39,7 +40,7 @@ task('artisan:config:cache', function () {
     /** Copy .env file */
     cd('{{deploy_path}}');
     run('cp ../.env shared/');
-    
+
     artisan('config:cache');
 });
 

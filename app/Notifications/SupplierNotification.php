@@ -2,11 +2,10 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Config;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class SupplierNotification extends Notification
 {
@@ -23,8 +22,8 @@ class SupplierNotification extends Notification
     {
         $this->notificationInfo = $notificationInfo;
         $email_settings = $notificationInfo['email_settings'];
-        $mail_driver = !empty($email_settings['mail_driver']) ? $email_settings['mail_driver'] : 'smtp';
-        
+        $mail_driver = ! empty($email_settings['mail_driver']) ? $email_settings['mail_driver'] : 'smtp';
+
         Config::set('mail.driver', $mail_driver);
         Config::set('mail.host', $email_settings['mail_host']);
         Config::set('mail.port', $email_settings['mail_port']);
@@ -56,12 +55,13 @@ class SupplierNotification extends Notification
     public function toMail($notifiable)
     {
         $data = $this->notificationInfo;
+
         return (new MailMessage)
-                    ->subject($data['subject'])
-                    ->view(
-                        'emails.plain_html',
-                        ['content' => $data['email_body']]
-                    );
+            ->subject($data['subject'])
+            ->view(
+                'emails.plain_html',
+                ['content' => $data['email_body']]
+            );
     }
 
     /**

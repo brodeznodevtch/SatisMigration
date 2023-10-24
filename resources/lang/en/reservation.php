@@ -1,4 +1,5 @@
 <?php
+
 return [
     'manage_reservations' => 'Manage reservations',
     'all_your_reservations' => 'All your reservations',

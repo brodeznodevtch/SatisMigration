@@ -4,19 +4,21 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class LostSaleReportExport implements FromView, WithEvents, WithTitle
 {
     private $quotes;
+
     private $size;
+
     private $business;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $quotes
      * @param  int  $size
      * @param  \App\Business  $business
@@ -31,8 +33,6 @@ class LostSaleReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
@@ -41,8 +41,6 @@ class LostSaleReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
@@ -80,8 +78,6 @@ class LostSaleReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {

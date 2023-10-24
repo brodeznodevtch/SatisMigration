@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AddProviderAndSupplierAccountsToAccountBusinessLocationsTable extends Migration
 {
@@ -16,7 +16,7 @@ class AddProviderAndSupplierAccountsToAccountBusinessLocationsTable extends Migr
     {
         DB::statement('ALTER TABLE account_business_locations DROP FOREIGN KEY account_business_locations_account_payable_id_foreign');
         DB::statement('ALTER TABLE account_business_locations DROP COLUMN account_payable_id');
-    
+
         Schema::table('account_business_locations', function (Blueprint $table) {
             $table->unsignedBigInteger('supplier_account_id')
                 ->nullable()

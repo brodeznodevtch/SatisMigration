@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Quote;
+use App\Models\Quote;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class UpdateQuotes extends Command
 {

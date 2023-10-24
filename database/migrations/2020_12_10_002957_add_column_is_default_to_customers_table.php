@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnIsDefaultToCustomersTable extends Migration
 {
@@ -14,9 +14,9 @@ class AddColumnIsDefaultToCustomersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->boolean("is_default")
+            $table->boolean('is_default')
                 ->default(false)
-                ->after("is_taxpayer");
+                ->after('is_taxpayer');
         });
     }
 
@@ -28,7 +28,7 @@ class AddColumnIsDefaultToCustomersTable extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn("is_default");
+            $table->dropColumn('is_default');
         });
     }
 }

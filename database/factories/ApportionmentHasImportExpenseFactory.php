@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\ApportionmentHasImportExpense::class, function (Faker $faker) {
+$factory->define(App\Models\ApportionmentHasImportExpense::class, function (Faker $faker) {
     return [
         //
     ];

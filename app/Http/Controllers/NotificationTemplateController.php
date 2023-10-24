@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\NotificationTemplate;
+use App\Models\NotificationTemplate;
 use Illuminate\Http\Request;
 
 class NotificationTemplateController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +14,7 @@ class NotificationTemplateController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('send_notification')) {
+        if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -45,18 +44,17 @@ class NotificationTemplateController extends Controller
         $booking_tags = NotificationTemplate::bookingNotificationTags();
 
         return view('notification_template.index')
-                ->with(compact('customer_notifications', 'supplier_notifications', 'tags', 'booking_tags'));
+            ->with(compact('customer_notifications', 'supplier_notifications', 'tags', 'booking_tags'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('send_notification')) {
+        if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -67,14 +65,14 @@ class NotificationTemplateController extends Controller
             NotificationTemplate::updateOrCreate(
                 [
                     'business_id' => $business_id,
-                    'template_for' => $key
+                    'template_for' => $key,
                 ],
                 [
                     'subject' => $value['subject'],
                     'email_body' => $value['email_body'],
                     'sms_body' => $value['sms_body'],
-                    'auto_send' => !empty($value['auto_send']) ? 1 : 0,
-                    'auto_send_sms' => !empty($value['auto_send_sms']) ? 1 : 0
+                    'auto_send' => ! empty($value['auto_send']) ? 1 : 0,
+                    'auto_send_sms' => ! empty($value['auto_send_sms']) ? 1 : 0,
                 ]
             );
         }

@@ -11,9 +11,9 @@
 |
 */
 
-include_once('install_r.php');
+include_once 'install_r.php';
 
-Route::middleware(['IsInstalled'])->group(function (){
+Route::middleware(['IsInstalled'])->group(function () {
 
     Route::get('/', function () {
         return view('welcome');
@@ -25,19 +25,17 @@ Route::middleware(['IsInstalled'])->group(function (){
     Route::post('/business/register/check-username', 'BusinessController@postCheckUsername')->name('business.postCheckUsername');
 });
 
-Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function(){
+Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function () {
     Route::get('/start', 'UserController@getFirstSession');
     Route::post('/user/first-session', 'UserController@updatePasswordFirst');
 });
-
-
 
 Route::post('credits/show-report', 'CreditRequestController@showReport');
 Route::resource('credits', 'CreditRequestController');
 
 Route::get('business_types/get-data', 'BusinessTypeController@getBusinessTypeData');
 Route::get('payment_terms/get-data', 'PaymentTermController@getPaymentTermData');
-Route::get('/documents/default', 'DocumentTypeController@verifyDefault');   
+Route::get('/documents/default', 'DocumentTypeController@verifyDefault');
 
 Route::get('/documents/default', 'DocumentTypeController@verifyDefault');
 //only create customer
@@ -65,7 +63,7 @@ Route::get('/customers/get_only_customers', 'CustomerController@getClients');
 Route::get('/products/get_only_products', 'ProductController@getProductsSelect');
 
 //Routes for authenticated users only
-Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function(){
+Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function () {
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
     //rutas para busineestypes y paymentTerm
@@ -97,7 +95,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/home/get-total-stock', 'HomeController@getTotalStock');
     Route::post('/home/choose-month', 'HomeController@chooseMonth');
     Route::get('/home/get-weekly-sales', 'HomeController@getWeekSales');
-    
 
     //Slider options
     Route::get('/carrousel', 'SliderController@index');
@@ -127,7 +124,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('brands', 'BrandController');
 
     //DocumentType
-    Route::resource('documents','DocumentTypeController');
+    Route::resource('documents', 'DocumentTypeController');
 
     Route::resource('payment-account', 'PaymentAccountController');
 
@@ -135,7 +132,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/tax_groups/get_tax_groups', 'TaxGroupController@getTaxGroups');
     Route::post('/tax_groups/get_tax_percent', 'TaxGroupController@getTaxPercent');
     Route::resource('tax_groups', 'TaxGroupController');
-    
+
     Route::get('/unitgroups/getUnitGroupsData', 'UnitGroupController@getUnitGroupsData');
     Route::get('/unitgroups/groupHasLines/{id}', 'UnitGroupController@groupHasLines');
     Route::resource('unitgroups', 'UnitGroupController');
@@ -222,7 +219,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/expenses/get_suppliers', 'ExpenseController@getSuppliers');
     Route::get('/expenses/get_categories', 'ExpenseController@getCategories');
     Route::get('/expenses/accounting-by-range/{start_date}/{end_date}', 'ExpenseController@accountingByRange');
-    Route::get('/expenses/{id}/print','ExpenseController@printExpense');
+    Route::get('/expenses/{id}/print', 'ExpenseController@printExpense');
     Route::post('/purchases/get_purchase_entry_row', 'PurchaseController@getPurchaseEntryRow');
     Route::post('/purchases/check_ref_number', 'PurchaseController@checkRefNumber');
     Route::get('/purchases/print/{id}/{type}', 'PurchaseController@printInvoice');
@@ -266,10 +263,9 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('pos', 'SellPosController');
     Route::resource('terminal', 'PosController');
 
-
     Route::get('roles/verifyRoleName/{name}', 'RoleController@verifyRoleName');
     Route::get('roles/verifyDelete/{id}', 'RoleController@verifyDelete');
-    Route::get('roles/getRolesData', 'RoleController@getRolesData');    
+    Route::get('roles/getRolesData', 'RoleController@getRolesData');
     Route::get('roles/getPermissionsByRoles', 'RoleController@getPermissionsByRoles');
     Route::resource('roles', 'RoleController');
     Route::get('modules/getModulesData', 'ModuleController@getModulesData');
@@ -289,13 +285,13 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // Rutas Positions
     Route::get('positions/getPositionsData', 'ManagePositionsController@getPositionsData');
-    Route::resource('positions', "ManagePositionsController");
+    Route::resource('positions', 'ManagePositionsController');
 
     // Rutas Contact Mode
     Route::get('crm-contactmode/getContactModeData', 'CRMContactModeController@getContactModeData');
     Route::resource('crm-contactmode', 'CRMContactModeController');
 
-    // Rutas Contact Reason 
+    // Rutas Contact Reason
     Route::get('crm-contactreason/getContactReasonData', 'CRMContactReasonController@getContactReasonData');
     Route::resource('crm-contactreason', 'CRMContactReasonController');
 
@@ -306,14 +302,13 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('follow-oportunities/getProductsByFollowOportunity/{id}', 'FollowOportunitiesController@getProductsByFollowOportunity');
     Route::get('oportunities/convert-to-customer/{id}', 'OportunityController@createCustomer');
     Route::post('oportunities/convert-to-customer', 'OportunityController@storeCustomer');
-    
-    Route::resource('follow-oportunities', 'FollowOportunitiesController', ['except'=>'create']);
+
+    Route::resource('follow-oportunities', 'FollowOportunitiesController', ['except' => 'create']);
     Route::get('/follow-oportunities/create/{id}', 'FollowOportunitiesController@create');
     Route::get('/follow-oportunities/showOportunities', 'FollowOportunitiesController@showOportunities');
 
-
     /** Quotes */
-    Route::get("quotes/get_quotes", "QuoteController@getQuotes");
+    Route::get('quotes/get_quotes', 'QuoteController@getQuotes');
     Route::get('quotes/addProduct/{variation_id}/{warehouse_id}/{selling_price_group_id?}', 'QuoteController@addProduct');
     Route::get('quotes/addProductNotStock/{variation_id}', 'QuoteController@addProductNotStock');
     Route::get('quotes/getQuotesData', 'QuoteController@getQuotesData');
@@ -323,11 +318,11 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('quotes', 'QuoteController');
 
     /** Orders */
-    Route::post("orders/get_quote_lines", "OrderController@getQuoteLines");
-    Route::get("orders/get_product_row/{quote_id}/{variation_id}/{location_id}/{row_count}", "OrderController@getProductRow");
-    Route::get("orders/orders_planner", "OrderController@orderPlanner");
+    Route::post('orders/get_quote_lines', 'OrderController@getQuoteLines');
+    Route::get('orders/get_product_row/{quote_id}/{variation_id}/{location_id}/{row_count}', 'OrderController@getProductRow');
+    Route::get('orders/orders_planner', 'OrderController@orderPlanner');
     Route::post('orders/orders_planner_report', 'OrderController@orderPlannerReport');
-    Route::get("orders/change_order_status/{id}/{employee_id?}", "OrderController@changeOrderStatus");
+    Route::get('orders/change_order_status/{id}/{employee_id?}', 'OrderController@changeOrderStatus');
     Route::post('orders/refresh-orders-list', 'OrderController@refreshOrdersList');
     Route::get('orders/get_in_charge_people', 'OrderController@getInChargePeople');
     Route::get('orders/get_orders', 'OrderController@getOrders');
@@ -488,7 +483,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('backup/download/{file_name}', 'BackUpController@download');
     Route::get('backup/delete/{file_name}', 'BackUpController@delete');
     Route::resource('backup', 'BackUpController', ['only' => [
-        'index', 'create', 'store'
+        'index', 'create', 'store',
     ]]);
 
     Route::resource('selling-price-group', 'SellingPriceGroupController');
@@ -540,7 +535,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('catalogue/importCatalogue', 'CatalogueController@importCatalogue');
     Route::resource('catalogue', 'CatalogueController')->except(['create']);
 
-
     Route::get('entries/search/{code}', 'AccountingEntrieController@search');
     Route::get('entries/search-period', 'AccountingEntrieController@searchPeriod');
     Route::get('entries/clone-entrie/{id}', 'AccountingEntrieController@cloneEntrie');
@@ -565,7 +559,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     Route::get('entries/getApertureDebitAccounts/{date}', 'AccountingEntrieController@getApertureDebitAccounts');
     Route::get('entries/getApertureCreditAccounts/{date}', 'AccountingEntrieController@getApertureCreditAccounts');
-    
+
     Route::get('/entries/assign-short-name', 'AccountingEntrieController@assignShortName');
     Route::get('entries/setNumeration/{mode}/{period}', 'AccountingEntrieController@setNumeration');
     Route::resource('entries', 'AccountingEntrieController')->except(['create']);
@@ -627,7 +621,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('accounting-periods/getPeriodStatus/{id}', 'AccountingPeriodController@getPeriodStatus');
     Route::resource('accounting-periods', 'AccountingPeriodController');
 
-
     Route::get('type-entries/getTypesData', 'TypeEntrieController@getTypesData');
     Route::get('type-entries/getTypes', 'TypeEntrieController@getTypes');
     Route::resource('type-entries', 'TypeEntrieController');
@@ -643,10 +636,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('bank-checkbooks/validateRange/{id}/{number}', 'BankCheckbookController@validateRange');
     Route::resource('bank-checkbooks', 'BankCheckbookController');
 
-
-
     //RRHH Routes
-    //Routes settings 
+    //Routes settings
     Route::get('rrhh-setting', 'RrhhSettingController@index');
     Route::post('rrhh-setting', 'RrhhSettingController@store');
 
@@ -735,7 +726,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('rrhh-income-discount-create/{id}', 'RrhhIncomeDiscountController@createIncomeDiscount');
     Route::post('rrhh-income-discount-update', 'RrhhIncomeDiscountController@updateIncomeDiscount');
 
-
     //Routes catalogos RRHH
     Route::resource('rrhh-catalogues', 'RrhhHeaderController');
     Route::resource('rrhh-catalogues-data', 'RrhhDataController');
@@ -761,7 +751,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     //Route::get('/salarial-constance', 'RrhhSalarialConstanceController@salarialConstances');
     Route::get('/salarial-constance/{id}/download', 'RrhhSalarialConstanceController@download');
 
-
     // Route Module Payroll
     //Routes Payroll
     Route::resource('payroll', 'PayrollController');
@@ -778,18 +767,15 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('payroll-getPayrollDetail/{id}', 'PayrollController@getPayrollDetail');
     Route::get('payroll/{id}/exportPayroll', 'PayrollController@exportPayroll');
 
-
     //Report
     Route::get('payroll-annual-summary', 'PayrollReportController@annualSummary');
     Route::post('/payroll-annual-summary/export', 'PayrollReportController@generateAnnualSummary');
-
-
 
     //Route catalogues
     Route::resource('institution-law', 'InstitutionLawController');
     Route::put('institution-law/{id}/edit', 'InstitutionLawController@update');
     Route::get('institution-law-getInstitutionLaws', 'InstitutionLawController@getInstitutionLaws');
-    
+
     Route::resource('law-discount', 'LawDiscountController');
     Route::put('law-discount/{id}/edit', 'InstitutionLawController@update');
     Route::get('law-discount-getLawDiscounts', 'LawDiscountController@getLawDiscounts');
@@ -797,7 +783,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('bonus-calculation', 'BonusCalculationController');
     Route::put('bonus-calculation/{id}/edit', 'InstitutionLawController@update');
     Route::get('bonus-calculation-getBonusCalculations', 'BonusCalculationController@getBonusCalculations');
-
 
     /** Route implementations */
     Route::get('implementations', 'ImplementationController@index');
@@ -848,7 +833,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('claim-types/getUserById/{id}', 'ClaimTypeController@getUserById');
     Route::get('claim-types/getUsersByClaimType/{id}', 'ClaimTypeController@getUsersByClaimType');
     Route::get('claim-types/getSuggestedClosingDate/{date}/{days}', 'ClaimTypeController@getSuggestedClosingDate');
-    
+
     Route::resource('claim-types', 'ClaimTypeController');
 
     Route::get('sdocs/getSDocsData', 'SupportDocumentsController@getSDocsData');
@@ -906,7 +891,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('credit-documents', 'CreditDocumentsController');
 
     Route::post('print_pos', 'ReporterController@printPOS');
-    Route::get('print_test', function(){
+    Route::get('print_test', function () {
         return view('reports.print_test');
     });
 
@@ -915,7 +900,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // Payment terms
     Route::get('/payment-terms/get-payment-terms', 'PaymentTermController@getPaymentTerms');
-    Route::resource('/payment-terms','PaymentTermController');
+    Route::resource('/payment-terms', 'PaymentTermController');
 
     // Sales book to final consumer
     Route::get('book-final-consumer', 'ReporterController@viewBookFinalConsumer');
@@ -1003,7 +988,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/reports/price-lists-report', 'ReportController@getPriceListsReport');
     Route::post('/reports/post-price-lists-report', 'ReportController@postPriceListsReport');
 
-    Route::get('/debs-pay', function(){
+    Route::get('/debs-pay', function () {
         return view('debs_to_pay.index');
     });
 
@@ -1075,7 +1060,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     // All Sales report routes
     Route::get('/sales-reports/all-sales-report', 'ReportController@getAllSalesReport');
     Route::post('/sales-reports/all-sales-report', 'ReportController@postAllSalesReport');
-    
+
     // All Sales report routes
     Route::get('/sales-reports/all-sales-with-utility-report', 'ReportController@getAllSalesWithUtilityReport');
     Route::post('/sales-reports/all-sales-with-utility-report', 'ReportController@postAllSalesWithUtilityReport');
@@ -1115,7 +1100,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/sales/calculate-tax-and-payments', 'SellPosController@calculateTaxAndPayments');
 
     // Sales toggle dropdown
-    Route::get("pos/get_toggle_dropdown/{id}", "SellController@getToggleDropdown");
+    Route::get('pos/get_toggle_dropdown/{id}', 'SellController@getToggleDropdown');
 
     // Create all opening balances
     Route::get('/customers/create-opening-balances/{business_id}', 'CustomerController@createAllOpeningBalances');
@@ -1141,7 +1126,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/balances_customer/send-account-statement', 'MailController@sendAccountStatement');
 
     // Account statement toggle dropdown
-    Route::get("balances_customer/get_toggle_dropdown/{id}", "CustomerController@getToggleDropdown");
+    Route::get('balances_customer/get_toggle_dropdown/{id}', 'CustomerController@getToggleDropdown');
 
     // Create kardex lines route
     Route::get('/kardex/create-kardex-lines/{variation_id}', 'KardexController@createKardexLines');
@@ -1225,7 +1210,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
         Route::get('/lab-orders/copy-change-status/{order_id}/{status_id}', 'LabOrderController@changeStatusAndCopy');
         Route::get('/lab-orders/edit-change-status/{order_id}/{status_id}', 'LabOrderController@changeStatusAndEdit');
         Route::get('/lab-orders/getHoops', 'LabOrderController@getHoops');
-        Route::get("lab_order/get_toggle_dropdown/{id}", "LabOrderController@getToggleDropdown");
+        Route::get('lab_order/get_toggle_dropdown/{id}', 'LabOrderController@getToggleDropdown');
         Route::post('/lab_orders/multiple-change-status', 'LabOrderController@multipleChangeStatus');
         Route::resource('lab-orders', 'LabOrderController');
 
@@ -1250,7 +1235,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/products/list_for_quotes', 'ProductController@getProductsToQuote');
             Route::get('/products/list-no-variation', 'ProductController@getProductsWithoutVariations');
             Route::get('/lab_orders/products/list_for_lab_orders', 'ProductController@getProductsToLabOrder');
-    
+
             Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
             Route::post('/products/product_form_part', 'ProductController@getProductVariationFormPart');
             Route::post('/products/get_product_variation_row', 'ProductController@getProductVariationRow');
@@ -1259,7 +1244,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::post('/products/check_product_sku', 'ProductController@checkProductSku');
             Route::get('/products/quick_add', 'ProductController@quickAdd');
             Route::post('/products/save_quick_product', 'ProductController@saveQuickProduct');
-    
+
             Route::get('/products/view/{id}', 'ProductController@view');
             Route::get('/products/viewSupplier/{id}', 'ProductController@viewSupplier');
             Route::get('/products/viewKit/{id}', 'ProductController@viewKit');
@@ -1271,15 +1256,15 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/products/showProduct/{id}', 'ProductController@showProduct');
             Route::get('/products/showStock/{variation_id}/{location_id}', 'ProductController@showStock');
             Route::get('/products/getMeasureFromKitLines/{id}', 'ProductController@getMeasureFromKitLines');
-    
-            Route::get("products/get_toggle_dropdown/{id}", "ProductController@getToggleDropdown");
+
+            Route::get('products/get_toggle_dropdown/{id}', 'ProductController@getToggleDropdown');
 
             Route::post('products/check-sku-unique', 'ProductController@checkSkuUnique');
 
             Route::get('/products/recalculate-product-cost/{variation_id}', 'ProductController@recalculateProductCost');
             Route::get('/products/get-recalculate-cost', 'ProductController@getRecalculateCost');
             Route::post('/products/get-recalculate-cost', 'ProductController@postRecalculateCost');
-    
+
             Route::resource('products', 'ProductController');
 
             // Materials
@@ -1332,8 +1317,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     // Reservations
     Route::resource('reservations', 'ReservationController');
     Route::get('pos/reservations/get_reservations', 'ReservationController@getReservations');
-    Route::get("reservations/get_product_row/{quote_id}/{variation_id}/{location_id}/{row_count}", "ReservationController@getProductRow");
-    Route::get("reservations/get_payment_row/{removable}/{row_index}/{payment_id}", "ReservationController@getPaymentRow");
+    Route::get('reservations/get_product_row/{quote_id}/{variation_id}/{location_id}/{row_count}', 'ReservationController@getProductRow');
+    Route::get('reservations/get_payment_row/{removable}/{row_index}/{payment_id}', 'ReservationController@getPaymentRow');
     Route::get('/payments/add_payment-to-quote/{quote_id}', 'TransactionPaymentController@addPaymentToQuote');
     Route::get('/payments/show-to-quote/{quote_id}', 'TransactionPaymentController@showToQuote');
     Route::post('/payments/quote', 'TransactionPaymentController@storeToQuote');
@@ -1379,10 +1364,10 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('quotes/get-service-blocks-by-quote/{id}', 'QuoteController@getServiceBlocksByQuote');
     Route::get('quotes/viewQuoteWorkshop/{id}', 'QuoteController@viewQuoteWorkshop');
     Route::post('quote/workshop-data/{quote_id}', 'QuoteController@workshopData');
-    Route::post("quote/get-spare-lines", 'QuoteController@getSpareLines'); // Workshop route
+    Route::post('quote/get-spare-lines', 'QuoteController@getSpareLines'); // Workshop route
 
     // Orders
-    Route::post("orders/get-spare-lines", "OrderController@getSpareLines"); // Workshop route
+    Route::post('orders/get-spare-lines', 'OrderController@getSpareLines'); // Workshop route
     Route::post('/orders/add-service-block/{id}', 'OrderController@addServiceBlock');
 
     // --- END WORKSHOP ROUTES ---

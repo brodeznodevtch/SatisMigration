@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddBusinessActivityColumnToContactTable extends Migration
 {
@@ -14,8 +14,8 @@ class AddBusinessActivityColumnToContactTable extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->string("business_activity", 191)
-                ->after("name")
+            $table->string('business_activity', 191)
+                ->after('name')
                 ->nullable()
                 ->default(null);
         });
@@ -29,7 +29,7 @@ class AddBusinessActivityColumnToContactTable extends Migration
     public function down()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->dropColumn("business_activity");
+            $table->dropColumn('business_activity');
         });
     }
 }

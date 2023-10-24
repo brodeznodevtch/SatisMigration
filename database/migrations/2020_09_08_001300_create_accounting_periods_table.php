@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAccountingPeriodsTable extends Migration
 {
@@ -19,7 +19,7 @@ class CreateAccountingPeriodsTable extends Migration
 
             $table->unsignedInteger('fiscal_year_id');
             $table->foreign('fiscal_year_id')->references('id')->on('fiscal_years');
-            
+
             $table->integer('month');
             $table->boolean('status')->default(1);
 

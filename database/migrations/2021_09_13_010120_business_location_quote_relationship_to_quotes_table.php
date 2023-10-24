@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class BusinessLocationQuoteRelationshipToQuotesTable extends Migration
 {
@@ -18,7 +18,7 @@ class BusinessLocationQuoteRelationshipToQuotesTable extends Migration
                 ->after('transaction_id')
                 ->nullable()
                 ->default(null);
-            
+
             $table->foreign('location_id')
                 ->references('id')
                 ->on('business_locations');

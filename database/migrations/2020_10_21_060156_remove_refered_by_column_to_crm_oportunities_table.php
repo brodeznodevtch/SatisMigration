@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveReferedByColumnToCrmOportunitiesTable extends Migration
 {
@@ -13,7 +13,7 @@ class RemoveReferedByColumnToCrmOportunitiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('crm_oportunities', function(Blueprint $table){
+        Schema::table('crm_oportunities', function (Blueprint $table) {
             $table->dropColumn('refered_by');
         });
     }

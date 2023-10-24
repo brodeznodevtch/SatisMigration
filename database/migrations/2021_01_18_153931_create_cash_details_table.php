@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCashDetailsTable extends Migration
 {
@@ -31,18 +31,18 @@ class CreateCashDetailsTable extends Migration
             $table->integer('one_hundred_dollars')->nullable()->default(null);
             $table->timestamps();
 
-            $table->foreign("cash_register_id")
-                ->references("id")
-                ->on("cash_registers");
-            $table->foreign("cashier_id")
-                ->references("id")
-                ->on("cashiers");
-            $table->foreign("business_id")
-                ->references("id")
-                ->on("business");
-            $table->foreign("location_id")
-                ->references("id")
-                ->on("business_locations");
+            $table->foreign('cash_register_id')
+                ->references('id')
+                ->on('cash_registers');
+            $table->foreign('cashier_id')
+                ->references('id')
+                ->on('cashiers');
+            $table->foreign('business_id')
+                ->references('id')
+                ->on('business');
+            $table->foreign('location_id')
+                ->references('id')
+                ->on('business_locations');
         });
     }
 

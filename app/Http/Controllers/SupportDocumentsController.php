@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\SupportDocuments;
-use Illuminate\Http\Request;
+use App\Models\SupportDocuments;
 use DB;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class SupportDocumentsController extends Controller
@@ -16,9 +16,10 @@ class SupportDocumentsController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('sdocs.view') && !auth()->user()->can('sdocs.create')) {
+        if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
+
         return view('support_documents.index');
     }
 
@@ -29,15 +30,16 @@ class SupportDocumentsController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('sdocs.view') && !auth()->user()->can('sdocs.create')) {
+        if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
+
         return view('support_documents.create');
     }
 
     public function getSDocsData()
     {
-        if (!auth()->user()->can('sdocs.view') && !auth()->user()->can('sdocs.create')) {
+        if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -45,6 +47,7 @@ class SupportDocumentsController extends Controller
         $sdocs = DB::table('support_documents')
             ->select('id', 'name', 'description')
             ->where('business_id', $business_id);
+
         return DataTables::of($sdocs)
             ->addColumn(
                 'action',
@@ -63,12 +66,11 @@ class SupportDocumentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('sdocs.create')) {
+        if (! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -84,10 +86,10 @@ class SupportDocumentsController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $sdocs,
-                'msg' => __("lang_v1.added_success")
+                'msg' => __('lang_v1.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
 
@@ -97,7 +99,6 @@ class SupportDocumentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function show(SupportDocuments $supportDocuments)
@@ -108,12 +109,12 @@ class SupportDocumentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('sdocs.update')) {
+        if (! auth()->user()->can('sdocs.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -129,13 +130,12 @@ class SupportDocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('sdocs.update')) {
+        if (! auth()->user()->can('sdocs.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -152,16 +152,17 @@ class SupportDocumentsController extends Controller
                 $outpout = [
                     'success' => true,
                     'data' => $sdocs,
-                    'msg' => __("lang_v1.updated_success")
+                    'msg' => __('lang_v1.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $outpout = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $outpout;
         }
     }
@@ -169,12 +170,12 @@ class SupportDocumentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('sdocs.delete')) {
+        if (! auth()->user()->can('sdocs.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -187,16 +188,17 @@ class SupportDocumentsController extends Controller
 
                 $outpout = [
                     'success' => true,
-                    'msg' => __("lang_v1.deleted_success")
+                    'msg' => __('lang_v1.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $outpout = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $outpout;
         }
     }

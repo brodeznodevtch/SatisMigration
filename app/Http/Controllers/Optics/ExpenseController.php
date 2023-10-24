@@ -2,27 +2,24 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\Http\Request;
-
-use App\Transaction;
-use App\ExpenseCategory;
-use App\BusinessLocation;
-use App\User;
-use App\Utils\TransactionUtil;
+use App\Models\BusinessLocation;
+use App\Models\ExpenseCategory;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\ModuleUtil;
+use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class ExpenseController extends Controller
 {
     /**
-    * Constructor
-    *
-    * @param TransactionUtil $transactionUtil
-    * @return void
-    */
+     * Constructor
+     *
+     * @return void
+     */
     public function __construct(TransactionUtil $transactionUtil, ModuleUtil $moduleUtil)
     {
         $this->transactionUtil = $transactionUtil;
@@ -37,7 +34,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -45,40 +42,40 @@ class ExpenseController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $expenses = Transaction::leftJoin('expense_categories AS ec', 'transactions.expense_category_id', '=', 'ec.id')
-                        ->join(
-                            'business_locations AS bl',
-                            'transactions.location_id',
-                            '=',
-                            'bl.id'
-                        )
-                        ->leftJoin('users AS U', 'transactions.expense_for', '=', 'U.id')
-                        ->leftJoin(
-                            'transaction_payments AS TP',
-                            'transactions.id',
-                            '=',
-                            'TP.transaction_id'
-                        )
-                        ->where('transactions.business_id', $business_id)
-                        ->where('transactions.type', 'expense')
-                        ->select(
-                            'transactions.id',
-                            'transactions.document',
-                            'transaction_date',
-                            'ref_no',
-                            'ec.name as category',
-                            'payment_status',
-                            'additional_notes',
-                            'final_total',
-                            'bl.name as location_name',
-                            DB::raw("CONCAT(COALESCE(U.first_name, ''),' ',COALESCE(U.last_name,'')) as expense_for"),
-                            DB::raw('SUM(TP.amount) as amount_paid')
-                        )
-                        ->groupBy('transactions.id');
+                ->join(
+                    'business_locations AS bl',
+                    'transactions.location_id',
+                    '=',
+                    'bl.id'
+                )
+                ->leftJoin('users AS U', 'transactions.expense_for', '=', 'U.id')
+                ->leftJoin(
+                    'transaction_payments AS TP',
+                    'transactions.id',
+                    '=',
+                    'TP.transaction_id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->where('transactions.type', 'expense')
+                ->select(
+                    'transactions.id',
+                    'transactions.document',
+                    'transaction_date',
+                    'ref_no',
+                    'ec.name as category',
+                    'payment_status',
+                    'additional_notes',
+                    'final_total',
+                    'bl.name as location_name',
+                    DB::raw("CONCAT(COALESCE(U.first_name, ''),' ',COALESCE(U.last_name,'')) as expense_for"),
+                    DB::raw('SUM(TP.amount) as amount_paid')
+                )
+                ->groupBy('transactions.id');
 
             //Add condition for expense for,used in sales representative expense report
             if (request()->has('expense_for')) {
                 $expense_for = request()->get('expense_for');
-                if (!empty($expense_for)) {
+                if (! empty($expense_for)) {
                     $expenses->where('transactions.expense_for', $expense_for);
                 }
             }
@@ -86,23 +83,23 @@ class ExpenseController extends Controller
             //Add condition for location,used in sales representative expense report
             if (request()->has('location_id')) {
                 $location_id = request()->get('location_id');
-                if (!empty($location_id)) {
+                if (! empty($location_id)) {
                     $expenses->where('transactions.location_id', $location_id);
                 }
             }
 
             //Add condition for start and end date filter, uses in sales representative expense report
-            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+            if (! empty(request()->start_date) && ! empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end =  request()->end_date;
+                $end = request()->end_date;
                 $expenses->whereDate('transaction_date', '>=', $start)
-                        ->whereDate('transaction_date', '<=', $end);
+                    ->whereDate('transaction_date', '<=', $end);
             }
 
             //Add condition for expense category, used in list of expense,
-            if(request()->has('expense_category_id')){
+            if (request()->has('expense_category_id')) {
                 $expense_category_id = request()->get('expense_category_id');
-                if(!empty($expense_category_id)){
+                if (! empty($expense_category_id)) {
                     $expenses->where('transactions.expense_category_id', $expense_category_id);
                 }
             }
@@ -111,7 +108,7 @@ class ExpenseController extends Controller
             if ($permitted_locations != 'all') {
                 $expenses->whereIn('transactions.location_id', $permitted_locations);
             }
-            
+
             return Datatables::of($expenses)
                 ->addColumn(
                     'action',
@@ -148,7 +145,8 @@ class ExpenseController extends Controller
                 )
                 ->addColumn('payment_due', function ($row) {
                     $due = $row->final_total - $row->amount_paid;
-                    return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="' . $due . '">' . $due . '</span>';
+
+                    return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="'.$due.'">'.$due.'</span>';
                 })
                 ->rawColumns(['final_total', 'action', 'payment_status', 'payment_due'])
                 ->make(true);
@@ -157,14 +155,14 @@ class ExpenseController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $categories = ExpenseCategory::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
 
         $users = User::forDropdown($business_id, false, true, true);
 
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
         return view('optics.expense.index')
-                ->with(compact('categories', 'business_locations', 'users'));
+            ->with(compact('categories', 'business_locations', 'users'));
     }
 
     /**
@@ -174,23 +172,23 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
-        
+
         //Check if subscribed or not
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id);
 
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
-                                ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $users = User::forDropdown($business_id, true, true);
-        
+
         return view('optics.expense.create')
             ->with(compact('expense_categories', 'business_locations', 'users'));
     }
@@ -198,12 +196,11 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -211,16 +208,16 @@ class ExpenseController extends Controller
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
             }
 
             //Validate document size
             $request->validate([
-                'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ]);
 
-            $transaction_data = $request->only([ 'ref_no', 'transaction_date', 'location_id', 'final_total', 'expense_for', 'additional_notes', 'expense_category_id']);
+            $transaction_data = $request->only(['ref_no', 'transaction_date', 'location_id', 'final_total', 'expense_for', 'additional_notes', 'expense_category_id']);
 
             $user_id = $request->session()->get('user.id');
             $transaction_data['business_id'] = $business_id;
@@ -240,27 +237,26 @@ class ExpenseController extends Controller
                 $transaction_data['ref_no'] = $this->transactionUtil->generateReferenceNumber('expense', $ref_count);
             }
 
-
             //upload document
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
-            if(!empty($document_name)) {
+            if (! empty($document_name)) {
                 $transaction_data['document'] = $document_name;
             }
 
             $transaction = Transaction::create($transaction_data);
 
-            # Store binnacle
+            // Store binnacle
             $this->transactionUtil->registerBinnacle($user_id, $this->module_name, 'create', $transaction);
 
             $output = ['success' => 1,
-                            'msg' => __('expense.expense_add_success')
-                        ];
+                'msg' => __('expense.expense_add_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('expenses')->with('status', $output);
@@ -285,24 +281,24 @@ class ExpenseController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
 
         //Check if subscribed or not
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id);
 
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
-                                ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $expense = Transaction::where('business_id', $business_id)
-                                ->where('id', $id)
-                                ->first();
+            ->where('id', $id)
+            ->first();
         $users = User::forDropdown($business_id, true, true);
 
         return view('optics.expense.edit')
@@ -312,31 +308,30 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             //Validate document size
             $request->validate([
-                'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ]);
 
-            $transaction_data = $request->only([ 'ref_no', 'transaction_date', 'location_id', 'final_total', 'expense_for', 'additional_notes', 'expense_category_id']);
+            $transaction_data = $request->only(['ref_no', 'transaction_date', 'location_id', 'final_total', 'expense_for', 'additional_notes', 'expense_category_id']);
 
             $business_id = $request->session()->get('user.business_id');
-            
+
             //Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
             }
-        
+
             $transaction_data['transaction_date'] = \Carbon::createFromFormat(
                 'm/d/Y',
                 $transaction_data['transaction_date']
@@ -348,7 +343,7 @@ class ExpenseController extends Controller
             //upload document
             //upload document
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
-            if(!empty($document_name)) {
+            if (! empty($document_name)) {
                 $transaction_data['document'] = $document_name;
             }
 
@@ -356,25 +351,25 @@ class ExpenseController extends Controller
                 ->where('id', $id)
                 ->first();
 
-            # Clone record before action
+            // Clone record before action
             $transaction_old = clone $transaction;
-                                
+
             $transaction->update($transaction_data);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->transactionUtil->registerBinnacle($user_id, $this->module_name, 'update', $transaction_old, $transaction);
 
             $output = ['success' => 1,
-                            'msg' => __('expense.expense_update_success')
-                        ];
+                'msg' => __('expense.expense_update_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('expenses')->with('status', $output);
@@ -388,7 +383,7 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('expense.access')) {
+        if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -397,29 +392,29 @@ class ExpenseController extends Controller
                 $business_id = request()->session()->get('user.business_id');
 
                 $expense = Transaction::where('business_id', $business_id)
-                                        ->where('type', 'expense')
-                                        ->where('id', $id)
-                                        ->first();
+                    ->where('type', 'expense')
+                    ->where('id', $id)
+                    ->first();
 
-                # Clone record before action
+                // Clone record before action
                 $expense_old = clone $expense;
 
                 $expense->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->transactionUtil->registerBinnacle($user_id, $this->module_name, 'delete', $expense_old);
 
                 $output = ['success' => true,
-                            'msg' => __("expense.expense_delete_success")
-                            ];
+                    'msg' => __('expense.expense_delete_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

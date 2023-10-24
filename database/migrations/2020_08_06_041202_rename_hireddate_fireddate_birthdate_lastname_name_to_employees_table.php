@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RenameHireddateFireddateBirthdateLastnameNameToEmployeesTable extends Migration
 {
@@ -13,12 +13,12 @@ class RenameHireddateFireddateBirthdateLastnameNameToEmployeesTable extends Migr
      */
     public function up()
     {
-        Schema::table('employees', function(Blueprint $table){
-            $table->renameColumn('name',  'first_name');
-            $table->renameColumn('lastname',  'last_name');
-            $table->renameColumn('hireddate',  'hired_date');
-            $table->renameColumn('fireddate',  'fired_date');
-            $table->renameColumn('birthdate',  'birth_date');
+        Schema::table('employees', function (Blueprint $table) {
+            $table->renameColumn('name', 'first_name');
+            $table->renameColumn('lastname', 'last_name');
+            $table->renameColumn('hireddate', 'hired_date');
+            $table->renameColumn('fireddate', 'fired_date');
+            $table->renameColumn('birthdate', 'birth_date');
         });
     }
 

@@ -4,19 +4,21 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class SalesTrackingReportExport implements FromView, WithEvents, WithTitle
 {
     private $orders;
+
     private $size;
+
     private $business;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $orders
      * @param  int  $size
      * @param  \App\Business  $business
@@ -24,37 +26,33 @@ class SalesTrackingReportExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($orders, $size, $business)
     {
-    	$this->orders = $orders;
+        $this->orders = $orders;
         $this->size = $size;
         $this->business = $business;
     }
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.sales_tracking_report');
+        return __('report.sales_tracking_report');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:I7500', 'Calibri');
-    			$event->sheet->setFontSize('A1:I7500', 10);
+                $event->sheet->setFontFamily('A1:I7500', 'Calibri');
+                $event->sheet->setFontSize('A1:I7500', 10);
 
-    			$event->sheet->mergeCells('A1:I1');
-    			$event->sheet->mergeCells('A2:I2');
+                $event->sheet->mergeCells('A1:I1');
+                $event->sheet->mergeCells('A2:I2');
 
                 $event->sheet->horizontalAlign('A1:I2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet->horizontalAlign('A4:I4', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -78,15 +76,13 @@ class SalesTrackingReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.sales_tracking_report_excel', [
-    		'orders' => $this->orders,
-    		'size' => $this->size,
-    		'business' => $this->business,
+        return view('reports.sales_tracking_report_excel', [
+            'orders' => $this->orders,
+            'size' => $this->size,
+            'business' => $this->business,
         ]);
     }
 }

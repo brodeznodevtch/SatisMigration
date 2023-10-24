@@ -2,36 +2,28 @@
 
 namespace App\Utils;
 
-
 class GlobalUtil extends Util
 {
-    function getUserIP()
+    public function getUserIP()
     {
         // Get real user IP behind CloudFlare network
-        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-            $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
+            $_SERVER['HTTP_CLIENT_IP'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
 
-        $client     = @$_SERVER['HTTP_CLIENT_IP'];
-        $forward    = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote     = @$_SERVER['REMOTE_ADDR'];
+        $client = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote = @$_SERVER['REMOTE_ADDR'];
 
-        If(filter_has_var($client, FILTER_VALIDATE_IP))
-        {
+        if (filter_has_var($client, FILTER_VALIDATE_IP)) {
             $ip = $client;
-        }
-        elseif(filter_var($forward, FILTER_VALIDATE_IP))
-        {
+        } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
             $ip = $forward;
-        }
-        else
-        {
+        } else {
             $ip = $remote;
         }
 
         return $ip;
     }
 }
-
-?>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FollowQuote;
+use App\Models\FollowQuote;
 use Illuminate\Http\Request;
 
 class FollowQuoteController extends Controller
@@ -30,7 +30,6 @@ class FollowQuoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class FollowQuoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\FollowQuote  $followQuote
      * @return \Illuminate\Http\Response
      */
     public function show(FollowQuote $followQuote)
@@ -52,7 +50,6 @@ class FollowQuoteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\FollowQuote  $followQuote
      * @return \Illuminate\Http\Response
      */
     public function edit(FollowQuote $followQuote)
@@ -63,8 +60,6 @@ class FollowQuoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\FollowQuote  $followQuote
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, FollowQuote $followQuote)
@@ -75,7 +70,6 @@ class FollowQuoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\FollowQuote  $followQuote
      * @return \Illuminate\Http\Response
      */
     public function destroy(FollowQuote $followQuote)

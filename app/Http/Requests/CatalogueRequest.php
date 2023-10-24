@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Catalogue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use App\Catalogue;
-use App\AccountingEntriesDetail;
-use DB;
 
 class CatalogueRequest extends FormRequest
 {
@@ -29,41 +27,43 @@ class CatalogueRequest extends FormRequest
     {
         $parent = $request->input('parent');
         $prefijo = Catalogue::select('code')->where('id', $parent)->first();
-        if($parent == 0) {
+        if ($parent == 0) {
 
-            if($prefijo != null) {
+            if ($prefijo != null) {
 
                 $prefijo = $prefijo->code;
+
                 return [
                     'code' => 'required|integer|regex:/^('.$prefijo.')/',
                     'name' => 'required',
                     'type' => 'required',
                     'parent' => 'unique:accounting_entries_details,account_id',
                 ];
-            
+
             } else {
 
                 return [
-                   'code' => 'required|integer|digits:1',
-                   'name' => 'required',
-                   'type' => 'required',
-                   'parent' => 'unique:accounting_entries_details,account_id',
-                   'name' => 'required',
-               ];
-           }
-       
-       } else {
+                    'code' => 'required|integer|digits:1',
+                    'name' => 'required',
+                    'type' => 'required',
+                    'parent' => 'unique:accounting_entries_details,account_id',
+                    'name' => 'required',
+                ];
+            }
 
-            if($prefijo != null) {
+        } else {
+
+            if ($prefijo != null) {
 
                 $prefijo = $prefijo->code;
+
                 return [
                     'code' => 'required|integer|regex:/^('.$prefijo.')/',
                     'name' => 'required',
                     'type' => 'required',
                     'parent' => 'unique:accounting_entries_details,account_id',
                 ];
-            
+
             } else {
 
                 return [
@@ -73,15 +73,15 @@ class CatalogueRequest extends FormRequest
                     'parent' => 'unique:accounting_entries_details,account_id',
                 ];
             }
-       }
-   }
+        }
+    }
 
-   public function messages() {
+    public function messages()
+    {
 
         return [
-            
+
             'parent.unique' => __('accounting.account_auxiliar'),
         ];
     }
-
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditRequest;
-use App\CreditHasReference;
-use App\CreditHasFamilyMember;
-use App\Business;
+use App\Models\Business;
+use App\Models\CreditHasFamilyMember;
+use App\Models\CreditHasReference;
+use App\Models\CreditRequest;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -19,8 +19,6 @@ class CreditRequestController extends Controller
      */
     public function index()
     {
-
-
 
         $business = Business::where('id', 3)->first();
         $logo = $business->logo;
@@ -41,7 +39,6 @@ class CreditRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -49,7 +46,7 @@ class CreditRequestController extends Controller
 
         $type_person = $request->input('type_person');
 
-        if($type_person == "legal") {
+        if ($type_person == 'legal') {
             $validateData = $request->validate(
                 [
                     'business_name' => 'required',
@@ -73,7 +70,6 @@ class CreditRequestController extends Controller
                     'term_business' => 'required',
                     'warranty_business' => 'required',
 
-
                     'amount_request_business' => 'required|numeric',
                     'name_reference.*' => ['required'],
                     'phone_reference.*' => ['required'],
@@ -87,8 +83,7 @@ class CreditRequestController extends Controller
 
                 ]
             );
-        }
-        else {
+        } else {
             $validateData = $request->validate(
                 [
                     'amount_request_natural' => 'required|numeric',
@@ -120,12 +115,9 @@ class CreditRequestController extends Controller
 
         }
 
-        
-
-
         try {
 
-            if($type_person == "legal") {
+            if ($type_person == 'legal') {
                 $credit_details = $request->only([
                     'type_person',
                     'business_name',
@@ -188,14 +180,12 @@ class CreditRequestController extends Controller
                 $order_via_fax = $request->input('order_via_fax');
                 if ($order_purchase) {
                     $credit_details['order_purchase'] = 1;
-                }
-                else {
+                } else {
                     $credit_details['order_purchase'] = 0;
                 }
                 if ($order_via_fax) {
                     $credit_details['order_via_fax'] = 1;
-                }
-                else {
+                } else {
                     $credit_details['order_via_fax'] = 0;
                 }
 
@@ -206,20 +196,18 @@ class CreditRequestController extends Controller
             $business = Business::where('id', 3)->first();
 
             $last_correlative = DB::table('credit_requests')
-            ->select(DB::raw('MAX(id) as max'))
-            ->first();
+                ->select(DB::raw('MAX(id) as max'))
+                ->first();
 
             if ($last_correlative->max != null) {
                 $correlative = $last_correlative->max + 1;
-            }
-            else {
+            } else {
                 $correlative = 1;
             }
             if ($correlative < 10) {
-                $credit_details['correlative'] = "".$business->credit_prefix."0".$correlative."";
-            }
-            else {
-                $credit_details['correlative'] = "".$business->credit_prefix."".$correlative."";
+                $credit_details['correlative'] = ''.$business->credit_prefix.'0'.$correlative.'';
+            } else {
+                $credit_details['correlative'] = ''.$business->credit_prefix.''.$correlative.'';
             }
 
             DB::beginTransaction();
@@ -231,11 +219,9 @@ class CreditRequestController extends Controller
             $amount_reference = $request->input('amount_reference');
             $date_reference = $request->input('date_reference');
 
-            if (!empty($name_reference))
-            {
-                $cont = 0;                
-                while($cont < count($name_reference))
-                {
+            if (! empty($name_reference)) {
+                $cont = 0;
+                while ($cont < count($name_reference)) {
                     $detail = new CreditHasReference;
                     $detail->credit_id = $credit->id;
                     $detail->name = $name_reference[$cont];
@@ -244,7 +230,7 @@ class CreditRequestController extends Controller
                     $detail->date_cancelled = $date_reference[$cont];
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
 
             $name_relationship = $request->input('name_relationship');
@@ -252,11 +238,9 @@ class CreditRequestController extends Controller
             $phone_relationship = $request->input('phone_relationship');
             $address_relationship = $request->input('address_relationship');
 
-            if (!empty($name_relationship))
-            {
-                $cont = 0;                
-                while($cont < count($name_relationship))
-                {
+            if (! empty($name_relationship)) {
+                $cont = 0;
+                while ($cont < count($name_relationship)) {
                     $detail = new CreditHasFamilyMember;
                     $detail->credit_id = $credit->id;
                     $detail->name = $name_relationship[$cont];
@@ -265,19 +249,19 @@ class CreditRequestController extends Controller
                     $detail->address = $address_relationship[$cont];
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
 
             $output = [
                 'success' => true,
                 'id' => $credit->id,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -286,7 +270,6 @@ class CreditRequestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CreditRequest  $creditRequest
      * @return \Illuminate\Http\Response
      */
     public function show(CreditRequest $creditRequest)
@@ -297,7 +280,6 @@ class CreditRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CreditRequest  $creditRequest
      * @return \Illuminate\Http\Response
      */
     public function edit(CreditRequest $creditRequest)
@@ -308,8 +290,6 @@ class CreditRequestController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CreditRequest  $creditRequest
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CreditRequest $creditRequest)
@@ -320,7 +300,6 @@ class CreditRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CreditRequest  $creditRequest
      * @return \Illuminate\Http\Response
      */
     public function destroy(CreditRequest $creditRequest)
@@ -330,7 +309,7 @@ class CreditRequestController extends Controller
 
     public function showReport(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $business = Business::where('id', 3)->first();
             $logo = $business->logo;
 
@@ -341,17 +320,15 @@ class CreditRequestController extends Controller
 
             $date = Carbon::parse($credit->request_date);
 
-            $months = array(__('accounting.january'), __('accounting.february'), __('accounting.march'), __('accounting.april'), __('accounting.may'), __('accounting.june'), __('accounting.july'), __('accounting.august'), __('accounting.september'), __('accounting.october'), __('accounting.november'), __('accounting.december'));          
+            $months = [__('accounting.january'), __('accounting.february'), __('accounting.march'), __('accounting.april'), __('accounting.may'), __('accounting.june'), __('accounting.july'), __('accounting.august'), __('accounting.september'), __('accounting.october'), __('accounting.november'), __('accounting.december')];
 
             $month = $months[($date->format('n')) - 1];
 
-
-            $footer = "En la ciudad de ______________________________________  a los ______ días del mes de ___________________ del año _______________ ";
-
-
+            $footer = 'En la ciudad de ______________________________________  a los ______ días del mes de ___________________ del año _______________ ';
 
             $pdf = \PDF::loadView('reports.credit_request', compact('credit', 'references', 'relationships', 'footer', 'logo'));
             $pdf->setPaper('letter', 'portrait');
+
             return $pdf->stream();
         }
     }

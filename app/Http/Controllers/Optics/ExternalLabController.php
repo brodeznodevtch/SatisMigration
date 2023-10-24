@@ -12,14 +12,12 @@ class ExternalLabController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $util;
 
     /**
      * Constructor
      *
-     * @param \App\Utils\Util $util
      * @return void
      */
     public function __construct(Util $util)
@@ -35,8 +33,8 @@ class ExternalLabController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('external_lab.view') && !auth()->user()->can('external_lab.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('external_lab.view') && ! auth()->user()->can('external_lab.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -68,7 +66,7 @@ class ExternalLabController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('external_lab.create')) {
+        if (! auth()->user()->can('external_lab.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -78,12 +76,11 @@ class ExternalLabController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('external_lab.create')) {
+        if (! auth()->user()->can('external_lab.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -95,7 +92,7 @@ class ExternalLabController extends Controller
 
             $external_lab = ExternalLab::create($input);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->util->registerBinnacle($user_id, $this->module_name, 'create', $external_lab);
@@ -103,14 +100,14 @@ class ExternalLabController extends Controller
             $output = [
                 'success' => true,
                 'data' => $external_lab,
-                'msg' => __("external_lab.added_success")
+                'msg' => __('external_lab.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -136,7 +133,7 @@ class ExternalLabController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('external_lab.update')) {
+        if (! auth()->user()->can('external_lab.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -150,13 +147,12 @@ class ExternalLabController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\ExternalLab  $externalLab
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('external_lab.update')) {
+        if (! auth()->user()->can('external_lab.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -166,27 +162,27 @@ class ExternalLabController extends Controller
 
                 $external_lab = ExternalLab::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $external_lab_old = clone $external_lab;
 
                 $external_lab->fill($input);
                 $external_lab->save();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = $request->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'update', $external_lab_old, $external_lab);
 
                 $output = [
                     'success' => true,
-                    'msg' => __("external_lab.updated_success")
+                    'msg' => __('external_lab.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -202,7 +198,7 @@ class ExternalLabController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('external_lab.delete')) {
+        if (! auth()->user()->can('external_lab.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -210,26 +206,26 @@ class ExternalLabController extends Controller
             try {
                 $external_lab = ExternalLab::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $external_lab_old = clone $external_lab;
 
                 $external_lab->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'delete', $external_lab_old);
 
                 $output = [
                     'success' => true,
-                    'msg' => __("external_lab.deleted_success")
+                    'msg' => __('external_lab.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

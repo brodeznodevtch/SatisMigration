@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,10 +34,10 @@ class AuthServiceProvider extends ServiceProvider
                     return true;
                 }
             } else {
-                if( $user->hasRole('Implementaciones#' . $user->business_id)){
+                if ($user->hasRole('Implementaciones#'.$user->business_id)) {
                     return true;
-                }else{
-                    if ($user->hasRole('Super Admin#' . $user->business_id)) {
+                } else {
+                    if ($user->hasRole('Super Admin#'.$user->business_id)) {
                         // $permission = DB::table('permissions as permission')
                         //     ->leftJoin('modules as module', 'module.id', '=', 'permission.module_id')
                         //     ->select('permission.*', 'module.name as module')
@@ -47,7 +47,7 @@ class AuthServiceProvider extends ServiceProvider
                         //     ->where('module.status', 1)
                         //     ->get();
                         // if(count($permission) > 0){
-                            return true;
+                        return true;
                         //}
                     }
                 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyPaymentCommitmentTable extends Migration
 {
@@ -21,7 +21,7 @@ class ModifyPaymentCommitmentTable extends Migration
                 ->nullable()
                 ->default(null)
                 ->after('total');
-            
+
             $table->foreign('updated_by')
                 ->references('id')
                 ->on('users');

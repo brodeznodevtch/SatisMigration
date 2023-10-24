@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddInvoicedColumnToQuotesTable extends Migration
 {
@@ -14,9 +14,9 @@ class AddInvoicedColumnToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->boolean("invoiced")
+            $table->boolean('invoiced')
                 ->default(false)
-                ->after("status");
+                ->after('status');
         });
     }
 
@@ -28,7 +28,7 @@ class AddInvoicedColumnToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn("status");
+            $table->dropColumn('status');
         });
     }
 }

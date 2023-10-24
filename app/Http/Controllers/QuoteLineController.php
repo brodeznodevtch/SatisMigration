@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\QuoteLine;
+use App\Models\QuoteLine;
 use Illuminate\Http\Request;
 
 class QuoteLineController extends Controller
@@ -30,7 +30,6 @@ class QuoteLineController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class QuoteLineController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\QuoteLine  $quoteLine
      * @return \Illuminate\Http\Response
      */
     public function show(QuoteLine $quoteLine)
@@ -52,7 +50,6 @@ class QuoteLineController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\QuoteLine  $quoteLine
      * @return \Illuminate\Http\Response
      */
     public function edit(QuoteLine $quoteLine)
@@ -63,8 +60,6 @@ class QuoteLineController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\QuoteLine  $quoteLine
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, QuoteLine $quoteLine)
@@ -75,7 +70,6 @@ class QuoteLineController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\QuoteLine  $quoteLine
      * @return \Illuminate\Http\Response
      */
     public function destroy(QuoteLine $quoteLine)

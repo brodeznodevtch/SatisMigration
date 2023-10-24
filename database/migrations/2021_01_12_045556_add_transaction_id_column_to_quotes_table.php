@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddTransactionIdColumnToQuotesTable extends Migration
 {
@@ -14,15 +14,15 @@ class AddTransactionIdColumnToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->integer("transaction_id")
+            $table->integer('transaction_id')
                 ->nullable()
                 ->default(null)
-                ->after("document_type_id")
+                ->after('document_type_id')
                 ->unsigned();
 
-            $table->foreign("transaction_id")
-                ->on("transactions")
-                ->references("id");
+            $table->foreign('transaction_id')
+                ->on('transactions')
+                ->references('id');
         });
     }
 
@@ -34,8 +34,8 @@ class AddTransactionIdColumnToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropForeign("transaction_id");
-            $table->dropColumn("transaction_id");
+            $table->dropForeign('transaction_id');
+            $table->dropColumn('transaction_id');
         });
     }
 }

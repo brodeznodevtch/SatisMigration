@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddBusinessIdToDocumentCorrelativesTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddBusinessIdToDocumentCorrelativesTable extends Migration
      */
     public function up()
     {
-        Schema::table('document_correlatives', function(Blueprint $table){
+        Schema::table('document_correlatives', function (Blueprint $table) {
             $table->integer('business_id')->unsigned()->nullable()->after('final');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade')->onUpdate('cascade');
         });

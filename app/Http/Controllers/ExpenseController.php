@@ -2,38 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use App\User;
-use Validator;
-
-use App\Contact;
-use App\Business;
-use App\BankAccount;
-use App\PaymentTerm;
-use App\Transaction;
-use App\DocumentType;
-use App\Utils\TaxUtil;
-use App\BankTransaction;
-use App\ExpenseCategory;
-use App\BusinessLocation;
-use App\ExpenseLine;
-use App\Utils\ModuleUtil;
-
-use App\TransactionPayment;
-
+use App\Models\BankAccount;
+use App\Models\BankTransaction;
+use App\Models\BusinessLocation;
+use App\Models\Contact;
+use App\Models\DocumentType;
+use App\Models\ExpenseCategory;
+use App\Models\ExpenseLine;
+use App\Models\PaymentTerm;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
+use App\Models\TypeBankTransaction;
+use App\Models\User;
 use App\Utils\BusinessUtil;
-use App\TypeBankTransaction;
-use Illuminate\Http\Request;
+use App\Utils\ModuleUtil;
+use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
+use DB;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class ExpenseController extends Controller
 {
     protected $taxUtil;
+
     /**
      * Constructor
      *
-     * @param TransactionUtil $transactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, ModuleUtil $moduleUtil, TaxUtil $taxUtil, BusinessUtil $businessUtil)
@@ -52,10 +47,10 @@ class ExpenseController extends Controller
     public function index()
     {
         if (auth()->user()->can('expense.create')) {
-            if(!auth()->user()->can('expense.access')){
+            if (! auth()->user()->can('expense.access')) {
                 abort(403, 'Unauthorized action.');
             }
-        }else{
+        } else {
             abort(403, 'Unauthorized action.');
         }
 
@@ -84,23 +79,23 @@ class ExpenseController extends Controller
             //Add condition for location,used in sales representative expense report
             if (request()->has('location_id')) {
                 $location_id = request()->get('location_id');
-                if (!empty($location_id)) {
+                if (! empty($location_id)) {
                     $expenses->where('transactions.location_id', $location_id);
                 }
             }
 
             //Add condition for start and end date filter, uses in sales representative expense report
-            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+            if (! empty(request()->start_date) && ! empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end =  request()->end_date;
+                $end = request()->end_date;
                 $expenses->whereDate('transaction_date', '>=', $start)
-                ->whereDate('transaction_date', '<=', $end);
+                    ->whereDate('transaction_date', '<=', $end);
             }
 
             //Add condition for expense category, used in list of expense,
             if (request()->has('expense_category_id')) {
                 $expense_category_id = request()->get('expense_category_id');
-                if (!empty($expense_category_id)) {
+                if (! empty($expense_category_id)) {
                     $expenses->join('expense_lines as el', 'transactions.id', 'el.transaction_id')
                         ->where('el.expense_category_id', $expense_category_id);
                 }
@@ -117,28 +112,28 @@ class ExpenseController extends Controller
                     function ($row) {
                         $action = '<div class="btn-group">
                             <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                                data-toggle="dropdown" aria-expanded="false">'. __("messages.actions")
+                                data-toggle="dropdown" aria-expanded="false">'.__('messages.actions')
                                 .'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
-                        
-                        $action .= '<li><a style="cursor: pointer" data-href="'. action("ExpenseController@edit", [$row->id]) .'" class="edit_expense_button"><i class="glyphicon glyphicon-edit"></i> '. __("messages.edit") .'</a></li>';
-                        
+
+                        $action .= '<li><a style="cursor: pointer" data-href="'.action('ExpenseController@edit', [$row->id]).'" class="edit_expense_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+
                         if ($row->document) {
-                            $action .= '<li><a href="'. url("uploads/documents/" . $row->document) .'" download="">
-                                <i class="fa fa-download" aria-hidden="true"></i> '. __("purchase.download_document") .'</a></li>';
+                            $action .= '<li><a href="'.url('uploads/documents/'.$row->document).'" download="">
+                                <i class="fa fa-download" aria-hidden="true"></i> '.__('purchase.download_document').'</a></li>';
                         }
-                        
-                        $action .= '<li><a style="cursor: pointer" data-href="'. action("ExpenseController@destroy", [$row->id]) .'" class="delete_expense"><i class="glyphicon glyphicon-trash"></i> '. __("messages.delete") .'</a></li>';
-                        $action .= '<li><a href="#" class="print-expense" data-href="'.  action("ExpenseController@printExpense", [$row->id])  .'"><i class="fa fa-print" aria-hidden="true"></i>'. __("messages.print") .'</a></li>';
-                        $action .= '<li class="divider"></li>'; 
-                        
-                        if ($row->payment_status != "paid") {
-                            $action .= '<li><a href="'. action("TransactionPaymentController@addPayment", [$row->id]) .'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> '. __("purchase.add_payment") .'</a></li>';
+
+                        $action .= '<li><a style="cursor: pointer" data-href="'.action('ExpenseController@destroy', [$row->id]).'" class="delete_expense"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
+                        $action .= '<li><a href="#" class="print-expense" data-href="'.action('ExpenseController@printExpense', [$row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                        $action .= '<li class="divider"></li>';
+
+                        if ($row->payment_status != 'paid') {
+                            $action .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->id]).'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> '.__('purchase.add_payment').'</a></li>';
                         }
-                        
-                        $action .= '<li><a href="'. action("TransactionPaymentController@show", [$row->id]) .'" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> '. __("purchase.view_payments") .'</a></li>';
-                        
+
+                        $action .= '<li><a href="'.action('TransactionPaymentController@show', [$row->id]).'" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> '.__('purchase.view_payments').'</a></li>';
+
                         $action .= '</ul></div>';
 
                         return $action;
@@ -186,7 +181,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('expense.create')) {
+        if (! auth()->user()->can('expense.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -195,13 +190,13 @@ class ExpenseController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id, false);
 
         $document = DocumentType::where('is_document_purchase', 1)
-        ->pluck('document_name', 'id');
+            ->pluck('document_name', 'id');
         $payment_term = PaymentTerm::where('business_id', $business_id)->pluck('name', 'id');
         $tax_groups = $this->taxUtil->getTaxGroups($business_id, 'products', true);
-        
+
         $payment_condition = [
             'cash' => __('order.cash'),
-            'credit' => __('order.credit')
+            'credit' => __('order.credit'),
         ];
         $payment_terms = PaymentTerm::forDropdown($business_id);
 
@@ -228,21 +223,21 @@ class ExpenseController extends Controller
             $query = Contact::where('business_id', $business_id);
 
             $suppliers = $query->where(function ($query) use ($term) {
-                $query->where('name', 'like', '%' . $term . '%')
-                ->orWhere('supplier_business_name', 'like', '%' . $term . '%')
-                ->orWhere('contacts.contact_id', 'like', '%' . $term . '%');
+                $query->where('name', 'like', '%'.$term.'%')
+                    ->orWhere('supplier_business_name', 'like', '%'.$term.'%')
+                    ->orWhere('contacts.contact_id', 'like', '%'.$term.'%');
             })
-            ->select(
-                'contacts.id',
-                'name as text',
-                'supplier_business_name as business_name',
-                'contacts.contact_id',
-                'contacts.is_exempt',
-                'contacts.is_excluded_subject',
-                'contacts.tax_group_id'
-            )
-            ->onlySuppliers()
-            ->get();
+                ->select(
+                    'contacts.id',
+                    'name as text',
+                    'supplier_business_name as business_name',
+                    'contacts.contact_id',
+                    'contacts.is_exempt',
+                    'contacts.is_excluded_subject',
+                    'contacts.tax_group_id'
+                )
+                ->onlySuppliers()
+                ->get();
 
             foreach ($suppliers as $supplier) {
                 $supplier->tax_percent = $this->taxUtil->getTaxPercent($supplier->tax_group_id);
@@ -256,7 +251,7 @@ class ExpenseController extends Controller
 
     /**
      * Get expense categories by term
-     * 
+     *
      * @return json
      */
     public function getCategories()
@@ -273,12 +268,12 @@ class ExpenseController extends Controller
             ->join('catalogues', 'catalogues.id', '=', 'expense_categories.account_id');
 
         $account = $query->where(function ($query) use ($term) {
-                $query->where('expense_categories.name', 'like', '%' . $term . '%');
-            })
+            $query->where('expense_categories.name', 'like', '%'.$term.'%');
+        })
             ->select(
                 'expense_categories.id',
                 'expense_categories.name as text',
-                'catalogues.name as account_name', 
+                'catalogues.name as account_name',
                 'expense_categories.id as cat_id',
                 'catalogues.code as code'
             )
@@ -289,16 +284,16 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->can('expense.create')) {
+        if (! auth()->user()->can('expense.create')) {
             abort(403, 'Unauthorized action.');
         }
-        
-        if(!auth()->user()->can('is_close_book') &&
-            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0){
+
+        if (! auth()->user()->can('is_close_book') &&
+            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0) {
 
             return $output = [
                 'success' => 0,
-                'msg' => __('purchase.month_closed')
+                'msg' => __('purchase.month_closed'),
             ];
         }
 
@@ -306,16 +301,15 @@ class ExpenseController extends Controller
         $request->validate(
             [
                 'document_types_id' => 'required',
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000),
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
                 'ref_no' => 'required',
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ],
             [
                 'document_types_id.required' => trans('expense.expense_document_types_required'),
-                'ref_no.required' => trans('expense.expense_ref_no_required')
+                'ref_no.required' => trans('expense.expense_ref_no_required'),
             ]
         );
-
 
         try {
 
@@ -323,7 +317,7 @@ class ExpenseController extends Controller
             $user_id = auth()->user()->id;
 
             // Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
             }
 
@@ -340,7 +334,7 @@ class ExpenseController extends Controller
                 'document_date',
                 'serie',
                 'exempt_amount',
-                'excluded_subject_amount'
+                'excluded_subject_amount',
             ]);
 
             $expense_lines = $request->input('expense_lines');
@@ -350,23 +344,23 @@ class ExpenseController extends Controller
             $transaction_data['created_by'] = $user_id;
             $transaction_data['status'] = 'final';
             $transaction_data['type'] = 'expense';
-            $transaction_data['tax_id'] = $request->input('tax_group_id') === 'nulled' ? null : $request->tax_group_id ;
+            $transaction_data['tax_id'] = $request->input('tax_group_id') === 'nulled' ? null : $request->tax_group_id;
             $transaction_data['payment_status'] = 'due';
             $transaction_data['transaction_date'] = $this->transactionUtil->uf_date($transaction_data['transaction_date']);
             $transaction_data['total_before_tax'] = $this->transactionUtil->num_uf($transaction_data['total_before_tax']);
-            
+
             $transaction_data['tax_group_amount'] = $this->transactionUtil->num_uf($request->input('tax_amount'));
             $transaction_data['tax_amount'] = $this->transactionUtil->num_uf($request->input('perception_amount'));
-            
-            if($request->input('enable_exempt_amount')){
+
+            if ($request->input('enable_exempt_amount')) {
                 $transaction_data['exempt_amount'] = $this->transactionUtil->num_uf($transaction_data['exempt_amount']);
-            }else{
+            } else {
                 $transaction_data['exempt_amount'] = $this->transactionUtil->num_uf(0);
             }
 
-            if($request->input('is_excluded_subject') == '1'){
+            if ($request->input('is_excluded_subject') == '1') {
                 $transaction_data['excluded_subject_amount'] = $this->transactionUtil->num_uf($transaction_data['excluded_subject_amount']);
-            }else{
+            } else {
                 $transaction_data['excluded_subject_amount'] = $this->transactionUtil->num_uf(0);
             }
             $transaction_data['final_total'] = $this->transactionUtil->num_uf($transaction_data['final_total']);
@@ -380,7 +374,7 @@ class ExpenseController extends Controller
 
             // upload document
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
-            if (!empty($document_name)) {
+            if (! empty($document_name)) {
                 $transaction_data['document'] = $document_name;
             }
 
@@ -394,7 +388,7 @@ class ExpenseController extends Controller
                 ExpenseLine::create([
                     'transaction_id' => $transaction->id,
                     'expense_category_id' => $line['category_id'],
-                    'line_total_exc_tax' => $line['line_total']
+                    'line_total_exc_tax' => $line['line_total'],
                 ]);
             }
 
@@ -402,15 +396,15 @@ class ExpenseController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('expense.expense_add_success')
+                'msg' => __('expense.expense_add_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             DB::rollback();
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -428,10 +422,9 @@ class ExpenseController extends Controller
         //
     }
 
-
     public function edit($id)
     {
-        if (!auth()->user()->can('expense.update')) {
+        if (! auth()->user()->can('expense.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -457,7 +450,7 @@ class ExpenseController extends Controller
                 'expense_lines.line_total_exc_tax as amount',
 
             )->get();
-        
+
         return view('expense.edit', compact(
             'expense',
             'document',
@@ -474,42 +467,41 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         // dd($request->contact_id);
-        if (!auth()->user()->can('expense.update')) {
+        if (! auth()->user()->can('expense.update')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if(!auth()->user()->can('is_close_book') &&
-            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0){
+        if (! auth()->user()->can('is_close_book') &&
+            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0) {
             return $output = [
                 'success' => 0,
-                'msg' => __('purchase.month_closed')
+                'msg' => __('purchase.month_closed'),
             ];
         }
 
         $request->validate(
             [
                 'document_types_id' => 'required',
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000),
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
                 'ref_no' => 'required',
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ],
             [
                 'document_types_id.required' => trans('expense.expense_document_types_required'),
-                'ref_no.required' => trans('expense.expense_ref_no_required')
+                'ref_no.required' => trans('expense.expense_ref_no_required'),
             ]
         );
 
         try {
             $business_id = auth()->user()->business_id;
             // Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
             }
 
@@ -529,46 +521,45 @@ class ExpenseController extends Controller
                 'document_date',
                 'serie',
                 'exempt_amount',
-                'excluded_subject_amount'
+                'excluded_subject_amount',
             ]);
             // dd($transaction_data);
 
             $transaction_data['transaction_date'] = $this->transactionUtil->uf_date($transaction_data['transaction_date']);
             $transaction_data['total_before_tax'] = $this->transactionUtil->num_uf(
                 $transaction_data['total_before_tax']
-            );          
+            );
 
             $transaction_data['tax_group_amount'] = $this->transactionUtil->num_uf($request->input('tax_amount'));
             $transaction_data['tax_amount'] = $this->transactionUtil->num_uf($request->input('perception_amount'));
-            
-            if($request->input('enable_exempt_amount')){
+
+            if ($request->input('enable_exempt_amount')) {
                 $transaction_data['exempt_amount'] = $this->transactionUtil->num_uf($transaction_data['exempt_amount']);
-            }else{
+            } else {
                 $transaction_data['exempt_amount'] = $this->transactionUtil->num_uf(0);
             }
 
-            if($request->input('is_excluded_subject') == '1'){
+            if ($request->input('is_excluded_subject') == '1') {
                 $transaction_data['excluded_subject_amount'] = $this->transactionUtil->num_uf($transaction_data['excluded_subject_amount']);
-            }else{
+            } else {
                 $transaction_data['excluded_subject_amount'] = $this->transactionUtil->num_uf(0);
             }
-
 
             $transaction_data['final_total'] = $this->transactionUtil->num_uf(
                 $transaction_data['final_total']
             );
-            $transaction_data['tax_id'] = $request->input('tax_group_id') === 'nulled' ? null : $request->tax_group_id ;
+            $transaction_data['tax_id'] = $request->input('tax_group_id') === 'nulled' ? null : $request->tax_group_id;
             //upload document
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
-            if (!empty($document_name)) {
+            if (! empty($document_name)) {
                 $transaction_data['document'] = $document_name;
             }
 
             $transaction_data['document_date'] = $this->transactionUtil->uf_date($transaction_data['document_date']);
-            
+
             Transaction::where('business_id', $business_id)
-            ->where('id', $id)
-            ->update($transaction_data);
+                ->where('id', $id)
+                ->update($transaction_data);
 
             $expense_lines = $request->input('expense_lines');
             /** Update expense lines */
@@ -578,20 +569,20 @@ class ExpenseController extends Controller
                     $el = ExpenseLine::create([
                         'transaction_id' => $id,
                         'expense_category_id' => $line['category_id'],
-                        'line_total_exc_tax' => $line['line_total']
+                        'line_total_exc_tax' => $line['line_total'],
                     ]);
 
                     array_push($ids, $el->id);
                 } else {
                     ExpenseLine::updateOrCreate([
-                            'id' => $line['id'] 
-                        ],
+                        'id' => $line['id'],
+                    ],
                         [
-                        'transaction_id' => $id,
-                        'expense_category_id' => $line['category_id'],
-                        'line_total_exc_tax' => $line['line_total']
-                    ]);
-                    
+                            'transaction_id' => $id,
+                            'expense_category_id' => $line['category_id'],
+                            'line_total_exc_tax' => $line['line_total'],
+                        ]);
+
                     array_push($ids, $line['id']);
                 }
             }
@@ -604,14 +595,14 @@ class ExpenseController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('expense.expense_update_success')
+                'msg' => __('expense.expense_update_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -626,7 +617,7 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('expense.delete')) {
+        if (! auth()->user()->can('expense.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -635,21 +626,21 @@ class ExpenseController extends Controller
                 $business_id = request()->session()->get('user.business_id');
 
                 $expense = Transaction::where('business_id', $business_id)
-                ->where('type', 'expense')
-                ->where('id', $id)
-                ->first();
+                    ->where('type', 'expense')
+                    ->where('id', $id)
+                    ->first();
                 $expense->delete();
 
                 $output = [
                     'success' => true,
-                    'msg' => __("expense.expense_delete_success")
+                    'msg' => __('expense.expense_delete_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -659,13 +650,13 @@ class ExpenseController extends Controller
 
     /**
      * Create expense accounting entry by range
-     * 
-     * @param date $start_date
-     * @param date $end_date
-     * 
+     *
+     * @param  date  $start_date
+     * @param  date  $end_date
      * @return json
      */
-    public function accountingByRange($start_date, $end_date) {
+    public function accountingByRange($start_date, $end_date)
+    {
         if (! auth()->user()->can('entries.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -677,53 +668,53 @@ class ExpenseController extends Controller
             ->whereRaw('DATE(transaction_date) BETWEEN ? AND ?', [$start_date, $end_date])
             ->select('id', 'transaction_date', 'ref_no', 'final_total')
             ->get();
-        
+
         foreach ($transactions as $k => $t) {
-            \Log::info($k+1 ." ". $t);
+            \Log::info($k + 1 .' '.$t);
         }
 
         return [
             'success' => true,
-            'msg' => 'Gastos contabilizados con éxito'
+            'msg' => 'Gastos contabilizados con éxito',
         ];
     }
 
     /**
      * Show all expenses from checks.
-     * 
+     *
      * @param  int  $bank_transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function getAddExpenses($bank_transaction_id = null) {
+    public function getAddExpenses($bank_transaction_id = null)
+    {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $business_id = request()->session()->get("user.business_id");
+        $business_id = request()->session()->get('user.business_id');
 
-
-        return view("expense.partials.expenses")
-        ->with(compact("bank_transaction_id"));
+        return view('expense.partials.expenses')
+            ->with(compact('bank_transaction_id'));
     }
 
     /**
      * POST Add expenses from checks.
-     * 
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return string
      */
-    public function postAddExpenses(Request $request){
+    public function postAddExpenses(Request $request)
+    {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $bank_transaction_id = $request->input("bank_transaction_id");
+        $bank_transaction_id = $request->input('bank_transaction_id');
         $transaction = BankTransaction::find($bank_transaction_id);
 
         $check_amount = $transaction->amount;
 
-        $expenses = $request->input("expenses");
-        $payments = $request->input("payments");
+        $expenses = $request->input('expenses');
+        $payments = $request->input('payments');
 
         $bank_account = BankAccount::find($transaction->bank_account_id);
 
@@ -743,23 +734,23 @@ class ExpenseController extends Controller
             $payment_method = 'check';
         }
 
-        $cont = 0;                
+        $cont = 0;
 
-        while($cont < count($expenses)) {
+        while ($cont < count($expenses)) {
 
             // Update expense
-            $expense = Transaction::where("id", $expenses[$cont])
-            ->first();
+            $expense = Transaction::where('id', $expenses[$cont])
+                ->first();
 
             //$expense->bank_transaction_id = $bank_transaction_id;
             $expense->payment_balance += $payments[$cont];
 
             if (number_format($expense->final_total, 2) == number_format($expense->payment_balance, 2)) {
                 $expense->payment_balance = $expense->final_total;
-                $expense->payment_status = "paid";
+                $expense->payment_status = 'paid';
             } else {
 
-                $expense->payment_status = "partial";
+                $expense->payment_status = 'partial';
 
             }
 
@@ -789,7 +780,7 @@ class ExpenseController extends Controller
 
             $payment->transaction_id = $expense->id;
             $payment->created_by = $request->session()->get('user.id');
-            $payment->business_id = $request->session()->get("user.business_id");
+            $payment->business_id = $request->session()->get('user.business_id');
             $payment->bank_transaction_id = $transaction->id;
 
             $payment->save();
@@ -798,41 +789,42 @@ class ExpenseController extends Controller
 
             $cont = $cont + 1;
 
-            
         }
 
         return [
             'success' => true,
-            'msg' => __('expense.transaction_paid_success')
+            'msg' => __('expense.transaction_paid_success'),
         ];
     }
 
     /**
      * Get purchases and expenses for select2
+     *
      * @param string
      */
-    public function getPurchasesExpenses(){
-        if(request()->ajax()){
+    public function getPurchasesExpenses()
+    {
+        if (request()->ajax()) {
             $business_id = request()->user()->business_id;
             $q = request()->input('q', '');
 
-            $query = Transaction::where("transactions.business_id", $business_id)
-            ->join("contacts as c", "transactions.contact_id", "c.id")
-            ->join("document_types as dt", "transactions.document_types_id", "dt.id")
-            ->whereIn("transactions.type", ["expense", "purchase"])
-            ->whereIn("transactions.payment_status", ["due", 'partial']);
+            $query = Transaction::where('transactions.business_id', $business_id)
+                ->join('contacts as c', 'transactions.contact_id', 'c.id')
+                ->join('document_types as dt', 'transactions.document_types_id', 'dt.id')
+                ->whereIn('transactions.type', ['expense', 'purchase'])
+                ->whereIn('transactions.payment_status', ['due', 'partial']);
 
             $transctions = [];
-            if(!empty($q)){
-                $transactions = $query->where(function ($query) use ($q){
-                    $query->where('transactions.ref_no', 'like', '%'. $q .'%')
-                    ->orWhere('c.name', 'like', '%'. $q. '%')
-                    ->orWhere('c.supplier_business_name', 'like', '%'. $q .'%');
+            if (! empty($q)) {
+                $transactions = $query->where(function ($query) use ($q) {
+                    $query->where('transactions.ref_no', 'like', '%'.$q.'%')
+                        ->orWhere('c.name', 'like', '%'.$q.'%')
+                        ->orWhere('c.supplier_business_name', 'like', '%'.$q.'%');
                 });
             }
 
             $transactions = $transactions->select(
-                "transactions.id",
+                'transactions.id',
                 DB::raw("CONCAT(c.supplier_business_name, ', ', dt.short_name, ' #', transactions.ref_no) as text")
             )->get();
 
@@ -842,16 +834,17 @@ class ExpenseController extends Controller
 
     /**
      * GET Add expense from checks.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
-    public function getAddExpense(){
+    public function getAddExpense()
+    {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = auth()->user()->business_id;
-        
+
         // Provider
         $document = DocumentType::where('is_document_sale', 1)->select('id', 'document_name')->pluck('document_name', 'id');
         $business_locations = BusinessLocation::where('business_id', $business_id)->first();
@@ -860,42 +853,43 @@ class ExpenseController extends Controller
         $payment_condition = ['cash' => __('order.cash'), 'credit' => __('order.credit')];
         $payment_terms = PaymentTerm::forDropdown($business_id);
 
-        return view("expense.partials.add_expense")
-        ->with(compact('document', 'business_locations', 'payment_term', 'tax_groups', 'payment_condition', 'payment_terms'));
+        return view('expense.partials.add_expense')
+            ->with(compact('document', 'business_locations', 'payment_term', 'tax_groups', 'payment_condition', 'payment_terms'));
     }
 
     /**
      * Get expense details.
-     * 
-     * @param  int $expense_id
+     *
+     * @param  int  $expense_id
      * @return json
      */
-    public function getExpenseDetails($expense_id){
-        $business_id = request()->session()->get("user.business_id");
+    public function getExpenseDetails($expense_id)
+    {
+        $business_id = request()->session()->get('user.business_id');
 
         $expense = Transaction::where('transactions.business_id', $business_id)
-        ->join("contacts as c", "transactions.contact_id", "c.id")
-        ->whereIn('transactions.type', ['expense', 'purchase'])
-        ->where('transactions.id', $expense_id)
-        ->select(
-            "c.id as contact_id",
-            "transactions.id",
-            "transactions.expense_category_id",
-            "transactions.transaction_date",
-            "transactions.document_types_id",
-            "transactions.ref_no",
-            "transactions.payment_condition",
-            "transactions.payment_term_id",
-            "transactions.total_before_tax",
-            "transactions.tax_id",
-            "transactions.tax_amount",
-            "transactions.final_total",
-            "transactions.payment_balance",
-            "transactions.additional_notes",
-            "transactions.document",
-            "c.supplier_business_name as supplier_name"
-        )
-        ->first();
+            ->join('contacts as c', 'transactions.contact_id', 'c.id')
+            ->whereIn('transactions.type', ['expense', 'purchase'])
+            ->where('transactions.id', $expense_id)
+            ->select(
+                'c.id as contact_id',
+                'transactions.id',
+                'transactions.expense_category_id',
+                'transactions.transaction_date',
+                'transactions.document_types_id',
+                'transactions.ref_no',
+                'transactions.payment_condition',
+                'transactions.payment_term_id',
+                'transactions.total_before_tax',
+                'transactions.tax_id',
+                'transactions.tax_amount',
+                'transactions.final_total',
+                'transactions.payment_balance',
+                'transactions.additional_notes',
+                'transactions.document',
+                'c.supplier_business_name as supplier_name'
+            )
+            ->first();
 
         $expense->transaction_date = $this->transactionUtil->format_date($expense->transaction_date);
 
@@ -904,7 +898,7 @@ class ExpenseController extends Controller
 
     /**
      * Pass value from tax_amount column to tax_group_amount column.
-     * 
+     *
      * @return string
      */
     public function updateTaxes()
@@ -922,7 +916,7 @@ class ExpenseController extends Controller
                     $expense->tax_amount = null;
                     $expense->save();
 
-                    \Log::info('EXPENSE: ' . $expense->id);
+                    \Log::info('EXPENSE: '.$expense->id);
                 }
             }
 
@@ -934,8 +928,8 @@ class ExpenseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = 'FAIL';
         }
@@ -946,7 +940,7 @@ class ExpenseController extends Controller
     /**
      * Function to fix value of the final total of expenses and amount of
      * payments due to bug in expense form.
-     * 
+     *
      * @return string
      */
     public function setFinalTotalFromExpenses()
@@ -957,8 +951,8 @@ class ExpenseController extends Controller
             \Log::info('--- START ---');
 
             $expenses = Transaction::where('type', 'expense')
-            ->where('final_total', 0)
-            ->get();
+                ->where('final_total', 0)
+                ->get();
 
             foreach ($expenses as $expense) {
                 if ($expense->contact_id) {
@@ -970,7 +964,7 @@ class ExpenseController extends Controller
 
                     $tax_supplier = 0;
 
-                    if ($tax_supplier_percent != "0") {
+                    if ($tax_supplier_percent != '0') {
                         if ($expense->total_before_tax > 0) {
                             $min_amount = $this->taxUtil->getTaxMinAmount($supplier->tax_group_id);
                             $max_amount = $this->taxUtil->getTaxMaxAmount($supplier->tax_group_id);
@@ -999,7 +993,7 @@ class ExpenseController extends Controller
 
                     $expense->save();
 
-                    \Log::info("EXPENSE: " . $expense->id);
+                    \Log::info('EXPENSE: '.$expense->id);
                 }
 
                 $payments = TransactionPayment::where('transaction_id', $expense->id)->get();
@@ -1011,7 +1005,7 @@ class ExpenseController extends Controller
                         $payment->amount = $expense->final_total;
                         $payment->save();
 
-                        \Log::info("PAYMENT: " . $payment->id);
+                        \Log::info('PAYMENT: '.$payment->id);
                     }
                 }
             }
@@ -1024,8 +1018,8 @@ class ExpenseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = 'FAIL';
         }
@@ -1035,7 +1029,7 @@ class ExpenseController extends Controller
 
     /**
      * Calculate perception value.
-     * 
+     *
      * @param  float  $amount
      * @param  float  $min_amount
      * @param  float  $max_amount
@@ -1054,20 +1048,20 @@ class ExpenseController extends Controller
                     $tax_amount = $amount * $tax_percent;
                 }
 
-            // If has only min amount
-            } else if ($min_amount && ! $max_amount) {
+                // If has only min amount
+            } elseif ($min_amount && ! $max_amount) {
                 if ($amount >= $min_amount) {
                     $tax_amount = $amount * $tax_percent;
                 }
 
-            // If has only max amount
-            } else if (! $min_amount && $max_amount) {
+                // If has only max amount
+            } elseif (! $min_amount && $max_amount) {
                 if ($amount <= $max_amount) {
                     $tax_amount = $amount * $tax_percent;
                 }
             }
 
-        // If has none tax
+            // If has none tax
         } else {
             $tax_amount = $amount * $tax_percent;
         }
@@ -1096,30 +1090,31 @@ class ExpenseController extends Controller
                 )
                 ->first();
             $taxes = [];
-            if($expense->tax_id) {
-                $tax_amount = !is_null($expense->tax_amount) || $expense->tax_amount == '' ? $expense->tax_amount : 0;
-                $tax_group_amount = !is_null($expense->tax_group_amount) || $expense->tax_group_amount == '' ? $expense->tax_group_amount : 0;
+            if ($expense->tax_id) {
+                $tax_amount = ! is_null($expense->tax_amount) || $expense->tax_amount == '' ? $expense->tax_amount : 0;
+                $tax_group_amount = ! is_null($expense->tax_group_amount) || $expense->tax_group_amount == '' ? $expense->tax_group_amount : 0;
 
                 $taxes[] = [
-                    "tax_name" => $this->taxUtil->getTaxName($expense->tax_id),
-                    "tax_amount" => $tax_amount + $tax_group_amount
+                    'tax_name' => $this->taxUtil->getTaxName($expense->tax_id),
+                    'tax_amount' => $tax_amount + $tax_group_amount,
                 ];
             } else {
                 $taxes[] = [
-                    "tax_name" => '',
-                    "tax_amount" => '$0.00'
+                    'tax_name' => '',
+                    'tax_amount' => '$0.00',
                 ];
             }
             $output = ['success' => 1, 'receipt' => []];
             $output['receipt']['html_content'] = view('expense.print', compact('expense', 'taxes'))->render();
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return $output;
     }
 }

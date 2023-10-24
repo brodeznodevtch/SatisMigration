@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Business;
+use App\Models\Module;
+use App\Models\RrhhData;
+use App\Models\RrhhHeader;
+use App\Models\RrhhTypeIncomeDiscount;
 use Illuminate\Database\Seeder;
-use App\RrhhHeader;
-use App\RrhhData;
-use App\Module;
-use App\Business;
-use App\RrhhTypeIncomeDiscount;
 use Spatie\Permission\Models\Permission;
 
 class RrhhCatalogueHeaderSeeder extends Seeder
@@ -34,63 +34,63 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             'Tipos de ausencias',
             'Tipos de incapacidades',
             'Tipos de parentescos',
-            'Tipos de ingresos y descuentos'
+            'Tipos de ingresos y descuentos',
         ];
 
         $estadoCiviles = [
             'Casado(a)',
             'Soltero(a)',
             'Acompañado(a)',
-            'Viudo(a)'
+            'Viudo(a)',
         ];
 
         $departamentosEmpresa = [
-            'Finanzas', 
-            'Informática', 
-            'Contabilidad', 
+            'Finanzas',
+            'Informática',
+            'Contabilidad',
             'Marketing',
-            'Ventas'
+            'Ventas',
         ];
 
         $puestosTrabajo = [
-            'Auxiliar contable', 
-            'Contador', 
-            'Desarrollador web', 
+            'Auxiliar contable',
+            'Contador',
+            'Desarrollador web',
             'Secretaria',
-            'Vendedor'
+            'Vendedor',
         ];
 
         $afps = [
-            'Confía', 
-            'Crecer'
+            'Confía',
+            'Crecer',
         ];
 
         $tiposEmpleado = ['Permanente'];
 
         $nacionalidades = [
-            'Salvadoreño', 
-            'Guatemalteco', 
-            'Hondureño', 
-            'Costarricense', 
-            'Panameño'
+            'Salvadoreño',
+            'Guatemalteco',
+            'Hondureño',
+            'Costarricense',
+            'Panameño',
         ];
 
         $profesiones = [
-            'Ingeniero', 
-            'Licenciado'
+            'Ingeniero',
+            'Licenciado',
         ];
 
         $formasPago = [
-            'Transferencia bancaria', 
-            'Pago en cheque'
+            'Transferencia bancaria',
+            'Pago en cheque',
         ];
 
         $tiposDocumento = [
-            'DUI', 
-            'NIT', 
-            'ISSS', 
-            'AFP', 
-            'Constancia de antedentes penales'
+            'DUI',
+            'NIT',
+            'ISSS',
+            'AFP',
+            'Constancia de antedentes penales',
         ];
 
         $dateRequiredTiposDocumento = [
@@ -117,59 +117,58 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             false, //Constancia de antedentes penales
         ];
 
-        
         $capacidadesEspeciales = [
-            'Perdida de la vista en un ojo', 
-            'Perdida de una mano', 
-            'Perdida de un pie', 
-            'Perdida de audicion en un oído'
+            'Perdida de la vista en un ojo',
+            'Perdida de una mano',
+            'Perdida de un pie',
+            'Perdida de audicion en un oído',
         ];
-        
+
         $clasificacionesEmpleado = [
-            'Profesional', 
-            'Técnico'
+            'Profesional',
+            'Técnico',
         ];
-        
+
         $tiposEstudio = [
-            'Primaria', 
-            'Bachillerato', 
-            'Técnico', 
-            'Universitario', 
-            'Maestría', 
-            'Curso', 
-            'Diplomado', 
-            'Seminario', 
-            'No definido'
+            'Primaria',
+            'Bachillerato',
+            'Técnico',
+            'Universitario',
+            'Maestría',
+            'Curso',
+            'Diplomado',
+            'Seminario',
+            'No definido',
         ];
-        
+
         $tiposAusencias = [
-            'Permiso personal', 
-            'Permiso familiar', 
-            'Asistencia al ISSS', 
-            'Falta', 
-            'Incapacidad matenidad', 
-            'Incapacidad extensión', 
-            'Diligencia'
+            'Permiso personal',
+            'Permiso familiar',
+            'Asistencia al ISSS',
+            'Falta',
+            'Incapacidad matenidad',
+            'Incapacidad extensión',
+            'Diligencia',
         ];
-        
+
         $tiposIncapacidades = [
-            'Enfermedad o Accidente común', 
-            'Accidente de trabajo o Enfermedad profesional', 
-            'Incapacidad total'
+            'Enfermedad o Accidente común',
+            'Accidente de trabajo o Enfermedad profesional',
+            'Incapacidad total',
         ];
-        
+
         $tiposParentescos = [
-            'Madre', 
-            'Padre', 
-            'Compañero(a) de vida', 
-            'Hijo(a)', 
-            'Hermano(a)', 
-            'Abuelo(a)', 
-            'Tío(a)', 
-            'Cuñado(a)', 
-            'Nieto(a)', 
-            'Sobrino(a)', 
-            'Primo(a)'
+            'Madre',
+            'Padre',
+            'Compañero(a) de vida',
+            'Hijo(a)',
+            'Hermano(a)',
+            'Abuelo(a)',
+            'Tío(a)',
+            'Cuñado(a)',
+            'Nieto(a)',
+            'Sobrino(a)',
+            'Primo(a)',
         ];
 
         foreach ($headers as $header) {
@@ -189,7 +188,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $estadoCivil,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -200,7 +199,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $departamentoEmpresa,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -211,7 +210,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $puestoTrabajo,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -222,7 +221,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $afp,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -233,7 +232,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $tipoEmpleado,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -244,7 +243,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $nacionalidad,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -255,7 +254,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $profesion,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -266,7 +265,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'value' => $formaPago,
                             'status' => 1,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -280,7 +279,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'expedition_place' => $expeditionPlaceTiposDocumento[$key],
                             'number_required' => $numberRequiredTiposDocumento[$key],
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -292,7 +291,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -304,7 +303,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -316,7 +315,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -328,7 +327,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -340,7 +339,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
@@ -352,54 +351,52 @@ class RrhhCatalogueHeaderSeeder extends Seeder
                             'status' => 1,
                             'date_required' => true,
                             'rrhh_header_id' => $header->id,
-                            'business_id' => $item->id
+                            'business_id' => $item->id,
                         ]);
                     }
                 }
             }
 
-
             RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Anticipo de sueldo', 
-                'payroll_column' => 'Otros ingresos', 
-                'status' => 1, 
+                'type' => 1,
+                'name' => 'Anticipo de sueldo',
+                'payroll_column' => 'Otros ingresos',
+                'status' => 1,
                 'business_id' => $item->id,
             ]);
 
             RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 2, 
-                'name' => 'Anticipo de sueldo', 
-                'payroll_column' => 'Otras deducciones', 
-                'status' => 1, 
+                'type' => 2,
+                'name' => 'Anticipo de sueldo',
+                'payroll_column' => 'Otras deducciones',
+                'status' => 1,
                 'business_id' => $item->id,
             ]);
 
             RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Horas extras diurnas', 
-                'payroll_column' => 'Horas extras', 
-                'status' => 1, 
+                'type' => 1,
+                'name' => 'Horas extras diurnas',
+                'payroll_column' => 'Horas extras',
+                'status' => 1,
                 'business_id' => $item->id,
             ]);
 
             RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Horas extras nocturnas', 
-                'payroll_column' => 'Horas extras', 
-                'status' => 1, 
+                'type' => 1,
+                'name' => 'Horas extras nocturnas',
+                'payroll_column' => 'Horas extras',
+                'status' => 1,
                 'business_id' => $item->id,
             ]);
 
             RrhhTypeIncomeDiscount::firstOrCreate([
-                'type' => 1, 
-                'name' => 'Comisiones', 
-                'payroll_column' => 'Comisiones', 
-                'status' => 1, 
+                'type' => 1,
+                'name' => 'Comisiones',
+                'payroll_column' => 'Comisiones',
+                'status' => 1,
                 'business_id' => $item->id,
             ]);
         }
-
 
         $moduleConfiguration = Module::where('name', 'Configuraciones')->first();
 
@@ -432,7 +429,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['name' => 'rrhh_catalogues.delete'],
             ['description' => 'Eliminar catálogos de recursos humanos', 'guard_name' => 'web', 'module_id' => $module->id]
         );
-
 
         $moduleRrhh = Module::updateOrCreate(
             ['name' => 'Recursos humanos'],
@@ -469,7 +465,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['description' => 'Descargar constancia salarial', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
 
-
         Permission::updateOrCreate(
             ['name' => 'rrhh_import_employees.create'],
             ['description' => 'Importar empleados', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
@@ -479,7 +474,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['name' => 'rrhh_import_employees.update'],
             ['description' => 'Actualizar empleados masivamente', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
-
 
         Permission::updateOrCreate(
             ['name' => 'rrhh_document_employee.view'],
@@ -500,7 +494,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['name' => 'rrhh_document_employee.delete'],
             ['description' => 'Eliminar documento del empleado', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
-
 
         Permission::updateOrCreate(
             ['name' => 'rrhh_economic_dependence.create'],
@@ -542,7 +535,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['description' => 'Autorizar acción de personal', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
 
-
         Permission::updateOrCreate(
             ['name' => 'rrhh_income_discount.view'],
             ['description' => 'Ver ingreso o descuento', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
@@ -563,7 +555,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['description' => 'Eliminar ingreso o descuento', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
 
-
         Permission::updateOrCreate(
             ['name' => 'rrhh_absence_inability.view'],
             ['description' => 'Ver ausencia o incapacidad', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
@@ -583,7 +574,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['name' => 'rrhh_absence_inability.delete'],
             ['description' => 'Eliminar ausencia o incapacidad', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
-
 
         Permission::updateOrCreate(
             ['name' => 'rrhh_contract.create'],
@@ -609,7 +599,6 @@ class RrhhCatalogueHeaderSeeder extends Seeder
             ['name' => 'rrhh_contract.finish'],
             ['description' => 'Finalizar contrato del empleado', 'guard_name' => 'web', 'module_id' => $moduleRrhh->id]
         );
-
 
         Permission::updateOrCreate(
             ['name' => 'rrhh_assistance.view'],

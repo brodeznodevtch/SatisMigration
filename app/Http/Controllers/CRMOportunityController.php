@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\CRMOportunity;
-use App\CRMContactReason;
-use App\CRMContactMode;
-use App\Category;
-use App\System;
-use App\Contact;
-
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\CRMOportunity;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use App\Utils\ModuleUtil;
-use DB;
 
 class CRMOportunityController extends Controller
 {
@@ -23,25 +20,27 @@ class CRMOportunityController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('crm-oportunities.view') && !auth()->user()->can('crm-oportunities.create')) {
+        if (! auth()->user()->can('crm-oportunities.view') && ! auth()->user()->can('crm-oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
+
         return view('crm_oportunity.index');
     }
 
     public function getOportunityData()
     {
-        if (!auth()->user()->can('crm-oportunities.view') && !auth()->user()->can('crm-oportunities.create')) {
+        if (! auth()->user()->can('crm-oportunities.view') && ! auth()->user()->can('crm-oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $oportunity = DB::table('crm_oportunities')
-            ->select('crm_oportunities.contact_type', DB::raw("crm_contact_reasons.name as reason"), 'crm_oportunities.name', 'crm_oportunities.company', 'crm_oportunities.id')
+            ->select('crm_oportunities.contact_type', DB::raw('crm_contact_reasons.name as reason'), 'crm_oportunities.name', 'crm_oportunities.company', 'crm_oportunities.id')
             ->join('crm_contact_reasons', 'crm_oportunities.contact_reason_id', '=', 'crm_contact_reasons.id')
             ->where('crm_oportunities.business_id', $business_id)
             ->where('crm_oportunities.status', 'Oportunidad');
+
         return DataTables::of($oportunity)
             ->addColumn(
                 'action',
@@ -67,7 +66,7 @@ class CRMOportunityController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('crm-oportunities.create')) {
+        if (! auth()->user()->can('crm-oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -92,12 +91,11 @@ class CRMOportunityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('crm-oportunities.create')) {
+        if (! auth()->user()->can('crm-oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -106,16 +104,16 @@ class CRMOportunityController extends Controller
             $oportunity = $request->only(['contact_type', 'contact_reason_id', 'name', 'company', 'charge', 'email', 'contacts', 'contact_mode_id', 'refered_id', 'product_cat_id']);
             $oportunity['business_id'] = $request->session()->get('user.business_id');
             $oportunity['employee_id'] = $request->session()->get('user.id');
-            $oportunity['status'] = "Oportunidad";
+            $oportunity['status'] = 'Oportunidad';
 
             $oportunity = CRMOportunity::create($oportunity);
             $outpout = [
                 'success' => true,
                 'data' => $oportunity,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
 
@@ -141,7 +139,7 @@ class CRMOportunityController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('crm-oportunities.update')) {
+        if (! auth()->user()->can('crm-oportunities.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -164,14 +162,13 @@ class CRMOportunityController extends Controller
             $clients = Contact::where('business_id', $business_id)->whereIn('type', ['customer', 'both'])->pluck('name', 'id');
 
             return view('crm_oportunity.edit')
-            ->with(compact('contactreason', 'contactmode', 'categories', 'clients', 'oportunity'));
+                ->with(compact('contactreason', 'contactmode', 'categories', 'clients', 'oportunity'));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddBusinessIdToQuotesTable extends Migration
 {
@@ -14,12 +14,12 @@ class AddBusinessIdToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->unsignedInteger("business_id")
-                ->after("user_id");
-            
-            $table->foreign("business_id")
-                ->references("id")
-                ->on("business");
+            $table->unsignedInteger('business_id')
+                ->after('user_id');
+
+            $table->foreign('business_id')
+                ->references('id')
+                ->on('business');
         });
     }
 
@@ -31,8 +31,8 @@ class AddBusinessIdToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropForeign("business_id");
-            $table->dropColumn("business_id");
+            $table->dropForeign('business_id');
+            $table->dropColumn('business_id');
         });
     }
 }

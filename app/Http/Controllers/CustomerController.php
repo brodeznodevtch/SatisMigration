@@ -2,50 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-use DB;
-use Excel;
-use App\Business;
-use App\Catalogue;
-use App\City;
-use App\Zone;
-use App\State;
-use DataTables;
-use App\Contact;
-use App\Country;
-use App\Category;
-use App\Customer;
-use App\TaxGroup;
-use App\PaymentTerm;
-use App\BusinessType;
-use App\CustomerGroup;
-use App\Utils\TaxUtil;
-use App\CRMContactMode;
-use App\CustomerContact;
-use App\BusinessLocation;
-use App\CRMContactReason;
-
-use App\CustomerPortfolio;
-use App\CustomerVehicle;
-use App\Employees;
+use App\Models\Brands;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\BusinessType;
+use App\Models\Catalogue;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\Customer;
+use App\Models\CustomerContact;
+use App\Models\CustomerGroup;
+use App\Models\CustomerPortfolio;
+use App\Models\CustomerVehicle;
+use App\Models\Employees;
 use App\Exports\AccountsReceivableReportExport;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
-use Illuminate\Http\Request;
-use App\Utils\TransactionUtil;
-use App\Transaction;
+use App\Models\PaymentTerm;
+use App\Models\State;
+use App\Models\TaxGroup;
+use App\Models\Transaction;
 use App\Utils\BusinessUtil;
+use App\Utils\TaxUtil;
+use App\Utils\TransactionUtil;
 use App\Utils\Util;
+use App\Models\Zone;
+use DataTables;
+use DB;
+use Excel;
+use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
     /**
      * Constructor.
      *
-     * @param  \App\Utils\TransactionUtil  $transactionUtil
-     * @param  \App\Utils\TaxUtil  $taxUtil
-     * @param  \App\Utils\BusinessUtil  $businessUtil
-     * @param  \App\Utils\Util  $util
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, TaxUtil $taxUtil, BusinessUtil $businessUtil, Util $util)
@@ -57,7 +52,7 @@ class CustomerController extends Controller
 
         // Binnacle data
         $this->module_name = 'customer';
-        
+
         if (config('app.disable_sql_req_pk')) {
             DB::statement('SET SESSION sql_require_primary_key=0');
         }
@@ -70,7 +65,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('customer.view')) {
+        if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -84,7 +79,7 @@ class CustomerController extends Controller
         $known_by = CRMContactMode::forDropdown($business_id);
 
         //Llenar select de Contact Mode
-        $contactmode = CRMContactMode::where('name', 'not like', "%cliente%")->pluck('name', 'id');
+        $contactmode = CRMContactMode::where('name', 'not like', '%cliente%')->pluck('name', 'id');
 
         //Llenar select de Category
         $categories = Category::forDropdown($business_id);
@@ -115,7 +110,6 @@ class CustomerController extends Controller
             compact('contactreason', 'known_by', 'categories', 'clients', 'contactmode', 'countries', 'products', 'locations', 'customer_portfolios'));
     }
 
-
     public function verifiedIfExistsDocument($type, $value)
     {
         if (request()->ajax()) {
@@ -127,35 +121,39 @@ class CustomerController extends Controller
                 if (Customer::where('dni', $value)->where('business_id', $business_id)->exists()) {
                     $output = [
                         'success' => true,
-                        'msg' => trans('customer.DNI_invalid')
+                        'msg' => trans('customer.DNI_invalid'),
                     ];
-                    return  $output;
+
+                    return $output;
                 } else {
                     $output = [
                         'success' => false,
-                        'msg' => trans('customer.DNI_valid')
+                        'msg' => trans('customer.DNI_valid'),
                     ];
-                    return  $output;
+
+                    return $output;
                 }
-            } else if ($type == 'reg_number') {
+            } elseif ($type == 'reg_number') {
                 if (Customer::where('reg_number', $value)->where('business_id', $business_id)->exists()) {
                     $output2 = [
                         'success' => true,
-                        'msg' => trans('customer.num_reg_invalid')
+                        'msg' => trans('customer.num_reg_invalid'),
                     ];
-                    return  $output2;
+
+                    return $output2;
                 } else {
                     $output2 = [
                         'success' => false,
                         'msg' => trans('customer.num_reg_valid'),
                     ];
-                    return  $output2;
+
+                    return $output2;
                 }
             }
         }
     }
 
-    //validacion para la vista edit de clientes 
+    //validacion para la vista edit de clientes
     public function verifiedIfExistsDocumentID($type, $value, $id = '')
     {
         if (request()->ajax()) {
@@ -168,29 +166,33 @@ class CustomerController extends Controller
                 if (Customer::where('id', '<>', $id)->where('dni', $value)->where('business_id', $business_id)->exists()) {
                     $output = [
                         'success' => true,
-                        'msg' => trans('customer.DNI_invalid')
+                        'msg' => trans('customer.DNI_invalid'),
                     ];
-                    return  $output;
+
+                    return $output;
                 } else {
                     $output = [
                         'success' => false,
-                        'msg' => trans('customer.DNI_valid')
+                        'msg' => trans('customer.DNI_valid'),
                     ];
-                    return  $output;
+
+                    return $output;
                 }
-            } else if ($type == 'reg_number' && $id != null) {
+            } elseif ($type == 'reg_number' && $id != null) {
                 if (Customer::where('id', '<>', $id)->where('reg_number', $value)->where('business_id', $business_id)->exists()) {
                     $output2 = [
                         'success' => true,
-                        'msg' => trans('customer.num_reg_invalid')
+                        'msg' => trans('customer.num_reg_invalid'),
                     ];
-                    return  $output2;
+
+                    return $output2;
                 } else {
                     $output2 = [
                         'success' => false,
                         'msg' => trans('customer.num_reg_valid'),
                     ];
-                    return  $output2;
+
+                    return $output2;
                 }
             }
         }
@@ -207,17 +209,17 @@ class CustomerController extends Controller
                     ->where('business_id', $business_id)->where('tax_number', request()->tax_number)->exists();
 
                 if (empty($tax_number)) {
-                    $output = ['success' => false, 'msg' => trans("customer.validate_tax_number_error")];
+                    $output = ['success' => false, 'msg' => trans('customer.validate_tax_number_error')];
                 } else {
-                    $output = ['success' => true, 'msg' => trans("customer.validate_tax_number_success")];
+                    $output = ['success' => true, 'msg' => trans('customer.validate_tax_number_success')];
                 }
-            } else if (request()->tax_number) {
+            } elseif (request()->tax_number) {
                 // Check if there are records in the database that are the same as the input.
                 $tax_number = Customer::where('business_id', $business_id)->where('tax_number', request()->tax_number)->exists();
                 if ($tax_number) {
-                    $output = ['success' => false, 'msg' => trans("customer.validate_tax_number_error")];
+                    $output = ['success' => false, 'msg' => trans('customer.validate_tax_number_error')];
                 } else {
-                    $output = ['success' => true, 'msg' => trans("customer.validate_tax_number_success")];
+                    $output = ['success' => true, 'msg' => trans('customer.validate_tax_number_success')];
                 }
             }
 
@@ -232,14 +234,15 @@ class CustomerController extends Controller
             if (request()->customer_id) {
                 $business_id = auth()->user()->business_id;
                 $customer = Customer::where('business_id', $business_id)->where('id', request()->customer_id)->first();
-                if ((!empty($customer->tax_number) && !is_null($customer->tax_number)) &&
-                    (!empty($customer->reg_number) && !is_null($customer->reg_number))
+                if ((! empty($customer->tax_number) && ! is_null($customer->tax_number)) &&
+                    (! empty($customer->reg_number) && ! is_null($customer->reg_number))
                 ) {
-                    $output = ['success' => true, 'msg' => trans("customer.customer_has_no_nit_nrc")];
+                    $output = ['success' => true, 'msg' => trans('customer.customer_has_no_nit_nrc')];
                 } else {
-                    $output = ['success' => false, 'msg' => trans("customer.customer_has_no_nit_nrc")];
+                    $output = ['success' => false, 'msg' => trans('customer.customer_has_no_nit_nrc')];
                 }
             }
+
             return $output;
         }
     }
@@ -251,7 +254,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -278,15 +281,15 @@ class CustomerController extends Controller
             ->pluck('name', 'id');
 
         /** Tax groups */
-        $tax_groups = $this->taxUtil->getTaxGroups($business_id, 'contacts');                        
+        $tax_groups = $this->taxUtil->getTaxGroups($business_id, 'contacts');
 
-        $main_customer_account = "";
+        $main_customer_account = '';
 
         $business = Business::find($business_id);
         if ($business->accounting_customer_id) {
-            $main_customer_account = Catalogue::where("status", 1)
-                                    ->where("id", $business->accounting_customer_id)
-                                    ->value("code");
+            $main_customer_account = Catalogue::where('status', 1)
+                ->where('id', $business->accounting_customer_id)
+                ->value('code');
         }
 
         $business_receivable_type = $business->receivable_type;
@@ -312,12 +315,11 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -350,10 +352,10 @@ class CustomerController extends Controller
 
         if ($is_taxpayer) {
             $request->validate([
-                'reg_number'    => 'required',
-                'tax_number'    => 'required',
+                'reg_number' => 'required',
+                'tax_number' => 'required',
                 'business_line' => 'required',
-                'business_type_id' => 'required'
+                'business_type_id' => 'required',
             ]);
         }
 
@@ -423,7 +425,7 @@ class CustomerController extends Controller
                     $customer_details['tax_number'] = $request->input('tax_number');
                 }
 
-            } else if ($is_gov_institution) {
+            } elseif ($is_gov_institution) {
                 $customer_details['is_taxpayer'] = 2;
 
                 if (! $customer_settings['nit_in_general_info']) {
@@ -446,9 +448,9 @@ class CustomerController extends Controller
 
             // return $customer_details;
             $customer = Customer::create($customer_details);
-            $customer->code = 'C'. str_pad($customer->id, 4, 0, STR_PAD_LEFT);
+            $customer->code = 'C'.str_pad($customer->id, 4, 0, STR_PAD_LEFT);
             $customer->save();
-            
+
             $customer_id = $customer->id;
 
             // Store binnacle
@@ -460,7 +462,7 @@ class CustomerController extends Controller
             );
 
             // Add opening balance
-            if (!empty($request->input('opening_balance'))) {
+            if (! empty($request->input('opening_balance'))) {
                 $this->transactionUtil->createOpeningBalanceTransaction($business_id, null, $customer->opening_balance, $customer->id);
             }
 
@@ -468,7 +470,7 @@ class CustomerController extends Controller
             if (config('app.business') == 'workshop') {
                 $vehicles = $request->input('vehicles');
                 $customer_vehicles = [];
-    
+
                 if (! empty($vehicles)) {
                     foreach ($vehicles as $vehicle) {
                         $new_vehicle = [
@@ -481,29 +483,29 @@ class CustomerController extends Controller
                             'responsible' => $vehicle['responsible'],
                             'engine_number' => $vehicle['engine_number'],
                             'vin_chassis' => $vehicle['vin_chassis'],
-                            'mi_km' => $vehicle['mi_km']
+                            'mi_km' => $vehicle['mi_km'],
                         ];
-        
+
                         $customer_vehicles[] = $new_vehicle;
                     }
-    
+
                     $customer->vehicles()->createMany($customer_vehicles);
                 }
             }
 
             $output = [
                 'success' => true,
-                'msg' => __("customer.added_success"),
+                'msg' => __('customer.added_success'),
                 'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
                 'is_default' => $customer->is_default,
                 'allowed_credit' => $customer->allowed_credit,
-                'is_withholding_agent' => $customer->is_withholding_agent
+                'is_withholding_agent' => $customer->is_withholding_agent,
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -512,12 +514,12 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if (!auth()->user()->can('customer.view')) {
+        if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -539,100 +541,99 @@ class CustomerController extends Controller
         //return view('customer.show', compact('customer'));
         return response()->json($customer);
     }
+
     public function getContacts($id)
     {
-        if (!auth()->user()->can('customer.view')) {
+        if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
         }
         $customer = Customer::findOrFail($id);
         $contacts = CustomerContact::where('customer_id', $customer->id)->get();
+
         return view('customer.contacts', compact('contacts', 'customer'));
     }
 
-
     public function addContact(Request $request, $id)
     {
-        try{
+        try {
             $customer = Customer::findOrFail($id);
-            $contactnames = $request->input("contactname");
-            $contactmobile = $request->input("contactphone");
-            $contactlandlines = $request->input("contactlandline");
-            $contactmails = $request->input("contactemail");
-            $contactcargos = $request->input("contactcargo");
-            if (!empty($contactnames)) {
+            $contactnames = $request->input('contactname');
+            $contactmobile = $request->input('contactphone');
+            $contactlandlines = $request->input('contactlandline');
+            $contactmails = $request->input('contactemail');
+            $contactcargos = $request->input('contactcargo');
+            if (! empty($contactnames)) {
                 CustomerContact::where('customer_id', $customer->id)->forceDelete();
                 $cont = 0;
                 $saveContact = false;
                 while ($cont < count($contactnames)) {
                     //se crea un nuevo contacto acorde a la cantidad de datos mandados en el array $request->contactid
-                    if(!empty($contactnames[$cont])){
+                    if (! empty($contactnames[$cont])) {
                         CustomerContact::create([
-                            'name'      => $contactnames[$cont],
-                            'phone'     => $contactmobile[$cont],
-                            'landline'  => $contactlandlines[$cont],
-                            'email'     => $contactmails[$cont],
-                            'cargo'     => $contactcargos[$cont],
-                            'customer_id' => $customer->id
+                            'name' => $contactnames[$cont],
+                            'phone' => $contactmobile[$cont],
+                            'landline' => $contactlandlines[$cont],
+                            'email' => $contactmails[$cont],
+                            'cargo' => $contactcargos[$cont],
+                            'customer_id' => $customer->id,
                         ]);
                         $saveContact = true;
                     }
                     $cont = $cont + 1;
                 }
 
-                if($saveContact == true){
+                if ($saveContact == true) {
                     $output = [
                         'success' => 1,
                         'msg' => __('customer.contact_added_success'),
-                        'customer_id' => $customer->id
+                        'customer_id' => $customer->id,
                     ];
-                }
-                else{
+                } else {
                     return back();
                 }
-            }
-            else{
+            } else {
                 $contacts = CustomerContact::where('customer_id', $customer->id)->get();
-                if(count($contacts) == 0){
+                if (count($contacts) == 0) {
                     return back();
-                }else{
+                } else {
                     CustomerContact::where('customer_id', $customer->id)->forceDelete();
                     $output = [
                         'success' => 1,
                         'msg' => __('customer.contact_added_success'),
-                        'customer_id' => $customer->id
+                        'customer_id' => $customer->id,
                     ];
                 }
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $output = [
                 'success' => 0,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
-        
+
         return back()->with('status', $output);
     }
 
-
     public function getContacts1($id)
     {
-        if (!auth()->user()->can('customer.view')) {
+        if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $contacts = CustomerContact::where('customer_id', $id)->get();
+
         return response()->json($contacts);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('customer.update')) {
+        if (! auth()->user()->can('customer.update')) {
             abort(403, 'Unauthorized action.');
         }
         $customer = Customer::findOrFail($id);
@@ -664,7 +665,6 @@ class CustomerController extends Controller
             ->where('state_id', $customer->state_id)
             ->pluck('name', 'id');
 
-
         $payment_terms = PaymentTerm::select('id', 'name')
             ->pluck('name', 'id');
 
@@ -678,19 +678,19 @@ class CustomerController extends Controller
         //contactos multiples que pertenecen a este cliente
         $customer_contacts = CustomerContact::where('customer_id', $id)->get();
 
-        $main_customer_account = "";
+        $main_customer_account = '';
 
         $business = Business::find($business_id);
         if ($business->accounting_customer_id) {
-            $main_customer_account = Catalogue::where("status", 1)
-            ->where("id", $business->accounting_customer_id)
-                ->value("code");
+            $main_customer_account = Catalogue::where('status', 1)
+                ->where('id', $business->accounting_customer_id)
+                ->value('code');
         }
 
         $account_name = [];
         if ($customer->accounting_account_id) {
-            $catalogue = Catalogue::where("status", 1)
-            ->where("id", $customer->accounting_account_id)
+            $catalogue = Catalogue::where('status', 1)
+                ->where('id', $customer->accounting_account_id)
                 ->select(DB::raw("CONCAT(code, ' ', name) as name"))
                 ->first();
 
@@ -732,13 +732,12 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('customer.update')) {
+        if (! auth()->user()->can('customer.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -798,8 +797,8 @@ class CustomerController extends Controller
                 'cost',
             ]);
 
-            $customer_details['is_exempt'] = !empty($request->input('is_exempt')) ? $request->input('is_exempt') : null;
-            $customer_details['is_foreign'] = !empty($request->input('is_foreign')) ? $request->input('is_foreign') : null;
+            $customer_details['is_exempt'] = ! empty($request->input('is_exempt')) ? $request->input('is_exempt') : null;
+            $customer_details['is_foreign'] = ! empty($request->input('is_foreign')) ? $request->input('is_foreign') : null;
 
             $customer_details['tax_group_id'] = $request->input('tax_group_id') != 0 ? $request->input('tax_group_id') : null;
             $customer_details['latitude'] = $request->latitude;
@@ -830,7 +829,7 @@ class CustomerController extends Controller
                     $customer_details['tax_number'] = $request->input('tax_number');
                 }
 
-            } else if ($is_gov_institution) {
+            } elseif ($is_gov_institution) {
                 $customer_details['is_taxpayer'] = 2;
 
                 if (! $customer_settings['nit_in_general_info']) {
@@ -855,7 +854,7 @@ class CustomerController extends Controller
             $customer->update($customer_details);
 
             // Get opening balance if exists
-            $ob_transaction =  Transaction::where('customer_id', $id)
+            $ob_transaction = Transaction::where('customer_id', $id)
                 ->where('type', 'opening_balance')
                 ->first();
 
@@ -882,10 +881,10 @@ class CustomerController extends Controller
             // Save vehicles
             if (config('app.business') == 'workshop') {
                 $vehicles = $request->input('vehicles');
-    
+
                 if (! empty($vehicles)) {
                     $saved_ids = [];
-    
+
                     foreach ($vehicles as $vehicle) {
                         if (isset($vehicle['id'])) {
                             $updated_vehicle = CustomerVehicle::find($vehicle['id']);
@@ -899,9 +898,9 @@ class CustomerController extends Controller
                             $updated_vehicle->vin_chassis = $vehicle['vin_chassis'];
                             $updated_vehicle->mi_km = $vehicle['mi_km'];
                             $updated_vehicle->save();
-    
+
                             $saved_ids[] = $vehicle['id'];
-    
+
                         } else {
                             $new_vehicle = CustomerVehicle::create([
                                 'customer_id' => $customer->id,
@@ -913,18 +912,18 @@ class CustomerController extends Controller
                                 'responsible' => $vehicle['responsible'],
                                 'engine_number' => $vehicle['engine_number'],
                                 'vin_chassis' => $vehicle['vin_chassis'],
-                                'mi_km' => $vehicle['mi_km']
+                                'mi_km' => $vehicle['mi_km'],
                             ]);
-    
+
                             $saved_ids[] = $new_vehicle->id;
                         }
                     }
-    
+
                     DB::table('customer_vehicles')
                         ->where('customer_id', $customer->id)
                         ->whereNotIn('id', $saved_ids)
                         ->delete();
-    
+
                 } else {
                     DB::table('customer_vehicles')
                         ->where('customer_id', $customer->id)
@@ -943,12 +942,12 @@ class CustomerController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __("customer.updated_success")
+                'msg' => __('customer.updated_success'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         //return $output;
@@ -958,12 +957,12 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('customer.delete')) {
+        if (! auth()->user()->can('customer.delete')) {
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax()) {
@@ -982,9 +981,9 @@ class CustomerController extends Controller
                 if ($allow_delete) {
                     // Clone record before action
                     $customer_old = clone $customer;
-    
+
                     $customer->delete();
-    
+
                     // Store binnacle
                     $this->transactionUtil->registerBinnacle(
                         $this->module_name,
@@ -992,27 +991,28 @@ class CustomerController extends Controller
                         $customer_old->name,
                         $customer_old
                     );
-    
+
                     $output = [
                         'success' => true,
-                        'msg' => __('customer.deleted_success')
+                        'msg' => __('customer.deleted_success'),
                     ];
 
                 } else {
                     $output = [
                         'success' => false,
-                        'msg' => __('customer.transactions_already_exist')
+                        'msg' => __('customer.transactions_already_exist'),
                     ];
                 }
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -1024,7 +1024,7 @@ class CustomerController extends Controller
      */
     public function getAddCustomer($customer_name = null)
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1054,14 +1054,14 @@ class CustomerController extends Controller
         $tax_groups = $this->taxUtil->getTaxGroups($business_id, 'contacts');
 
         //To get receivable_type
-        $main_customer_account = "";
+        $main_customer_account = '';
 
         $business = Business::find($business_id);
         if ($business->accounting_customer_id) {
-            $main_customer_account = Catalogue::where("status", 1)
-            ->where("id", $business->accounting_customer_id)
-                ->value("code");
-        }        
+            $main_customer_account = Catalogue::where('status', 1)
+                ->where('id', $business->accounting_customer_id)
+                ->value('code');
+        }
         $business_receivable_type = $business->receivable_type;
 
         return view('customer.partials.add_customer_modal')
@@ -1095,7 +1095,7 @@ class CustomerController extends Controller
             );
 
         /** customer portfolio filter */
-        if(!empty($portfolio_id)){
+        if (! empty($portfolio_id)) {
             $customers->where('customer_portfolio_id', $portfolio_id);
         }
 
@@ -1104,38 +1104,39 @@ class CustomerController extends Controller
                 'actions',
                 function ($row) {
                     $html = '<div class="btn-group">
-                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (auth()->user()->can('customer.view')) {
                         //$html .= '<li><a href="#" data-href="' . action('CustomerController@show', [$row->id]) . '" class="view_customer_button"><i class="glyphicon glyphicon-eye-open"></i> '.__("messages.view").'</a></li>'
-                        $html .= '<li><a href="#" onClick="viewCustomer(' . $row->id . ')"><i class="glyphicon glyphicon-eye-open"></i> ' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="viewCustomer('.$row->id.')"><i class="glyphicon glyphicon-eye-open"></i> '.__('messages.view').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.update')) {
-                        $html .= '<li><a href="' . action('CustomerController@edit', [$row->id]) . '" ><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        $html .= '<li><a href="'.action('CustomerController@edit', [$row->id]).'" ><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
-                    $html .= '<li><a href="#" data-href="' . action('CustomerController@getContacts', [$row->id]) . '" class="contact_button"><i class="fa fa-address-book"></i> ' . __("customer.Contacts") . '</a></li>';
+                    $html .= '<li><a href="#" data-href="'.action('CustomerController@getContacts', [$row->id]).'" class="contact_button"><i class="fa fa-address-book"></i> '.__('customer.Contacts').'</a></li>';
 
-                    $html .= '<li><a href="' . action('TransactionPaymentController@show', [$row->opening_balance_id]) . '" class="view_payment_modal"><i class="fa fa-money"></i> ' . __("purchase.view_payments") . '</a></li>';
+                    $html .= '<li><a href="'.action('TransactionPaymentController@show', [$row->opening_balance_id]).'" class="view_payment_modal"><i class="fa fa-money"></i> '.__('purchase.view_payments').'</a></li>';
 
                     if (auth()->user()->can('purchase.payments') || auth()->user()->can('sell.payments')) {
                         if (($row->opening_balance - $row->total_paid) > 0) {
-                            $html .= '<li><a href="' . action('TransactionPaymentController@addPayment', [$row->opening_balance_id]) . '" class="add_payment_modal"><i class="fa fa-money"></i> ' . __("customer.pay_opening_balance") . '</a></li>';
+                            $html .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->opening_balance_id]).'" class="add_payment_modal"><i class="fa fa-money"></i> '.__('customer.pay_opening_balance').'</a></li>';
                         }
                     }
 
                     if (auth()->user()->can('customer.create')) {
-                        $html .= '<li><a href="#" onClick="createFollowCustomer(' . $row->id . ',\'' . $row->name . '\')"><i class="glyphicon glyphicon-comment"></i> ' . __("crm.tracing") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="createFollowCustomer('.$row->id.',\''.$row->name.'\')"><i class="glyphicon glyphicon-comment"></i> '.__('crm.tracing').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.delete')) {
-                        $html .= '<li><a href="#" onClick="deleteCustomer(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="deleteCustomer('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';
+
                     return $html;
                 }
             )
@@ -1152,7 +1153,7 @@ class CustomerController extends Controller
      */
     public function getImportCustomers()
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1162,7 +1163,7 @@ class CustomerController extends Controller
         if ($zip_loaded === false) {
             $output = [
                 'success' => 0,
-                'msg' => __('messages.install_enable_zip')
+                'msg' => __('messages.install_enable_zip'),
             ];
 
             return view('customer.import')
@@ -1180,7 +1181,7 @@ class CustomerController extends Controller
      */
     public function postImportCustomers(Request $request)
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1208,12 +1209,12 @@ class CustomerController extends Controller
                 $error_msg = '';
 
                 DB::beginTransaction();
-                                
+
                 foreach ($imported_data as $key => $value) {
-                    //Check if 26 no. of columns exists                    
+                    //Check if 26 no. of columns exists
                     if (count($value) != 26) {
-                        $is_valid =  false;
-                        $error_msg = __('customer.number_of_columns_mismatch') . ' ' . $key;
+                        $is_valid = false;
+                        $error_msg = __('customer.number_of_columns_mismatch').' '.$key;
                         break;
                     }
 
@@ -1221,30 +1222,30 @@ class CustomerController extends Controller
                     $customer_array = [];
 
                     // Check name
-                    if (!empty(trim($value[0]))) {
+                    if (! empty(trim($value[0]))) {
                         $customer_array['name'] = $value[0];
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = __('customer.customer_name_is_required', ['number' => $row_no]);
                         break;
                     }
 
                     //Check is foreign
                     $is_foreign = trim($value[1]);
-                    if ($is_foreign == "0" || $is_foreign == "1") {
+                    if ($is_foreign == '0' || $is_foreign == '1') {
                         $customer_array['is_foreign'] = $value[1];
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = __('customer.customer_is_foreign_required', ['number' => $row_no]);
                         break;
                     }
 
                     //Check DNI (DUI)
-                    if (!empty(trim($value[2]))) {
+                    if (! empty(trim($value[2]))) {
                         $verif_exist_dni = Customer::where('business_id', $business_id)
                             ->where('dni', trim($value[2]))->exists();
                         if ($verif_exist_dni) {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.exists_dni', ['number' => $row_no]);
                             break;
                         } else {
@@ -1253,11 +1254,11 @@ class CustomerController extends Controller
                     }
 
                     //Check email
-                    if (!empty(trim($value[3]))) {
+                    if (! empty(trim($value[3]))) {
                         if (filter_var(trim($value[3]), FILTER_VALIDATE_EMAIL)) {
                             $customer_array['email'] = trim($value[3]);
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.email_is_invalid', ['number' => $row_no]);
                             break;
                         }
@@ -1270,12 +1271,12 @@ class CustomerController extends Controller
 
                     // Check country
                     $country = null;
-                    if (!empty(trim($value[6]))) {
-                        $country = Country::whereRaw('upper(name) = upper("' . trim($value[6]) . '")')->first();
-                        if (!empty($country)) {
+                    if (! empty(trim($value[6]))) {
+                        $country = Country::whereRaw('upper(name) = upper("'.trim($value[6]).'")')->first();
+                        if (! empty($country)) {
                             $customer_array['country_id'] = $country->id;
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.customer_country_not_found', ['number' => $row_no]);
                             break;
                         }
@@ -1285,15 +1286,15 @@ class CustomerController extends Controller
 
                     // Check state
                     $state = null;
-                    if (!empty(trim($value[7])) && !is_null($country)) {
-                        $state = State::whereRaw('upper(name) = upper("' . trim($value[7]) . '")')
+                    if (! empty(trim($value[7])) && ! is_null($country)) {
+                        $state = State::whereRaw('upper(name) = upper("'.trim($value[7]).'")')
                             ->where('country_id', $country->id)->first();
-                        if (!empty($state)) {
+                        if (! empty($state)) {
                             $customer_array['state_id'] = $state->id;
                             $zone = Zone::where('id', $state->zone_id)->first();
                             $customer_array['zone_id'] = $zone->id;
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.customer_state_not_found', ['number' => $row_no]);
                             break;
                         }
@@ -1303,13 +1304,13 @@ class CustomerController extends Controller
 
                     // Check city
                     $city = null;
-                    if (!empty(trim($value[8])) && !is_null($state)) {
-                        $city = City::whereRaw('upper(name) = upper("' . trim($value[8]) . '")')
+                    if (! empty(trim($value[8])) && ! is_null($state)) {
+                        $city = City::whereRaw('upper(name) = upper("'.trim($value[8]).'")')
                             ->where('state_id', $state->id)->first();
-                        if (!empty($city)) {
+                        if (! empty($city)) {
                             $customer_array['city_id'] = $city->id;
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.customer_city_not_found', ['number' => $row_no]);
                             break;
                         }
@@ -1324,106 +1325,106 @@ class CustomerController extends Controller
 
                     //Check (is_exempt)
                     $is_exempt = trim($value[11]);
-                    if ($is_exempt == "0" || $is_exempt == "1") {
+                    if ($is_exempt == '0' || $is_exempt == '1') {
                         $customer_array['is_exempt'] = $is_exempt;
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Exempt is required in row no. $row_no";
                         break;
                     }
 
                     // Check is taxpayer
-                    if (!empty($value[12]) || $value[12] == 0) {
+                    if (! empty($value[12]) || $value[12] == 0) {
                         if ($value[12] == 0 || $value[12] == 1) {
                             $customer_array['is_taxpayer'] = $value[12];
                             if ($value[12] == 1) {
                                 // Business name
-                                if (!empty($value[13])) {
+                                if (! empty($value[13])) {
                                     $customer_array['business_name'] = trim($value[13]);
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.business_name_required', ['number' => $row_no]);
                                     break;
                                 }
 
                                 //Tax number (NIT)
-                                if (!empty($value[14])) {
+                                if (! empty($value[14])) {
                                     $verif_exist_tax_n = Customer::where('business_id', $business_id)
                                         ->where('tax_number', trim($value[14]))->exists();
                                     if ($verif_exist_tax_n) {
-                                        $is_valid =  false;
+                                        $is_valid = false;
                                         $error_msg = __('customer.exists_tax_num', ['number' => $row_no]);
                                         break;
                                     } else {
                                         $customer_array['tax_number'] = trim($value[14]);
                                     }
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.tax_number_required', ['number' => $row_no]);
                                     break;
                                 }
 
                                 //reg number
-                                if (!empty($value[15])) {
+                                if (! empty($value[15])) {
                                     $verif_exist_reg = Customer::where('business_id', $business_id)
                                         ->where('reg_number', trim($value[15]))->exists();
                                     if ($verif_exist_reg) {
-                                        $is_valid =  false;
+                                        $is_valid = false;
                                         $error_msg = __('customer.exists_reg', ['number' => $row_no]);
                                         break;
                                     } else {
                                         $customer_array['reg_number'] = trim($value[15]);
                                     }
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.reg_number_required', ['number' => $row_no]);
                                     break;
                                 }
 
                                 //business line
-                                if (!empty($value[16])) {
+                                if (! empty($value[16])) {
                                     $customer_array['business_line'] = trim($value[16]);
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.business_line_required', ['number' => $row_no]);
                                     break;
                                 }
 
                                 // Check business type
-                                if (!empty(trim($value[17]))) {
-                                    $business_type = BusinessType::whereRaw('upper(name) = upper("' . trim($value[17]) . '")')->first();
-                                    if (!empty($business_type)) {
+                                if (! empty(trim($value[17]))) {
+                                    $business_type = BusinessType::whereRaw('upper(name) = upper("'.trim($value[17]).'")')->first();
+                                    if (! empty($business_type)) {
                                         if ($business_type->name == 'Gran Empresa') {
                                             $tax_group = TaxGroup::whereRaw("upper(description) = 'RETENCIÓN'")
                                                 ->where('type', 'contacts')->first();
 
-                                            if (!empty($tax_group)) {
+                                            if (! empty($tax_group)) {
                                                 $customer_array['tax_group_id'] = $tax_group->id;
                                             } else {
-                                                $is_valid =  false;
+                                                $is_valid = false;
                                                 $error_msg = __('lang_v1.required_tax_group', ['number' => $row_no]);
                                                 break;
                                             }
                                         }
                                         $customer_array['business_type_id'] = $business_type->id;
                                     } else {
-                                        $is_valid =  false;
+                                        $is_valid = false;
                                         $error_msg = __('customer.business_type_required', ['number' => $row_no]);
                                         break;
                                     }
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.business_type_required', ['number' => $row_no]);
                                     break;
                                 }
                             }
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.option_is_taxpayer_invalid', ['number' => $row_no]);
                             break;
                         }
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = __('customer.taxpayer_required', ['number' => $row_no]);
                         break;
                     }
@@ -1439,65 +1440,65 @@ class CustomerController extends Controller
                             if ($catalogue) {
                                 $customer_array['accounting_account_id'] = $catalogue->id;
                             } else {
-                                $is_valid =  false;
+                                $is_valid = false;
                                 $error_msg = "Invalid accounting account in row no. $row_no";
                                 break;
                             }
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = "Accounting account must be integer in row no. $row_no";
                             break;
                         }
                     }
 
-                    // Check DNI (DUI)                    
+                    // Check DNI (DUI)
                     if ($customer_array['is_taxpayer'] == 0) {
                         if (empty($customer_array['dni'])) {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.dui_required', ['number' => $row_no]);
                             break;
                         }
                     }
 
                     // Check allowed credit
-                    if (!empty(trim($value[19]))) {
+                    if (! empty(trim($value[19]))) {
                         if ($value[19] == 0 || $value[19] == 1) {
                             $customer_array['allowed_credit'] = trim($value[19]);
 
                             if ($customer_array['allowed_credit'] == 1) {
                                 // Check opening balance
-                                if (!empty(trim($value[20])) && $value[20] >= 0) {
+                                if (! empty(trim($value[20])) && $value[20] >= 0) {
                                     $customer_array['opening_balance'] = trim($value[20]);
                                 }
 
                                 // Check credit limit
-                                if (!empty(trim($value[21])) && $value[21] >= 0) {
+                                if (! empty(trim($value[21])) && $value[21] >= 0) {
                                     $customer_array['credit_limit'] = trim($value[21]);
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.credit_limit_required', ['number' => $row_no]);
                                     break;
                                 }
 
                                 // Check payment terms
                                 $days = trim($value[22]);
-                                if (!empty($days)) {
+                                if (! empty($days)) {
                                     $payment_term = PaymentTerm::where('days', $days)->first();
-                                    if (!empty($payment_term)) {
+                                    if (! empty($payment_term)) {
                                         $customer_array['payment_terms_id'] = $payment_term->id;
                                     } else {
-                                        $is_valid =  false;
+                                        $is_valid = false;
                                         $error_msg = __('customer.payment_term_invalid', ['number' => $row_no]);
                                         break;
                                     }
                                 } else {
-                                    $is_valid =  false;
+                                    $is_valid = false;
                                     $error_msg = __('customer.payment_term_required', ['number' => $row_no]);
                                     break;
                                 }
                             }
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = __('customer.option_allowed_credit_invalid', ['number' => $row_no]);
                             break;
                         }
@@ -1506,27 +1507,27 @@ class CustomerController extends Controller
                     }
 
                     // check social contact
-                    if (!empty(trim($value[23]))) {
+                    if (! empty(trim($value[23]))) {
                         $contact_modes = CRMContactMode::where('business_id', $business_id)
-                            ->whereRaw('upper(name) = upper("' . trim($value[23]) . '")')->first();
+                            ->whereRaw('upper(name) = upper("'.trim($value[23]).'")')->first();
 
-                        if (!empty($contact_modes)) {
+                        if (! empty($contact_modes)) {
                             $customer_array['contact_mode_id'] = $contact_modes->id;
                         }
                     }
 
                     // Check customer group
-                    if (!empty(trim($value[24]))) {
-                        $customer_group = CustomerGroup::whereRaw('upper(name) = upper("' . trim($value[24]) . '")')->first();
-                        if (!empty($customer_group)) {
+                    if (! empty(trim($value[24]))) {
+                        $customer_group = CustomerGroup::whereRaw('upper(name) = upper("'.trim($value[24]).'")')->first();
+                        if (! empty($customer_group)) {
                             $customer_array['customer_group_id'] = $customer_group->id;
                         }
                     }
 
                     // Check customer portfolio
-                    if (!empty(trim($value[25]))) {
-                        $customer_portfolio = CustomerPortfolio::whereRaw('upper(name) = upper("' . trim($value[25]) . '")')->first();
-                        if (!empty($customer_portfolio)) {
+                    if (! empty(trim($value[25]))) {
+                        $customer_portfolio = CustomerPortfolio::whereRaw('upper(name) = upper("'.trim($value[25]).'")')->first();
+                        if (! empty($customer_portfolio)) {
                             $customer_array['customer_portfolio_id'] = $customer_portfolio->id;
                         }
                     }
@@ -1534,11 +1535,11 @@ class CustomerController extends Controller
                     $formated_data[] = $customer_array;
                 }
 
-                if (!$is_valid) {
+                if (! $is_valid) {
                     throw new \Exception($error_msg);
                 }
 
-                if (!empty($formated_data)) {
+                if (! empty($formated_data)) {
                     foreach ($formated_data as $customer_data) {
                         $customer_data['business_id'] = $business_id;
                         $customer_data['created_by'] = $user_id;
@@ -1556,19 +1557,20 @@ class CustomerController extends Controller
                 }
                 $output = [
                     'success' => 1,
-                    'msg' => __('product.file_imported_successfully')
+                    'msg' => __('product.file_imported_successfully'),
                 ];
 
                 DB::commit();
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
+
             return redirect()->route('customers.import')->with('notification', $output);
         }
 
@@ -1583,7 +1585,7 @@ class CustomerController extends Controller
      */
     public function getFollowCustomer($id)
     {
-        if (!auth()->user()->can('customer.view')) {
+        if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1626,13 +1628,13 @@ class CustomerController extends Controller
                 ->leftJoin('customer_portfolios as cp', 'customers.customer_portfolio_id', 'cp.id')
                 ->where('customers.business_id', $business_id);
 
-            if (!empty($term)) {
+            if (! empty($term)) {
                 $customers->where(function ($query) use ($term) {
-                    $query->where('customers.name', 'like', '%' . $term . '%')
-                        ->orWhere('customers.business_name', 'like', '%' . $term . '%')
-                        ->orWhere('customers.dni', 'like', '%' . $term . '%')
-                        ->orWhere('customers.tax_number', 'like', '%' . $term . '%')
-                        ->orWhere('customers.reg_number', 'like', '%' . $term . '%');
+                    $query->where('customers.name', 'like', '%'.$term.'%')
+                        ->orWhere('customers.business_name', 'like', '%'.$term.'%')
+                        ->orWhere('customers.dni', 'like', '%'.$term.'%')
+                        ->orWhere('customers.tax_number', 'like', '%'.$term.'%')
+                        ->orWhere('customers.reg_number', 'like', '%'.$term.'%');
                 });
             }
 
@@ -1657,7 +1659,7 @@ class CustomerController extends Controller
                 'tr.min_amount',
                 'tr.max_amount'
             )->groupBy('customers.id')
-            ->get();
+                ->get();
 
             foreach ($customers as $c) {
                 if ($c->contact > 0) {
@@ -1673,7 +1675,7 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function indexBalancesCustomer()
@@ -1685,14 +1687,14 @@ class CustomerController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $fy = $this->businessUtil->getCurrentFinancialYear($business_id);
-    
+
         $date_filters['this_fy'] = $fy;
         $date_filters['this_month']['start'] = date('Y-m-01');
         $date_filters['this_month']['end'] = date('Y-m-t');
         $date_filters['this_week']['start'] = date('Y-m-d', strtotime('monday this week'));
         $date_filters['this_week']['end'] = date('Y-m-d', strtotime('sunday this week'));
 
-        $months = array(
+        $months = [
             '01' => __('accounting.january'),
             '02' => __('accounting.february'),
             '03' => __('accounting.march'),
@@ -1704,8 +1706,8 @@ class CustomerController extends Controller
             '09' => __('accounting.september'),
             '10' => __('accounting.october'),
             '11' => __('accounting.november'),
-            '12' => __('accounting.december')
-        );
+            '12' => __('accounting.december'),
+        ];
 
         $business = Business::find($business_id);
 
@@ -1727,9 +1729,9 @@ class CustomerController extends Controller
         return DataTables::of($customers)
             ->addColumn(
                 'total_remaining', function ($row) {
-                    $total_remaining =  round(($row->final_total - $row->total_paid), 6);
+                    $total_remaining = round(($row->final_total - $row->total_paid), 6);
 
-                    return '<span class="display_currency remaining_credit" data-currency_symbol="true" data-orig-value="' . $total_remaining . '">' . $total_remaining . '</span>';
+                    return '<span class="display_currency remaining_credit" data-currency_symbol="true" data-orig-value="'.$total_remaining.'">'.$total_remaining.'</span>';
                 }
             )
             ->editColumn(
@@ -1740,7 +1742,7 @@ class CustomerController extends Controller
                         $final_total = $row->final_total;
                     }
 
-                    return '<span class="display_currency balance_to_date" data-currency_symbol="true" data-orig-value="' . $final_total . '">' . $final_total . '</span>';
+                    return '<span class="display_currency balance_to_date" data-currency_symbol="true" data-orig-value="'.$final_total.'">'.$final_total.'</span>';
                 }
             )
             ->editColumn(
@@ -1751,17 +1753,17 @@ class CustomerController extends Controller
                         $total_paid = $row->total_paid;
                     }
 
-                    return '<span class="display_currency payments" data-currency_symbol="true" data-orig-value="' . $total_paid . '">' . $total_paid . '</span>';
+                    return '<span class="display_currency payments" data-currency_symbol="true" data-orig-value="'.$total_paid.'">'.$total_paid.'</span>';
                 }
             )
             ->editColumn(
                 'credit_limit', function ($row) {
-                    $credit_limit = "";
+                    $credit_limit = '';
 
                     if ($row->credit_limit != 0) {
-                        $credit_limit = '<span style="color: #029600">$ ' . number_format($row->credit_limit, 2) . '</span>';
+                        $credit_limit = '<span style="color: #029600">$ '.number_format($row->credit_limit, 2).'</span>';
                     } else {
-                        $credit_limit = '<span style="color: #029600">$ ' . number_format(0, 2) . '</span>';
+                        $credit_limit = '<span style="color: #029600">$ '.number_format(0, 2).'</span>';
                     }
 
                     return $credit_limit;
@@ -1769,21 +1771,21 @@ class CustomerController extends Controller
             )
             ->addColumn(
                 'limit_balance', function ($row) {
-                    $total_remaining =  $row->final_total - $row->total_paid;
+                    $total_remaining = $row->final_total - $row->total_paid;
                     $limit_balance = (float) ($row->credit_limit - $total_remaining);
                     $total = number_format($limit_balance, 2);
-                    $limit_balance_html = "";
-                    
+                    $limit_balance_html = '';
+
                     if ($limit_balance < 0) {
                         $limit_balance_html = '
                         <span class="display_currency"data-currency_symbol="true" style="color:red">
-                            <strong>$' . $total . '</strong>
+                            <strong>$'.$total.'</strong>
                         </span>
                         <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color:red">
                         </i>
                         ';
                     } else {
-                        $limit_balance_html = '<span>$' . $total . '</span>';
+                        $limit_balance_html = '<span>$'.$total.'</span>';
                     }
 
                     return $limit_balance_html;
@@ -1791,29 +1793,29 @@ class CustomerController extends Controller
             )
             ->setRowAttr([
                 'data-href' => function ($row) {
-                    if (auth()->user()->can("customer.view")) {
-                        return  action('CustomerController@showBalances', [$row->id]);
+                    if (auth()->user()->can('customer.view')) {
+                        return action('CustomerController@showBalances', [$row->id]);
                     } else {
                         return '';
                     }
                 },
-                'data-customer' => function($row) {
+                'data-customer' => function ($row) {
                     return $row->id;
-                }
+                },
             ])
             ->rawColumns([
                 'total_remaining',
                 'total_paid',
                 'final_total',
                 'limit_balance',
-                'credit_limit'
+                'credit_limit',
             ])
             ->toJson();
     }
 
     /**
      * Get details of the customer's account statement.
-     * 
+     *
      * @param  int  $id
      * @return JSON
      */
@@ -1830,8 +1832,8 @@ class CustomerController extends Controller
             ->whereIn('transactions.payment_status', ['due', 'partial'])
             ->select(
                 DB::raw('IFNULL(customers.business_name, customers.name) as name'),
-                DB::raw("SUM(transactions.final_total) as final_total"),
-                DB::raw("SUM(transactions.payment_balance) as total_paid"),
+                DB::raw('SUM(transactions.final_total) as final_total'),
+                DB::raw('SUM(transactions.payment_balance) as total_paid'),
                 'customers.credit_limit',
                 'customers.email'
             )
@@ -1843,10 +1845,10 @@ class CustomerController extends Controller
 
     /**
      * Get accounts receivable
-     * 
      */
-    public function accountsReceivable() {
-        if (!auth()->user()->can('cxc.access')) {
+    public function accountsReceivable()
+    {
+        if (! auth()->user()->can('cxc.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1872,9 +1874,10 @@ class CustomerController extends Controller
                 )->editColumn(
                     'payments',
                     '<span class="display_currency payments" data-currency_symbol="true" data-orig-value="{{ $payments }}">{{ $payments }}</span>'
-                )->addColumn('receivable_amount', function($row){
+                )->addColumn('receivable_amount', function ($row) {
                     $receivable_amount = round($row->final_total, 2) - round($row->payments, 2);
-                    return '<span class="display_currency receivable_amount" data-currency_symbol="true" data-orig-value="'. $receivable_amount .'">'. $receivable_amount .'</span>';
+
+                    return '<span class="display_currency receivable_amount" data-currency_symbol="true" data-orig-value="'.$receivable_amount.'">'.$receivable_amount.'</span>';
                 })
                 ->removeColumn('days_30')
                 ->removeColumn('days_60')
@@ -1886,8 +1889,8 @@ class CustomerController extends Controller
                 ->toJson();
         }
 
-        # Locations and sellers
-		$locations = BusinessLocation::forDropdown($business_id, true);
+        // Locations and sellers
+        $locations = BusinessLocation::forDropdown($business_id, true);
         $sellers = CustomerPortfolio::pluck('name', 'id');
 
         return view('customer.partials.accounts_receivable')
@@ -1896,11 +1899,12 @@ class CustomerController extends Controller
 
     /**
      *  Generate accounts receivable reporte
-     * 
+     *
      * @return PDF | Excel
      */
-    public function accountsReceivableReport() {
-        if (!auth()->user()->can('cxc.access')) {
+    public function accountsReceivableReport()
+    {
+        if (! auth()->user()->can('cxc.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1917,26 +1921,26 @@ class CustomerController extends Controller
             [$business_id, $customer_id, $seller_id, $location_id, $start_date, $end_date, $due_only]));
 
         $business_name = Business::find($business_id)->business_full_name;
-        $report_name = __('cxc.cxc') ." ".  __("accounting.from_date") ." ". $this->transactionUtil->format_date($start_date) ." ". __("accounting.to_date") ." ". $this->transactionUtil->format_date($end_date);
+        $report_name = __('cxc.cxc').' '.__('accounting.from_date').' '.$this->transactionUtil->format_date($start_date).' '.__('accounting.to_date').' '.$this->transactionUtil->format_date($end_date);
 
         $final_totals = [
             'days_30' => $transactions->sum('days_30'),
             'days_60' => $transactions->sum('days_60'),
             'days_90' => $transactions->sum('days_90'),
             'days_120' => $transactions->sum('days_120'),
-            'more_than_120_days' => $transactions->sum('more_than_120')
+            'more_than_120_days' => $transactions->sum('more_than_120'),
         ];
         $final_totals['totals'] = $final_totals['days_30'] + $final_totals['days_60'] + $final_totals['days_90'] + $final_totals['days_120'] + $final_totals['more_than_120_days'];
 
-        if($report_type == 'pdf'){
+        if ($report_type == 'pdf') {
             $accounts_receivable_report = \PDF::loadView('customer.partials.accounts_receivable_report_pdf',
                 compact('transactions', 'business_name', 'report_name', 'final_totals'));
-            $accounts_receivable_report->setPaper("A3", "landscape");
+            $accounts_receivable_report->setPaper('A3', 'landscape');
 
-		    return $accounts_receivable_report->stream(__('cxc.cxc') .'.pdf');
+            return $accounts_receivable_report->stream(__('cxc.cxc').'.pdf');
 
-        } else if($report_type == 'excel'){
-            return Excel::download(new AccountsReceivableReportExport($transactions, $business_name, $report_name, $final_totals, $this->transactionUtil), __('cxc.cxc'). '.xlsx');
+        } elseif ($report_type == 'excel') {
+            return Excel::download(new AccountsReceivableReportExport($transactions, $business_name, $report_name, $final_totals, $this->transactionUtil), __('cxc.cxc').'.xlsx');
         }
     }
 
@@ -1952,18 +1956,19 @@ class CustomerController extends Controller
             $query = Customer::where('business_id', $business_id);
 
             $customers = $query->where(function ($query) use ($term) {
-                $query->where('customers.name', 'like', '%' . $term . '%')
-                    ->orWhere('customers.business_name', 'like', '%' . $term . '%');
-                })
+                $query->where('customers.name', 'like', '%'.$term.'%')
+                    ->orWhere('customers.business_name', 'like', '%'.$term.'%');
+            })
                 ->select('customers.id', DB::raw('IFNULL(customers.business_name, customers.name) as text'), 'customers.business_name as business_name')
                 ->get();
+
             return json_encode($customers);
         }
     }
 
     /**
      * Create opening balance transactions from customer opening balances.
-     * 
+     *
      * @param  int  $business_id
      * @return string
      */
@@ -1972,20 +1977,20 @@ class CustomerController extends Controller
         try {
             $customers = Customer::where('opening_balance', '>', 0)->get();
 
-            \Log::info("--- START ---");
+            \Log::info('--- START ---');
 
             foreach ($customers as $customer) {
-                \Log::info("CUSTOMER " . $customer->id);
+                \Log::info('CUSTOMER '.$customer->id);
 
                 $this->transactionUtil->createOpeningBalanceTransaction($business_id, null, $customer->opening_balance, $customer->id);
             }
 
-            \Log::info("--- END ---");
+            \Log::info('--- END ---');
 
             $output = 'SUCCESS';
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = 'FAIL';
         }
@@ -1995,7 +2000,7 @@ class CustomerController extends Controller
 
     /**
      * Get sales togle dropdown.
-     * 
+     *
      * @param  array  $params
      * @return @return \Illuminate\Http\Response
      */
@@ -2016,9 +2021,9 @@ class CustomerController extends Controller
             return view('balances_customer.partials.toggle_dropdown')
                 ->with(compact('id', 'is_direct_sale', 'payment_status', 'status', 'transaction_date', 'business'))
                 ->render();
-            
+
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output['success'] = false;
             $output['msg'] = __('messages.something_went_wrong');
@@ -2037,6 +2042,7 @@ class CustomerController extends Controller
         if (request()->ajax()) {
             $row_count = request()->input('row_count');
             $brands = Brands::pluck('name', 'id');
+
             return view('customer.partials.vehicle_row', compact('row_count', 'brands'));
         }
     }
@@ -2071,13 +2077,13 @@ class CustomerController extends Controller
 
         $payment_terms = PaymentTerm::select('id', 'name')
             ->pluck('name', 'id');
-        
+
         $code = $this->util->generatePatientsCode();
-        
+
         $sexs = $this->util->Sexs();
-        
+
         $business_locations = BusinessLocation::forDropdown($business_id);
-        
+
         return view('customer.create-customer-patient')
             ->with(compact(
                 'customer_name',
@@ -2095,7 +2101,6 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function storeCustomerAndPatient(Request $request)
@@ -2106,7 +2111,7 @@ class CustomerController extends Controller
 
         $is_taxpayer = $request->input('is_taxpayer');
         $allowed_credit = $request->input('allowed_credit');
-        $is_patient = !empty($request->input('is_patient')) ? true : false;
+        $is_patient = ! empty($request->input('is_patient')) ? true : false;
 
         try {
             DB::beginTransaction();
@@ -2116,14 +2121,14 @@ class CustomerController extends Controller
                 'business_name',
                 'email',
                 'telphone',
-                'dni',                
+                'dni',
                 'business_type_id',
                 'customer_portfolio_id',
                 'customer_group_id',
                 'address',
                 'country_id',
                 'state_id',
-                'city_id'
+                'city_id',
             ]);
 
             $business_id = request()->session()->get('user.business_id');
@@ -2147,7 +2152,7 @@ class CustomerController extends Controller
             } else {
                 $customer_details['is_taxpayer'] = 0;
             }
-            
+
             if ($allowed_credit) {
                 $customer_details['allowed_credit'] = 1;
                 $customer_details['opening_balance'] = $request->input('opening_balance') ?? 0;
@@ -2180,20 +2185,20 @@ class CustomerController extends Controller
                     'email',
                     'address',
                     'glasses_graduation',
-                    'location_id'
+                    'location_id',
                 ]);
 
                 $patient_details['full_name'] = $request->input('name');
                 $patient_details['contacts'] = $request->input('telphone');
                 $patient_details['business_id'] = $business_id;
                 $patient_details['register_by'] = $user_id;
-                $patient_details['glasses'] = !empty($request->input('chkhas_glasses')) ? 1 : 0;
+                $patient_details['glasses'] = ! empty($request->input('chkhas_glasses')) ? 1 : 0;
                 $patient_details['notes'] = $request->input('txt-notes');
 
                 $employee_code = $request->input('employee_code');
-                if (!empty($employee_code)) {
+                if (! empty($employee_code)) {
                     $employee = Employees::where('agent_code', $request->input('employee_code'))->first();
-                    $patient_details['employee_id'] = !empty($employee) ? $employee->id : null;
+                    $patient_details['employee_id'] = ! empty($employee) ? $employee->id : null;
                 }
 
                 $patient = Patient::create($patient_details);
@@ -2214,7 +2219,7 @@ class CustomerController extends Controller
 
             $outpout = [
                 'success' => true,
-                'msg' => __("customer.added_success"),
+                'msg' => __('customer.added_success'),
                 'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
                 'allowed_credit' => $customer->allowed_credit,
@@ -2222,13 +2227,13 @@ class CustomerController extends Controller
                 'full_name' => $full_name,
                 'pat_id' => $pat_id,
                 'is_patient' => $is_patient,
-                'is_default' => $customer->is_default
+                'is_default' => $customer->is_default,
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $outpout = [
                 'success' => false,
@@ -2240,7 +2245,7 @@ class CustomerController extends Controller
 
     /**
      * Get customer vehicles list.
-     * 
+     *
      * @param  int  $id
      * @param  json
      */
@@ -2259,7 +2264,7 @@ class CustomerController extends Controller
 
     /**
      * Generates glasses consumption report in PDF or Excel.
-     * 
+     *
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
@@ -2342,7 +2347,7 @@ class CustomerController extends Controller
                 __('customer.payment_terms'),
                 __('customer.contact_mode'),
                 __('customer.customer_portfolio'),
-                __('customer.customer_group')
+                __('customer.customer_group'),
             ];
 
             // Data
@@ -2353,7 +2358,7 @@ class CustomerController extends Controller
             if ($report_type == 'pdf') {
                 $header_data['business_name'] = mb_strtoupper($business->business_full_name);
                 $header_data['report_name'] = mb_strtoupper($title);
-                
+
             } else {
                 $data[] = [mb_strtoupper($business->business_full_name)];
                 $data[] = [mb_strtoupper($title)];
@@ -2396,15 +2401,15 @@ class CustomerController extends Controller
                 'data' => $data,
                 'type' => $report_type,
                 'header_data' => $header_data,
-                'headers' => [$headers]
+                'headers' => [$headers],
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 

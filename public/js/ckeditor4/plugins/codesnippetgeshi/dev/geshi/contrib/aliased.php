@@ -13,14 +13,15 @@
  * aliased.php/file.name.ext.
  *
  * @author  Ross Golder <ross@golder.org>
+ *
  * @version $Id: aliased.php 2533 2012-08-15 18:49:04Z benbe $
  */
 
 // Your config here
-define("SOURCE_ROOT", "/var/www/your/source/root/");
+define('SOURCE_ROOT', '/var/www/your/source/root/');
 
 // Assume you've put geshi in the include_path already
-require_once("geshi.php");
+require_once 'geshi.php';
 
 // Get path info
 $path = SOURCE_ROOT.$_SERVER['PATH_INFO'];
@@ -28,12 +29,12 @@ $path = SOURCE_ROOT.$_SERVER['PATH_INFO'];
 // Check for dickheads trying to use '../' to get to sensitive areas
 $base_path_len = strlen(SOURCE_ROOT);
 $real_path = realpath($path);
-if(strncmp($real_path, SOURCE_ROOT, $base_path_len)) {
-    exit("Access outside acceptable path.");
+if (strncmp($real_path, SOURCE_ROOT, $base_path_len)) {
+    exit('Access outside acceptable path.');
 }
 
 // Check file exists
-if(!file_exists($path)) {
+if (! file_exists($path)) {
     exit("File not found ($path).");
 }
 
@@ -49,7 +50,7 @@ $geshi->set_line_style('font: normal normal 95% \'Courier New\', Courier, monosp
 $geshi->set_code_style('color: #000020;', 'color: #000020;');
 $geshi->set_link_styles(GESHI_LINK, 'color: #000060;');
 $geshi->set_link_styles(GESHI_HOVER, 'background-color: #f0f000;');
-$geshi->set_header_content('Source code viewer - ' . $path . ' - ' . $geshi->get_language_name());
+$geshi->set_header_content('Source code viewer - '.$path.' - '.$geshi->get_language_name());
 $geshi->set_header_content_style('font-family: Verdana, Arial, sans-serif; color: #808080; font-size: 70%; font-weight: bold; background-color: #f0f0ff; border-bottom: 1px solid #d0d0d0; padding: 2px;');
 $geshi->set_footer_content('Parsed in <TIME> seconds,  using GeSHi <VERSION>');
 $geshi->set_footer_content_style('font-family: Verdana, Arial, sans-serif; color: #808080; font-size: 70%; font-weight: bold; background-color: #f0f0ff; border-top: 1px solid #d0d0d0; padding: 2px;');
@@ -65,7 +66,7 @@ $geshi->set_footer_content_style('font-family: Verdana, Arial, sans-serif; color
     <?php
         // Output the stylesheet. Note it doesn't output the <style> tag
     echo $geshi->get_stylesheet();
-    ?>
+?>
     html {
         background-color: #f0f0f0;
     }

@@ -1,8 +1,6 @@
 <?php
 
-use App\Business;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Business;
 use Illuminate\Database\Migrations\Migration;
 
 class AddNewProductSettingsToBusinessTable extends Migration
@@ -25,7 +23,7 @@ class AddNewProductSettingsToBusinessTable extends Migration
                 'decimals_in_purchases' => isset($product_settings['decimals_in_purchases']) ? $product_settings['decimals_in_purchases'] : 4,
                 'decimals_in_inventories' => isset($product_settings['decimals_in_inventories']) ? $product_settings['decimals_in_inventories'] : 4,
                 'decimals_in_fiscal_documents' => isset($product_settings['decimals_in_fiscal_documents']) ? $product_settings['decimals_in_fiscal_documents'] : 2,
-                'product_rotation' => null
+                'product_rotation' => null,
             ];
 
             $item->product_settings = json_encode($default);

@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\TransactionPayment;
 use Illuminate\Database\Migrations\Migration;
-use App\TransactionPayment;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddBusinessIdToTransactionPaymentsTable extends Migration
 {

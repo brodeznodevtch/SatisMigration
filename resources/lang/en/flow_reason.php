@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_flow_reason' => 'Add reason',
     'added_success' => 'Reason added successfully',

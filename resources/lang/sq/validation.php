@@ -120,6 +120,6 @@ return [
 
     'custom-messages' => [
         'quantity_not_available' => 'Vetëm :qty :unit në dispozicion',
-        'this_field_is_required' => 'Kjo fushë është e nevojshme'
+        'this_field_is_required' => 'Kjo fushë është e nevojshme',
     ],
 ];

@@ -2,45 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use View;
-use Excel;
-use App\Quote;
-use Validator;
-use App\Reason;
-use DataTables;
-use App\Contact;
-use App\Business;
-use App\Customer;
-use App\LostSale;
-use App\Employees;
-use App\QuoteLine;
-use App\Warehouse;
-use Carbon\Carbon;
-use App\DocumentType;
-
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Customer;
+use App\Models\CustomerVehicle;
+use App\Models\DocumentType;
+use App\Models\Employees;
+use App\Exports\QuoteExport;
+use App\Models\LostSale;
+use App\Models\Quote;
+use App\Models\QuoteLine;
+use App\Models\Reason;
+use App\Models\SellingPriceGroup;
+use App\Utils\EmployeeUtil;
+use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-
-use App\BusinessLocation;
-use App\CustomerVehicle;
-use App\SellingPriceGroup;
-use App\Utils\ProductUtil;
-use App\Exports\QuoteExport;
-use App\Utils\EmployeeUtil;
-use App\Variation;
-use App\VariationLocationDetails;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
+use Carbon\Carbon;
+use DataTables;
+use DB;
+use Excel;
 use Illuminate\Http\Request;
+use View;
 
 class QuoteController extends Controller
 {
-
     protected $taxUtil;
+
     protected $productUtil;
+
     protected $transactionUtil;
+
     protected $employeeUtil;
 
-    public function __construct(TaxUtil $taxUtil, ProductUtil $productUtil, TransactionUtil $transactionUtil, EmployeeUtil $employeeUtil){
+    public function __construct(TaxUtil $taxUtil, ProductUtil $productUtil, TransactionUtil $transactionUtil, EmployeeUtil $employeeUtil)
+    {
         $this->taxUtil = $taxUtil;
         $this->productUtil = $productUtil;
         $this->transactionUtil = $transactionUtil;
@@ -52,18 +51,17 @@ class QuoteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
         if (auth()->user()->can('quotes.view')) {
-            if(!auth()->user()->can('quotes.access')){
+            if (! auth()->user()->can('quotes.access')) {
                 abort(403, 'Unauthorized action.');
             }
-        }else{
+        } else {
             abort(403, 'Unauthorized action.');
         }
-        return view("quote.index");
+
+        return view('quote.index');
     }
 
     /**
@@ -73,7 +71,7 @@ class QuoteController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('quotes.create')) {
+        if (! auth()->user()->can('quotes.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -90,14 +88,14 @@ class QuoteController extends Controller
             $correlative = 1;
         }
 
-        $cont = str_pad($correlative, 5, "0", STR_PAD_LEFT);
-        
-        $correlative = "" . $business->quote_prefix . "" . $cont . "";
-        
-        $documents =  DocumentType::where('business_id',$business_id)
+        $cont = str_pad($correlative, 5, '0', STR_PAD_LEFT);
+
+        $correlative = ''.$business->quote_prefix.''.$cont.'';
+
+        $documents = DocumentType::where('business_id', $business_id)
             ->where('is_active', 1)
             ->pluck('document_name', 'id');
-        
+
         $customers = DB::table('customers as customer')
             ->leftJoin('customer_portfolios as portfolio', 'portfolio.id', '=', 'customer.customer_portfolio_id')
             ->leftJoin('employees as employee', 'employee.id', '=', 'portfolio.seller_id')
@@ -127,18 +125,18 @@ class QuoteController extends Controller
         $service_blocks = [];
 
         $html = View::make('quote.create', compact(
-                'documents',
-                'payment_condition',
-                'tax_detail', 
-                'customers',
-                'correlative',
-                'bl_attributes',
-                'business_locations' ,
-                'warehouses',
-                'employees',
-                'prices_group',
-                'service_blocks'
-            ))
+            'documents',
+            'payment_condition',
+            'tax_detail',
+            'customers',
+            'correlative',
+            'bl_attributes',
+            'business_locations',
+            'warehouses',
+            'employees',
+            'prices_group',
+            'service_blocks'
+        ))
             ->render();
 
         return $html;
@@ -147,12 +145,11 @@ class QuoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('quotes.create')) {
+        if (! auth()->user()->can('quotes.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -214,16 +211,16 @@ class QuoteController extends Controller
                 $correlative = 1;
             }
 
-            $cont = str_pad($correlative, 5, "0", STR_PAD_LEFT);
+            $cont = str_pad($correlative, 5, '0', STR_PAD_LEFT);
 
-            $correlative = "" . $business->quote_prefix . "" . $cont . "";
+            $correlative = ''.$business->quote_prefix.''.$cont.'';
 
             $quote_details['quote_ref_no'] = $correlative;
             $quote_details['business_id'] = $business_id;
             $quote_details['user_id'] = $request->session()->get('user.id');
             $quote_details['created_by'] = $request->session()->get('user.id');
             $quote_details['due_date'] = $due_date;
-            $quote_details['status'] = "opened";
+            $quote_details['status'] = 'opened';
             $quote_details['quote_date'] = $quote_date;
             $quote_details['selling_price_group_id'] = isset($quote_details['price_group_id']) ? ($quote_details['price_group_id'] == 0 ? null : $quote_details['price_group_id']) : null;
             $quote_details['discount_amount'] = $this->productUtil->num_uf($quote_details['discount_amount']);
@@ -251,7 +248,7 @@ class QuoteController extends Controller
             $discount_amount = $request->input('line_discount_amount');
             $tax_amount = $request->input('line_tax_amount');
 
-            if (!empty($variation_id)) {
+            if (! empty($variation_id)) {
                 $cont = 0;
 
                 while ($cont < count($variation_id)) {
@@ -287,28 +284,28 @@ class QuoteController extends Controller
                         $detail->service_parent_id = $service_parent_id[$cont] > 0 ? $service_parent_id[$cont] : null;
                         $detail->note = $note_line[$cont];
                     }
-                    
+
                     $detail->save();
 
                     $cont = $cont + 1;
-                } 
+                }
             }
 
             DB::commit();
 
             $output = [
                 'success' => true,
-                'msg' => __("quote.added_success")
+                'msg' => __('quote.added_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -318,7 +315,6 @@ class QuoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function show(Quote $quotes)
@@ -329,12 +325,12 @@ class QuoteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('quotes.update')) {
+        if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -343,7 +339,7 @@ class QuoteController extends Controller
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
 
-        $documents =  DocumentType::where('business_id',$business_id)
+        $documents = DocumentType::where('business_id', $business_id)
             ->where('is_active', 1)
             ->pluck('document_name', 'id');
 
@@ -396,14 +392,14 @@ class QuoteController extends Controller
                 ->where('line.quote_id', $id)
                 ->orderBy('line.id', 'asc')
                 ->get();
-    
-            $service_blocks = array();
-    
+
+            $service_blocks = [];
+
             foreach ($service_block_q as $item) {
-                $service_block_array = array(
+                $service_block_array = [
                     'quote_line_id' => $item->id,
                     'quote_id' => $item->quote_id,
-                    'variation_id'=> $item->variation_id,
+                    'variation_id' => $item->variation_id,
                     'warehouse_id' => $item->warehouse_id,
                     'quantity' => $item->quantity,
                     'price' => $item->unit_price_exc_tax,
@@ -420,9 +416,9 @@ class QuoteController extends Controller
                     'tax_percent' => $this->taxUtil->getTaxPercent($item->tax_id),
                     'service_parent_id' => 0,
                     'type_product' => $item->type_product,
-                    'note' => $item->note
-                );
-    
+                    'note' => $item->note,
+                ];
+
                 $spare_rows_q = DB::table('quote_lines as line')
                     ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
                     ->join('products as product', 'product.id', '=', 'variation.product_id')
@@ -439,14 +435,14 @@ class QuoteController extends Controller
                     ->where('line.quote_id', $id)
                     ->orderBy('line.id', 'asc')
                     ->get();
-    
-                $spare_rows = array();
-    
+
+                $spare_rows = [];
+
                 foreach ($spare_rows_q as $spare) {
-                    $spare_row_array = array(
+                    $spare_row_array = [
                         'quote_line_id' => $spare->id,
                         'quote_id' => $spare->quote_id,
-                        'variation_id'=> $spare->variation_id,
+                        'variation_id' => $spare->variation_id,
                         'warehouse_id' => $spare->warehouse_id,
                         'quantity' => $spare->quantity,
                         'price' => $spare->unit_price_exc_tax,
@@ -463,14 +459,14 @@ class QuoteController extends Controller
                         'tax_percent' => $this->taxUtil->getTaxPercent($spare->tax_id),
                         'service_parent_id' => $spare->service_parent_id,
                         'type_product' => $spare->type_product,
-                        'note' => $item->note
-                    );
-    
+                        'note' => $item->note,
+                    ];
+
                     array_push($spare_rows, $spare_row_array);
                 }
-    
+
                 $service_block_array['spare_rows'] = $spare_rows;
-    
+
                 array_push($service_blocks, $service_block_array);
             }
 
@@ -483,20 +479,20 @@ class QuoteController extends Controller
         }
 
         $html = View::make('quote.edit', compact(
-                'quote',
-                'documents',
-                'payment_condition',
-                'tax_detail', 
-                'customers',
-                'bl_attributes',
-                'business_locations',
-                'warehouses',
-                'employees',
-                'prices_group',
-                'customer_vehicles',
-                'service_blocks',
-                'row_index_count'
-            ))
+            'quote',
+            'documents',
+            'payment_condition',
+            'tax_detail',
+            'customers',
+            'bl_attributes',
+            'business_locations',
+            'warehouses',
+            'employees',
+            'prices_group',
+            'customer_vehicles',
+            'service_blocks',
+            'row_index_count'
+        ))
             ->render();
 
         return $html;
@@ -505,13 +501,12 @@ class QuoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('quotes.update')) {
+        if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -560,7 +555,7 @@ class QuoteController extends Controller
                 'total_before_tax',
                 'tax_amount',
                 'total_final',
-                'price_group_id'
+                'price_group_id',
             ]);
 
             $quote = Quote::findOrFail($id);
@@ -570,7 +565,7 @@ class QuoteController extends Controller
             $business_id = request()->session()->get('user.business_id');
             $business = Business::where('id', $business_id)->first();
             $validity = $business->quote_validity;
-    
+
             $quote_date = $this->taxUtil->uf_date($request->quote_date);
             $due_date = Carbon::parse($quote_date);
             $due_date->addDays($validity);
@@ -613,16 +608,16 @@ class QuoteController extends Controller
 
             QuoteLine::where('quote_id', $id)->forceDelete();
 
-            if (!empty($variation_id)) {
-                $cont = 0;   
-             
-                while($cont < count($variation_id)) {
+            if (! empty($variation_id)) {
+                $cont = 0;
+
+                while ($cont < count($variation_id)) {
                     $detail = new QuoteLine;
 
                     $detail->quote_id = $quote->id;
                     $detail->variation_id = $variation_id[$cont];
 
-                    if ($warehouse_id[$cont] != "null") {
+                    if ($warehouse_id[$cont] != 'null') {
                         $detail->warehouse_id = $warehouse_id[$cont];
                     }
 
@@ -657,24 +652,24 @@ class QuoteController extends Controller
                     $detail->save();
 
                     $cont = $cont + 1;
-                } 
+                }
             }
 
             DB::commit();
 
             $output = [
                 'success' => true,
-                'msg' => __("quote.updated_success")
+                'msg' => __('quote.updated_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -684,32 +679,32 @@ class QuoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('quotes.delete')) {
+        if (! auth()->user()->can('quotes.delete')) {
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax()) {
-            try{
+            try {
 
                 $quote = Quote::findOrFail($id);
                 $quote->forceDelete();
                 $output = [
                     'success' => true,
-                    'msg' => __('quote.deleted_success')
+                    'msg' => __('quote.deleted_success'),
                 ];
-                
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -720,39 +715,40 @@ class QuoteController extends Controller
      * @param  string  $q
      * @return JSON
      */
-    public function getQuotes() {
+    public function getQuotes()
+    {
         if (request()->ajax()) {
             $term = request()->input('q', '');
 
             $business_id = request()->session()->get('user.business_id');
             $user_id = request()->session()->get('user.id');
 
-            $quotes = Quote::join("customers as c", "quotes.customer_id", "c.id")
+            $quotes = Quote::join('customers as c', 'quotes.customer_id', 'c.id')
                 ->where('quotes.business_id', $business_id)
-                ->where('quotes.type', "quote");
+                ->where('quotes.type', 'quote');
 
-            if (!empty($term)) {
+            if (! empty($term)) {
                 $quotes->where(function ($query) use ($term) {
-                    $query->where('quotes.customer_name', 'like', '%' . $term .'%')
-                        ->orWhere("quotes.quote_ref_no", 'like', '%' . $term . '%');
+                    $query->where('quotes.customer_name', 'like', '%'.$term.'%')
+                        ->orWhere('quotes.quote_ref_no', 'like', '%'.$term.'%');
                 });
             }
 
             $quotes = $quotes->select(
-                    'c.id as customer_id',
-                    'c.name as c_name',
-                    'c.is_exempt',
-                    DB::raw("CONCAT(quotes.customer_name, ' #', quotes.quote_ref_no) AS text"),
-                    'quotes.*'
-                )
+                'c.id as customer_id',
+                'c.name as c_name',
+                'c.is_exempt',
+                DB::raw("CONCAT(quotes.customer_name, ' #', quotes.quote_ref_no) AS text"),
+                'quotes.*'
+            )
                 ->get();
 
             foreach ($quotes as $qt) {
-                $delivery_address = Quote::where("business_id", $business_id)
-                    ->where("type", "order") 
-                    ->where("status", "closed")
-                    ->where("customer_id", $qt->customer_id)
-                    ->orderBy("quote_date", "asc")
+                $delivery_address = Quote::where('business_id', $business_id)
+                    ->where('type', 'order')
+                    ->where('status', 'closed')
+                    ->where('customer_id', $qt->customer_id)
+                    ->orderBy('quote_date', 'asc')
                     ->get()
                     ->last();
 
@@ -767,7 +763,7 @@ class QuoteController extends Controller
                             'customer_vehicles.id'
                         )
                         ->get();
-    
+
                     if (! empty($customer_vehicles)) {
                         $qt->customer_vehicles = $customer_vehicles;
                     }
@@ -789,25 +785,25 @@ class QuoteController extends Controller
     public function addProduct($variation_id, $warehouse_id, $selling_price_group_id = null)
     {
         $product_q = DB::table('variations as variation')
-        ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
-        ->leftJoin('variation_location_details as VLD', 'VLD.variation_id', '=', 'variation.id')
-        ->where('variation.id', $variation_id)
-        ->where('VLD.warehouse_id', $warehouse_id)
-        ->select('variation.id as variation_id', 'product.type as type_product', 
-            'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 
-            'variation.sub_sku as sub_sku', 'VLD.qty_available', 'product.tax as tax_id', 'product.alert_quantity as tax_percent', 
-            "variation.default_sell_price as unit_price_exc_tax", "variation.sell_price_inc_tax as unit_price_inc_tax", 'variation.default_sell_price as price'
-        )->first();
+            ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
+            ->leftJoin('variation_location_details as VLD', 'VLD.variation_id', '=', 'variation.id')
+            ->where('variation.id', $variation_id)
+            ->where('VLD.warehouse_id', $warehouse_id)
+            ->select('variation.id as variation_id', 'product.type as type_product',
+                'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku',
+                'variation.sub_sku as sub_sku', 'VLD.qty_available', 'product.tax as tax_id', 'product.alert_quantity as tax_percent',
+                'variation.default_sell_price as unit_price_exc_tax', 'variation.sell_price_inc_tax as unit_price_inc_tax', 'variation.default_sell_price as price'
+            )->first();
 
-        if(!empty($selling_price_group_id) || !is_null($selling_price_group_id)){
-        $variation_group_prices = $this->productUtil->getVariationGroupPrice($variation_id, $selling_price_group_id, $product_q->tax_percent); 
-        if (!empty($variation_group_prices['price_inc_tax'])) {
+        if (! empty($selling_price_group_id) || ! is_null($selling_price_group_id)) {
+            $variation_group_prices = $this->productUtil->getVariationGroupPrice($variation_id, $selling_price_group_id, $product_q->tax_percent);
+            if (! empty($variation_group_prices['price_inc_tax'])) {
                 $product_q->unit_price_inc_tax = $variation_group_prices['price_inc_tax'];
                 $product_q->unit_price_exc_tax = $variation_group_prices['price_exc_tax'];
             }
         }
-    
-        $product_array = array(
+
+        $product_array = [
             'variation_id' => $product_q->variation_id,
             'type_product' => $product_q->type_product,
             'name_product' => $product_q->name_product,
@@ -818,20 +814,21 @@ class QuoteController extends Controller
             'price_inc_tax' => $product_q->unit_price_inc_tax,
             'qty_available' => $product_q->qty_available,
             'tax_percent' => $this->taxUtil->getTaxPercent($product_q->tax_id),
-        );
-        $product = json_decode(json_encode($product_array), FALSE);
+        ];
+        $product = json_decode(json_encode($product_array), false);
+
         return response()->json($product);
     }
 
     public function addProductNotStock($variation_id)
     {
         $product_q = DB::table('variations as variation')
-        ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
-        ->select('variation.id as variation_id', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'variation.default_sell_price as price', 'variation.sell_price_inc_tax as price_inc_tax', 'product.tax as tax_id')
-        ->where('variation.id', $variation_id)
-        ->first();
+            ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
+            ->select('variation.id as variation_id', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'variation.default_sell_price as price', 'variation.sell_price_inc_tax as price_inc_tax', 'product.tax as tax_id')
+            ->where('variation.id', $variation_id)
+            ->first();
 
-        $product_array = array(
+        $product_array = [
             'variation_id' => $product_q->variation_id,
             'name_product' => $product_q->name_product,
             'name_variation' => $product_q->name_variation,
@@ -840,8 +837,8 @@ class QuoteController extends Controller
             'price' => $product_q->price,
             'price_inc_tax' => $product_q->price_inc_tax,
             'tax_percent' => $this->taxUtil->getTaxPercent($product_q->tax_id),
-        );
-        $product = json_decode(json_encode ($product_array), FALSE);
+        ];
+        $product = json_decode(json_encode($product_array), false);
 
         return response()->json($product);
     }
@@ -849,107 +846,107 @@ class QuoteController extends Controller
     public function getQuotesData()
     {
         $quotes = DB::table('quotes as quote')
-        ->join('users as user', 'user.id', '=', 'quote.created_by')
-        ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
-        ->select('quote.*', 'employee.short_name as short_name')
-        ->where('quote.type', 'quote');
-        
+            ->join('users as user', 'user.id', '=', 'quote.created_by')
+            ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
+            ->select('quote.*', 'employee.short_name as short_name')
+            ->where('quote.type', 'quote');
 
         return DataTables::of($quotes)
-        ->addColumn(
-            'actions', function($row){
-                $user_id = request()->session()->get('user.id');
+            ->addColumn(
+                'actions', function ($row) {
+                    $user_id = request()->session()->get('user.id');
 
-                $html ='<div class="btn-group">
-                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'. __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                    $html = '<div class="btn-group">
+                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
-                if (auth()->user()->can('quotes.view')) {
-                    $html .= '<li><a href="#" onClick="viewQuote('.$row->id.')"><i class="fa fa-file-pdf-o"></i>PDF</a></li>';
-                }
-
-                if (config('app.business') != 'workshop') {
                     if (auth()->user()->can('quotes.view')) {
-                        $html .= '<li><a href="#" onClick="excelQuote('.$row->id.')"><i class="fa fa-file-excel-o"></i>Excel</a></li>';
+                        $html .= '<li><a href="#" onClick="viewQuote('.$row->id.')"><i class="fa fa-file-pdf-o"></i>PDF</a></li>';
                     }
-                }
 
-                if ((auth()->user()->can('quotes.update')) && ($row->status == 'opened')) {
-                    $html .= '<li><a href="#" data-id="' . $row->id . '" class="edit_quote_button"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
-                }
-                if(auth()->user()->can('quotes.update') && ($row->type != 'order')){
-                    $now = \Carbon::parse(now());
-                    $due_date = \Carbon::parse($row->due_date);
-                    if($now->gt($due_date)){
-                        if(is_null($row->lost_sale_id)){
-                            $html .= '<li><a href="#" data-href="' . action('QuoteController@createLostSale', [$row->id]) . '" class="add_lost_sale"><i class="fa fa-exclamation-triangle"></i> ' . __("Venta perdida") . '</a></li>';
-                        }else{
-                            $html .= '<li><a href="#" data-href="' . action('QuoteController@editLostSale', [$row->lost_sale_id]) . '" class="edit_lost_sale"><i class="fa fa-exclamation-triangle"></i> ' . __("Editar venta perdida") . '</a></li>';
+                    if (config('app.business') != 'workshop') {
+                        if (auth()->user()->can('quotes.view')) {
+                            $html .= '<li><a href="#" onClick="excelQuote('.$row->id.')"><i class="fa fa-file-excel-o"></i>Excel</a></li>';
                         }
                     }
+
+                    if ((auth()->user()->can('quotes.update')) && ($row->status == 'opened')) {
+                        $html .= '<li><a href="#" data-id="'.$row->id.'" class="edit_quote_button"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
+                    }
+                    if (auth()->user()->can('quotes.update') && ($row->type != 'order')) {
+                        $now = \Carbon::parse(now());
+                        $due_date = \Carbon::parse($row->due_date);
+                        if ($now->gt($due_date)) {
+                            if (is_null($row->lost_sale_id)) {
+                                $html .= '<li><a href="#" data-href="'.action('QuoteController@createLostSale', [$row->id]).'" class="add_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Venta perdida').'</a></li>';
+                            } else {
+                                $html .= '<li><a href="#" data-href="'.action('QuoteController@editLostSale', [$row->lost_sale_id]).'" class="edit_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Editar venta perdida').'</a></li>';
+                            }
+                        }
+                    }
+
+                    if ((auth()->user()->can('quotes.delete')) && ($row->status == 'opened')) {
+                        $html .= '<li><a href="#" onClick="deleteQuote('.$row->id.')"><i class="glyphicon glyphicon-trash"></i>'.__('messages.delete').'</a></li>';
+                    }
+
+                    $html .= '</ul></div>';
+
+                    return $html;
+                })
+            ->editColumn('lost_sale_id', function ($row) {
+                $is_lost_sale_html = '';
+                if (is_null($row->lost_sale_id)) {
+                    $is_lost_sale_html = '<span style="color: #56B81F;">'.__('crm.no').'</span>';
+                } else {
+                    $is_lost_sale_html = '<span style="color: #F3400C;">'.__('crm.yes').'</span> <i class="fa fa-exclamation-triangle" style="color:#F3400C;"></i>';
                 }
 
-                if ((auth()->user()->can('quotes.delete')) && ($row->status == 'opened')) {
-                    $html .= '<li><a href="#" onClick="deleteQuote('.$row->id.')"><i class="glyphicon glyphicon-trash"></i>'.__('messages.delete').'</a></li>';
-                }
-
-                $html .= '</ul></div>';
-                return $html;
+                return $is_lost_sale_html;
             })
-        ->editColumn('lost_sale_id', function($row){
-            $is_lost_sale_html = '';
-            if(is_null($row->lost_sale_id)){
-                $is_lost_sale_html = '<span style="color: #56B81F;">'.__('crm.no').'</span>';
-            }else{
-                $is_lost_sale_html = '<span style="color: #F3400C;">'.__('crm.yes').'</span> <i class="fa fa-exclamation-triangle" style="color:#F3400C;"></i>';
-            }
-            return $is_lost_sale_html;
-        })
-        ->rawColumns(['actions', 'lost_sale_id'])
-        ->toJson();
+            ->rawColumns(['actions', 'lost_sale_id'])
+            ->toJson();
     }
 
     public function getLinesByQuote($id)
     {
         $product_q = DB::table('quote_lines as line')
-        ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
-        ->join('products as product', 'product.id', '=', 'variation.product_id')
-        ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.tax as tax_id')
-        ->where('line.quote_id', $id)
-        ->orderBy('line.id', 'asc')
-        ->get();
+            ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
+            ->join('products as product', 'product.id', '=', 'variation.product_id')
+            ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.tax as tax_id')
+            ->where('line.quote_id', $id)
+            ->orderBy('line.id', 'asc')
+            ->get();
 
-        $lines_array = array();
+        $lines_array = [];
 
         foreach ($product_q as $item) {
 
-            $product_array = array(
-                "id" => $item->id,
-                "quote_id" => $item->quote_id,
-                "variation_id"=> $item->variation_id,
-                "warehouse_id" => $item->warehouse_id,
-                "quantity" => $item->quantity,
-                "unit_price_exc_tax" => $item->unit_price_exc_tax,
-                "unit_price_inc_tax" => $item->unit_price_inc_tax,
-                "discount_type" => $item->discount_type,
-                "discount_amount" => $item->discount_amount,
-                "tax_amount" => $item->tax_amount,
-                "created_at" => $item->created_at,
-                "updated_at" => $item->updated_at,
+            $product_array = [
+                'id' => $item->id,
+                'quote_id' => $item->quote_id,
+                'variation_id' => $item->variation_id,
+                'warehouse_id' => $item->warehouse_id,
+                'quantity' => $item->quantity,
+                'unit_price_exc_tax' => $item->unit_price_exc_tax,
+                'unit_price_inc_tax' => $item->unit_price_inc_tax,
+                'discount_type' => $item->discount_type,
+                'discount_amount' => $item->discount_amount,
+                'tax_amount' => $item->tax_amount,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
                 'name_product' => $item->name_product,
                 'name_variation' => $item->name_variation,
                 'sku' => $item->sku,
                 'sub_sku' => $item->sub_sku,
                 'tax_percent' => $this->taxUtil->getTaxPercent($item->tax_id),
-            );
+            ];
 
             array_push($lines_array, $product_array);
 
         }
 
-
-        $lines = json_decode(json_encode ($lines_array), FALSE);
+        $lines = json_decode(json_encode($lines_array), false);
 
         return response()->json($lines);
 
@@ -957,15 +954,15 @@ class QuoteController extends Controller
 
     public function viewQuote($id)
     {
-        if (!auth()->user()->can('quotes.view')) {
+        if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $quote = DB::table('quotes as quote')
-        ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
-        ->select('quote.*', DB::raw('CONCAT(employee.first_name, " ", employee.last_name) as employee'), 'employee.short_name as short_name')
-        ->where('quote.id', $id)
-        ->first();
+            ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
+            ->select('quote.*', DB::raw('CONCAT(employee.first_name, " ", employee.last_name) as employee'), 'employee.short_name as short_name')
+            ->where('quote.id', $id)
+            ->first();
 
         $letters = $this->transactionUtil->getAmountLetters($quote->total_final);
         $letters2 = utf8_decode(strtolower($letters));
@@ -979,31 +976,31 @@ class QuoteController extends Controller
         $legend = $business->quote_legend;
 
         $lines = DB::table('quote_lines as line')
-        ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
-        ->join('products as product', 'product.id', '=', 'variation.product_id')
-        ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.warranty as warranty')
-        ->where('line.quote_id', $id)
-        ->orderBy('line.id', 'asc')
-        ->get();
+            ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
+            ->join('products as product', 'product.id', '=', 'variation.product_id')
+            ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.warranty as warranty')
+            ->where('line.quote_id', $id)
+            ->orderBy('line.id', 'asc')
+            ->get();
         $quote_date = $this->employeeUtil->getDate($quote->quote_date, true);
         $customer_name = ucwords(strtolower($quote->customer_name));
 
         $pdf = \PDF::loadView('quote.view', compact('quote', 'business', 'quote_date', 'customer_name', 'lines', 'value_letters', 'legend'))->setOptions(['isRemoteEnabled' => true]);
+
         return $pdf->stream('quote.pdf');
     }
 
-
     public function viewExcel($id)
     {
-        if (!auth()->user()->can('quotes.view')) {
+        if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $quote = DB::table('quotes as quote')
-        ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
-        ->select('quote.*', DB::raw('CONCAT(employee.first_name, " ", employee.last_name) as employee'), 'employee.short_name as short_employee')
-        ->where('quote.id', $id)
-        ->first();
+            ->join('employees as employee', 'employee.id', '=', 'quote.employee_id')
+            ->select('quote.*', DB::raw('CONCAT(employee.first_name, " ", employee.last_name) as employee'), 'employee.short_name as short_employee')
+            ->where('quote.id', $id)
+            ->first();
 
         $letters = $this->transactionUtil->getAmountLetters($quote->total_final);
         $letters2 = utf8_decode(strtolower($letters));
@@ -1017,29 +1014,32 @@ class QuoteController extends Controller
         $legend = $business->quote_legend;
 
         $lines = DB::table('quote_lines as line')
-        ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
-        ->join('products as product', 'product.id', '=', 'variation.product_id')
-        ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.warranty as warranty')
-        ->where('line.quote_id', $id)
-        ->orderBy('line.id', 'asc')
-        ->get();
+            ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
+            ->join('products as product', 'product.id', '=', 'variation.product_id')
+            ->select('line.*', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'product.warranty as warranty')
+            ->where('line.quote_id', $id)
+            ->orderBy('line.id', 'asc')
+            ->get();
 
         return Excel::download(new QuoteExport($quote, $lines, $value_letters, $legend), 'Quote.xlsx');
     }
 
     // create lost sale
-    public function createLostSale($id){
-        if (!auth()->user()->can('quotes.view')) {
+    public function createLostSale($id)
+    {
+        if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = auth()->user()->business_id;
         $reasons = Reason::where('business_id', $business_id)->pluck('reason', 'id');
         $quote_id = $id;
+
         return view('quote.partials.lost_sale_create', compact('reasons', 'quote_id'));
     }
 
-    public function editLostSale($id){
-        if (!auth()->user()->can('quotes.view')) {
+    public function editLostSale($id)
+    {
+        if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = auth()->user()->business_id;
@@ -1050,8 +1050,9 @@ class QuoteController extends Controller
     }
 
     // add lost sale
-    public function storeLostSale(Request $request){
-        if (!auth()->user()->can('quotes.create')) {
+    public function storeLostSale(Request $request)
+    {
+        if (! auth()->user()->can('quotes.create')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
@@ -1069,7 +1070,7 @@ class QuoteController extends Controller
             DB::beginTransaction();
             $business_id = auth()->user()->business_id;
             $lost_sale = new LostSale();
-            
+
             $lost_sale->quote_id = $request->quote_id;
             $lost_sale->user_id = auth()->user()->id;
             $lost_sale->reason_id = $request->reason_id;
@@ -1079,7 +1080,7 @@ class QuoteController extends Controller
 
             // dd($lost_sale);
             $lost_sale->save();
-            if($lost_sale){
+            if ($lost_sale) {
                 $quote = Quote::find($lost_sale->quote_id);
                 $quote->lost_sale_id = $lost_sale->id;
                 $quote->update();
@@ -1087,18 +1088,21 @@ class QuoteController extends Controller
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("informacion guardada correctamente"),
+                'msg' => __('informacion guardada correctamente'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
 
     }
+
     //edit lost sale
-    public function updateLostSale(Request $request, $id){
-        if (!auth()->user()->can('quotes.update')) {
+    public function updateLostSale(Request $request, $id)
+    {
+        if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
@@ -1119,21 +1123,22 @@ class QuoteController extends Controller
             $lost_sale->comments = $request->comments;
             $lost_sale->update();
             DB::commit();
-            
+
             $output = [
                 'success' => true,
-                'msg' => __("informacion actualizada correctamente"),
+                'msg' => __('informacion actualizada correctamente'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
     /**
      * Add service block to quote form.
-     * 
+     *
      * @param  int  $id
      * @return array
      */
@@ -1153,13 +1158,13 @@ class QuoteController extends Controller
                 ->where('variations.id', $id)
                 ->select(
                     'variations.id as variation_id',
-                    'products.type as type_product', 
+                    'products.type as type_product',
                     'products.name as name_product',
                     'variations.name as name_variation',
-                    'products.sku as sku', 
+                    'products.sku as sku',
                     'variations.sub_sku as sub_sku',
                     'products.tax as tax_id',
-                    'products.alert_quantity as tax_percent', 
+                    'products.alert_quantity as tax_percent',
                     'variations.default_sell_price as unit_price_exc_tax',
                     'variations.sell_price_inc_tax as unit_price_inc_tax',
                     'variations.default_sell_price as price'
@@ -1167,15 +1172,15 @@ class QuoteController extends Controller
                 ->first();
 
             if (! empty($selling_price_group_id) || ! is_null($selling_price_group_id)) {
-                $variation_group_prices = $this->productUtil->getVariationGroupPrice($id, $selling_price_group_id, $service_q->tax_percent); 
-                
+                $variation_group_prices = $this->productUtil->getVariationGroupPrice($id, $selling_price_group_id, $service_q->tax_percent);
+
                 if (! empty($variation_group_prices['price_inc_tax'])) {
                     $service_q->unit_price_inc_tax = $variation_group_prices['price_inc_tax'];
                     $service_q->unit_price_exc_tax = $variation_group_prices['price_exc_tax'];
                 }
             }
 
-            $service_block = array(
+            $service_block = [
                 'variation_id' => $service_q->variation_id,
                 'type_product' => $service_q->type_product,
                 'name_product' => $service_q->name_product,
@@ -1186,8 +1191,8 @@ class QuoteController extends Controller
                 'price_inc_tax' => $service_q->unit_price_inc_tax,
                 'qty_available' => $service_q->qty_available,
                 'tax_percent' => $this->taxUtil->getTaxPercent($service_q->tax_id),
-                'spare_rows' => []
-            );
+                'spare_rows' => [],
+            ];
 
             if (! empty($quote_line_id)) {
                 $service_block['quote_line_id'] = $quote_line_id;
@@ -1198,17 +1203,17 @@ class QuoteController extends Controller
                 'success' => 1,
                 'block' => [],
                 'service_block_index' => $service_block_index,
-                'service_id' => $id
+                'service_id' => $id,
             ];
 
-            $output['html_content'] = view($view . '.partials.service_block', compact(
-                    'service_block_index',
-                    'service_block',
-                    'warehouse_id',
-                    'tax_detail',
-                    'row_index',
-                    'id'
-                ))
+            $output['html_content'] = view($view.'.partials.service_block', compact(
+                'service_block_index',
+                'service_block',
+                'warehouse_id',
+                'tax_detail',
+                'row_index',
+                'id'
+            ))
                 ->render();
 
             return $output;
@@ -1217,7 +1222,7 @@ class QuoteController extends Controller
 
     /**
      * Add spares to service block.
-     * 
+     *
      * @param  int  $variation_id
      * @return json
      */
@@ -1238,13 +1243,13 @@ class QuoteController extends Controller
             ->where('variation.id', $variation_id)
             ->select(
                 'variation.id as variation_id',
-                'product.type as type_product', 
+                'product.type as type_product',
                 'product.name as name_product',
                 'variation.name as name_variation',
-                'product.sku as sku', 
+                'product.sku as sku',
                 'variation.sub_sku as sub_sku',
                 'product.tax as tax_id',
-                'product.alert_quantity as tax_percent', 
+                'product.alert_quantity as tax_percent',
                 'variation.default_sell_price as unit_price_exc_tax',
                 'variation.sell_price_inc_tax as unit_price_inc_tax',
                 'variation.default_sell_price as price'
@@ -1267,8 +1272,8 @@ class QuoteController extends Controller
                 $product_q->unit_price_exc_tax = $variation_group_prices['price_exc_tax'];
             }
         }
-    
-        $product = array(
+
+        $product = [
             'variation_id' => $product_q->variation_id,
             'type_product' => $product_q->type_product,
             'name_product' => $product_q->name_product,
@@ -1278,8 +1283,8 @@ class QuoteController extends Controller
             'price' => (empty($selling_price_group_id) || is_null($selling_price_group_id)) ? $product_q->price : $product_q->unit_price_exc_tax,
             'price_inc_tax' => $product_q->unit_price_inc_tax,
             'qty_available' => isset($product_q->qty_available) ? $product_q->qty_available : 0,
-            'tax_percent' => $this->taxUtil->getTaxPercent($product_q->tax_id)
-        );
+            'tax_percent' => $this->taxUtil->getTaxPercent($product_q->tax_id),
+        ];
 
         if (! empty($quote_id)) {
             $quote_line = QuoteLine::where('quote_id', $quote_id)
@@ -1303,17 +1308,17 @@ class QuoteController extends Controller
             'product' => $product,
             'service_block_index' => $service_block_index,
             'row_index' => $row_index,
-            'service_parent_id' => $service_parent_id
+            'service_parent_id' => $service_parent_id,
         ];
 
         $output['html_content'] = view('quote.partials.spare_row', compact(
-                'product',
-                'warehouse_id',
-                'tax_detail',
-                'service_block_index',
-                'row_index',
-                'service_parent_id'
-            ))
+            'product',
+            'warehouse_id',
+            'tax_detail',
+            'service_block_index',
+            'row_index',
+            'service_parent_id'
+        ))
             ->render();
 
         return $output;
@@ -1321,7 +1326,7 @@ class QuoteController extends Controller
 
     /**
      * Add spares not stock to service block.
-     * 
+     *
      * @param  int  $variation_id
      * @return json
      */
@@ -1340,18 +1345,18 @@ class QuoteController extends Controller
             ->where('variation.id', $variation_id)
             ->select(
                 'variation.id as variation_id',
-                'product.type as type_product', 
+                'product.type as type_product',
                 'product.name as name_product',
                 'variation.name as name_variation',
-                'product.sku as sku', 
+                'product.sku as sku',
                 'variation.sub_sku as sub_sku',
                 'product.tax as tax_id',
                 'variation.default_sell_price as price',
                 'variation.sell_price_inc_tax as price_inc_tax'
             )
             ->first();
-    
-        $product = array(
+
+        $product = [
             'variation_id' => $product_q->variation_id,
             'type_product' => $product_q->type_product,
             'name_product' => $product_q->name_product,
@@ -1362,7 +1367,7 @@ class QuoteController extends Controller
             'price_inc_tax' => $product_q->price_inc_tax,
             'qty_available' => null,
             'tax_percent' => $this->taxUtil->getTaxPercent($product_q->tax_id),
-        );
+        ];
 
         if (! empty($quote_id)) {
             $quote_line = QuoteLine::where('quote_id', $quote_id)
@@ -1386,17 +1391,17 @@ class QuoteController extends Controller
             'product' => $product,
             'service_block_index' => $service_block_index,
             'row_index' => $row_index,
-            'service_parent_id' => $service_parent_id
+            'service_parent_id' => $service_parent_id,
         ];
 
         $output['html_content'] = view('quote.partials.spare_row', compact(
-                'product',
-                'warehouse_id',
-                'tax_detail',
-                'service_block_index',
-                'row_index',
-                'service_parent_id'
-            ))
+            'product',
+            'warehouse_id',
+            'tax_detail',
+            'service_block_index',
+            'row_index',
+            'service_parent_id'
+        ))
             ->render();
 
         return $output;
@@ -1404,7 +1409,7 @@ class QuoteController extends Controller
 
     /**
      * Get service blocks by quote.
-     * 
+     *
      * @param  int  $id
      * @return json
      */
@@ -1426,13 +1431,13 @@ class QuoteController extends Controller
             ->orderBy('line.id', 'asc')
             ->get();
 
-        $service_blocks = array();
+        $service_blocks = [];
 
         foreach ($service_block_q as $item) {
-            $service_block_array = array(
+            $service_block_array = [
                 'quote_line_id' => $item->id,
                 'quote_id' => $item->quote_id,
-                'variation_id'=> $item->variation_id,
+                'variation_id' => $item->variation_id,
                 'warehouse_id' => $item->warehouse_id,
                 'quantity' => $item->quantity,
                 'unit_price_exc_tax' => $item->unit_price_exc_tax,
@@ -1447,8 +1452,8 @@ class QuoteController extends Controller
                 'sku' => $item->sku,
                 'sub_sku' => $item->sub_sku,
                 'tax_percent' => $this->taxUtil->getTaxPercent($item->tax_id),
-                'service_parent_id' => 0
-            );
+                'service_parent_id' => 0,
+            ];
 
             $spare_rows_q = DB::table('quote_lines as line')
                 ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
@@ -1466,13 +1471,13 @@ class QuoteController extends Controller
                 ->orderBy('line.id', 'asc')
                 ->get();
 
-            $spare_rows = array();
+            $spare_rows = [];
 
             foreach ($spare_rows_q as $spare) {
-                $spare_row_array = array(
+                $spare_row_array = [
                     'quote_line_id' => $spare->id,
                     'quote_id' => $spare->quote_id,
-                    'variation_id'=> $spare->variation_id,
+                    'variation_id' => $spare->variation_id,
                     'warehouse_id' => $spare->warehouse_id,
                     'quantity' => $spare->quantity,
                     'unit_price_exc_tax' => $spare->unit_price_exc_tax,
@@ -1487,8 +1492,8 @@ class QuoteController extends Controller
                     'sku' => $spare->sku,
                     'sub_sku' => $spare->sub_sku,
                     'tax_percent' => $this->taxUtil->getTaxPercent($spare->tax_id),
-                    'service_parent_id' => $spare->service_parent_id
-                );
+                    'service_parent_id' => $spare->service_parent_id,
+                ];
 
                 array_push($spare_rows, $spare_row_array);
             }
@@ -1499,16 +1504,16 @@ class QuoteController extends Controller
         }
 
         $output = [
-            'success' => 1
+            'success' => 1,
         ];
 
         $output['html_content'] = view('quote.partials.service_block', compact(
-                'service_block_index',
-                'service_block',
-                'warehouse_id',
-                'tax_detail',
-                'row_index'
-            ))
+            'service_block_index',
+            'service_block',
+            'warehouse_id',
+            'tax_detail',
+            'row_index'
+        ))
             ->render();
 
         return $output;
@@ -1517,7 +1522,7 @@ class QuoteController extends Controller
 
     /**
      * Get quote in PDF format.
-     * 
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -1545,7 +1550,7 @@ class QuoteController extends Controller
                 'states.name as state'
             )
             ->first();
-        
+
         $location = BusinessLocation::first();
         $business->landmark = $location->landmark;
         $business->city = $location->city;
@@ -1578,13 +1583,13 @@ class QuoteController extends Controller
             ->orderBy('line.id', 'asc')
             ->get();
 
-        $service_blocks = array();
+        $service_blocks = [];
 
         foreach ($service_block_q as $item) {
-            $service_block_array = array(
+            $service_block_array = [
                 'quote_line_id' => $item->id,
                 'quote_id' => $item->quote_id,
-                'variation_id'=> $item->variation_id,
+                'variation_id' => $item->variation_id,
                 'warehouse_id' => $item->warehouse_id,
                 'quantity' => $item->quantity,
                 'unit_price_exc_tax' => $item->unit_price_exc_tax,
@@ -1602,8 +1607,8 @@ class QuoteController extends Controller
                 'service_parent_id' => 0,
                 'type_product' => $item->type_product,
                 'note' => $item->note,
-                'sku' => $item->sub_sku
-            );
+                'sku' => $item->sub_sku,
+            ];
 
             $spare_rows_q = DB::table('quote_lines as line')
                 ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
@@ -1622,12 +1627,12 @@ class QuoteController extends Controller
                 ->orderBy('line.id', 'asc')
                 ->get();
 
-            $spare_rows = array();
+            $spare_rows = [];
             foreach ($spare_rows_q as $spare) {
-                $spare_row_array = array(
+                $spare_row_array = [
                     'quote_line_id' => $spare->id,
                     'quote_id' => $spare->quote_id,
-                    'variation_id'=> $spare->variation_id,
+                    'variation_id' => $spare->variation_id,
                     'warehouse_id' => $spare->warehouse_id,
                     'quantity' => $spare->quantity,
                     'unit_price_exc_tax' => $spare->unit_price_exc_tax,
@@ -1645,7 +1650,7 @@ class QuoteController extends Controller
                     'service_parent_id' => $spare->service_parent_id,
                     'type_product' => $spare->type_product,
                     'note' => $item->note,
-                );
+                ];
 
                 array_push($spare_rows, $spare_row_array);
             }
@@ -1668,7 +1673,7 @@ class QuoteController extends Controller
 
     /**
      * Get workshop data.
-     * 
+     *
      * @param  int  $id
      * @return json
      */
@@ -1700,7 +1705,7 @@ class QuoteController extends Controller
 
     /**
      * Get spares from a service block.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function getSpareLines()
@@ -1745,7 +1750,7 @@ class QuoteController extends Controller
                 'warehouse_id' => $quote_line->warehouse_id,
                 'validate_stock' => $validate_stock,
                 'quote_id' => $quote_id,
-                'id' => $quote_line->id
+                'id' => $quote_line->id,
             ];
 
             array_push($result, $line);

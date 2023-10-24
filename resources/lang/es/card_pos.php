@@ -1,4 +1,5 @@
 <?php
+
 return [
     'card_pos' => 'POS para pago con tarjetas',
     'manage' => 'Administrar POS para pagos con tarjetas',

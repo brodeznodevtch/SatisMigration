@@ -1,4 +1,5 @@
 <?php
+
 return [
     'add_material_type' => 'Add Material Type',
     'added_success' => 'Material type added successfully',

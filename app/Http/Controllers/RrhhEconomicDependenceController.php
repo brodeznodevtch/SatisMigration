@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhEconomicDependence;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Carbon\Carbon;
-use Storage;
+use App\Models\Employees;
+use App\Models\RrhhEconomicDependence;
 use App\Utils\ModuleUtil;
+use DB;
+use Illuminate\Http\Request;
+use Storage;
 
 class RrhhEconomicDependenceController extends Controller
 {
@@ -18,13 +16,14 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil)
     {
         $this->moduleUtil = $moduleUtil;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,21 +33,22 @@ class RrhhEconomicDependenceController extends Controller
     {
         //
     }
-    public function getByEmployee($id) 
+
+    public function getByEmployee($id)
     {
-        if ( !auth()->user()->can('rrhh_economic_dependence.view') ) {
+        if (! auth()->user()->can('rrhh_economic_dependence.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $employee = Employees::where('id', $id)->where('business_id', $business_id)->first();
         $economicDependences = DB::table('rrhh_economic_dependences as economicDependence')
-        ->join('rrhh_datas as type', 'type.id', '=', 'economicDependence.type_relationship_id')
-        ->join('employees as employee', 'employee.id', '=', 'economicDependence.employee_id')
-        ->select('economicDependence.id as id', 'type.value as type', 'economicDependence.name as name', 'economicDependence.birthdate as birthdate', 'economicDependence.phone as phone', 'economicDependence.status as status')
-        ->where('economicDependence.employee_id', $employee->id)
-        ->where('type.rrhh_header_id', 15)
-        ->get();
-        
+            ->join('rrhh_datas as type', 'type.id', '=', 'economicDependence.type_relationship_id')
+            ->join('employees as employee', 'employee.id', '=', 'economicDependence.employee_id')
+            ->select('economicDependence.id as id', 'type.value as type', 'economicDependence.name as name', 'economicDependence.birthdate as birthdate', 'economicDependence.phone as phone', 'economicDependence.status as status')
+            ->where('economicDependence.employee_id', $employee->id)
+            ->where('type.rrhh_header_id', 15)
+            ->get();
+
         return view('rrhh.economic_dependences.index', compact('economicDependences', 'employee'));
     }
 
@@ -57,14 +57,14 @@ class RrhhEconomicDependenceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
         //
     }
 
-    function createEconomicDependence($id) 
+    public function createEconomicDependence($id)
     {
-        if ( !auth()->user()->can('rrhh_economic_dependence.create') ) {
+        if (! auth()->user()->can('rrhh_economic_dependence.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -78,20 +78,19 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_economic_dependence.create') ) {
+        if (! auth()->user()->can('rrhh_economic_dependence.create')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate([
             'type_relationship_id' => 'required',
-            'name'                 => 'required',
-            'employee_id'          => 'required',
-            'phone'                => 'required',
-            'birthdate'            => 'required',
+            'name' => 'required',
+            'employee_id' => 'required',
+            'phone' => 'required',
+            'birthdate' => 'required',
         ]);
 
         try {
@@ -99,21 +98,21 @@ class RrhhEconomicDependenceController extends Controller
             $input_details['birthdate'] = $this->moduleUtil->uf_date($request->input('birthdate'));
             $input_details['status'] = 1;
             DB::beginTransaction();
-    
+
             $economicDependence = RrhhEconomicDependence::create($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -123,7 +122,6 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhEconomicDependence $rrhhDocuments)
@@ -134,12 +132,12 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) 
+    public function edit($id)
     {
-        if ( !auth()->user()->can('rrhh_economic_dependence.edit') ) {
+        if (! auth()->user()->can('rrhh_economic_dependence.edit')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -153,54 +151,54 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
-    public function updateEconomicDependence(Request $request) 
+    public function updateEconomicDependence(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_economic_dependence.edit') ) {
+        if (! auth()->user()->can('rrhh_economic_dependence.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
             'type_relationship_id' => 'required',
-            'name'                 => 'required',
-            'employee_id'          => 'required',
-            'phone'                => 'required',
-            'birthdate'            => 'required',
-            'status'               => 'required',
+            'name' => 'required',
+            'employee_id' => 'required',
+            'phone' => 'required',
+            'birthdate' => 'required',
+            'status' => 'required',
         ]);
 
         try {
             $input_details = $request->all();
             $input_details['birthdate'] = $this->moduleUtil->uf_date($request->input('birthdate'));
-            if($request->input('status') == 1){
+            if ($request->input('status') == 1) {
                 $input_details['status'] = 1;
-            }else{
+            } else {
                 $input_details['status'] = 0;
             }
             DB::beginTransaction();
-    
+
             $item = RrhhEconomicDependence::findOrFail($request->id);
             $economicDependence = $item->update($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -210,12 +208,13 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
-        if (!auth()->user()->can('rrhh_economic_dependence.delete')) {
+        if (! auth()->user()->can('rrhh_economic_dependence.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -223,18 +222,16 @@ class RrhhEconomicDependenceController extends Controller
             try {
                 $item = RrhhEconomicDependence::findOrFail($id);
                 $item->forceDelete();
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }                
-
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
 

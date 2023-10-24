@@ -2,9 +2,9 @@
 
 namespace App\Console;
 
+use File;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use File;
 
 class Kernel extends ConsoleKernel
 {
@@ -20,14 +20,13 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
 
         $cronLog = storage_path('logs/cron.log');
-        if (!File::exists($cronLog)) {
+        if (! File::exists($cronLog)) {
             File::put($cronLog, '');
         }
 
@@ -42,12 +41,12 @@ class Kernel extends ConsoleKernel
             $schedule->command('pos:sendSubscriptionExpiryAlert')->daily();
         }
 
-        if ($env === 'demo' && !empty($email)) {
+        if ($env === 'demo' && ! empty($email)) {
             //IMPORTANT NOTE: This command will delete all business details and create dummy business, run only in demo server.
             $schedule->command('pos:dummyBusiness')
-            ->cron('0 */2 * * *')
+                ->cron('0 */2 * * *')
                     //->everyThirtyMinutes()
-            ->emailOutputTo($email);
+                ->emailOutputTo($email);
         }
 
         $schedule->command('command:update_quotes')->daily()->withoutOverlapping()->appendOutputTo($cronLog);

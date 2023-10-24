@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyQuotesTable extends Migration
 {
@@ -14,25 +14,25 @@ class ModifyQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->unsignedInteger("state_id")
+            $table->unsignedInteger('state_id')
                 ->nullable()
                 ->default(null)
-                ->after("mobile");
-            $table->unsignedInteger("city_id")
+                ->after('mobile');
+            $table->unsignedInteger('city_id')
                 ->nullable()
                 ->default(null)
-                ->after("state_id");
-            $table->string("landmark")
+                ->after('state_id');
+            $table->string('landmark')
                 ->nullable()
-                ->default("")
-                ->after("address");
+                ->default('')
+                ->after('address');
 
-            $table->foreign("state_id")
-                ->references("id")
-                ->on("states");
-            $table->foreign("city_id")
-                ->references("id")
-                ->on("cities");
+            $table->foreign('state_id')
+                ->references('id')
+                ->on('states');
+            $table->foreign('city_id')
+                ->references('id')
+                ->on('cities');
         });
     }
 

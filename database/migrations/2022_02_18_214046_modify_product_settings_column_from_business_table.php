@@ -1,8 +1,6 @@
 <?php
 
-use App\Business;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Business;
 use Illuminate\Database\Migrations\Migration;
 
 class ModifyProductSettingsColumnFromBusinessTable extends Migration

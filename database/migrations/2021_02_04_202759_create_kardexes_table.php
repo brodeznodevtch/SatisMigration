@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateKardexesTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateKardexesTable extends Migration
 
             $table->unsignedInteger('movement_type_id');
             $table->foreign('movement_type_id')->references('id')->on('movement_types')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->unsignedInteger('business_location_id');
             $table->foreign('business_location_id')->references('id')->on('business_locations')->onDelete('cascade')->onUpdate('cascade');
 
@@ -45,7 +45,7 @@ class CreateKardexesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
 
             $table->dateTime('date_time');
-            
+
             $table->unsignedInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade')->onUpdate('cascade');
 

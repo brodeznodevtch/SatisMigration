@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class Add4DecimalsInTransactions extends Migration
 {
@@ -33,7 +33,7 @@ class Add4DecimalsInTransactions extends Migration
                 CHANGE `total_amount_recovered` `total_amount_recovered` 
                     DECIMAL(20,4) NULL DEFAULT NULL 
                         COMMENT 'Used for stock adjustment.'");
-            
+
         });
     }
 

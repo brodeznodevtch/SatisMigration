@@ -2,12 +2,10 @@
 
 namespace App\Utils;
 
-use App\LawDiscount;
-use DB;
+use App\Models\LawDiscount;
 
 class PayrollUtil extends Util
 {
-
     public function calculateIsss($total_income, $business_id, $isr_id)
     {
         $lawDiscounts = LawDiscount::join('institution_laws as institution_law', 'institution_law.id', '=', 'law_discounts.institution_law_id')
@@ -57,16 +55,16 @@ class PayrollUtil extends Util
         return $afp;
     }
 
-
-    public function calculateRent($total_income, $business_id, $isr_id, $isss, $afp){
+    public function calculateRent($total_income, $business_id, $isr_id, $isss, $afp)
+    {
         $lawDiscountsRenta = LawDiscount::join('institution_laws as institution_law', 'institution_law.id', '=', 'law_discounts.institution_law_id')
-        ->join('payment_periods as payment_period', 'payment_period.id', '=', 'law_discounts.payment_period_id')
-        ->select('law_discounts.id as id', 'law_discounts.*', 'institution_law.name as institution_law', 'payment_period.name as payment_period')
-        ->where('institution_law.name', 'Renta')
-        ->where('payment_period.id', $isr_id)
-        ->where('law_discounts.business_id', $business_id)
-        ->where('law_discounts.deleted_at', null)
-        ->get();
+            ->join('payment_periods as payment_period', 'payment_period.id', '=', 'law_discounts.payment_period_id')
+            ->select('law_discounts.id as id', 'law_discounts.*', 'institution_law.name as institution_law', 'payment_period.name as payment_period')
+            ->where('institution_law.name', 'Renta')
+            ->where('payment_period.id', $isr_id)
+            ->where('law_discounts.business_id', $business_id)
+            ->where('law_discounts.deleted_at', null)
+            ->get();
 
         $rent = 0;
         for ($i = 0; $i < count($lawDiscountsRenta); $i++) {

@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\CustomerPortfolio;
+use App\Models\Customer;
+use App\Models\CustomerPortfolio;
+use App\Models\Employees;
+use App\Utils\Util;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Utils\Util;
-use App\Employees;
-use DB;
-use Exception;
 
 class CustomerPortfolioController extends Controller
 {
-
     public function __construct(Util $util)
     {
         $this->util = $util;
@@ -26,10 +24,11 @@ class CustomerPortfolioController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('portfolios.view') && !auth()->user()->can('portfolios.create')) {
+        if (! auth()->user()->can('portfolios.view') && ! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
+
         return view('customer_portfolios.index');
     }
 
@@ -40,7 +39,7 @@ class CustomerPortfolioController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('portfolios.create')) {
+        if (! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -52,10 +51,9 @@ class CustomerPortfolioController extends Controller
             ->with(compact('sellers', 'code'));
     }
 
-
     public function getPortfoliosData()
     {
-        if (!auth()->user()->can('portfolios.view') && !auth()->user()->can('portfolios.create')) {
+        if (! auth()->user()->can('portfolios.view') && ! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -65,6 +63,7 @@ class CustomerPortfolioController extends Controller
             ->join('employees', 'employees.id', '=', 'customer_portfolios.seller_id')
             ->where('customer_portfolios.status', 'active')
             ->where('customer_portfolios.business_id', $business_id);
+
         return DataTables::of($portfolios)
             ->addColumn(
                 'action',
@@ -84,12 +83,11 @@ class CustomerPortfolioController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('portfolios.create')) {
+        if (! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -102,10 +100,10 @@ class CustomerPortfolioController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $portfolio,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $outpout = ['success' => false, 'msg' => $e->getMessage()];
         }
 
@@ -115,7 +113,6 @@ class CustomerPortfolioController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function show(CustomerPortfolio $customerPortfolio)
@@ -126,12 +123,12 @@ class CustomerPortfolioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('portfolios.update')) {
+        if (! auth()->user()->can('portfolios.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -148,13 +145,12 @@ class CustomerPortfolioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('portfolios.update')) {
+        if (! auth()->user()->can('portfolios.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -172,16 +168,17 @@ class CustomerPortfolioController extends Controller
                 $outpout = [
                     'success' => true,
                     'data' => $portfolios,
-                    'msg' => __("customer.updated_success")
+                    'msg' => __('customer.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $outpout = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $outpout;
         }
     }
@@ -189,12 +186,12 @@ class CustomerPortfolioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('portfolios.delete')) {
+        if (! auth()->user()->can('portfolios.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -207,31 +204,32 @@ class CustomerPortfolioController extends Controller
 
                 DB::beginTransaction();
 
-                if (!count($customers)) {
+                if (! count($customers)) {
                     $portfolios = CustomerPortfolio::where('business_id', $business_id)->findOrFail($id);
                     $portfolios->delete();
 
                     $outpout = [
                         'success' => true,
-                        'msg' => __("customer.deleted_success")
+                        'msg' => __('customer.deleted_success'),
                     ];
 
                     DB::commit();
                 } else {
                     $outpout = [
                         'success' => false,
-                        'msg' => __("customer.portfolios_has_assoc_customers")
+                        'msg' => __('customer.portfolios_has_assoc_customers'),
                     ];
                     DB::rollBack();
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $outpout = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $outpout;
         }
     }

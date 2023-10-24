@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyQuotesCustomersRelationshipOnQuotesTable extends Migration
 {
@@ -14,11 +14,11 @@ class ModifyQuotesCustomersRelationshipOnQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropForeign("quotes_customer_id_foreign");
+            $table->dropForeign('quotes_customer_id_foreign');
 
-            $table->foreign("customer_id")
-                ->references("id")
-                ->on("customers");
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers');
         });
     }
 
@@ -30,11 +30,11 @@ class ModifyQuotesCustomersRelationshipOnQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropForeign("customer_id");
+            $table->dropForeign('customer_id');
 
-            $table->foreign("customer_id")
-                ->references("id")
-                ->on("contacts");
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('contacts');
         });
     }
 }

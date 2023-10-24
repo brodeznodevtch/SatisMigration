@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\RrhhTypeWage;
+use App\Models\Business;
+use App\Models\RrhhTypeWage;
 use Illuminate\Database\Seeder;
 
 class RrhhTypeWageSeeder extends Seeder
@@ -14,14 +14,14 @@ class RrhhTypeWageSeeder extends Seeder
     public function run()
     {
         $business = Business::all();
-        foreach($business as $item){
+        foreach ($business as $item) {
             RrhhTypeWage::firstOrCreate([
                 'name' => 'Asalariado',
                 'isss' => 1,
                 'afp' => 1,
                 'type' => 'Ley de salario',
                 'business_id' => $item->id,
-                'deleted_at' => null
+                'deleted_at' => null,
             ]);
 
             RrhhTypeWage::firstOrCreate([
@@ -30,7 +30,7 @@ class RrhhTypeWageSeeder extends Seeder
                 'afp' => 0,
                 'type' => 'Honorario',
                 'business_id' => $item->id,
-                'deleted_at' => null
+                'deleted_at' => null,
             ]);
         }
     }

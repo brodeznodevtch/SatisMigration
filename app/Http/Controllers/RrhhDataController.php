@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhAbsenceInability;
-use App\RrhhData;
-use App\RrhhDocuments;
-use App\RrhhEconomicDependence;
-use App\RrhhPositionHistory;
-use App\RrhhStudy;
-use Illuminate\Http\Request;
-use DB;
+use App\Models\Employees;
+use App\Models\RrhhAbsenceInability;
+use App\Models\RrhhData;
+use App\Models\RrhhDocuments;
+use App\Models\RrhhEconomicDependence;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhStudy;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class RrhhDataController extends Controller
@@ -26,73 +26,77 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function getCatalogueData($id) {
-        if ( !auth()->user()->can('rrhh_catalogues.view') ) {
+    public function getCatalogueData($id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $data = DB::table('rrhh_datas')
-        ->select('rrhh_datas.*')
-        ->where('rrhh_header_id', $id)
-        ->where('business_id', $business_id)
-        ->where('deleted_at', null);
-
+            ->select('rrhh_datas.*')
+            ->where('rrhh_header_id', $id)
+            ->where('business_id', $business_id)
+            ->where('deleted_at', null);
 
         return DataTables::of($data)
-        ->addColumn(
-            'status',
-            function ($row) {
-                if ($row->status == 1) {
+            ->addColumn(
+                'status',
+                function ($row) {
+                    if ($row->status == 1) {
 
-                    $html = 'Activo';
-                } else {
+                        $html = 'Activo';
+                    } else {
 
-                    $html = 'Inactivo';
+                        $html = 'Inactivo';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )
-        ->addColumn(
-            'date_required',
-            function ($row) {
-                if ($row->date_required == 1) {
+            )
+            ->addColumn(
+                'date_required',
+                function ($row) {
+                    if ($row->date_required == 1) {
 
-                    $html = 'Requerida';
-                } else {
+                        $html = 'Requerida';
+                    } else {
 
-                    $html = 'No requerida';
+                        $html = 'No requerida';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )
-        ->addColumn(
-            'number_required',
-            function ($row) {
-                if ($row->number_required == 1) {
+            )
+            ->addColumn(
+                'number_required',
+                function ($row) {
+                    if ($row->number_required == 1) {
 
-                    $html = 'Requerida';
-                } else {
+                        $html = 'Requerida';
+                    } else {
 
-                    $html = 'No requerida';
+                        $html = 'No requerida';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )
-        ->addColumn(
-            'expedition_place',
-            function ($row) {
-                if ($row->expedition_place == 1) {
+            )
+            ->addColumn(
+                'expedition_place',
+                function ($row) {
+                    if ($row->expedition_place == 1) {
 
-                    $html = 'Requerida';
-                } else {
+                        $html = 'Requerida';
+                    } else {
 
-                    $html = 'No requerida';
+                        $html = 'No requerida';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )
-        ->toJson();
+            )
+            ->toJson();
     }
 
     /**
@@ -105,83 +109,84 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function createItem($id) {
+    public function createItem($id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $type_item = '';
         $header_id = $id;
 
         switch ($id) {
             case 1:
-            $type_item = __('rrhh.marital_status');
-            break;
+                $type_item = __('rrhh.marital_status');
+                break;
 
             case 2:
-            $type_item = __('rrhh.department');
-            break;
+                $type_item = __('rrhh.department');
+                break;
 
             case 3:
-            $type_item = __('rrhh.position');
-            break;
+                $type_item = __('rrhh.position');
+                break;
 
             case 4:
-            $type_item = __('rrhh.afp');
-            break;
+                $type_item = __('rrhh.afp');
+                break;
 
             case 5:
-            $type_item = __('rrhh.type');
-            break;
+                $type_item = __('rrhh.type');
+                break;
 
             case 6:
-            $type_item = __('rrhh.nationality');
-            break;
-            
+                $type_item = __('rrhh.nationality');
+                break;
+
             case 7:
-            $type_item = __('rrhh.profession_occupation');
-            break;
+                $type_item = __('rrhh.profession_occupation');
+                break;
 
             case 8:
-            $type_item = __('rrhh.way_to_pay');
-            break;
+                $type_item = __('rrhh.way_to_pay');
+                break;
 
             case 9:
-            $type_item = __('rrhh.document_type');
-            break;
+                $type_item = __('rrhh.document_type');
+                break;
 
             case 10:
-            $type_item = __('rrhh.special_capabilities');
-            break;
+                $type_item = __('rrhh.special_capabilities');
+                break;
 
             case 11:
-            $type_item = __('rrhh.employee_classification');
-            break;
+                $type_item = __('rrhh.employee_classification');
+                break;
 
             case 12:
-            $type_item = __('rrhh.types_studies');
-            break;
+                $type_item = __('rrhh.types_studies');
+                break;
 
             case 13:
-            $type_item = __('rrhh.types_absences');
-            break;
-            
+                $type_item = __('rrhh.types_absences');
+                break;
+
             case 14:
-            $type_item = __('rrhh.types_inabilities');
-            break;
+                $type_item = __('rrhh.types_inabilities');
+                break;
 
             case 15:
-            $type_item = __('rrhh.types_relationships');
-            break;
+                $type_item = __('rrhh.types_relationships');
+                break;
 
             case 16:
-            $type_item = __('rrhh.types_income_discounts');
-            break;
+                $type_item = __('rrhh.types_income_discounts');
+                break;
 
             case 17:
-            $type_item = __('rrhh.salarial_constances');
-            break;
+                $type_item = __('rrhh.salarial_constances');
+                break;
         }
 
         return view('rrhh.catalogues.create', compact('type_item', 'header_id'));
@@ -190,11 +195,11 @@ class RrhhDataController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+    public function store(Request $request)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -202,33 +207,33 @@ class RrhhDataController extends Controller
             'value' => [
                 'required',
                 Rule::unique('rrhh_datas')
-                ->where(function ($query) {
-                    return $query->where('rrhh_header_id', request('rrhh_header_id'));
-                })
-                ->where(function ($query) {
-                    return $query->where('business_id', request()->session()->get('user.business_id'));
-                })
-                ->where(function ($query) {
-                    return $query->where('deleted_at', null);
-                })
-            ],           
+                    ->where(function ($query) {
+                        return $query->where('rrhh_header_id', request('rrhh_header_id'));
+                    })
+                    ->where(function ($query) {
+                        return $query->where('business_id', request()->session()->get('user.business_id'));
+                    })
+                    ->where(function ($query) {
+                        return $query->where('deleted_at', null);
+                    }),
+            ],
         ]);
 
         try {
-            
+
             $code = '';
-            if($request->input('rrhh_header_id') > 1 && $request->input('rrhh_header_id') < 6) {
-                
-                if($request->input('rrhh_header_id') > 1 && $request->input('rrhh_header_id') < 6) {
+            if ($request->input('rrhh_header_id') > 1 && $request->input('rrhh_header_id') < 6) {
+
+                if ($request->input('rrhh_header_id') > 1 && $request->input('rrhh_header_id') < 6) {
                     $last_correlative = DB::table('rrhh_datas')
-                    ->where('rrhh_header_id', $request->input('rrhh_header_id'))
-                    ->count();
+                        ->where('rrhh_header_id', $request->input('rrhh_header_id'))
+                        ->count();
                     if ($last_correlative > 0) {
                         $correlative = $last_correlative + 1;
                     } else {
                         $correlative = 1;
                     }
-                    $correlative = str_pad($correlative, 5, "0", STR_PAD_LEFT);            
+                    $correlative = str_pad($correlative, 5, '0', STR_PAD_LEFT);
                     $code = $this->getCorrelative($request->input('rrhh_header_id'), $correlative);
                 }
 
@@ -237,22 +242,22 @@ class RrhhDataController extends Controller
             $date_required = null;
             $expedition_place = null;
             $number_required = null;
-            if($request->input('rrhh_header_id') == 9) {
-                if($request->input('date_required')){
+            if ($request->input('rrhh_header_id') == 9) {
+                if ($request->input('date_required')) {
                     $date_required = 1;
-                }else{
+                } else {
                     $date_required = 0;
                 }
 
-                if($request->input('expedition_place')){
+                if ($request->input('expedition_place')) {
                     $expedition_place = 1;
-                }else{
+                } else {
                     $expedition_place = 0;
                 }
 
-                if($request->input('number_required')){
+                if ($request->input('number_required')) {
                     $number_required = 1;
-                }else{
+                } else {
                     $number_required = 0;
                 }
             }
@@ -269,22 +274,22 @@ class RrhhDataController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
+
         return $output;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhData $rrhhData)
@@ -295,7 +300,6 @@ class RrhhDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
     public function edit(RrhhData $rrhhData)
@@ -303,86 +307,86 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function editItem($id) {
+    public function editItem($id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         $item = RrhhData::findOrFail($id);
 
-        
         $type_item = '';
         $header_id = $item->rrhh_header_id;
 
         switch ($header_id) {
             case 1:
-            $type_item = __('rrhh.marital_status');
-            break;
+                $type_item = __('rrhh.marital_status');
+                break;
 
             case 2:
-            $type_item = __('rrhh.department');
-            break;
+                $type_item = __('rrhh.department');
+                break;
 
             case 3:
-            $type_item = __('rrhh.position');
-            break;
+                $type_item = __('rrhh.position');
+                break;
 
             case 4:
-            $type_item = __('rrhh.afp');
-            break;
+                $type_item = __('rrhh.afp');
+                break;
 
             case 5:
-            $type_item = __('rrhh.type');
-            break;
+                $type_item = __('rrhh.type');
+                break;
 
             case 6:
-            $type_item = __('rrhh.nationality');
-            break;
+                $type_item = __('rrhh.nationality');
+                break;
 
             case 7:
-            $type_item = __('rrhh.profession_occupation');
-            break;
-            
+                $type_item = __('rrhh.profession_occupation');
+                break;
+
             case 8:
-            $type_item = __('rrhh.way_to_pay');
-            break;
+                $type_item = __('rrhh.way_to_pay');
+                break;
 
             case 9:
-            $type_item = __('rrhh.document_type');
-            break;
-            
+                $type_item = __('rrhh.document_type');
+                break;
+
             case 10:
-            $type_item = __('rrhh.special_capabilities');
-            break;
+                $type_item = __('rrhh.special_capabilities');
+                break;
 
             case 11:
-            $type_item = __('rrhh.employee_classification');
-            break;
+                $type_item = __('rrhh.employee_classification');
+                break;
 
             case 12:
-            $type_item = __('rrhh.types_studies');
-            break;
+                $type_item = __('rrhh.types_studies');
+                break;
 
             case 13:
-            $type_item = __('rrhh.types_absences');
-            break;
-            
+                $type_item = __('rrhh.types_absences');
+                break;
+
             case 14:
-            $type_item = __('rrhh.types_inabilities');
-            break;
+                $type_item = __('rrhh.types_inabilities');
+                break;
 
             case 15:
-            $type_item = __('rrhh.types_relationships');
-            break;
+                $type_item = __('rrhh.types_relationships');
+                break;
 
             case 16:
-            $type_item = __('rrhh.types_income_discounts');
-            break;
+                $type_item = __('rrhh.types_income_discounts');
+                break;
 
             case 17:
-            $type_item = __('rrhh.salarial_constances');
-            break;
+                $type_item = __('rrhh.salarial_constances');
+                break;
         }
 
         return view('rrhh.catalogues.edit', compact('type_item', 'header_id', 'item'));
@@ -391,13 +395,13 @@ class RrhhDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RrhhData  $rrhhData
+     * @param  \App\Models\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -405,16 +409,16 @@ class RrhhDataController extends Controller
             'value' => [
                 'required',
                 Rule::unique('rrhh_datas')
-                ->where(function ($query) {
-                    return $query->where('rrhh_header_id', request('rrhh_header_id'));
-                })
-                ->where(function ($query) {
-                    return $query->where('business_id', request()->session()->get('user.business_id'));
-                })
-                ->where(function ($query) {
-                    return $query->where('deleted_at', null);
-                })
-            ], 
+                    ->where(function ($query) {
+                        return $query->where('rrhh_header_id', request('rrhh_header_id'));
+                    })
+                    ->where(function ($query) {
+                        return $query->where('business_id', request()->session()->get('user.business_id'));
+                    })
+                    ->where(function ($query) {
+                        return $query->where('deleted_at', null);
+                    }),
+            ],
         ]);
 
         try {
@@ -428,26 +432,28 @@ class RrhhDataController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
+
         return $output;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhData  $rrhhData
+     * @param  \App\Models\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        if (!auth()->user()->can('rrhh_catalogues.delete')) {
+    public function destroy($id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -469,13 +475,13 @@ class RrhhDataController extends Controller
                 $countRelationship = RrhhEconomicDependence::where('type_relationship_id', $id)->count();
 
                 if (
-                    $countEmployeeAfp > 0 || 
-                    $countEmployeeCS > 0 || 
-                    $countEmployeeNat > 0 || 
-                    $countEmployeeProf > 0 || 
-                    $countEmployeeType > 0 || 
-                    $countEmployeePayment > 0 || 
-                    $countPosition > 0 || 
+                    $countEmployeeAfp > 0 ||
+                    $countEmployeeCS > 0 ||
+                    $countEmployeeNat > 0 ||
+                    $countEmployeeProf > 0 ||
+                    $countEmployeeType > 0 ||
+                    $countEmployeePayment > 0 ||
+                    $countPosition > 0 ||
                     $countDepartement > 0 ||
                     $countDocument > 0 ||
                     $countStudy > 0 ||
@@ -485,21 +491,21 @@ class RrhhDataController extends Controller
                 ) {
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
                 } else {
                     $item = RrhhData::findOrFail($id);
                     $item->delete();
                     $output = [
                         'success' => true,
-                        'msg' => __('rrhh.deleted_successfully')
+                        'msg' => __('rrhh.deleted_successfully'),
                     ];
-                }                
-            }catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => $e->getMessage()
+                    'msg' => $e->getMessage(),
                 ];
             }
 
@@ -507,19 +513,18 @@ class RrhhDataController extends Controller
         }
     }
 
-
-
-    public function getCorrelative($id, $code) {        
+    public function getCorrelative($id, $code)
+    {
 
         $count = DB::table('rrhh_datas')
-        ->where('rrhh_header_id', $id)
-        ->where('code', $code)
-        ->count();
+            ->where('rrhh_header_id', $id)
+            ->where('code', $code)
+            ->count();
 
-        if($count > 0) {
+        if ($count > 0) {
 
-            $correlative = (int) $code + 1;            
-            $code = str_pad($correlative, 5, "0", STR_PAD_LEFT);
+            $correlative = (int) $code + 1;
+            $code = str_pad($correlative, 5, '0', STR_PAD_LEFT);
 
             return $this->getCorrelative($id, $code);
 
@@ -527,7 +532,6 @@ class RrhhDataController extends Controller
 
             return $code;
         }
-        
-    }
 
+    }
 }

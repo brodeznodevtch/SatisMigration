@@ -2,29 +2,31 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class SuggestedPurchaseReportExport implements WithEvents, WithTitle
 {
     private $transactions;
+
     private $business_name;
+
     private $location_name;
+
     private $date;
 
     /**
      * Constructor.
-     * 
-     * @param collect $transactions
-     * @param string $business_name
-     * @param string $date;
-     * 
+     *
+     * @param  collect  $transactions
+     * @param  string  $business_name
+     * @param  string  $date;
      * @return void
      */
     public function __construct($transactions, $business_name, $location_name, $date)
     {
-    	$this->transactions = $transactions;
+        $this->transactions = $transactions;
         $this->business_name = $business_name;
         $this->location_name = $location_name;
         $this->date = $date;
@@ -32,25 +34,21 @@ class SuggestedPurchaseReportExport implements WithEvents, WithTitle
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.suggested_purchase_report');
+        return __('report.suggested_purchase_report');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [
-    		AfterSheet::class => function(AfterSheet $event) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
                 /** General setup */
-    			$event->sheet->setOrientation("landscape");
+                $event->sheet->setOrientation('landscape');
                 $event->sheet->setShowGridlines(false);
 
                 /** Header */
@@ -59,13 +57,13 @@ class SuggestedPurchaseReportExport implements WithEvents, WithTitle
                 $event->sheet->mergeCells('A3:P3');
                 $event->sheet->rowHeight('1', 20);
                 $event->sheet->verticalAlign('A1:P1', 'center');
-                $event->sheet->horizontalAlign('A1:P3', "center");
+                $event->sheet->horizontalAlign('A1:P3', 'center');
                 $event->sheet->setBold('A1:P3');
                 $event->sheet->setFontSize('A1:P1', 14);
                 $event->sheet->setFontSize('A2:P3', 12);
                 $event->sheet->setCellValue('A1', mb_strtoupper($this->business_name));
                 $event->sheet->setCellValue('A2', mb_strtoupper($this->location_name));
-                $event->sheet->setCellValue('A3', mb_strtoupper(__('report.suggested_purchase_report')) ." ". strtoupper(__('accounting.to_date')) ." ". $this->date);
+                $event->sheet->setCellValue('A3', mb_strtoupper(__('report.suggested_purchase_report')).' '.strtoupper(__('accounting.to_date')).' '.$this->date);
 
                 /** Column width and font align */
                 $event->sheet->columnWidth('A', 15); // sku
@@ -105,47 +103,46 @@ class SuggestedPurchaseReportExport implements WithEvents, WithTitle
                 $event->sheet->setCellValue('N4', mb_strtoupper(__('report.request')));
                 $event->sheet->setCellValue('O4', mb_strtoupper(__('report.excess')));
                 $event->sheet->setCellValue('P4', mb_strtoupper(__('report.move')));
-                
+
                 /** table body */
                 $row = 5;
                 foreach ($this->transactions as $t) {
                     $request = ($t->avg_val - $t->stock) <= 0 ? 'no' : 'yes';
                     $qty_req = $request == 'yes' ? ($t->max_val - $t->stock) : 0;
-                    
+
                     $diff_max = $t->stock - $t->max_val;
                     $excess = $diff_max <= 0 ? 'no' : 'yes';
                     $move = $diff_max <= 0 ? 0 : $diff_max;
 
-                    $event->sheet->setCellValue('A'. $row, $t->sku);
-                    $event->sheet->setCellValue('B'. $row, $t->product);
-                    $event->sheet->setCellValue('C'. $row, $t->category);
-                    $event->sheet->setCellValue('D'. $row, $t->sub_category);
-                    $event->sheet->setCellValue('E'. $row, $t->brand);
-                    $event->sheet->setCellValue('F'. $row, $t->total);
-                    $event->sheet->setCellValue('G'. $row, $t->min_val);
-                    $event->sheet->setCellValue('H'. $row, $t->max_val);
-                    $event->sheet->setCellValue('I'. $row, $t->avg_val);
-                    $event->sheet->setCellValue('J'. $row, $t->min_val);
-                    $event->sheet->setCellValue('K'. $row, $t->max_val);
-                    $event->sheet->setCellValue('L'. $row, $t->stock);
-                    $event->sheet->setCellValue('M'. $row, mb_strtoupper(__('lang_v1.'. $request)));
-                    $event->sheet->setCellValue('N'. $row, $qty_req);
-                    $event->sheet->setCellValue('O'. $row, mb_strtoupper(__('lang_v1.'. $excess)));
-                    $event->sheet->setCellValue('P'. $row, $move);
+                    $event->sheet->setCellValue('A'.$row, $t->sku);
+                    $event->sheet->setCellValue('B'.$row, $t->product);
+                    $event->sheet->setCellValue('C'.$row, $t->category);
+                    $event->sheet->setCellValue('D'.$row, $t->sub_category);
+                    $event->sheet->setCellValue('E'.$row, $t->brand);
+                    $event->sheet->setCellValue('F'.$row, $t->total);
+                    $event->sheet->setCellValue('G'.$row, $t->min_val);
+                    $event->sheet->setCellValue('H'.$row, $t->max_val);
+                    $event->sheet->setCellValue('I'.$row, $t->avg_val);
+                    $event->sheet->setCellValue('J'.$row, $t->min_val);
+                    $event->sheet->setCellValue('K'.$row, $t->max_val);
+                    $event->sheet->setCellValue('L'.$row, $t->stock);
+                    $event->sheet->setCellValue('M'.$row, mb_strtoupper(__('lang_v1.'.$request)));
+                    $event->sheet->setCellValue('N'.$row, $qty_req);
+                    $event->sheet->setCellValue('O'.$row, mb_strtoupper(__('lang_v1.'.$excess)));
+                    $event->sheet->setCellValue('P'.$row, $move);
 
-                    $row ++;
+                    $row++;
                 }
-                $row --;
+                $row--;
 
                 /** set font size and family, set borders */
-    			$event->sheet->setFontSize('A4:P'. $row, 10);
-                $event->sheet->horizontalAlign('L4:L'. $row, 'center');
-                $event->sheet->horizontalAlign('N4:N'. $row, 'center');
-                $event->sheet->setFormat('A1:E'. $row, '@');
-                $event->sheet->setAllBorders('A4:P'. $row, 'thin');
-                $event->sheet->setFontFamily('A1:P'. $row, 'Calibri');
+                $event->sheet->setFontSize('A4:P'.$row, 10);
+                $event->sheet->horizontalAlign('L4:L'.$row, 'center');
+                $event->sheet->horizontalAlign('N4:N'.$row, 'center');
+                $event->sheet->setFormat('A1:E'.$row, '@');
+                $event->sheet->setAllBorders('A4:P'.$row, 'thin');
+                $event->sheet->setFontFamily('A1:P'.$row, 'Calibri');
             },
         ];
     }
-
 }

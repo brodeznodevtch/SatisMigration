@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCustomerDuiColumnToTransactionsTable extends Migration
 {
@@ -14,9 +14,9 @@ class AddCustomerDuiColumnToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->string("customer_dui")
+            $table->string('customer_dui')
                 ->nullable()
-                ->after("customer_name");
+                ->after('customer_name');
         });
     }
 
@@ -28,7 +28,7 @@ class AddCustomerDuiColumnToTransactionsTable extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn("customer_dui");
+            $table->dropColumn('customer_dui');
         });
     }
 }

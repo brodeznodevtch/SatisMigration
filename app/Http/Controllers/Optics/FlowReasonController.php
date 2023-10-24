@@ -12,14 +12,12 @@ class FlowReasonController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $util;
 
     /**
      * Constructor
      *
-     * @param \App\Utils\Util $util
      * @return void
      */
     public function __construct(Util $util)
@@ -44,7 +42,7 @@ class FlowReasonController extends Controller
         if (request()->ajax()) {
             $flow_reasons = FlowReason::where('business_id', $business_id)
                 ->select('id', 'reason', 'description');
-            
+
             return Datatables::of($flow_reasons)
                 ->addColumn(
                     'action',
@@ -86,7 +84,6 @@ class FlowReasonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -103,7 +100,7 @@ class FlowReasonController extends Controller
 
             $flow_reason = FlowReason::create($input);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->util->registerBinnacle($user_id, $this->module_name, 'create', $flow_reason);
@@ -111,15 +108,15 @@ class FlowReasonController extends Controller
             $output = [
                 'success' => true,
                 'data' => $flow_reason,
-                'msg' => __('flow_reason.added_success')
+                'msg' => __('flow_reason.added_success'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -159,7 +156,6 @@ class FlowReasonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -177,28 +173,28 @@ class FlowReasonController extends Controller
 
                 $flow_reason = FlowReason::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $flow_reason_old = clone $flow_reason;
 
                 $flow_reason->fill($input);
                 $flow_reason->save();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = $request->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'update', $flow_reason_old, $flow_reason);
 
                 $output = [
                     'success' => true,
-                    'msg' => __('flow_reason.updated_success')
+                    'msg' => __('flow_reason.updated_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -222,27 +218,27 @@ class FlowReasonController extends Controller
             try {
                 $flow_reason = FlowReason::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $flow_reason_old = clone $flow_reason;
 
                 $flow_reason->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'delete', $flow_reason_old);
 
                 $output = [
                     'success' => true,
-                    'msg' => __('flow_reason.deleted_success')
+                    'msg' => __('flow_reason.deleted_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

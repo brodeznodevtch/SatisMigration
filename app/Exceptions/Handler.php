@@ -2,14 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Mail\ExceptionOccured;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-
 use Mail;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
-use App\Mail\ExceptionOccured;
 
 class Handler extends ExceptionHandler
 {
@@ -32,7 +31,6 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -50,7 +48,6 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
@@ -62,7 +59,6 @@ class Handler extends ExceptionHandler
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
@@ -76,8 +72,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Sends the exception email in demo server
-     *
-     * @param $exception
      */
     public function sendEmail(Exception $exception)
     {
@@ -88,8 +82,8 @@ class Handler extends ExceptionHandler
 
             $html = $handler->getHtml($e);
             $email = env('MAIL_USERNAME');
-            
-            if (!empty($email)) {
+
+            if (! empty($email)) {
                 Mail::to($email)->send(new ExceptionOccured($html));
             }
         } catch (Exception $ex) {

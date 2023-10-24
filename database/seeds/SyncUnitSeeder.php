@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\Unit;
+use App\Models\Business;
+use App\Models\Unit;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
@@ -11,11 +11,12 @@ class SyncUnitSeeder extends Seeder
 
     /**
      * Constructor
-     * 
+     *
      * @param App\Utils\ProductUtil
      * @return void
      */
-    public function __construct(ProductUtil $productUtil) {
+    public function __construct(ProductUtil $productUtil)
+    {
         $this->productUtil = $productUtil;
     }
 
@@ -36,7 +37,6 @@ class SyncUnitSeeder extends Seeder
 
         $business = Business::where('id', '!=', $business_id)->get();
 
-        
         foreach ($business as $b) {
             /** Get units from other business */
             $units = Unit::where('business_id', $business_id)->get();

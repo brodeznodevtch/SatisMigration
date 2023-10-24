@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnTaxIncToDocumentTypesTable extends Migration
 {
@@ -14,10 +14,10 @@ class AddColumnTaxIncToDocumentTypesTable extends Migration
     public function up()
     {
         Schema::table('document_types', function (Blueprint $table) {
-            $table->boolean("tax_inc")
-                ->after("short_name")
+            $table->boolean('tax_inc')
+                ->after('short_name')
                 ->default(true);
-            
+
             $table->renameColumn('isactive', 'is_active');
         });
     }
@@ -30,7 +30,7 @@ class AddColumnTaxIncToDocumentTypesTable extends Migration
     public function down()
     {
         Schema::table('document_types', function (Blueprint $table) {
-            $table->dropColumn("tax_inc");
+            $table->dropColumn('tax_inc');
             $table->renameColumn('is_active', 'isactive');
         });
     }

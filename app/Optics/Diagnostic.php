@@ -2,9 +2,8 @@
 
 namespace App\Optics;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Diagnostic extends Model
 {
@@ -33,7 +32,7 @@ class Diagnostic extends Model
      */
     protected $fillable = [
         'business_id',
-        'name'
+        'name',
     ];
 
     /**
@@ -43,22 +42,21 @@ class Diagnostic extends Model
      */
     public function business_location()
     {
-        return $this->belongsTo('App\BusinessLocation');
+        return $this->belongsTo(\App\Models\BusinessLocation::class);
     }
 
     /**
      * Return list of material types
      *
-     * @param int $business_id
-     * @param boolean $show_all = false
-     * @param array $receipt_printer_type_attribute
-     *
+     * @param  int  $business_id
+     * @param  bool  $show_all = false
+     * @param  array  $receipt_printer_type_attribute
      * @return array
      */
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
     {
         $query = Diagnostic::where('business_id', $business_id);
-        
+
         /*
         $permitted_diagnostics = Diagnostic::permittedDiagnostics();
         if ($permitted_diagnostics != 'all') {
@@ -70,14 +68,14 @@ class Diagnostic extends Model
 
         //Prepend none
         if ($prepend_none) {
-            $diagnostics = $diagnostics->prepend(__("lang_v1.none"), '');
+            $diagnostics = $diagnostics->prepend(__('lang_v1.none'), '');
         }
 
         //Prepend none
         if ($prepend_all) {
-            $diagnostics = $diagnostics->prepend(__("report.all"), '');
+            $diagnostics = $diagnostics->prepend(__('report.all'), '');
         }
-        
+
         return $diagnostics;
     }
 
@@ -94,13 +92,13 @@ class Diagnostic extends Model
     //         $business_id = request()->session()->get('user.business_id');
     //         $permitted_cashiers = [];
     //         $all_cashiers = Cashier::where('business_id', $business_id)->get();
-            
+
     //         foreach ($all_cashiers as $cashier) {
     //             if (auth()->user()->can('cashier.' . $cashier->id)) {
     //                 $permitted_cashiers[] = $cashier->id;
     //             }
     //         }
-    
+
     //         return $permitted_cashiers;
     //     }
     // }

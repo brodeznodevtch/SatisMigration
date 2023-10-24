@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddForeignKeyOfUnitsToProducts extends Migration
 {
@@ -16,7 +16,6 @@ class AddForeignKeyOfUnitsToProducts extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->unsignedInteger('unit_id')->nullable()->after('type');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
-
 
             $table->unsignedInteger('unit_group_id')->nullable()->after('unit_id');
             $table->foreign('unit_group_id')->references('id')->on('unit_groups')->onDelete('cascade');

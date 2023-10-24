@@ -2,34 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Product;
-use App\Transaction;
-use App\BusinessLocation;
-use App\MovementType;
-use App\PurchaseLine;
-
+use App\Models\BusinessLocation;
+use App\Models\MovementType;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Warehouse;
-
+use App\Models\Warehouse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OpeningStockController extends Controller
 {
-
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     protected $transactionUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil)
@@ -46,7 +42,7 @@ class OpeningStockController extends Controller
      */
     public function add($product_id)
     {
-        if (!auth()->user()->can('product.update')) {
+        if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -54,23 +50,23 @@ class OpeningStockController extends Controller
 
         //Get the product
         $product = Product::where('business_id', $business_id)
-                            ->where('id', $product_id)
-                            ->with(['variations', 'variations.product_variation', 'unit'])
-                            ->first();
-        if (!empty($product)) {
+            ->where('id', $product_id)
+            ->with(['variations', 'variations.product_variation', 'unit'])
+            ->first();
+        if (! empty($product)) {
             //Get Opening Stock Transactions for the product if exists
             $transactions = Transaction::where('business_id', $business_id)
-                                ->where('opening_stock_product_id', $product_id)
-                                ->where('type', 'opening_stock')
-                                ->with(['purchase_lines'])
-                                ->get();
-            
+                ->where('opening_stock_product_id', $product_id)
+                ->where('type', 'opening_stock')
+                ->with(['purchase_lines'])
+                ->get();
+
             $purchases = [];
             foreach ($transactions as $transaction) {
                 $purchase_lines = [];
 
                 foreach ($transaction->purchase_lines as $purchase_line) {
-                    if (!empty($purchase_lines[$purchase_line->variation_id])) {
+                    if (! empty($purchase_lines[$purchase_line->variation_id])) {
                         $k = count($purchase_lines[$purchase_line->variation_id]);
                     } else {
                         $k = 0;
@@ -107,27 +103,26 @@ class OpeningStockController extends Controller
             }
 
             return view('opening_stock.add')
-                    ->with(compact(
-                        'product',
-                        'locations',
-                        'purchases',
-                        'enable_expiry',
-                        'enable_lot'
-                    ));
+                ->with(compact(
+                    'product',
+                    'locations',
+                    'purchases',
+                    'enable_expiry',
+                    'enable_lot'
+                ));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function save(Request $request)
     {
         //dd($request);
-        if (!auth()->user()->can('product.update')) {
+        if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -147,13 +142,13 @@ class OpeningStockController extends Controller
             //$locations = BusinessLocation::forDropdown($business_id)->toArray();
             $locations = Warehouse::forDropdown($business_id, false)->toArray();
 
-            if (!empty($product)) {
+            if (! empty($product)) {
                 //Get product tax
-                $tax_percent = !empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
-                $tax_id = !empty($product->product_tax->id) ? $product->product_tax->id : null;
+                $tax_percent = ! empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
+                $tax_id = ! empty($product->product_tax->id) ? $product->product_tax->id : null;
 
                 //Get start date for financial year.
-                $transaction_date = request()->session()->get("financial_year.start");
+                $transaction_date = request()->session()->get('financial_year.start');
                 $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
 
                 DB::beginTransaction();
@@ -181,12 +176,12 @@ class OpeningStockController extends Controller
                                 $qty = $this->productUtil->num_uf(trim($v['quantity']));
 
                                 $exp_date = null;
-                                if (!empty($v['exp_date'])) {
+                                if (! empty($v['exp_date'])) {
                                     $exp_date = \Carbon::createFromFormat('d-m-Y', $v['exp_date'])->format('Y-m-d');
                                 }
 
                                 $lot_number = null;
-                                if (!empty($v['lot_number'])) {
+                                if (! empty($v['lot_number'])) {
                                     $lot_number = $v['lot_number'];
                                 }
 
@@ -225,7 +220,7 @@ class OpeningStockController extends Controller
                         $delete_variation_ids = [];
                         $transaction = [];
                         //create transaction & purchase lines
-                        if (!empty($purchase_lines)) {
+                        if (! empty($purchase_lines)) {
                             $is_new_transaction = false;
 
                             $transaction = Transaction::where('type', 'opening_stock')
@@ -234,7 +229,7 @@ class OpeningStockController extends Controller
                                 ->where('location_id', $location_id)
                                 ->where('warehouse_id', $warehouse_id)
                                 ->first();
-                            if (!empty($transaction)) {
+                            if (! empty($transaction)) {
                                 $transaction->total_before_tax = $purchase_total;
                                 $transaction->final_total = $purchase_total;
                                 $transaction->update();
@@ -253,18 +248,18 @@ class OpeningStockController extends Controller
                                         'final_total' => $purchase_total,
                                         'payment_status' => 'paid',
                                         'created_by' => $user_id,
-                                        'warehouse_id' => $warehouse_id
+                                        'warehouse_id' => $warehouse_id,
                                     ]
                                 );
                             }
 
-                            # Data to create or update kardex lines
+                            // Data to create or update kardex lines
                             $lines_before = PurchaseLine::where('transaction_id', $transaction->id)->get();
 
                             //unset deleted purchase lines
                             $delete_purchase_line_ids = [];
                             $delete_purchase_lines = null;
-                            if (!empty($updated_purchase_line_ids)) {
+                            if (! empty($updated_purchase_line_ids)) {
                                 $delete_purchase_lines = PurchaseLine::where('transaction_id', $transaction->id)
                                     ->whereNotIn('id', $updated_purchase_line_ids)
                                     ->get();
@@ -286,13 +281,13 @@ class OpeningStockController extends Controller
                                     }
                                     //Delete deleted purchase lines
                                     PurchaseLine::where('transaction_id', $transaction->id)
-                                                ->whereIn('id', $delete_purchase_line_ids)
-                                                ->delete();
+                                        ->whereIn('id', $delete_purchase_line_ids)
+                                        ->delete();
                                 }
                             }
                             $transaction->purchase_lines()->saveMany($purchase_lines);
 
-                            # Data to create or update kardex lines
+                            // Data to create or update kardex lines
                             $lines = PurchaseLine::where('transaction_id', $transaction->id)->get();
 
                             $movement_type = MovementType::where('name', 'opening_stock')
@@ -300,24 +295,22 @@ class OpeningStockController extends Controller
                                 ->where('business_id', $business_id)
                                 ->first();
 
-                            # Check if movement type is set else create it
+                            // Check if movement type is set else create it
                             if (empty($movement_type)) {
                                 $movement_type = MovementType::create([
                                     'name' => 'opening_stock',
                                     'type' => 'input',
-                                    'business_id' => $business_id
+                                    'business_id' => $business_id,
                                 ]);
                             }
 
-                            # Store kardex
-                            $this->transactionUtil->createOrUpdateInputLines($movement_type, $transaction, 'OS' . $transaction->id, $lines, $lines_before);
+                            // Store kardex
+                            $this->transactionUtil->createOrUpdateInputLines($movement_type, $transaction, 'OS'.$transaction->id, $lines, $lines_before);
 
                             //Update mapping of purchase & Sell.
-                            if (!$is_new_transaction) {
+                            if (! $is_new_transaction) {
                                 $this->transactionUtil->adjustMappingPurchaseSellAfterEditingPurchase('received', $transaction, $delete_purchase_lines);
                             }
-
-
 
                             //************************************************************** */
                             //************************************************************** */
@@ -328,7 +321,7 @@ class OpeningStockController extends Controller
 
                             if ($enable_editing_avg_cost == 1) {
                                 $variation_ids = PurchaseLine::where('transaction_id', $transaction->id)->pluck('variation_id');
-                
+
                                 foreach ($variation_ids as $variation_id) {
                                     $this->productUtil->recalculateProductCost($variation_id);
                                 }
@@ -351,8 +344,8 @@ class OpeningStockController extends Controller
                                 ->where('warehouse_id', $warehouse_id)
                                 ->with(['purchase_lines'])
                                 ->first();
-                            
-                            if (!empty($delete_transaction)) {
+
+                            if (! empty($delete_transaction)) {
                                 $delete_purchase_lines = $delete_transaction->purchase_lines;
 
                                 foreach ($delete_purchase_lines as $delete_purchase_line) {
@@ -375,20 +368,21 @@ class OpeningStockController extends Controller
             }
 
             $output = ['success' => 1,
-                             'msg' => __('lang_v1.opening_stock_added_successfully')
-                        ];
+                'msg' => __('lang_v1.opening_stock_added_successfully'),
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
+
             return back()->with('status', $output);
         }
 
         if (request()->ajax()) {
-                return $output;
+            return $output;
         }
 
         return redirect('products')->with('status', $output);

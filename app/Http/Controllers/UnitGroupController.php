@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\UnitGroup;
-use App\Unit;
-use App\Product;
-use App\UnitGroupLines;
+use App\Models\Product;
+use App\Models\Unit;
+use App\Models\UnitGroup;
+use App\Models\UnitGroupLines;
 use DataTables;
 use DB;
+use Illuminate\Http\Request;
 
 class UnitGroupController extends Controller
 {
@@ -35,22 +35,21 @@ class UnitGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('unit.create')) {
+        if (! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
         }
 
-        try{
+        try {
             $unit_ids = $request->input('unit_ids');
             $factors = $request->input('factor');
             $business_id = $request->session()->get('user.business_id');
 
             DB::beginTransaction();
-            $group = New UnitGroup;
+            $group = new UnitGroup;
             $group->business_id = $business_id;
             $group->unit_id = $request->input('unit_parent');
             $group->description = $request->input('description');
@@ -63,11 +62,9 @@ class UnitGroupController extends Controller
             $default->default = 1;
             $default->save();
 
-            if (!empty($unit_ids))
-            {
-                $cont = 0;                
-                while($cont < count($unit_ids))
-                {
+            if (! empty($unit_ids)) {
+                $cont = 0;
+                while ($cont < count($unit_ids)) {
                     $detail = new UnitGroupLines;
                     $detail->unit_id = $unit_ids[$cont];
                     $detail->unit_group_id = $group->id;
@@ -75,22 +72,22 @@ class UnitGroupController extends Controller
                     $detail->default = 0;
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("unit.group_added")
+                'msg' => __('unit.group_added'),
             ];
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return $output;
     }
 
@@ -103,6 +100,7 @@ class UnitGroupController extends Controller
     public function show($id)
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
+
         return response()->json($UnitGroup);
     }
 
@@ -115,23 +113,23 @@ class UnitGroupController extends Controller
     public function edit($id)
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
+
         return response()->json($UnitGroup);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('unit.update')) {
+        if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
         }
 
-        try{
+        try {
             $unit_ids = $request->input('eunit_ids');
             $factors = $request->input('efactor');
             $business_id = $request->session()->get('user.business_id');
@@ -143,11 +141,9 @@ class UnitGroupController extends Controller
             $group->description = $request->input('edescription');
             $group->save();
             UnitGroupLines::where('unit_group_id', $id)->where('default', 0)->forceDelete();
-            if (!empty($unit_ids))
-            {
-                $cont = 0;                
-                while($cont < count($unit_ids))
-                {
+            if (! empty($unit_ids)) {
+                $cont = 0;
+                while ($cont < count($unit_ids)) {
                     $detail = new UnitGroupLines;
                     $detail->unit_id = $unit_ids[$cont];
                     $detail->unit_group_id = $group->id;
@@ -155,22 +151,22 @@ class UnitGroupController extends Controller
                     $detail->default = 0;
                     $detail->save();
                     $cont = $cont + 1;
-                } 
+                }
             }
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("unit.group_updated")
+                'msg' => __('unit.group_updated'),
             ];
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return $output;
     }
 
@@ -185,51 +181,54 @@ class UnitGroupController extends Controller
         $group = UnitGroup::find($id);
         $products = Product::where('unit_id', $id)->count();
 
-        if($products > 0){
+        if ($products > 0) {
             $output = [
                 'success' => false,
-                'msg' => __("unit.group_has_children")
+                'msg' => __('unit.group_has_children'),
             ];
-        }
-        else{
+        } else {
             $group->delete();
             $output = [
                 'success' => true,
-                'msg' => __("unit.group_delete_success")
+                'msg' => __('unit.group_delete_success'),
             ];
         }
+
         return $output;
     }
 
     public function getUnitGroupsData()
     {
-        if (!auth()->user()->can('unit.view')) {
+        if (! auth()->user()->can('unit.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $unitGroups = UnitGroup::where('business_id', $business_id)->with('unit')->get();
+
         return DataTables::of($unitGroups)
-        ->addColumn('action', function ($row){
-            $action = "";
-            if (auth()->user()->can('unit.update')){
-                $action .= '<a class="btn btn-xs btn-primary" onClick="editUnitGroup('.$row->id.')"><i class="glyphicon glyphicon-edit"></i>'. __("messages.edit") .'</a>';
-            }
-            if (auth()->user()->can('unit.delete')){
-                $action .= ' <a class="btn btn-xs btn-danger" onClick="deleteUnitGroup('.$row->id.')"><i class="glyphicon glyphicon-trash"></i>'. __("messages.delete") .'</a>';
-            }
-            return $action;            
-        })       
-        ->toJson();
+            ->addColumn('action', function ($row) {
+                $action = '';
+                if (auth()->user()->can('unit.update')) {
+                    $action .= '<a class="btn btn-xs btn-primary" onClick="editUnitGroup('.$row->id.')"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a>';
+                }
+                if (auth()->user()->can('unit.delete')) {
+                    $action .= ' <a class="btn btn-xs btn-danger" onClick="deleteUnitGroup('.$row->id.')"><i class="glyphicon glyphicon-trash"></i>'.__('messages.delete').'</a>';
+                }
+
+                return $action;
+            })
+            ->toJson();
     }
 
     public function groupHasLines($id)
     {
         $lines = DB::table('unit_group_lines as lines')
-        ->join('units', 'units.id', '=', 'lines.unit_id')
-        ->select('lines.*', 'units.actual_name', 'units.short_name')
-        ->where('lines.unit_group_id', $id)
-        ->where('default', 0)
-        ->get();
+            ->join('units', 'units.id', '=', 'lines.unit_id')
+            ->select('lines.*', 'units.actual_name', 'units.short_name')
+            ->where('lines.unit_group_id', $id)
+            ->where('default', 0)
+            ->get();
+
         return $lines;
     }
 }
