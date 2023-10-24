@@ -11,12 +11,7 @@ class Warehouse extends Model
 
     protected $table = 'warehouses';
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
+
 
     /**
      * The attributes that aren't mass assignable.

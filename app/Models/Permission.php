@@ -12,7 +12,6 @@ class Permission extends Model
 
     protected $table = 'permissions';
 
-    protected $dates = ['deleted_at'];
 
     protected $fillable = ['name', 'description', 'guard_name', 'module_id'];
 

@@ -10,7 +10,6 @@ class UnitGroup extends Model
 {
     use SoftDeletes, CascadeSoftDeletes;
 
-    protected $dates = ['deleted_at'];
 
     protected $cascadeDeletes = ['UnitGroupLines'];
 

@@ -9,7 +9,6 @@ class UnitGroupLines extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
 
     protected $fillable = ['unit_id', 'unit_group_id', 'factor', 'default'];
 
