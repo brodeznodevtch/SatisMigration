@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
 use App\Mail\NotifyUserCreated;
 use App\Models\Business;
 use App\Models\System;
@@ -11,6 +10,7 @@ use App\Notifications\NewNotification;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;

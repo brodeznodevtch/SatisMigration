@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
@@ -22,6 +21,7 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Storage;
 
