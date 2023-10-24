@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'IsInstalled' => \App\Http\Middleware\IsInstalled::class,
         'PasswordChanged' => \App\Http\Middleware\FirstSession::class,
     ];
+
     /**
      * The priority-sorted list of middleware.
      *
