@@ -34,8 +34,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
-
     /**
      * Get the business that owns the user.
      */

@@ -10,7 +10,6 @@ class Module extends Model
 {
     use SoftDeletes, CascadeSoftDeletes;
 
-
     protected $cascadeDeletes = ['permission'];
 
     protected $fillable = ['name', 'description'];

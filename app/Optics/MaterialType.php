@@ -11,8 +11,6 @@ class MaterialType extends Model
 
     protected $table = 'material_types';
 
-
-
     /**
      * The attributes that aren't mass assignable.
      *

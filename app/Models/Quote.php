@@ -11,7 +11,6 @@ class Quote extends Model
 
     protected $guarded = ['id'];
 
-
     protected $fillable = [
         'customer_id',
         'employee_id',

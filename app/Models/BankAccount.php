@@ -9,7 +9,6 @@ class BankAccount extends Model
 {
     use SoftDeletes;
 
-
     protected $fillable = ['business_id', 'bank_id', 'catalogue_id', 'name', 'description', 'type', 'number'];
 
     public function bankTransaction()

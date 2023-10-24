@@ -9,7 +9,6 @@ class LabOrderDetail extends Model
 {
     use SoftDeletes;
 
-
     protected $guarded = ['id'];
 
     protected $fillable = [

@@ -11,8 +11,6 @@ class Diagnostic extends Model
 
     protected $table = 'diagnostics';
 
-
-
     /**
      * The attributes that aren't mass assignable.
      *

@@ -9,7 +9,6 @@ class ExternalLab extends Model
 {
     use SoftDeletes;
 
-
     protected $guarded = ['id'];
 
     protected $fillable = [

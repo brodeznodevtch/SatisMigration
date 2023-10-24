@@ -10,8 +10,6 @@ class Brands extends Model
 {
     use SoftDeletes;
 
-
-
     /**
      * The attributes that aren't mass assignable.
      *

@@ -11,8 +11,6 @@ class Warehouse extends Model
 
     protected $table = 'warehouses';
 
-
-
     /**
      * The attributes that aren't mass assignable.
      *

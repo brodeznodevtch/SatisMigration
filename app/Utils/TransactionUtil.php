@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-use Illuminate\Support\Str;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
@@ -41,6 +40,7 @@ use App\Models\Variation;
 use App\Models\VariationLocationDetails;
 use App\Restaurant\ResTable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TransactionUtil extends Util
 {

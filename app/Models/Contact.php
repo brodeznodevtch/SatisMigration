@@ -19,8 +19,6 @@ class Contact extends Model
      */
     protected $guarded = ['id'];
 
-
-
     public function scopeOnlySuppliers($query)
     {
         return $query->whereIn('contacts.type', ['supplier', 'both']);
