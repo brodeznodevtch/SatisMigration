@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Illuminate\Support\Str;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
@@ -2524,7 +2525,7 @@ class TransactionUtil extends Util
 
             return $invoice_no;
         } else {
-            return str_random(5);
+            return Str::random(5);
         }
     }
 
