@@ -13,10 +13,10 @@ use App\Models\PurchaseLine;
 use App\Models\Transaction;
 use App\Models\TransactionSellLine;
 use App\Models\User;
-use App\Utils\ProductUtil;
-use App\Utils\TransactionUtil;
 use App\Models\Variation;
 use App\Models\VariationLocationDetails;
+use App\Utils\ProductUtil;
+use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -642,14 +642,14 @@ class PhysicalInventoryController extends Controller
                     });
                 }
             )
-                    ->where('physical_inventory_id', $id)
-                    ->select(
-                        'physical_inventory_lines.*',
-                        'variation_location_details.qty_available as stock',
-                        DB::raw('(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = physical_inventory_lines.variation_id ORDER BY id DESC LIMIT 1) as price'),
-                        DB::raw('physical_inventory_lines.quantity - variation_location_details.qty_available as difference')
-                    )
-                    ->get();
+                ->where('physical_inventory_id', $id)
+                ->select(
+                    'physical_inventory_lines.*',
+                    'variation_location_details.qty_available as stock',
+                    DB::raw('(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = physical_inventory_lines.variation_id ORDER BY id DESC LIMIT 1) as price'),
+                    DB::raw('physical_inventory_lines.quantity - variation_location_details.qty_available as difference')
+                )
+                ->get();
 
             foreach ($pil as $item) {
                 $pil_upd = PhysicalInventoryLine::find($item->id);

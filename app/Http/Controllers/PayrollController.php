@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bank;
-use App\Models\BonusCalculation;
-use App\Models\Business;
-use App\Models\Employees;
 use App\Exports\PaymentFileReportExport;
 use App\Exports\PayrollBonusReportExport;
 use App\Exports\PayrollHonoraryReportExport;
 use App\Exports\PayrollSalaryReportExport;
 use App\Exports\PayrollVacationReportExport;
+use App\Models\Bank;
+use App\Models\BonusCalculation;
+use App\Models\Business;
+use App\Models\Employees;
 use App\Models\LawDiscount;
-use App\Notifications\PaymentSplisNotification;
 use App\Models\PaymentPeriod;
 use App\Models\Payroll;
 use App\Models\PayrollDetail;
@@ -24,6 +23,7 @@ use App\Models\RrhhSalaryHistory;
 use App\Models\RrhhSetting;
 use App\Models\RrhhTypeWage;
 use App\Models\User;
+use App\Notifications\PaymentSplisNotification;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\PayrollUtil;

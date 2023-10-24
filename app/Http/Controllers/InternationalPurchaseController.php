@@ -15,12 +15,12 @@ use App\Models\Pos;
 use App\Models\PurchaseLine;
 use App\Models\TaxRate;
 use App\Models\Transaction;
+use App\Models\Warehouse;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

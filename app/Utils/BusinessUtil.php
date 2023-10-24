@@ -223,13 +223,13 @@ class BusinessUtil extends Util
     public function getDetails($business_id)
     {
         $details = Business::leftjoin('tax_rates AS TR', 'business.default_sales_tax', 'TR.id')
-                            ->select(
-                                'business.*',
-                                'TR.percent AS tax_calculation_amount',
-                                'business.default_sales_discount'
-                            )
-                            ->where('business.id', $business_id)
-                            ->first();
+            ->select(
+                'business.*',
+                'TR.percent AS tax_calculation_amount',
+                'business.default_sales_discount'
+            )
+            ->where('business.id', $business_id)
+            ->first();
 
         return $details;
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NotificationTemplate;
+use App\Models\Transaction;
 use App\Notifications\CustomerNotification;
 use App\Notifications\SupplierNotification;
-use App\Models\NotificationTemplate;
 use App\Restaurant\Booking;
-use App\Models\Transaction;
 use App\Utils\NotificationUtil;
 use Illuminate\Http\Request;
 use Notification;

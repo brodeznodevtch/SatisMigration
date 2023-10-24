@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KardexReportExport;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasTransaction;
 use App\Models\Business;
-use App\Exports\KardexReportExport;
 use App\Models\Kardex;
 use App\Models\KitHasProduct;
 use App\Models\MovementType;
-use App\Optics\LabOrder;
-use App\Optics\LabOrderDetail;
 use App\Models\PhysicalInventory;
 use App\Models\PhysicalInventoryLine;
 use App\Models\Product;
@@ -18,12 +16,14 @@ use App\Models\PurchaseLine;
 use App\Models\StockAdjustmentLine;
 use App\Models\Transaction;
 use App\Models\TransactionSellLine;
-use App\Utils\ProductUtil;
-use App\Utils\TaxUtil;
-use App\Utils\TransactionUtil;
 use App\Models\Variation;
 use App\Models\VariationLocationDetails;
 use App\Models\Warehouse;
+use App\Optics\LabOrder;
+use App\Optics\LabOrderDetail;
+use App\Utils\ProductUtil;
+use App\Utils\TaxUtil;
+use App\Utils\TransactionUtil;
 use DB;
 use Excel;
 use Illuminate\Http\Request;

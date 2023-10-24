@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DebtsToPayReportExport;
+use App\Exports\SuggestedPurchaseReportExport;
 use App\Models\AccountBusinessLocation;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasTransaction;
@@ -17,8 +19,6 @@ use App\Models\Country;
 use App\Models\CustomerGroup;
 use App\Models\DocumentType;
 use App\Models\Employees;
-use App\Exports\DebtsToPayReportExport;
-use App\Exports\SuggestedPurchaseReportExport;
 use App\Models\MovementType;
 use App\Models\PaymentTerm;
 use App\Models\Pos;
@@ -28,6 +28,8 @@ use App\Models\TaxRate;
 use App\Models\Transaction;
 use App\Models\TransactionHasImportExpense;
 use App\Models\TypeEntrie;
+use App\Models\Variation;
+use App\Models\Warehouse;
 use App\Utils\AccountingUtil;
 use App\Utils\BusinessUtil;
 use App\Utils\ContactUtil;
@@ -35,8 +37,6 @@ use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Models\Variation;
-use App\Models\Warehouse;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

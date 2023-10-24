@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessLocation;
 use App\Models\Employees;
-use App\Notifications\NewNotification;
 use App\Models\Positions;
 use App\Models\System;
 use App\Models\User;
+use App\Notifications\NewNotification;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

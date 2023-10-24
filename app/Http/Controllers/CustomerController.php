@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AccountsReceivableReportExport;
 use App\Models\Brands;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -19,18 +20,17 @@ use App\Models\CustomerGroup;
 use App\Models\CustomerPortfolio;
 use App\Models\CustomerVehicle;
 use App\Models\Employees;
-use App\Exports\AccountsReceivableReportExport;
-use App\Optics\LabOrder;
-use App\Optics\Patient;
 use App\Models\PaymentTerm;
 use App\Models\State;
 use App\Models\TaxGroup;
 use App\Models\Transaction;
+use App\Models\Zone;
+use App\Optics\LabOrder;
+use App\Optics\Patient;
 use App\Utils\BusinessUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use App\Utils\Util;
-use App\Models\Zone;
 use DataTables;
 use DB;
 use Excel;

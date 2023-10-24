@@ -3,11 +3,11 @@
 namespace App\Utils;
 
 use App\Models\Business;
+use App\Models\NotificationTemplate;
+use App\Models\Transaction;
 use App\Notifications\CustomerNotification;
 use App\Notifications\SupplierNotification;
-use App\Models\NotificationTemplate;
 use App\Restaurant\Booking;
-use App\Models\Transaction;
 use Notification;
 
 class NotificationUtil extends Util

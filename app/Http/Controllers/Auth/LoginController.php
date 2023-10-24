@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Business;
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\Util;

@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\KardexController;
 use App\Models\Business;
 use App\Models\BusinessLocation;
-use App\Http\Controllers\KardexController;
 use App\Models\Kardex;
 use App\Models\KitHasProduct;
 use App\Models\Product;
