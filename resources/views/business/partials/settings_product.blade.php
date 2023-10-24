@@ -228,7 +228,7 @@
             </div>
         </div>
 
-        {{-- Show costs or prices --}}
+        {{-- Show costs ?? prices --}}
         <div class="col-sm-4">
             <div class="form-group">
                 {!! Form::label('show_costs_or_prices', __('lang_v1.show_costs_or_prices') . ':') !!}

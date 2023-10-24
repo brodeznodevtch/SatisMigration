@@ -7,7 +7,7 @@
     {{ $product->sku }}<br>
 
     <b>@lang('product.brand'): </b>
-    {{ $product->brand->name or '--' }}<br>
+    {{ $product->brand->name ?? '--' }}<br>
 
     <b>@lang('product.clasification'): </b>
     @switch($product->clasification)
@@ -31,7 +31,7 @@
     @endif
 
     <b>@lang('product.unit'): </b>
-    {{ $product->unit->actual_name or '--' }}<br>
+    {{ $product->unit->actual_name ?? '--' }}<br>
 
     @if (!empty($product->product_custom_field1))
       <b>@lang('lang_v1.product_custom_field1'): </b>
@@ -58,13 +58,13 @@
   <!-- col-2 -->
   <div class="col-sm-4 invoice-col">
     <b>@lang('product.barcode_type'): </b>
-    {{ $product->barcode_type or '--' }} <br>
+    {{ $product->barcode_type ?? '--' }} <br>
 
     <b>@lang('product.category'): </b>
-    {{ $product->category->name or '--' }}<br>
+    {{ $product->category->name ?? '--' }}<br>
 
     <b>@lang('product.sub_category'): </b>
-    {{ $product->sub_category->name or '--' }}<br>
+    {{ $product->sub_category->name ?? '--' }}<br>
 
     <b>@lang('product.manage_stock'): </b>
     @if ($product->enable_stock)
@@ -76,7 +76,7 @@
 
     @if ($product->enable_stock)
       <b>@lang('product.alert_quantity'): </b>
-      {{ $product->alert_quantity or '--' }} <br>
+      {{ $product->alert_quantity ?? '--' }} <br>
     @endif
   </div>
   <!-- /.col-2 -->
@@ -100,7 +100,7 @@
     @endif
 
     <b>@lang('product.applicable_tax'): </b>
-    {{ $product->product_tax->name or __('lang_v1.none') }}
+    {{ $product->product_tax->name ?? __('lang_v1.none') }}
     @php
     $tax_type = ['inclusive' => __('product.inclusive'), 'exclusive' => __('product.exclusive')];
     @endphp
@@ -113,7 +113,7 @@
         <b>@lang('product.dai'): </b>
         -->
     {{--
-    {{ $product->dai or '--' }}
+    {{ $product->dai ?? '--' }}
     --}}
 
     @php
