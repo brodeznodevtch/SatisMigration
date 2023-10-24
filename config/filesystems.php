@@ -37,7 +37,7 @@ return [
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
     |
-    | Supported Drivers: "local", "ftp", "s3", "rackspace"
+    | Supported Drivers: "local", "ftp", "sftp", "s3", "rackspace"
     |
     */
 
@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
+            'root' => storage_path('app'),
         ],
 
         'public' => [
@@ -57,52 +57,13 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_KEY'),
-            'secret' => env('AWS_SECRET'),
-            'region' => env('AWS_REGION'),
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
         ],
 
-        'dropbox' => [
-            'driver' => 'dropbox',
-            'authorizationToken' => env('DROPBOX_ACCESS_TOKEN'),
-        ],
-        'flags' => [
-            'driver' => 'local',
-            'root' => public_path().'/flags/',
-        ],
-        'credits' => [
-            'driver' => 'local',
-            'root' => public_path().'/credit_files/',
-        ],
-        'rrhh_photos' => [
-            'driver' => 'local',
-            'root' => public_path().'/rrhh_photos/',
-        ],
-        'slide' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/slides/',
-        ],
-        'employee_photo' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/employee_photo',
-        ],
-        'employee_documents' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/employee_documents',
-        ],
-        'employee_contracts' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/employee_contracts',
-        ],
-        'employee_personnel_actions' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/employee_personnel_actions',
-        ],
-        'employee_curriculum_vitae' => [
-            'driver' => 'local',
-            'root' => public_path().'/uploads/employee_curriculum_vitae',
-        ],
     ],
 
 ];

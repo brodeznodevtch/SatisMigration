@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Business;
 use App\Mail\NotifyUserCreated;
-use App\Notifications\NewNotification;
+use App\Models\Business;
 use App\Models\System;
 use App\Models\User;
+use App\Notifications\NewNotification;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -149,10 +150,10 @@ class ManageUserController extends Controller
                     for ($i = 0; $i < 9; $i++) {
                         $password .= substr($str, rand(0, 61), 1);
                     }
-                    $user_details['password'] = bcrypt($password);
+                    $user_details['password'] = Hash::make($password);
                 } else {
                     $password = $request->input('password');
-                    $user_details['password'] = bcrypt($user_details['password']);
+                    $user_details['password'] = Hash::make($user_details['password']);
                 }
 
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');
@@ -292,10 +293,10 @@ class ManageUserController extends Controller
                         for ($i = 0; $i < 9; $i++) {
                             $password .= substr($str, rand(0, 61), 1);
                         }
-                        $user_data['password'] = bcrypt($password);
+                        $user_data['password'] = Hash::make($password);
                     } else {
                         $password = $request->input('password');
-                        $user_data['password'] = bcrypt($password);
+                        $user_data['password'] = Hash::make($password);
                     }
                 }
                 $user = User::where('business_id', $business_id)->findOrFail($id);
@@ -384,10 +385,10 @@ class ManageUserController extends Controller
                         for ($i = 0; $i < 9; $i++) {
                             $new_password .= substr($str, rand(0, 61), 1);
                         }
-                        $user_data['password'] = bcrypt($new_password);
+                        $user_data['password'] = Hash::make($new_password);
                     } else {
                         $new_password = $request->input('password');
-                        $user_data['password'] = bcrypt($new_password);
+                        $user_data['password'] = Hash::make($new_password);
                     }
                 }
                 $user = User::where('business_id', $business_id)->findOrFail($id);

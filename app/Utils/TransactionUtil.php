@@ -2,6 +2,11 @@
 
 namespace App\Utils;
 
+use App\Events\TransactionPaymentAdded;
+use App\Events\TransactionPaymentDeleted;
+use App\Events\TransactionPaymentUpdated;
+use App\Exceptions\PurchaseSellMismatch;
+use App\get_sub_products;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Cashier;
@@ -12,11 +17,6 @@ use App\Models\Customer;
 use App\Models\DocumentCorrelative;
 use App\Models\DocumentType;
 use App\Models\Employees;
-use App\Events\TransactionPaymentAdded;
-use App\Events\TransactionPaymentDeleted;
-use App\Events\TransactionPaymentUpdated;
-use App\Exceptions\PurchaseSellMismatch;
-use App\get_sub_products;
 use App\Models\InvoiceScheme;
 use App\Models\Kardex;
 use App\Models\KitHasProduct;
@@ -26,7 +26,6 @@ use App\Models\Product;
 use App\Models\PurchaseLine;
 use App\Models\Quote;
 use App\Models\QuoteLine;
-use App\Restaurant\ResTable;
 use App\Models\Suplies;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
@@ -39,6 +38,7 @@ use App\Models\TransactionTaxDetail;
 use App\Models\User;
 use App\Models\Variation;
 use App\Models\VariationLocationDetails;
+use App\Restaurant\ResTable;
 use Illuminate\Support\Facades\DB;
 
 class TransactionUtil extends Util
@@ -491,7 +491,7 @@ class TransactionUtil extends Util
         if (! empty($sell_line)) {
             foreach ($sell_line as $sl) {
                 $trans_tax_detail = TransactionTaxDetail::where('sell_line_id', $sl->id)
-                        ->first();
+                    ->first();
                 if (! empty($trans_tax_detail)) {
                     $trans_tax_detail->delete();
                 }
@@ -3768,8 +3768,8 @@ class TransactionUtil extends Util
     {
 
         $sell_purchase_line = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line_id)
-                                    ->orderBy('id', 'desc')
-                                    ->get();
+            ->orderBy('id', 'desc')
+            ->get();
 
         foreach ($sell_purchase_line as $row) {
             if ($row->quantity > $decrement_qty) {

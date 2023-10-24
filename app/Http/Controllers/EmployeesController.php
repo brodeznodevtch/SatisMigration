@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
-use App\Notifications\NewNotification;
 use App\Models\RrhhAbsenceInability;
 use App\Models\RrhhContract;
 use App\Models\RrhhPositionHistory;
@@ -14,6 +13,7 @@ use App\Models\RrhhSalaryHistory;
 use App\Models\RrhhTypeWage;
 use App\Models\System;
 use App\Models\User;
+use App\Notifications\NewNotification;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Storage;
 
@@ -202,10 +203,10 @@ class EmployeesController extends Controller
                     for ($i = 0; $i < 9; $i++) {
                         $password .= substr($str, rand(0, 61), 1);
                     }
-                    $user_details['password'] = bcrypt($password);
+                    $user_details['password'] = Hash::make($password);
                 } else {
                     $password = $request->input('password');
-                    $user_details['password'] = bcrypt($user_details['password']);
+                    $user_details['password'] = Hash::make($user_details['password']);
                 }
 
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');

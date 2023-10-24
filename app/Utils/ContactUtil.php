@@ -112,10 +112,10 @@ class ContactUtil
         $employee_name = '';
 
         $customer_employeeName = Customer::join('customer_portfolios as cp', 'customers.customer_portfolio_id', 'cp.id')
-                ->join('employees as e', 'cp.seller_id', 'e.id')
-                ->where('customers.id', $customer_id)
-                ->select(DB::raw("CONCAT(e.first_name, ' ', e.last_name) as name"))
-                ->first();
+            ->join('employees as e', 'cp.seller_id', 'e.id')
+            ->where('customers.id', $customer_id)
+            ->select(DB::raw("CONCAT(e.first_name, ' ', e.last_name) as name"))
+            ->first();
 
         if (! empty($customer_employeeName)) {
             $employee_name = $customer_employeeName->name;

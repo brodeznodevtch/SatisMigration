@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessLocation;
 use App\Models\Employees;
-use App\Notifications\NewNotification;
 use App\Models\Positions;
 use App\Models\System;
 use App\Models\User;
+use App\Notifications\NewNotification;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -130,10 +131,10 @@ class ManageEmployeesController extends Controller
                     for ($i = 0; $i < 9; $i++) {
                         $password .= substr($str, rand(0, 61), 1);
                     }
-                    $user_details['password'] = bcrypt($password);
+                    $user_details['password'] = Hash::make($password);
                 } else {
                     $password = $request->input('password');
-                    $user_details['password'] = bcrypt($user_details['password']);
+                    $user_details['password'] = Hash::make($user_details['password']);
                 }
 
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');

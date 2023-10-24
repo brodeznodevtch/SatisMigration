@@ -49,10 +49,10 @@ class InstallUtil extends Util
 
                                 if (! empty($variation)) {
                                     $variation_location_d = VariationLocationDetails::where('variation_id', $variation->id)
-                                            ->where('product_id', $line->product_id)
-                                            ->where('product_variation_id', $variation->product_variation_id)
-                                            ->where('location_id', $sa->location_id)
-                                            ->increment('qty_available', $line->quantity);
+                                        ->where('product_id', $line->product_id)
+                                        ->where('product_variation_id', $variation->product_variation_id)
+                                        ->where('location_id', $sa->location_id)
+                                        ->increment('qty_available', $line->quantity);
                                 }
                             }
                         }

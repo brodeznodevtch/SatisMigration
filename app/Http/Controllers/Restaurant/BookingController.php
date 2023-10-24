@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Restaurant;
 
 use App\Models\BusinessLocation;
 use App\Models\Contact;
-use App\Restaurant\Booking;
 use App\Models\User;
+use App\Restaurant\Booking;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;

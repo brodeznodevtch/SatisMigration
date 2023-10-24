@@ -8,11 +8,11 @@ use App\Models\MovementType;
 use App\Models\PurchaseLine;
 use App\Models\Transaction;
 use App\Models\TransactionSellLine;
+use App\Models\Variation;
+use App\Models\Warehouse;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Models\Variation;
-use App\Models\Warehouse;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
@@ -432,47 +432,47 @@ class StockAdjustmentController extends Controller
 
         if ($stock_adjustment->adjustment_type == 'normal') {
             $stock_adjustment_details = Transaction::leftJoin('purchase_lines as pl', 'transactions.id', 'pl.transaction_id')
-                        ->join('products as p', 'pl.product_id', 'p.id')
-                        ->join('variations as v', 'pl.variation_id', 'v.id')
-                        ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
-                        ->where('transactions.id', $id)
-                        ->where('transactions.type', 'stock_adjustment')
-                        ->select(
-                            'p.name as product',
-                            'p.type as type',
-                            'pv.name as product_variation',
-                            'v.name as variation',
-                            'v.sub_sku',
-                            'pl.quantity',
-                            'pl.purchase_price as unit_price',
-                            'pl.lot_number',
-                            'pl.exp_date',
-                            'pl.sale_price'
-                        )
-                        ->groupBy('pl.id')
-                        ->get();
+                ->join('products as p', 'pl.product_id', 'p.id')
+                ->join('variations as v', 'pl.variation_id', 'v.id')
+                ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
+                ->where('transactions.id', $id)
+                ->where('transactions.type', 'stock_adjustment')
+                ->select(
+                    'p.name as product',
+                    'p.type as type',
+                    'pv.name as product_variation',
+                    'v.name as variation',
+                    'v.sub_sku',
+                    'pl.quantity',
+                    'pl.purchase_price as unit_price',
+                    'pl.lot_number',
+                    'pl.exp_date',
+                    'pl.sale_price'
+                )
+                ->groupBy('pl.id')
+                ->get();
 
         } elseif ($stock_adjustment->adjustment_type == 'abnormal') {
             $stock_adjustment_details = Transaction::leftJoin('transaction_sell_lines as tsl', 'transactions.id', 'tsl.transaction_id')
-                        ->join('products as p', 'tsl.product_id', 'p.id')
-                        ->join('variations as v', 'tsl.variation_id', 'v.id')
-                        ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
-                        ->where('transactions.id', $id)
-                        ->where('transactions.type', 'stock_adjustment')
-                        ->select(
-                            'p.name as product',
-                            'p.type as type',
-                            'pv.name as product_variation',
-                            'v.name as variation',
-                            'v.sub_sku',
-                            'tsl.quantity',
-                            'tsl.unit_price',
-                            'tsl.unit_price as lot_number', // Not will be used
-                            'tsl.unit_price as exp_date', // Not will be used
-                            'tsl.sale_price'
-                        )
-                        ->groupBy('tsl.id')
-                        ->get();
+                ->join('products as p', 'tsl.product_id', 'p.id')
+                ->join('variations as v', 'tsl.variation_id', 'v.id')
+                ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
+                ->where('transactions.id', $id)
+                ->where('transactions.type', 'stock_adjustment')
+                ->select(
+                    'p.name as product',
+                    'p.type as type',
+                    'pv.name as product_variation',
+                    'v.name as variation',
+                    'v.sub_sku',
+                    'tsl.quantity',
+                    'tsl.unit_price',
+                    'tsl.unit_price as lot_number', // Not will be used
+                    'tsl.unit_price as exp_date', // Not will be used
+                    'tsl.sale_price'
+                )
+                ->groupBy('tsl.id')
+                ->get();
         }
 
         $lot_n_exp_enabled = false;

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Optics;
 
 use App\Models\Module;
+use App\Models\Permission;
 use App\Optics\StatusLabOrder;
 use App\Optics\StatusLabOrderStep;
-use App\Models\Permission;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

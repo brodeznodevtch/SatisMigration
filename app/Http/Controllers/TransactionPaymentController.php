@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TransactionPaymentAdded;
+use App\Events\TransactionPaymentDeleted;
+use App\Events\TransactionPaymentUpdated;
 use App\Models\Bank;
 use App\Models\BankAccount;
 use App\Models\BusinessLocation;
@@ -11,9 +14,6 @@ use App\Models\CashRegisterTransaction;
 use App\Models\Contact;
 use App\Models\DocumentCorrelative;
 use App\Models\DocumentType;
-use App\Events\TransactionPaymentAdded;
-use App\Events\TransactionPaymentDeleted;
-use App\Events\TransactionPaymentUpdated;
 use App\Models\Pos;
 use App\Models\Quote;
 use App\Models\Transaction;

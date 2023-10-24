@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderTransactionExport;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\City;
 use App\Models\Customer;
 use App\Models\DocumentType;
 use App\Models\Employees;
-use App\Exports\OrderTransactionExport;
-use App\Order;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\QuoteLine;
 use App\Models\SellingPriceGroup;
 use App\Models\State;
 use App\Models\User;
+use App\Models\Variation;
+use App\Models\VariationGroupPrice;
+use App\Models\Warehouse;
+use App\Order;
 use App\Utils\BusinessUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Models\Variation;
-use App\Models\VariationGroupPrice;
-use App\Models\Warehouse;
 use DB;
 use Excel;
 use Illuminate\Http\Request;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BankReconciliationReportExport;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingEntriesDetail;
 use App\Models\BankAccount;
@@ -9,7 +10,6 @@ use App\Models\BankCheckbook;
 use App\Models\BankTransaction;
 use App\Models\Business;
 use App\Models\Catalogue;
-use App\Exports\BankReconciliationReportExport;
 use App\Models\Transaction;
 use App\Models\TransactionPayment;
 use App\Models\TypeBankTransaction;

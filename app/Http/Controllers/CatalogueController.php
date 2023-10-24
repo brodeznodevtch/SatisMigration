@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatalogueRequest;
+use App\Imports\CatalogueImport;
 use App\Models\AccountingEntriesDetail;
 use App\Models\BankAccount;
 use App\Models\Catalogue;
 use App\Models\Category;
-use App\Http\Requests\CatalogueRequest;
-use App\Imports\CatalogueImport;
 use DataTables;
 use DB;
 use Excel;

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\QuoteExport;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
 use App\Models\CustomerVehicle;
 use App\Models\DocumentType;
 use App\Models\Employees;
-use App\Exports\QuoteExport;
 use App\Models\LostSale;
 use App\Models\Quote;
 use App\Models\QuoteLine;
 use App\Models\Reason;
 use App\Models\SellingPriceGroup;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
 use App\Utils\EmployeeUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Models\Variation;
-use App\Models\VariationLocationDetails;
-use App\Models\Warehouse;
 use Carbon\Carbon;
 use DataTables;
 use DB;
