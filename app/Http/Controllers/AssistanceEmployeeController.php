@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\AssistanceEmployee;
-use App\Business;
-use App\Employees;
+use App\Models\AssistanceEmployee;
+use App\Models\Business;
+use App\Models\Employees;
 use App\Exports\AssistanceEmployeeReportExport;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;

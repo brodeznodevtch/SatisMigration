@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Apportionment;
-use App\ApportionmentHasImportExpense;
-use App\ApportionmentHasTransaction;
-use App\Business;
-use App\Kardex;
-use App\PurchaseLine;
-use App\Transaction;
-use App\TransactionHasImportExpense;
-use App\TransactionSellLine;
+use App\Models\Apportionment;
+use App\Models\ApportionmentHasImportExpense;
+use App\Models\ApportionmentHasTransaction;
+use App\Models\Business;
+use App\Models\Kardex;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\TransactionHasImportExpense;
+use App\Models\TransactionSellLine;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
@@ -421,7 +421,7 @@ class ApportionmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -485,7 +485,7 @@ class ApportionmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -635,7 +635,7 @@ class ApportionmentController extends Controller
     /**
      * Save lines of import expenses, purchases and products.
      *
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
     public function save($apportionment, Request $request)
@@ -707,7 +707,7 @@ class ApportionmentController extends Controller
     /**
      * Update lines of import expenses, purchases and products.
      *
-     * @param  \App\Apportionment  $apportionment
+     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
     public function updateApportionment($apportionment, Request $request)

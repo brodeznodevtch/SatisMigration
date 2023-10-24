@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhAbsenceInability;
-use App\RrhhData;
-use App\RrhhDocuments;
-use App\RrhhEconomicDependence;
-use App\RrhhPositionHistory;
-use App\RrhhStudy;
+use App\Models\Employees;
+use App\Models\RrhhAbsenceInability;
+use App\Models\RrhhData;
+use App\Models\RrhhDocuments;
+use App\Models\RrhhEconomicDependence;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhStudy;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -395,7 +395,7 @@ class RrhhDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhData  $rrhhData
+     * @param  \App\Models\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -448,7 +448,7 @@ class RrhhDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhData  $rrhhData
+     * @param  \App\Models\RrhhData  $rrhhData
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

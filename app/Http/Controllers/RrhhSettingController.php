@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\RrhhSetting;
+use App\Models\Business;
+use App\Models\RrhhSetting;
 use DB;
 use Illuminate\Http\Request;
 

@@ -1,13 +1,13 @@
 <?php
 
-use App\BonusCalculation;
-use App\Business;
-use App\InstitutionLaw;
-use App\LawDiscount;
-use App\Module;
-use App\PaymentPeriod;
-use App\PayrollStatus;
-use App\PayrollType;
+use App\Models\BonusCalculation;
+use App\Models\Business;
+use App\Models\InstitutionLaw;
+use App\Models\LawDiscount;
+use App\Models\Module;
+use App\Models\PaymentPeriod;
+use App\Models\PayrollStatus;
+use App\Models\PayrollType;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 

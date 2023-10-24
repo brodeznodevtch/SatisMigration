@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RrhhTypeContract;
+use App\Models\RrhhTypeContract;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -142,7 +142,7 @@ class RrhhTypeContractController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhTypeContract  $rrhhTypeContract
+     * @param  \App\Models\RrhhTypeContract  $rrhhTypeContract
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

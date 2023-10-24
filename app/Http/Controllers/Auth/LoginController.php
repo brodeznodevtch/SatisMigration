@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Business;
+use App\Models\Business;
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\Util;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;

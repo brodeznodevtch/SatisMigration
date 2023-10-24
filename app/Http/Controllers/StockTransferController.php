@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\MovementType;
-use App\PurchaseLine;
-use App\Transaction;
-use App\TransactionSellLine;
-use App\TransactionSellLinesPurchaseLines;
-use App\TransferState;
+use App\Models\Business;
+use App\Models\MovementType;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
+use App\Models\TransactionSellLinesPurchaseLines;
+use App\Models\TransferState;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\Warehouse;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
@@ -1162,7 +1162,7 @@ class StockTransferController extends Controller
     /**
      * Reserve the product of the "from warehouse".
      *
-     * @param  \App\Transaction  $sell_transfer
+     * @param  \App\Models\Transaction  $sell_transfer
      * @param  array  $product
      * @param  string  $type
      * @param  int  $old_qty
@@ -1203,7 +1203,7 @@ class StockTransferController extends Controller
      * Download the product from the "from warehouse" and update the reserved
      * quantity.
      *
-     * @param  \App\Transaction  $sell_transfer
+     * @param  \App\Models\Transaction  $sell_transfer
      * @param  array  $product
      * @param  string  $type
      * @param  int  $old_qty

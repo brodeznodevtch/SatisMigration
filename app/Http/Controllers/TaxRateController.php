@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\TaxRate;
-use App\Transaction;
+use App\Models\TaxRate;
+use App\Models\Transaction;
 use App\Utils\TaxUtil;
 use DB;
 use Illuminate\Http\Request;

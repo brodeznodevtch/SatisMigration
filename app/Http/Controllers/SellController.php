@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Customer;
-use App\CustomerGroup;
-use App\CustomerPortfolio;
-use App\DiscountCard;
-use App\DocumentType;
-use App\SellingPriceGroup;
-use App\TaxRate;
-use App\Transaction;
-use App\TransactionPayment;
-use App\TransactionSellLine;
-use App\User;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
+use App\Models\CustomerPortfolio;
+use App\Models\DiscountCard;
+use App\Models\DocumentType;
+use App\Models\SellingPriceGroup;
+use App\Models\TaxRate;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
+use App\Models\TransactionSellLine;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;

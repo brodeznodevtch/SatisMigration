@@ -23,7 +23,7 @@ class LabOrderDetail extends Model
 
     public function variation()
     {
-        return $this->belongsTo(\App\Variation::class, 'variation_id');
+        return $this->belongsTo(\App\Models\Variation::class, 'variation_id');
     }
 
     public function lab_order()
@@ -33,6 +33,6 @@ class LabOrderDetail extends Model
 
     public function location()
     {
-        return $this->belongsTo(\App\BusinessLocation::class, 'location_id');
+        return $this->belongsTo(\App\Models\BusinessLocation::class, 'location_id');
     }
 }

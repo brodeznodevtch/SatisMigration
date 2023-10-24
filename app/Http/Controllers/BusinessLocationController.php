@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountBusinessLocation;
-use App\BusinessLocation;
-use App\Catalogue;
-use App\InvoiceLayout;
-use App\InvoiceScheme;
+use App\Models\AccountBusinessLocation;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\InvoiceLayout;
+use App\Models\InvoiceScheme;
 use App\Utils\ModuleUtil;
 use App\Utils\Util;
 use DB;

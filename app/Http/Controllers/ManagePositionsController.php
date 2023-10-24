@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Positions;
+use App\Models\Positions;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

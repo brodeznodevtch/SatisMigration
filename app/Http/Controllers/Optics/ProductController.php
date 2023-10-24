@@ -2,37 +2,37 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\Apportionment;
-use App\ApportionmentHasTransaction;
-use App\Brands;
-use App\Business;
-use App\BusinessLocation;
-use App\Category;
-use App\Country;
-use App\CustomerGroup;
-use App\Employees;
-use App\KitHasProduct;
+use App\Models\Apportionment;
+use App\Models\ApportionmentHasTransaction;
+use App\Models\Brands;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Category;
+use App\Models\Country;
+use App\Models\CustomerGroup;
+use App\Models\Employees;
+use App\Models\KitHasProduct;
 use App\Optics\MaterialHasSupplier;
 use App\Optics\MaterialType;
-use App\PaymentTerm;
-use App\Product;
-use App\ProductHasSuppliers;
-use App\ProductVariation;
-use App\PurchaseLine;
-use App\SalePriceScale;
-use App\SellingPriceGroup;
-use App\TaxRate;
-use App\Transaction;
-use App\Unit;
-use App\UnitGroup;
+use App\Models\PaymentTerm;
+use App\Models\Product;
+use App\Models\ProductHasSuppliers;
+use App\Models\ProductVariation;
+use App\Models\PurchaseLine;
+use App\Models\SalePriceScale;
+use App\Models\SellingPriceGroup;
+use App\Models\TaxRate;
+use App\Models\Transaction;
+use App\Models\Unit;
+use App\Models\UnitGroup;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
-use App\Variation;
-use App\VariationGroupPrice;
-use App\VariationLocationDetails;
-use App\VariationTemplate;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\VariationGroupPrice;
+use App\Models\VariationLocationDetails;
+use App\Models\VariationTemplate;
+use App\Models\Warehouse;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -865,7 +865,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -1301,7 +1301,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -2086,7 +2086,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function view($id)

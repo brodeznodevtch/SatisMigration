@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\PaymentTerm;
+use App\Models\PaymentTerm;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

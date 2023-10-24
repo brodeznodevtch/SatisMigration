@@ -2,8 +2,8 @@
 
 namespace App\Utils;
 
-use App\Cashier;
-use App\CashierClosure;
+use App\Models\Cashier;
+use App\Models\CashierClosure;
 
 class CashierUtil extends Util
 {

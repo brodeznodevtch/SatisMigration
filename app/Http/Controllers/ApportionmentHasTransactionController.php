@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ApportionmentHasTransaction;
+use App\Models\ApportionmentHasTransaction;
 use Illuminate\Http\Request;
 
 class ApportionmentHasTransactionController extends Controller

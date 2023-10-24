@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\DiscountCard;
-use App\InvoiceLayout;
-use App\InvoiceScheme;
+use App\Models\DiscountCard;
+use App\Models\InvoiceLayout;
+use App\Models\InvoiceScheme;
 use Datatables;
 use Illuminate\Http\Request;
 

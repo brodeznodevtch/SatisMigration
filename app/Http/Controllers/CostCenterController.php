@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Catalogue;
-use App\CostCenter;
-use App\CostCenterMainAccount;
-use App\CostCenterOperationAccount;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\CostCenter;
+use App\Models\CostCenterMainAccount;
+use App\Models\CostCenterOperationAccount;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -123,7 +123,7 @@ class CostCenterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CostCenter  $costCenter
+     * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -136,7 +136,7 @@ class CostCenterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CostCenter  $costCenter
+     * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -158,7 +158,7 @@ class CostCenterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\CostCenter  $costCenter
+     * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -194,7 +194,7 @@ class CostCenterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CostCenter  $costCenter
+     * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

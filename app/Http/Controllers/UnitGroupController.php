@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
-use App\Unit;
-use App\UnitGroup;
-use App\UnitGroupLines;
+use App\Models\Product;
+use App\Models\Unit;
+use App\Models\UnitGroup;
+use App\Models\UnitGroupLines;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

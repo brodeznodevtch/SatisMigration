@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Catalogue;
-use App\Currency;
-use App\FiscalYear;
-use App\Module;
-use App\Shortcut;
-use App\State;
-use App\System;
-use App\TaxRate;
-use App\Unit;
-use App\User;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\Currency;
+use App\Models\FiscalYear;
+use App\Models\Module;
+use App\Models\Shortcut;
+use App\Models\State;
+use App\Models\System;
+use App\Models\TaxRate;
+use App\Models\Unit;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;

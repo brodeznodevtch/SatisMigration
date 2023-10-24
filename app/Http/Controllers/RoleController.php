@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Module;
-use App\SellingPriceGroup;
+use App\Models\BusinessLocation;
+use App\Models\Module;
+use App\Models\SellingPriceGroup;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;

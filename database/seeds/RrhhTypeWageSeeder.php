@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\RrhhTypeWage;
+use App\Models\Business;
+use App\Models\RrhhTypeWage;
 use Illuminate\Database\Seeder;
 
 class RrhhTypeWageSeeder extends Seeder

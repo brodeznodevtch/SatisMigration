@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\BankAccount;
-use App\BankTransaction;
+use App\Models\BankAccount;
+use App\Models\BankTransaction;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

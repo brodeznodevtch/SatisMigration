@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingEntrie;
-use App\AccountingEntriesDetail;
-use App\BankAccount;
-use App\BankCheckbook;
-use App\BankTransaction;
-use App\Business;
-use App\Catalogue;
+use App\Models\AccountingEntrie;
+use App\Models\AccountingEntriesDetail;
+use App\Models\BankAccount;
+use App\Models\BankCheckbook;
+use App\Models\BankTransaction;
+use App\Models\Business;
+use App\Models\Catalogue;
 use App\Exports\BankReconciliationReportExport;
-use App\Transaction;
-use App\TransactionPayment;
-use App\TypeBankTransaction;
-use App\TypeEntrie;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
+use App\Models\TypeBankTransaction;
+use App\Models\TypeEntrie;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;
 use DataTables;
@@ -508,7 +508,7 @@ class BankTransactionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\BankTransaction  $bankTransaction
+     * @param  \App\Models\BankTransaction  $bankTransaction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

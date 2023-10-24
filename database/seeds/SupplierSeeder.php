@@ -1,11 +1,11 @@
 <?php
 
-use App\Business;
-use App\City;
-use App\Contact;
-use App\Country;
-use App\State;
-use App\TaxGroup;
+use App\Models\Business;
+use App\Models\City;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\TaxGroup;
 use Illuminate\Database\Seeder;
 
 class SupplierSeeder extends Seeder

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\TaxRate;
+use App\Models\TaxRate;
 use Datatables;
 use Illuminate\Http\Request;
 

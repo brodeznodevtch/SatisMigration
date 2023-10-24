@@ -2,9 +2,9 @@
 
 namespace App\Utils;
 
-use App\TaxGroup;
-use App\TaxRate;
-use App\Transaction;
+use App\Models\TaxGroup;
+use App\Models\TaxRate;
+use App\Models\Transaction;
 
 class TaxUtil extends Util
 {

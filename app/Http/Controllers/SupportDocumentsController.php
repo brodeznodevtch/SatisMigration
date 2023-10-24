@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SupportDocuments;
+use App\Models\SupportDocuments;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -109,7 +109,7 @@ class SupportDocumentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -130,7 +130,7 @@ class SupportDocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -170,7 +170,7 @@ class SupportDocumentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SupportDocuments  $supportDocuments
+     * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

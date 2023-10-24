@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\TransferState;
+use App\Models\TransferState;
 use Illuminate\Http\Request;
 
 class TransferStateController extends Controller

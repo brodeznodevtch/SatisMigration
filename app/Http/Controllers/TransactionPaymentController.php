@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\BankAccount;
-use App\BusinessLocation;
-use App\Cashier;
-use App\CashRegister;
-use App\CashRegisterTransaction;
-use App\Contact;
-use App\DocumentCorrelative;
-use App\DocumentType;
+use App\Models\Bank;
+use App\Models\BankAccount;
+use App\Models\BusinessLocation;
+use App\Models\Cashier;
+use App\Models\CashRegister;
+use App\Models\CashRegisterTransaction;
+use App\Models\Contact;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
-use App\Pos;
-use App\Quote;
-use App\Transaction;
-use App\TransactionPayment;
+use App\Models\Pos;
+use App\Models\Quote;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;

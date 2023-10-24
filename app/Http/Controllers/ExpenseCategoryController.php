@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\Catalogue;
-use App\ExpenseCategory;
+use App\Models\Business;
+use App\Models\Catalogue;
+use App\Models\ExpenseCategory;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

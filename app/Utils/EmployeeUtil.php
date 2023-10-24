@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use App\Employees;
+use App\Models\Employees;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

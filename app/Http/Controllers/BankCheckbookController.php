@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\BankCheckbook;
-use App\BankTransaction;
+use App\Models\BankCheckbook;
+use App\Models\BankTransaction;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -99,7 +99,7 @@ class BankCheckbookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\BankCheckbook  $bankCheckbook
+     * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -113,7 +113,7 @@ class BankCheckbookController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\BankCheckbook  $bankCheckbook
+     * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -132,7 +132,7 @@ class BankCheckbookController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\BankCheckbook  $bankCheckbook
+     * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -195,7 +195,7 @@ class BankCheckbookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\BankCheckbook  $bankCheckbook
+     * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

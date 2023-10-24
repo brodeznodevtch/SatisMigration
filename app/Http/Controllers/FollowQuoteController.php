@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FollowQuote;
+use App\Models\FollowQuote;
 use Illuminate\Http\Request;
 
 class FollowQuoteController extends Controller

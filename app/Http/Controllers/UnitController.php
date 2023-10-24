@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\Product;
-use App\Unit;
-use App\UnitGroup;
-use App\UnitGroupLines;
+use App\Models\Business;
+use App\Models\Product;
+use App\Models\Unit;
+use App\Models\UnitGroup;
+use App\Models\UnitGroupLines;
 use App\Utils\ProductUtil;
 use DB;
 use Illuminate\Http\Request;

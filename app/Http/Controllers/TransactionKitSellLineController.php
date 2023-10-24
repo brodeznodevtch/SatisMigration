@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\TransactionKitSellLine;
+use App\Models\TransactionKitSellLine;
 use Illuminate\Http\Request;
 
 class TransactionKitSellLineController extends Controller

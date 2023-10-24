@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Customer;
-use App\Transaction;
-use App\TransactionPayment;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Customer;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
 use App\Utils\Util;
 use Carbon\Carbon;
 use DB;

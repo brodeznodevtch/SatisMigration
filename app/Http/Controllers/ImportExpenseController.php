@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\ImportExpense;
+use App\Models\Business;
+use App\Models\ImportExpense;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -153,7 +153,7 @@ class ImportExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\ImportExpense  $importExpense
+     * @param  \App\Models\ImportExpense  $importExpense
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Restaurant;
 
 use App\Restaurant\ResTable;
-use App\Transaction;
-use App\User;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

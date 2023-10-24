@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use App\Transaction;
+use App\Models\Transaction;
 use App\Utils\RestaurantUtil;
 use App\Utils\Util;
 use Illuminate\Http\Request;

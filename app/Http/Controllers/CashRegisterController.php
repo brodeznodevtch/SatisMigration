@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\CashDetail;
-use App\Cashier;
-use App\CashierClosure;
-use App\CashRegister;
-use App\CashRegisterTransaction;
-use App\DocumentCorrelative;
-use App\Transaction;
+use App\Models\CashDetail;
+use App\Models\Cashier;
+use App\Models\CashierClosure;
+use App\Models\CashRegister;
+use App\Models\CashRegisterTransaction;
+use App\Models\DocumentCorrelative;
+use App\Models\Transaction;
 use App\Utils\CashierUtil;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ProductUtil;

@@ -2,13 +2,13 @@
 
 namespace App\Utils;
 
-use App\AccountingEntrie;
-use App\AccountingEntriesDetail;
-use App\AccountingPeriod;
-use App\BankTransaction;
-use App\Business;
-use App\FiscalYear;
-use App\TypeBankTransaction;
+use App\Models\AccountingEntrie;
+use App\Models\AccountingEntriesDetail;
+use App\Models\AccountingPeriod;
+use App\Models\BankTransaction;
+use App\Models\Business;
+use App\Models\FiscalYear;
+use App\Models\TypeBankTransaction;
 use Carbon;
 
 class AccountingUtil extends Util

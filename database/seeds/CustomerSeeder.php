@@ -1,12 +1,12 @@
 <?php
 
-use App\Business;
-use App\City;
-use App\Country;
-use App\Customer;
-use App\State;
-use App\TaxGroup;
-use App\Zone;
+use App\Models\Business;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Customer;
+use App\Models\State;
+use App\Models\TaxGroup;
+use App\Models\Zone;
 use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder

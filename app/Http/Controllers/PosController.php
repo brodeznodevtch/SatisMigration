@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\BankAccount;
-use App\BusinessLocation;
-use App\Employees;
-use App\Pos;
+use App\Models\BankAccount;
+use App\Models\BusinessLocation;
+use App\Models\Employees;
+use App\Models\Pos;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\Business;
-use App\BusinessLocation;
-use App\Contact;
-use App\Country;
-use App\CustomerGroup;
-use App\Employees;
-use App\MovementType;
-use App\PaymentTerm;
-use App\Pos;
-use App\PurchaseLine;
-use App\TaxRate;
-use App\Transaction;
+use App\Models\Bank;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CustomerGroup;
+use App\Models\Employees;
+use App\Models\MovementType;
+use App\Models\PaymentTerm;
+use App\Models\Pos;
+use App\Models\PurchaseLine;
+use App\Models\TaxRate;
+use App\Models\Transaction;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Warehouse;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

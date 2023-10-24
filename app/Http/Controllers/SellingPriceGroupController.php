@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Module;
-use App\SellingPriceGroup;
+use App\Models\Module;
+use App\Models\SellingPriceGroup;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -119,7 +119,7 @@ class SellingPriceGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\SellingPriceGroup  $sellingPriceGroup
+     * @param  \App\Models\SellingPriceGroup  $sellingPriceGroup
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -140,7 +140,7 @@ class SellingPriceGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\SellingPriceGroup  $sellingPriceGroup
+     * @param  \App\Models\SellingPriceGroup  $sellingPriceGroup
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -177,7 +177,7 @@ class SellingPriceGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SellingPriceGroup  $sellingPriceGroup
+     * @param  \App\Models\SellingPriceGroup  $sellingPriceGroup
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

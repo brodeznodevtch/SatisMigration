@@ -2,8 +2,8 @@
 
 namespace App\Utils;
 
-use App\Transaction;
-use App\User;
+use App\Models\Transaction;
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 
 class RestaurantUtil

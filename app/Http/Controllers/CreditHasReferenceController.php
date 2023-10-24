@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditHasReference;
+use App\Models\CreditHasReference;
 use Illuminate\Http\Request;
 
 class CreditHasReferenceController extends Controller

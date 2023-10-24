@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\BusinessType;
-use App\Category;
-use App\City;
-use App\Contact;
-use App\Country;
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\Customer;
-use App\CustomerContact;
-use App\CustomerGroup;
-use App\CustomerPortfolio;
-use App\FollowCustomer;
-use App\FollowCustomersHasProduct;
-use App\FollowOportunities;
-use App\FollowOportunitiesHasProduct;
-use App\Oportunity;
-use App\PaymentTerm;
-use App\SellingPriceGroup;
-use App\State;
+use App\Models\BusinessLocation;
+use App\Models\BusinessType;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\Customer;
+use App\Models\CustomerContact;
+use App\Models\CustomerGroup;
+use App\Models\CustomerPortfolio;
+use App\Models\FollowCustomer;
+use App\Models\FollowCustomersHasProduct;
+use App\Models\FollowOportunities;
+use App\Models\FollowOportunitiesHasProduct;
+use App\Models\Oportunity;
+use App\Models\PaymentTerm;
+use App\Models\SellingPriceGroup;
+use App\Models\State;
 use App\Utils\TaxUtil;
-use App\Variation;
-use App\Zone;
+use App\Models\Variation;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -233,7 +233,7 @@ class OportunityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Oportunity  $oportunity
+     * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -261,7 +261,7 @@ class OportunityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Oportunity  $oportunity
+     * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -319,7 +319,7 @@ class OportunityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Oportunity  $oportunity
+     * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -369,7 +369,7 @@ class OportunityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Oportunity  $oportunity
+     * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

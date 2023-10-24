@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\Claim;
-use App\ClaimType;
-use App\Customer;
-use App\StatusClaim;
+use App\Models\Business;
+use App\Models\Claim;
+use App\Models\ClaimType;
+use App\Models\Customer;
+use App\Models\StatusClaim;
 use Carbon\Carbon;
 use DataTables;
 use DB;
@@ -173,7 +173,7 @@ class ClaimController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Claim  $claim
+     * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -199,7 +199,7 @@ class ClaimController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Claim  $claim
+     * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -215,7 +215,7 @@ class ClaimController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Claim  $claim
+     * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -320,7 +320,7 @@ class ClaimController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Claim  $claim
+     * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

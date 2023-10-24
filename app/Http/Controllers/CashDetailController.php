@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CashDetail;
+use App\Models\CashDetail;
 use Illuminate\Http\Request;
 
 class CashDetailController extends Controller

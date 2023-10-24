@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CostCenterCategorie;
+use App\Models\CostCenterCategorie;
 use Illuminate\Http\Request;
 
 class CostCenterCategorieController extends Controller

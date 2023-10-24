@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RrhhHeader;
+use App\Models\RrhhHeader;
 use Illuminate\Http\Request;
 
 class RrhhHeaderController extends Controller

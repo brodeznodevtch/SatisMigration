@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Models\Category;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use DB;

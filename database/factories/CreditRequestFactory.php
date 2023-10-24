@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\CreditRequest::class, function (Faker $faker) {
+$factory->define(App\Models\CreditRequest::class, function (Faker $faker) {
     return [
         //
     ];

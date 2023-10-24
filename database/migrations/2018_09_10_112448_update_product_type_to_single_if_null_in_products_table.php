@@ -1,6 +1,6 @@
 <?php
 
-use App\Product;
+use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 
 class UpdateProductTypeToSingleIfNullInProductsTable extends Migration

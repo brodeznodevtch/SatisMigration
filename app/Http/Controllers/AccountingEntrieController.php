@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingEntrie;
-use App\AccountingEntriesDetail;
-use App\AccountingPeriod;
-use App\BankAccount;
-use App\BankTransaction;
-use App\Business;
-use App\BusinessLocation;
-use App\Catalogue;
-use App\Contact;
-use App\FiscalYear;
-use App\Shortcut;
-use App\Transaction;
-use App\TypeBankTransaction;
-use App\TypeEntrie;
+use App\Models\AccountingEntrie;
+use App\Models\AccountingEntriesDetail;
+use App\Models\AccountingPeriod;
+use App\Models\BankAccount;
+use App\Models\BankTransaction;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\Contact;
+use App\Models\FiscalYear;
+use App\Models\Shortcut;
+use App\Models\Transaction;
+use App\Models\TypeBankTransaction;
+use App\Models\TypeEntrie;
 use Carbon\Carbon;
 use DataTables;
 use DB;
@@ -306,7 +306,7 @@ class AccountingEntrieController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\AccountingEntrie  $accountingEntrie
+     * @param  \App\Models\AccountingEntrie  $accountingEntrie
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -324,7 +324,7 @@ class AccountingEntrieController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\AccountingEntrie  $accountingEntrie
+     * @param  \App\Models\AccountingEntrie  $accountingEntrie
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -342,7 +342,7 @@ class AccountingEntrieController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\AccountingEntrie  $accountingEntrie
+     * @param  \App\Models\AccountingEntrie  $accountingEntrie
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -379,7 +379,7 @@ class AccountingEntrieController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\AccountingEntrie  $accountingEntrie
+     * @param  \App\Models\AccountingEntrie  $accountingEntrie
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

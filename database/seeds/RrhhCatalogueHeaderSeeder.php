@@ -1,10 +1,10 @@
 <?php
 
-use App\Business;
-use App\Module;
-use App\RrhhData;
-use App\RrhhHeader;
-use App\RrhhTypeIncomeDiscount;
+use App\Models\Business;
+use App\Models\Module;
+use App\Models\RrhhData;
+use App\Models\RrhhHeader;
+use App\Models\RrhhTypeIncomeDiscount;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 

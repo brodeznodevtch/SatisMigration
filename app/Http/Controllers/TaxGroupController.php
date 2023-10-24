@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\TaxGroup;
-use App\TaxRate;
-use App\TaxRateTaxGroup;
-use App\Transaction;
+use App\Models\TaxGroup;
+use App\Models\TaxRate;
+use App\Models\TaxRateTaxGroup;
+use App\Models\Transaction;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use Datatables;

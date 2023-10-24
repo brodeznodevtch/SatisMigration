@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Business;
-use App\PayrollDetail;
+use App\Models\Business;
+use App\Models\PayrollDetail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use App\BusinessLocation;
-use App\Contact;
+use App\Models\BusinessLocation;
+use App\Models\Contact;
 use App\Restaurant\Booking;
-use App\User;
+use App\Models\User;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;

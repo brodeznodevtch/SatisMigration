@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Notifications\CustomerNotification;
 use App\Notifications\SupplierNotification;
-use App\NotificationTemplate;
+use App\Models\NotificationTemplate;
 use App\Restaurant\Booking;
-use App\Transaction;
+use App\Models\Transaction;
 use App\Utils\NotificationUtil;
 use Illuminate\Http\Request;
 use Notification;

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Employees;
+use App\Models\BusinessLocation;
+use App\Models\Employees;
 use App\Notifications\NewNotification;
-use App\Positions;
-use App\System;
-use App\User;
+use App\Models\Positions;
+use App\Models\System;
+use App\Models\User;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

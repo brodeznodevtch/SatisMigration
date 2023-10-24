@@ -2,43 +2,43 @@
 
 namespace App\Utils;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Cashier;
-use App\CashierClosure;
-use App\Contact;
-use App\Currency;
-use App\Customer;
-use App\DocumentCorrelative;
-use App\DocumentType;
-use App\Employees;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Cashier;
+use App\Models\CashierClosure;
+use App\Models\Contact;
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
+use App\Models\Employees;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
 use App\Exceptions\PurchaseSellMismatch;
 use App\get_sub_products;
-use App\InvoiceScheme;
-use App\Kardex;
-use App\KitHasProduct;
-use App\MovementType;
-use App\PrintFormat;
-use App\Product;
-use App\PurchaseLine;
-use App\Quote;
-use App\QuoteLine;
+use App\Models\InvoiceScheme;
+use App\Models\Kardex;
+use App\Models\KitHasProduct;
+use App\Models\MovementType;
+use App\Models\PrintFormat;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\Quote;
+use App\Models\QuoteLine;
 use App\Restaurant\ResTable;
-use App\Suplies;
-use App\TaxGroup;
-use App\TaxRate;
-use App\Transaction;
-use App\TransactionHasImportExpense;
-use App\TransactionPayment;
-use App\TransactionSellLine;
-use App\TransactionSellLinesPurchaseLines;
-use App\TransactionTaxDetail;
-use App\User;
-use App\Variation;
-use App\VariationLocationDetails;
+use App\Models\Suplies;
+use App\Models\TaxGroup;
+use App\Models\TaxRate;
+use App\Models\Transaction;
+use App\Models\TransactionHasImportExpense;
+use App\Models\TransactionPayment;
+use App\Models\TransactionSellLine;
+use App\Models\TransactionSellLinesPurchaseLines;
+use App\Models\TransactionTaxDetail;
+use App\Models\User;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
 use Illuminate\Support\Facades\DB;
 
 class TransactionUtil extends Util
@@ -2178,7 +2178,7 @@ class TransactionUtil extends Util
             if (isset($il->module_info['service_staff']['show_service_staff'])) {
                 $output['service_staff_label'] = ! empty($il->module_info['service_staff']['service_staff_label']) ? $il->module_info['service_staff']['service_staff_label'] : '';
                 if (! empty($transaction->res_waiter_id)) {
-                    $waiter = \App\User::find($transaction->res_waiter_id);
+                    $waiter = \App\Models\User::find($transaction->res_waiter_id);
                 }
 
                 //res_table_id
@@ -4752,11 +4752,11 @@ class TransactionUtil extends Util
     /**
      * Create or update kardex output lines.
      *
-     * @param  \App\MovementType  $movement_type
-     * @param  \App\Transaction  $transaction
+     * @param  \App\Models\MovementType  $movement_type
+     * @param  \App\Models\Transaction  $transaction
      * @param  string  $reference
-     * @param  \App\TransactionSellLine  $lines
-     * @param  \App\TransactionSellLine  $lines_before
+     * @param  \App\Models\TransactionSellLine  $lines
+     * @param  \App\Models\TransactionSellLine  $lines_before
      * @param  int  $calculate_balance
      * @return void
      */
@@ -4885,11 +4885,11 @@ class TransactionUtil extends Util
     /**
      * Create or update kardex input lines.
      *
-     * @param  \App\MovementType  $movement_type
-     * @param  \App\Transaction  $transaction
+     * @param  \App\Models\MovementType  $movement_type
+     * @param  \App\Models\Transaction  $transaction
      * @param  string  $reference
-     * @param  \App\PurchaseLine  $lines
-     * @param  \App\PurchaseLine  $lines_before
+     * @param  \App\Models\PurchaseLine  $lines
+     * @param  \App\Models\PurchaseLine  $lines_before
      * @param  int  $calculate_balance
      * @return void
      */
@@ -4998,9 +4998,9 @@ class TransactionUtil extends Util
     /**
      * Create or update a kardex line.
      *
-     * @param  \App\MovementType  $movement_type_id
-     * @param  \App\Transaction  $transaction
-     * @param  \App\Product  $product
+     * @param  \App\Models\MovementType  $movement_type_id
+     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\Product  $product
      * @param  float  $quantity
      * @param  float  $unit_cost
      * @param  float  $total_cost
@@ -5114,7 +5114,7 @@ class TransactionUtil extends Util
      *
      * @param  int  $location_id
      * @param  int  $warehouse_id
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @param  int  $transaction_id
      * @param  int  $variation_id
      * @return void
@@ -5192,7 +5192,7 @@ class TransactionUtil extends Util
     /**
      * Calculate balance for kardex generation.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @param  int  $variation_id
      * @param  float  $quantity
      * @param  int  $business_id
@@ -5265,7 +5265,7 @@ class TransactionUtil extends Util
     /**
      * Recalculate balance from last record saved.
      *
-     * @param  \App\Kardex  $kardex
+     * @param  \App\Models\Kardex  $kardex
      * @return void
      */
     public function recalculateBalances($kardex)
@@ -5500,7 +5500,7 @@ class TransactionUtil extends Util
     /**
      * Save tax and payment amounts.
      *
-     * @param  \App\Transaction  $transaction
+     * @param  \App\Models\Transaction  $transaction
      * @return void
      */
     public function saveTaxAndPayment($transaction)
@@ -5555,7 +5555,7 @@ class TransactionUtil extends Util
      * @param  int  $business_id
      * @param  array  $input
      * @param  int  $user_id
-     * @return \App\Quote
+     * @return \App\Models\Quote
      */
     public function createReservation($business_id, $input, $user_id)
     {
@@ -5599,7 +5599,7 @@ class TransactionUtil extends Util
     /**
      * Create quote line.
      *
-     * @param  \App\Quote  $quote
+     * @param  \App\Models\Quote  $quote
      * @param  array  $quote_lines
      * @param  int  $location_id
      * @return bool
@@ -5645,7 +5645,7 @@ class TransactionUtil extends Util
     /**
      * Add line for payment.
      *
-     * @param  \App\Quote/int  $quote
+     * @param  \App\Models\Quote/int  $quote
      * @param  array  $payments
      * @param  int  $contacts_id
      * @param  int  $cashier_id
@@ -6168,10 +6168,10 @@ class TransactionUtil extends Util
     /**
      * Create or update a kardex line for lab order.
      *
-     * @param  \App\MovementType  $movement_type
+     * @param  \App\Models\MovementType  $movement_type
      * @param  int  $transaction_id
      * @param  \App\LabOrderDetail  $lod
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @param  float  $quantity
      * @param  float  $unit_cost
      * @param  float  $total_cost
@@ -6263,7 +6263,7 @@ class TransactionUtil extends Util
      *
      * @param  int  $location_id
      * @param  int  $warehouse_id
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @param  int  $lab_order_id
      * @param  int  $variation_id
      * @return void

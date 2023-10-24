@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditHasFamilyMember;
+use App\Models\CreditHasFamilyMember;
 use Illuminate\Http\Request;
 
 class CreditHasFamilyMemberController extends Controller

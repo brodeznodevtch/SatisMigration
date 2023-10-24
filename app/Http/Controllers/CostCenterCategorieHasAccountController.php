@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CostCenterCategorieHasAccount;
+use App\Models\CostCenterCategorieHasAccount;
 use Illuminate\Http\Request;
 
 class CostCenterCategorieHasAccountController extends Controller

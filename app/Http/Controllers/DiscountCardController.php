@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DiscountCard;
+use App\Models\DiscountCard;
 
 class DiscountCardController extends Controller
 {

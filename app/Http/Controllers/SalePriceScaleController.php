@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SalePriceScale;
+use App\Models\SalePriceScale;
 use Illuminate\Http\Request;
 
 class SalePriceScaleController extends Controller

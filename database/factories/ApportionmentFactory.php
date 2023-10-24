@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\Apportionment::class, function (Faker $faker) {
+$factory->define(App\Models\Apportionment::class, function (Faker $faker) {
     return [
         //
     ];

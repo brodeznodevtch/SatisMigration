@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\BusinessLocation;
-use App\Customer;
-use App\Employees;
+use App\Models\BusinessLocation;
+use App\Models\Customer;
+use App\Models\Employees;
 use App\Optics\ExternalLab;
 use App\Optics\GraduationCard;
 use App\Optics\LabOrder;
@@ -12,16 +12,16 @@ use App\Optics\LabOrderDetail;
 use App\Optics\Patient;
 use App\Optics\StatusLabOrder;
 use App\Optics\StatusLabOrderStep;
-use App\Product;
-use App\PurchaseLine;
-use App\StockAdjustmentLine;
-use App\Transaction;
-use App\TransactionSellLine;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\StockAdjustmentLine;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
 use App\Utils\TransactionUtil;
 use App\Utils\Util;
-use App\Variation;
-use App\VariationLocationDetails;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;

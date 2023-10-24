@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\City;
-use App\State;
+use App\Models\City;
+use App\Models\State;
 use DataTables;
 use Illuminate\Http\Request;
 
@@ -70,7 +70,7 @@ class StateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\State  $state
+     * @param  \App\Models\State  $state
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -83,7 +83,7 @@ class StateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\State  $state
+     * @param  \App\Models\State  $state
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -96,7 +96,7 @@ class StateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\State  $state
+     * @param  \App\Models\State  $state
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -139,7 +139,7 @@ class StateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\State  $state
+     * @param  \App\Models\State  $state
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

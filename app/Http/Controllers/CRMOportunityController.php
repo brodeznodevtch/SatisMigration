@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Contact;
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\CRMOportunity;
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\CRMOportunity;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\QuoteLine;
+use App\Models\QuoteLine;
 use Illuminate\Http\Request;
 
 class QuoteLineController extends Controller

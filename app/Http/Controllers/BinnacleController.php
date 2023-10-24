@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Binnacle;
-use App\User;
+use App\Models\Binnacle;
+use App\Models\User;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;

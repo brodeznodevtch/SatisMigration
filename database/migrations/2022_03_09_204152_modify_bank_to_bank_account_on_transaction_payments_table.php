@@ -1,7 +1,7 @@
 <?php
 
-use App\BankAccount;
-use App\TransactionPayment;
+use App\Models\BankAccount;
+use App\Models\TransactionPayment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

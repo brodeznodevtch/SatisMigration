@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingPeriod;
-use App\FiscalYear;
+use App\Models\AccountingPeriod;
+use App\Models\FiscalYear;
 use DataTables;
 use Illuminate\Http\Request;
 

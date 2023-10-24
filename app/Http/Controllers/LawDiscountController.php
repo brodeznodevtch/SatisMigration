@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\InstitutionLaw;
-use App\LawDiscount;
-use App\PaymentPeriod;
+use App\Models\InstitutionLaw;
+use App\Models\LawDiscount;
+use App\Models\PaymentPeriod;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

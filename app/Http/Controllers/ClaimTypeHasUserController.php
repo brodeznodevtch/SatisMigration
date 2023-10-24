@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ClaimTypeHasUser;
+use App\Models\ClaimTypeHasUser;
 use Illuminate\Http\Request;
 
 class ClaimTypeHasUserController extends Controller

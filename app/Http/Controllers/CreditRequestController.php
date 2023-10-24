@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\CreditHasFamilyMember;
-use App\CreditHasReference;
-use App\CreditRequest;
+use App\Models\Business;
+use App\Models\CreditHasFamilyMember;
+use App\Models\CreditHasReference;
+use App\Models\CreditRequest;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;

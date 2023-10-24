@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-use App\Business;
-use App\BusinessLocation;
-use App\BusinessType;
-use App\Catalogue;
-use App\Category;
-use App\City;
-use App\Contact;
-use App\Country;
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\Customer;
-use App\CustomerContact;
-use App\CustomerGroup;
-use App\CustomerPortfolio;
-use App\CustomerVehicle;
-use App\Employees;
+use App\Models\Brands;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\BusinessType;
+use App\Models\Catalogue;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\Customer;
+use App\Models\CustomerContact;
+use App\Models\CustomerGroup;
+use App\Models\CustomerPortfolio;
+use App\Models\CustomerVehicle;
+use App\Models\Employees;
 use App\Exports\AccountsReceivableReportExport;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
-use App\PaymentTerm;
-use App\State;
-use App\TaxGroup;
-use App\Transaction;
+use App\Models\PaymentTerm;
+use App\Models\State;
+use App\Models\TaxGroup;
+use App\Models\Transaction;
 use App\Utils\BusinessUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use App\Utils\Util;
-use App\Zone;
+use App\Models\Zone;
 use DataTables;
 use DB;
 use Excel;
@@ -514,7 +514,7 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -628,7 +628,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -732,7 +732,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -957,7 +957,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

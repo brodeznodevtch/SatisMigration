@@ -50,6 +50,6 @@ class LabOrder extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(\App\Transaction::class, 'transaction_id');
+        return $this->belongsTo(\App\Models\Transaction::class, 'transaction_id');
     }
 }

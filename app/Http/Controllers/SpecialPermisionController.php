@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SpecialPermision;
+use App\Models\SpecialPermision;
 use Illuminate\Http\Request;
 
 class SpecialPermisionController extends Controller

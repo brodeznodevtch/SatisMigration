@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\DocumentClass;
-use App\DocumentType;
-use App\Transaction;
+use App\Models\DocumentClass;
+use App\Models\DocumentType;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;

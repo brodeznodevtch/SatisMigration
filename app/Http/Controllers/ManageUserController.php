@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
+use App\Models\Business;
 use App\Mail\NotifyUserCreated;
 use App\Notifications\NewNotification;
-use App\System;
-use App\User;
+use App\Models\System;
+use App\Models\User;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;

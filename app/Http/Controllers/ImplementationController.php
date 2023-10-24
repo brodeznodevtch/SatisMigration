@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\Module;
+use App\Models\Business;
+use App\Models\Module;
 use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;

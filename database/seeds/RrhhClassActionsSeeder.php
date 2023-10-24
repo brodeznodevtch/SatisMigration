@@ -1,6 +1,6 @@
 <?php
 
-use App\RrhhClassAction;
+use App\Models\RrhhClassAction;
 use Illuminate\Database\Seeder;
 
 class RrhhClassActionsSeeder extends Seeder

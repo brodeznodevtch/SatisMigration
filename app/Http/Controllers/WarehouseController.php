@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Catalogue;
-use App\Module;
-use App\Permission;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\Module;
+use App\Models\Permission;
 use App\Utils\Util;
-use App\Warehouse;
+use App\Models\Warehouse;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -152,7 +152,7 @@ class WarehouseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -190,7 +190,7 @@ class WarehouseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -256,7 +256,7 @@ class WarehouseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Warehouse  $warehouse
+     * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

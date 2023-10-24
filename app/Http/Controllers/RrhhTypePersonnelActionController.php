@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RrhhTypePersonnelAction;
+use App\Models\RrhhTypePersonnelAction;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -149,7 +149,7 @@ class RrhhTypePersonnelActionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
+     * @param  \App\Models\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -173,7 +173,7 @@ class RrhhTypePersonnelActionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
+     * @param  \App\Models\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -241,7 +241,7 @@ class RrhhTypePersonnelActionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
+     * @param  \App\Models\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

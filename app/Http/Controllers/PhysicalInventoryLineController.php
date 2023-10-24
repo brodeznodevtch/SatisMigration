@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\PhysicalInventory;
-use App\PhysicalInventoryLine;
-use App\Variation;
+use App\Models\PhysicalInventory;
+use App\Models\PhysicalInventoryLine;
+use App\Models\Variation;
 use Illuminate\Http\Request;
 
 class PhysicalInventoryLineController extends Controller

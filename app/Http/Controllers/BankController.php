@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\BankAccount;
-use App\BankCheckbook;
-use App\Business;
-use App\BusinessLocation;
-use App\Catalogue;
-use App\Contact;
-use App\Shortcut;
-use App\TypeBankTransaction;
-use App\TypeEntrie;
+use App\Models\Bank;
+use App\Models\BankAccount;
+use App\Models\BankCheckbook;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Catalogue;
+use App\Models\Contact;
+use App\Models\Shortcut;
+use App\Models\TypeBankTransaction;
+use App\Models\TypeEntrie;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Quote;
+use App\Models\Quote;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

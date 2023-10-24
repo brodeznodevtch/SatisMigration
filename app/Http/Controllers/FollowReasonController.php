@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FollowReason;
+use App\Models\FollowReason;
 use Illuminate\Http\Request;
 
 class FollowReasonController extends Controller

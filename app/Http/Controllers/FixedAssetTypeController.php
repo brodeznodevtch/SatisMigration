@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Catalogue;
-use App\FixedAsset;
-use App\FixedAssetType;
+use App\Models\Catalogue;
+use App\Models\FixedAsset;
+use App\Models\FixedAssetType;
 use DataTables;
 use Illuminate\Http\Request;
 

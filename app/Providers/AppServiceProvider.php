@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Business;
-use App\Module;
+use App\Models\Business;
+use App\Models\Module;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;

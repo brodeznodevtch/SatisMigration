@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\Employees;
+use App\Models\Employees;
 use App\Optics\Diagnostic;
 use App\Optics\GraduationCard;
 use App\Optics\GraduationCardHasDiagnostic;

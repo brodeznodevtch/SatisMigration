@@ -1,16 +1,16 @@
 <?php
 
-use App\Business;
-use App\BusinessLocation;
+use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Http\Controllers\KardexController;
-use App\Kardex;
-use App\KitHasProduct;
-use App\Product;
-use App\PurchaseLine;
-use App\TransactionSellLine;
-use App\Variation;
-use App\VariationLocationDetails;
-use App\Warehouse;
+use App\Models\Kardex;
+use App\Models\KitHasProduct;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\TransactionSellLine;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

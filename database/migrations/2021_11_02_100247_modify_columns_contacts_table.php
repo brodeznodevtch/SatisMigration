@@ -1,10 +1,10 @@
 <?php
 
-use App\City;
-use App\Contact;
-use App\Country;
-use App\PaymentTerm;
-use App\State;
+use App\Models\City;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\PaymentTerm;
+use App\Models\State;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;

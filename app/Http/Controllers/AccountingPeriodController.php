@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingEntrie;
-use App\AccountingPeriod;
+use App\Models\AccountingEntrie;
+use App\Models\AccountingPeriod;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

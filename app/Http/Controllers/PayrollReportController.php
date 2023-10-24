@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
+use App\Models\Business;
 use App\Exports\AnnualPayrollSummaryExport;
-use App\Payroll;
+use App\Models\Payroll;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use DataTables;

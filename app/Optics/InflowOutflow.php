@@ -37,20 +37,20 @@ class InflowOutflow extends Model
     /**
      * Get contact.
      *
-     * @return \App\Contact
+     * @return \App\Models\Contact
      */
     public function contact()
     {
-        return $this->belongsTo(\App\Contact::class, 'supplier_id');
+        return $this->belongsTo(\App\Models\Contact::class, 'supplier_id');
     }
 
     /**
      * Get employee.
      *
-     * @return \App\Employees
+     * @return \App\Models\Employees
      */
     public function employee()
     {
-        return $this->belongsTo(\App\Employees::class, 'employee_id');
+        return $this->belongsTo(\App\Models\Employees::class, 'employee_id');
     }
 }

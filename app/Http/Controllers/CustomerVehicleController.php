@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-use App\Customer;
-use App\CustomerVehicle;
+use App\Models\Brands;
+use App\Models\Customer;
+use App\Models\CustomerVehicle;
 use DB;
 use Excel;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\TransactionHasImportExpense;
+use App\Models\TransactionHasImportExpense;
 use Illuminate\Http\Request;
 
 class TransactionHasImportExpenseController extends Controller

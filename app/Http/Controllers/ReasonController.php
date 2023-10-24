@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Reason;
+use App\Models\Reason;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

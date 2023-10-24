@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Country;
-use App\State;
-use App\Zone;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\Zone;
 use DataTables;
 use Illuminate\Http\Request;
 use Storage;
@@ -83,7 +83,7 @@ class CountryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -96,7 +96,7 @@ class CountryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -109,7 +109,7 @@ class CountryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -120,7 +120,7 @@ class CountryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Country  $country
+     * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

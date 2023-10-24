@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\MovementType;
-use App\PurchaseLine;
-use App\Transaction;
-use App\TransactionSellLine;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\MovementType;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\Warehouse;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;

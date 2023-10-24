@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Brands;
-use App\BusinessLocation;
-use App\FixedAsset;
-use App\FixedAssetType;
+use App\Models\Brands;
+use App\Models\BusinessLocation;
+use App\Models\FixedAsset;
+use App\Models\FixedAssetType;
 use App\Utils\TransactionUtil;
 use DataTables;
 use Illuminate\Http\Request;

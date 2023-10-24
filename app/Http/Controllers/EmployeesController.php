@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\Business;
-use App\Employees;
+use App\Models\Bank;
+use App\Models\Business;
+use App\Models\Employees;
 use App\Notifications\NewNotification;
-use App\RrhhAbsenceInability;
-use App\RrhhContract;
-use App\RrhhPositionHistory;
-use App\RrhhSalarialConstance;
-use App\RrhhSalaryHistory;
-use App\RrhhTypeWage;
-use App\System;
-use App\User;
+use App\Models\RrhhAbsenceInability;
+use App\Models\RrhhContract;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalarialConstance;
+use App\Models\RrhhSalaryHistory;
+use App\Models\RrhhTypeWage;
+use App\Models\System;
+use App\Models\User;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
@@ -337,7 +337,7 @@ class EmployeesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Employees  $employee
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id)
@@ -435,7 +435,7 @@ class EmployeesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Employees  $employee
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -508,7 +508,7 @@ class EmployeesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Employees  $employee
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -682,7 +682,7 @@ class EmployeesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Employees  $employee
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

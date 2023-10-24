@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\DocumentCorrelative;
-use App\DocumentType;
+use App\Models\BusinessLocation;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;

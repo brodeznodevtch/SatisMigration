@@ -45,6 +45,6 @@ class Patient extends Model
      */
     public function employee()
     {
-        return $this->belongsTo(\App\Employees::class);
+        return $this->belongsTo(\App\Models\Employees::class);
     }
 }

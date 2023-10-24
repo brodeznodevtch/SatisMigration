@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BonusCalculation;
+use App\Models\BonusCalculation;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

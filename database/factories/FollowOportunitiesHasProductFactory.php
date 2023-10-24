@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\FollowOportunitiesHasProduct::class, function (Faker $faker) {
+$factory->define(App\Models\FollowOportunitiesHasProduct::class, function (Faker $faker) {
     return [
         //
     ];

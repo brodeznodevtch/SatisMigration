@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\RrhhTypeContract;
+use App\Models\Business;
+use App\Models\RrhhTypeContract;
 use Illuminate\Database\Seeder;
 
 class RrhhTypeContractSeeder extends Seeder

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
-use App\Zone;
+use App\Models\State;
+use App\Models\Zone;
 use DataTables;
 use Illuminate\Http\Request;
 
@@ -68,7 +68,7 @@ class ZoneController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Zone  $zone
+     * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -81,7 +81,7 @@ class ZoneController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Zone  $zone
+     * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -94,7 +94,7 @@ class ZoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Zone  $zone
+     * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -132,7 +132,7 @@ class ZoneController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Zone  $zone
+     * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

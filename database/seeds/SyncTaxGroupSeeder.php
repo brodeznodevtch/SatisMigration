@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\TaxGroup;
+use App\Models\Business;
+use App\Models\TaxGroup;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 

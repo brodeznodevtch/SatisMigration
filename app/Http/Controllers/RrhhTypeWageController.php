@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RrhhTypeWage;
+use App\Models\RrhhTypeWage;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -137,7 +137,7 @@ class RrhhTypeWageController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhTypeWage  $rrhhTypeWage
+     * @param  \App\Models\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -155,7 +155,7 @@ class RrhhTypeWageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhTypeWage  $rrhhTypeWage
+     * @param  \App\Models\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -208,7 +208,7 @@ class RrhhTypeWageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhTypeWage  $rrhhTypeWage
+     * @param  \App\Models\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

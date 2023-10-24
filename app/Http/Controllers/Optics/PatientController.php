@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\BusinessLocation;
-use App\Employees;
+use App\Models\BusinessLocation;
+use App\Models\Employees;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
 use App\Utils\Util;

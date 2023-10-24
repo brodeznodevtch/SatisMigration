@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\InstitutionLaw;
+use App\Models\InstitutionLaw;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

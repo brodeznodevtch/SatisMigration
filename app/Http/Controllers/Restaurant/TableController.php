@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use App\BusinessLocation;
+use App\Models\BusinessLocation;
 use App\Restaurant\ResTable;
 use Datatables;
 use Illuminate\Http\Request;

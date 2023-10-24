@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Kardex;
-use App\MovementType;
-use App\PhysicalInventory;
-use App\PhysicalInventoryLine;
-use App\Product;
-use App\PurchaseLine;
-use App\Transaction;
-use App\TransactionSellLine;
-use App\User;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Kardex;
+use App\Models\MovementType;
+use App\Models\PhysicalInventory;
+use App\Models\PhysicalInventoryLine;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
+use App\Models\User;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\VariationLocationDetails;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -420,7 +420,7 @@ class PhysicalInventoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\PhysicalInventory  $physicalInventory
+     * @param  \App\Models\PhysicalInventory  $physicalInventory
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

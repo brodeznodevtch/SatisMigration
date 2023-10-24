@@ -13,7 +13,7 @@
           <th>@lang('receipt.total')</th>
         </tr>
         @php
-          $purchases = \App\Product::lastThreePurchases($product->id);
+          $purchases = \App\Models\Product::lastThreePurchases($product->id);
         @endphp
 
         @if ($purchases->count())

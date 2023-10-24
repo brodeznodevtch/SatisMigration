@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Employees;
-use App\PaymentPeriod;
-use App\RrhhPositionHistory;
-use App\RrhhSalarialConstance;
-use App\RrhhSalaryHistory;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Employees;
+use App\Models\PaymentPeriod;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalarialConstance;
+use App\Models\RrhhSalaryHistory;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\PayrollUtil;
@@ -170,7 +170,7 @@ class RrhhSalarialConstanceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhSalarialConstance  $rrhhTypeContract
+     * @param  \App\Models\RrhhSalarialConstance  $rrhhTypeContract
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

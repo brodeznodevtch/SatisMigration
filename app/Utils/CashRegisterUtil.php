@@ -2,12 +2,12 @@
 
 namespace App\Utils;
 
-use App\Cashier;
-use App\CashRegister;
-use App\CashRegisterTransaction;
+use App\Models\Cashier;
+use App\Models\CashRegister;
+use App\Models\CashRegisterTransaction;
 use App\Optics\InflowOutflow;
-use App\Transaction;
-use App\TransactionPayment;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
 use DB;
 
 class CashRegisterUtil extends Util

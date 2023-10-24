@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductVariation;
-use App\Variation;
-use App\VariationTemplate;
-use App\VariationValueTemplate;
+use App\Models\ProductVariation;
+use App\Models\Variation;
+use App\Models\VariationTemplate;
+use App\Models\VariationValueTemplate;
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

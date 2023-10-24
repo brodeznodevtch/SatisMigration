@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\CustomerPortfolio;
-use App\Employees;
+use App\Models\Customer;
+use App\Models\CustomerPortfolio;
+use App\Models\Employees;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
@@ -123,7 +123,7 @@ class CustomerPortfolioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -145,7 +145,7 @@ class CustomerPortfolioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -186,7 +186,7 @@ class CustomerPortfolioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CustomerPortfolio  $customerPortfolio
+     * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

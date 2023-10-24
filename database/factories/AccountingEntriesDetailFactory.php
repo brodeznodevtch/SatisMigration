@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\AccountingEntriesDetail::class, function (Faker $faker) {
+$factory->define(App\Models\AccountingEntriesDetail::class, function (Faker $faker) {
     return [
         //
     ];

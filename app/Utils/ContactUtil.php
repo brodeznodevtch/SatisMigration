@@ -2,8 +2,8 @@
 
 namespace App\Utils;
 
-use App\Contact;
-use App\Customer;
+use App\Models\Contact;
+use App\Models\Customer;
 use DB;
 
 class ContactUtil

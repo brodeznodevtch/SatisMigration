@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ApportionmentHasImportExpense;
+use App\Models\ApportionmentHasImportExpense;
 use Illuminate\Http\Request;
 
 class ApportionmentHasImportExpenseController extends Controller

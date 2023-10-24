@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Cashier;
-use App\Module;
+use App\Models\BusinessLocation;
+use App\Models\Cashier;
+use App\Models\Module;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
@@ -143,7 +143,7 @@ class CashierController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Cashier  $cashier
+     * @param  \App\Models\Cashier  $cashier
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -165,7 +165,7 @@ class CashierController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Cashier  $cashier
+     * @param  \App\Models\Cashier  $cashier
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -213,7 +213,7 @@ class CashierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Cashier  $cashier
+     * @param  \App\Models\Cashier  $cashier
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

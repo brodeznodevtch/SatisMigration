@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\DocumentCorrelative;
-use App\DocumentType;
-use App\MovementType;
-use App\Transaction;
-use App\TransactionSellLine;
+use App\Models\BusinessLocation;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
+use App\Models\MovementType;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
 use App\Utils\BusinessUtil;
 use App\Utils\CashierUtil;
 use App\Utils\ContactUtil;

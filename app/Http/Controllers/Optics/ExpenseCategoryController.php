@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\ExpenseCategory;
+use App\Models\ExpenseCategory;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;

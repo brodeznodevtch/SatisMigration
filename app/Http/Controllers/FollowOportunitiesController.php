@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Category;
-use App\Contact;
-use App\Country;
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\FollowOportunities;
-use App\FollowOportunitiesHasProduct;
-use App\Oportunity;
+use App\Models\BusinessLocation;
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\FollowOportunities;
+use App\Models\FollowOportunitiesHasProduct;
+use App\Models\Oportunity;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;
@@ -176,7 +176,7 @@ class FollowOportunitiesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\FollowOportunities  $followOportunities
+     * @param  \App\Models\FollowOportunities  $followOportunities
      * @return \Illuminate\Http\Response
      */
     public function showOportunities($id)
@@ -264,7 +264,7 @@ class FollowOportunitiesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\FollowOportunities  $followOportunities
+     * @param  \App\Models\FollowOportunities  $followOportunities
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -378,7 +378,7 @@ class FollowOportunitiesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\FollowOportunities  $followOportunities
+     * @param  \App\Models\FollowOportunities  $followOportunities
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

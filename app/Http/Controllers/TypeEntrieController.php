@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingEntrie;
-use App\TypeEntrie;
+use App\Models\AccountingEntrie;
+use App\Models\TypeEntrie;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
@@ -72,7 +72,7 @@ class TypeEntrieController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\TypeEntrie  $typeEntrie
+     * @param  \App\Models\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -85,7 +85,7 @@ class TypeEntrieController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\TypeEntrie  $typeEntrie
+     * @param  \App\Models\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -116,7 +116,7 @@ class TypeEntrieController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\TypeEntrie  $typeEntrie
+     * @param  \App\Models\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

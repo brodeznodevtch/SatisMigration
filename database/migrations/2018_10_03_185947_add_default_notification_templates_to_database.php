@@ -1,7 +1,7 @@
 <?php
 
-use App\Business;
-use App\NotificationTemplate;
+use App\Models\Business;
+use App\Models\NotificationTemplate;
 use Illuminate\Database\Migrations\Migration;
 
 class AddDefaultNotificationTemplatesToDatabase extends Migration

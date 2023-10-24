@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessType;
+use App\Models\BusinessType;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

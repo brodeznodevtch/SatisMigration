@@ -42,7 +42,7 @@ class Diagnostic extends Model
      */
     public function business_location()
     {
-        return $this->belongsTo(\App\BusinessLocation::class);
+        return $this->belongsTo(\App\Models\BusinessLocation::class);
     }
 
     /**

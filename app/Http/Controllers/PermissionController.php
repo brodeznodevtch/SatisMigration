@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Permission;
+use App\Models\Permission;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;

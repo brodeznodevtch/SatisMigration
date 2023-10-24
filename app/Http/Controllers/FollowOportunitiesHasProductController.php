@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FollowOportunitiesHasProduct;
+use App\Models\FollowOportunitiesHasProduct;
 use Illuminate\Http\Request;
 
 class FollowOportunitiesHasProductController extends Controller

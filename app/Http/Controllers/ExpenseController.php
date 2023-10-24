@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\BankAccount;
-use App\BankTransaction;
-use App\BusinessLocation;
-use App\Contact;
-use App\DocumentType;
-use App\ExpenseCategory;
-use App\ExpenseLine;
-use App\PaymentTerm;
-use App\Transaction;
-use App\TransactionPayment;
-use App\TypeBankTransaction;
-use App\User;
+use App\Models\BankAccount;
+use App\Models\BankTransaction;
+use App\Models\BusinessLocation;
+use App\Models\Contact;
+use App\Models\DocumentType;
+use App\Models\ExpenseCategory;
+use App\Models\ExpenseLine;
+use App\Models\PaymentTerm;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
+use App\Models\TypeBankTransaction;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\TaxUtil;

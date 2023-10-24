@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CRMContactMode;
+use App\Models\CRMContactMode;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;

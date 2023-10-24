@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use App\LawDiscount;
+use App\Models\LawDiscount;
 
 class PayrollUtil extends Util
 {

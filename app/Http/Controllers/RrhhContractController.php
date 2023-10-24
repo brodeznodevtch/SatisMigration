@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Employees;
-use App\RrhhContract;
-use App\RrhhData;
-use App\RrhhDocuments;
-use App\RrhhPositionHistory;
-use App\RrhhSalaryHistory;
-use App\RrhhTypeContract;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Employees;
+use App\Models\RrhhContract;
+use App\Models\RrhhData;
+use App\Models\RrhhDocuments;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalaryHistory;
+use App\Models\RrhhTypeContract;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
@@ -309,7 +309,7 @@ class RrhhContractController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhContract  $rrhhDocuments
+     * @param  \App\Models\RrhhContract  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function generate(Request $request, $id)
@@ -505,7 +505,7 @@ class RrhhContractController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhContract  $rrhhDocuments
+     * @param  \App\Models\RrhhContract  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show($id, $employee_id)

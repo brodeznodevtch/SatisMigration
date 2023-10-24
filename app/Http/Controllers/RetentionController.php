@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\Transaction;
+use App\Models\Customer;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;

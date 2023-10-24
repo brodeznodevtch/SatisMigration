@@ -1,6 +1,6 @@
 <?php
 
-use App\Barcode;
+use App\Models\Barcode;
 use Illuminate\Database\Seeder;
 
 class BarcodesTableSeeder extends Seeder

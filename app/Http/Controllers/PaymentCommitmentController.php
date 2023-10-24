@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessLocation;
-use App\Contact;
-use App\PaymentCommitment;
-use App\PaymentCommitmentLine;
-use App\Transaction;
+use App\Models\BusinessLocation;
+use App\Models\Contact;
+use App\Models\PaymentCommitment;
+use App\Models\PaymentCommitmentLine;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;

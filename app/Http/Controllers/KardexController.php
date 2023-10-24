@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Apportionment;
-use App\ApportionmentHasTransaction;
-use App\Business;
+use App\Models\Apportionment;
+use App\Models\ApportionmentHasTransaction;
+use App\Models\Business;
 use App\Exports\KardexReportExport;
-use App\Kardex;
-use App\KitHasProduct;
-use App\MovementType;
+use App\Models\Kardex;
+use App\Models\KitHasProduct;
+use App\Models\MovementType;
 use App\Optics\LabOrder;
 use App\Optics\LabOrderDetail;
-use App\PhysicalInventory;
-use App\PhysicalInventoryLine;
-use App\Product;
-use App\PurchaseLine;
-use App\StockAdjustmentLine;
-use App\Transaction;
-use App\TransactionSellLine;
+use App\Models\PhysicalInventory;
+use App\Models\PhysicalInventoryLine;
+use App\Models\Product;
+use App\Models\PurchaseLine;
+use App\Models\StockAdjustmentLine;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\VariationLocationDetails;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
@@ -479,7 +479,7 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Transaction  $transaction
+     * @param  \App\Models\Transaction  $transaction
      * @param  string  $movement
      * @param  string  $reference
      * @param  string  $type
@@ -1130,7 +1130,7 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Transaction  $transaction
+     * @param  \App\Models\Transaction  $transaction
      * @param  string  $movement
      * @param  string  $reference
      * @param  string  $type

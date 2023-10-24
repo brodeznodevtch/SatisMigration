@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Business;
+use App\Models\Business;
 use App\Utils\TransactionUtil;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;

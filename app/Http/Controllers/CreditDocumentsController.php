@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditDocuments;
-use App\Customer;
-use App\DocumentType;
-use App\Employees;
-use App\SupportDocuments;
-use App\Transaction;
-use App\User;
+use App\Models\CreditDocuments;
+use App\Models\Customer;
+use App\Models\DocumentType;
+use App\Models\Employees;
+use App\Models\SupportDocuments;
+use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Http\Request;
@@ -191,7 +191,7 @@ class CreditDocumentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -325,7 +325,7 @@ class CreditDocumentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -352,7 +352,7 @@ class CreditDocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -388,7 +388,7 @@ class CreditDocumentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CreditDocuments  $creditDocuments
+     * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

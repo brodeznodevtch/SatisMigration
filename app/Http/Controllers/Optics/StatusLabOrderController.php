@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\Module;
+use App\Models\Module;
 use App\Optics\StatusLabOrder;
 use App\Optics\StatusLabOrderStep;
-use App\Permission;
+use App\Models\Permission;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

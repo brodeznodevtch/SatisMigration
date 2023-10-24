@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Customer;
-use App\CustomerVehicle;
-use App\DocumentType;
-use App\Employees;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Customer;
+use App\Models\CustomerVehicle;
+use App\Models\DocumentType;
+use App\Models\Employees;
 use App\Exports\QuoteExport;
-use App\LostSale;
-use App\Quote;
-use App\QuoteLine;
-use App\Reason;
-use App\SellingPriceGroup;
+use App\Models\LostSale;
+use App\Models\Quote;
+use App\Models\QuoteLine;
+use App\Models\Reason;
+use App\Models\SellingPriceGroup;
 use App\Utils\EmployeeUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\VariationLocationDetails;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use DataTables;
 use DB;
@@ -325,7 +325,7 @@ class QuoteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -501,7 +501,7 @@ class QuoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -679,7 +679,7 @@ class QuoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Quote  $quotes
+     * @param  \App\Models\Quote  $quotes
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

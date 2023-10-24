@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\Business;
-use App\Employees;
+use App\Models\Bank;
+use App\Models\Business;
+use App\Models\Employees;
 use App\Notifications\PersonnelActionNotification;
-use App\RrhhData;
-use App\RrhhPersonnelAction;
-use App\RrhhPersonnelActionAuthorizer;
-use App\RrhhPersonnelActionFile;
-use App\RrhhPositionHistory;
-use App\RrhhSalaryHistory;
-use App\RrhhTypePersonnelAction;
-use App\User;
+use App\Models\RrhhData;
+use App\Models\RrhhPersonnelAction;
+use App\Models\RrhhPersonnelActionAuthorizer;
+use App\Models\RrhhPersonnelActionFile;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalaryHistory;
+use App\Models\RrhhTypePersonnelAction;
+use App\Models\User;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;
@@ -802,7 +802,7 @@ class RrhhPersonnelActionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhPersonnelAction  $rrhhPersonnelAction
+     * @param  \App\Models\RrhhPersonnelAction  $rrhhPersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -858,7 +858,7 @@ class RrhhPersonnelActionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhPersonnelAction  $rrhhPersonnelAction
+     * @param  \App\Models\RrhhPersonnelAction  $rrhhPersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -1305,7 +1305,7 @@ class RrhhPersonnelActionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhPersonnelAction  $rrhhPersonnelAction
+     * @param  \App\Models\RrhhPersonnelAction  $rrhhPersonnelAction
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

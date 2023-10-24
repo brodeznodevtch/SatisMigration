@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\CashierClosure;
-use App\Catalogue;
-use App\Customer;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\CashierClosure;
+use App\Models\Catalogue;
+use App\Models\Customer;
 use App\Exports\AnnexExport;
 use App\Exports\AuxiliarReportExport;
 use App\Exports\BankTransactionsReportExport;
@@ -26,15 +26,15 @@ use App\Exports\PurchasesBookExport;
 use App\Exports\ResultStatusExport;
 use App\Exports\SalesBySeller;
 use App\Exports\SalesSummaryBySeller;
-use App\FiscalYear;
-use App\KitHasProduct;
-use App\Transaction;
-use App\TransactionKitSellLine;
-use App\TypeBankTransaction;
+use App\Models\FiscalYear;
+use App\Models\KitHasProduct;
+use App\Models\Transaction;
+use App\Models\TransactionKitSellLine;
+use App\Models\TypeBankTransaction;
 use App\Utils\BusinessUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Warehouse;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use DataTables;
 use DB;

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Business;
-use App\PurchaseLine;
-use App\Transaction;
+use App\Models\Business;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Console\Command;

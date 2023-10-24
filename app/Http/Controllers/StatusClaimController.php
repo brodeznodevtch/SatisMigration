@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\StatusClaim;
+use App\Models\Business;
+use App\Models\StatusClaim;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -80,7 +80,7 @@ class StatusClaimController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\StatusClaim  $statusClaim
+     * @param  \App\Models\StatusClaim  $statusClaim
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -96,7 +96,7 @@ class StatusClaimController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\StatusClaim  $statusClaim
+     * @param  \App\Models\StatusClaim  $statusClaim
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -136,7 +136,7 @@ class StatusClaimController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\StatusClaim  $statusClaim
+     * @param  \App\Models\StatusClaim  $statusClaim
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CustomerGroup;
+use App\Models\CustomerGroup;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -94,7 +94,7 @@ class CustomerGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CustomerGroup  $customerGroup
+     * @param  \App\Models\CustomerGroup  $customerGroup
      * @return \Illuminate\Http\Response
      */
     public function edit($id)

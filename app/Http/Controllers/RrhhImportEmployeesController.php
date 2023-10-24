@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Bank;
-use App\City;
-use App\Country;
-use App\Employees;
-use App\RrhhData;
-use App\RrhhPositionHistory;
-use App\RrhhSalaryHistory;
-use App\RrhhTypeWage;
-use App\State;
+use App\Models\Bank;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Employees;
+use App\Models\RrhhData;
+use App\Models\RrhhPositionHistory;
+use App\Models\RrhhSalaryHistory;
+use App\Models\RrhhTypeWage;
+use App\Models\State;
 use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use DB;

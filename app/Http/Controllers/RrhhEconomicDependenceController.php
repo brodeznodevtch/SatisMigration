@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhEconomicDependence;
+use App\Models\Employees;
+use App\Models\RrhhEconomicDependence;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -132,7 +132,7 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -151,7 +151,7 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -208,7 +208,7 @@ class RrhhEconomicDependenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhEconomicDependence  $rrhhDocuments
+     * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

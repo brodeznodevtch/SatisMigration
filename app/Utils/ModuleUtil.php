@@ -2,11 +2,11 @@
 
 namespace App\Utils;
 
-use App\BusinessLocation;
-use App\Product;
-use App\System;
-use App\Transaction;
-use App\User;
+use App\Models\BusinessLocation;
+use App\Models\Product;
+use App\Models\System;
+use App\Models\Transaction;
+use App\Models\User;
 use Module;
 
 class ModuleUtil extends Util

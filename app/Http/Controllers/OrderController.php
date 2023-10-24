@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\City;
-use App\Customer;
-use App\DocumentType;
-use App\Employees;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\City;
+use App\Models\Customer;
+use App\Models\DocumentType;
+use App\Models\Employees;
 use App\Exports\OrderTransactionExport;
 use App\Order;
-use App\Product;
-use App\Quote;
-use App\QuoteLine;
-use App\SellingPriceGroup;
-use App\State;
-use App\User;
+use App\Models\Product;
+use App\Models\Quote;
+use App\Models\QuoteLine;
+use App\Models\SellingPriceGroup;
+use App\Models\State;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
-use App\Variation;
-use App\VariationGroupPrice;
-use App\Warehouse;
+use App\Models\Variation;
+use App\Models\VariationGroupPrice;
+use App\Models\Warehouse;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
@@ -530,7 +530,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Quote  $order
+     * @param  \App\Models\Quote  $order
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

@@ -1,9 +1,9 @@
 <?php
 
-use App\Business;
-use App\BusinessLocation;
-use App\DocumentType;
-use App\PrintFormat;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\DocumentType;
+use App\Models\PrintFormat;
 use Illuminate\Database\Seeder;
 
 class PrintFormatSeeder extends Seeder

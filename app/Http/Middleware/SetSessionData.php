@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Business;
+use App\Models\Business;
 use App\Utils\BusinessUtil;
 use App\Utils\GlobalUtil;
 use Closure;

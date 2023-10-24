@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Contact;
-use App\Country;
-use App\CRMContactMode;
-use App\CRMContactReason;
-use App\FollowCustomer;
-use App\FollowCustomersHasProduct;
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\Country;
+use App\Models\CRMContactMode;
+use App\Models\CRMContactReason;
+use App\Models\FollowCustomer;
+use App\Models\FollowCustomersHasProduct;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -141,7 +141,7 @@ class FollowCustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -165,7 +165,7 @@ class FollowCustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -182,7 +182,7 @@ class FollowCustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -259,7 +259,7 @@ class FollowCustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\FollowCustomer  $followCustomer
+     * @param  \App\Models\FollowCustomer  $followCustomer
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -1,7 +1,7 @@
 <?php
 
-use App\ExpenseLine;
-use App\Transaction;
+use App\Models\ExpenseLine;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 
 class ModifyExpensesSeeder extends Seeder

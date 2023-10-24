@@ -1,6 +1,6 @@
 <?php
 
-use App\RrhhClassPersonnelAction;
+use App\Models\RrhhClassPersonnelAction;
 use Illuminate\Database\Seeder;
 
 class RrhhClassPersonnelActionsSeeder extends Seeder

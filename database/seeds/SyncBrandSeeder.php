@@ -1,7 +1,7 @@
 <?php
 
-use App\Brands;
-use App\Business;
+use App\Models\Brands;
+use App\Models\Business;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 

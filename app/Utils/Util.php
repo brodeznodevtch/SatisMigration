@@ -2,19 +2,19 @@
 
 namespace App\Utils;
 
-use App\Binnacle;
-use App\Business;
-use App\BusinessLocation;
-use App\Cashier;
-use App\CustomerPortfolio;
-use App\Module;
+use App\Models\Binnacle;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Cashier;
+use App\Models\CustomerPortfolio;
+use App\Models\Module;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
 use App\Optics\StatusLabOrder;
-use App\ReferenceCount;
-use App\TaxGroup;
-use App\User;
-use App\Warehouse;
+use App\Models\ReferenceCount;
+use App\Models\TaxGroup;
+use App\Models\User;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use DB;
 use GuzzleHttp\Client;

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\Employees;
-use App\PaymentPeriod;
-use App\RrhhIncomeDiscount;
-use App\RrhhTypeIncomeDiscount;
+use App\Models\Business;
+use App\Models\Employees;
+use App\Models\PaymentPeriod;
+use App\Models\RrhhIncomeDiscount;
+use App\Models\RrhhTypeIncomeDiscount;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -158,7 +158,7 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -178,7 +178,7 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -208,7 +208,7 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -286,7 +286,7 @@ class RrhhIncomeDiscountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhIncomeDiscount  $rrhhDocuments
+     * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

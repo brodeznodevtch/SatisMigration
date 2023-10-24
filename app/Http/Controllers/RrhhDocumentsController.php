@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhDocumentFile;
-use App\RrhhDocuments;
+use App\Models\Employees;
+use App\Models\RrhhDocumentFile;
+use App\Models\RrhhDocuments;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -278,7 +278,7 @@ class RrhhDocumentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhDocuments  $rrhhDocuments
+     * @param  \App\Models\RrhhDocuments  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -299,7 +299,7 @@ class RrhhDocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhDocuments  $rrhhDocuments
+     * @param  \App\Models\RrhhDocuments  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -442,7 +442,7 @@ class RrhhDocumentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhDocuments  $rrhhDocuments
+     * @param  \App\Models\RrhhDocuments  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

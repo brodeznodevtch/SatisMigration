@@ -2,30 +2,30 @@
 
 namespace App\Utils;
 
-use App\Apportionment;
-use App\ApportionmentHasTransaction;
-use App\Brands;
-use App\Business;
-use App\BusinessLocation;
-use App\Category;
-use App\DocumentType;
-use App\KitHasProduct;
-use App\Product;
-use App\ProductHasSuppliers;
-use App\ProductRack;
-use App\ProductVariation;
-use App\PurchaseLine;
-use App\TaxGroup;
-use App\TaxRate;
-use App\TaxRateTaxGroup;
-use App\Transaction;
-use App\TransactionSellLine;
-use App\Unit;
-use App\Variation;
-use App\VariationGroupPrice;
-use App\VariationLocationDetails;
-use App\VariationTemplate;
-use App\VariationValueTemplate;
+use App\Models\Apportionment;
+use App\Models\ApportionmentHasTransaction;
+use App\Models\Brands;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Category;
+use App\Models\DocumentType;
+use App\Models\KitHasProduct;
+use App\Models\Product;
+use App\Models\ProductHasSuppliers;
+use App\Models\ProductRack;
+use App\Models\ProductVariation;
+use App\Models\PurchaseLine;
+use App\Models\TaxGroup;
+use App\Models\TaxRate;
+use App\Models\TaxRateTaxGroup;
+use App\Models\Transaction;
+use App\Models\TransactionSellLine;
+use App\Models\Unit;
+use App\Models\Variation;
+use App\Models\VariationGroupPrice;
+use App\Models\VariationLocationDetails;
+use App\Models\VariationTemplate;
+use App\Models\VariationValueTemplate;
 use DB;
 
 class ProductUtil extends Util
@@ -1498,7 +1498,7 @@ class ProductUtil extends Util
      *
      * @param  int  $id
      * @param  string  $name
-     * @param  App\Category  $delete
+     * @param  App\Models\Category  $delete
      * @param  App\Utils\TransactionUtil  $transactionUtil
      * @param  string  $module_name
      * @return void
@@ -1594,7 +1594,7 @@ class ProductUtil extends Util
      *
      * @param  int  $id
      * @param  string  $name
-     * @param  App\Unit  $delete
+     * @param  App\Models\Unit  $delete
      * @return void
      *
      * @author Arquímides Martínez
@@ -1659,7 +1659,7 @@ class ProductUtil extends Util
      *
      * @param  int  $id
      * @param  string  $name
-     * @param  App\Brands  $delete
+     * @param  App\Models\Brands  $delete
      * @return void
      *
      * @author Arquímides Martínez
@@ -1724,7 +1724,7 @@ class ProductUtil extends Util
      *
      * @param  int  $id
      * @param  string  $description
-     * @param  App\TaxGroup  $delete
+     * @param  App\Models\TaxGroup  $delete
      * @return void
      *
      * @author Arquímides Martínez

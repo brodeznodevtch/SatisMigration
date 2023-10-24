@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\Contact;
-use App\DocumentType;
-use App\Employees;
-use App\ExpenseCategory;
+use App\Models\Contact;
+use App\Models\DocumentType;
+use App\Models\Employees;
+use App\Models\ExpenseCategory;
 use App\Optics\FlowReason;
 use App\Optics\InflowOutflow;
-use App\Transaction;
-use App\TransactionPayment;
+use App\Models\Transaction;
+use App\Models\TransactionPayment;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;

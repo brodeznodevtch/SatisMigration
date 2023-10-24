@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DocumentType;
-use App\MovementType;
-use App\PurchaseLine;
-use App\Transaction;
+use App\Models\DocumentType;
+use App\Models\MovementType;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;

@@ -2,12 +2,12 @@
 
 namespace App\Utils;
 
-use App\Business;
-use App\Product;
-use App\Variation;
-use App\VariationLocationDetails;
-use App\VariationTemplate;
-use App\VariationValueTemplate;
+use App\Models\Business;
+use App\Models\Product;
+use App\Models\Variation;
+use App\Models\VariationLocationDetails;
+use App\Models\VariationTemplate;
+use App\Models\VariationValueTemplate;
 use DB;
 use Illuminate\Database\QueryException;
 

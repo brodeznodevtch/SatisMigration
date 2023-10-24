@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhStudy;
+use App\Models\Employees;
+use App\Models\RrhhStudy;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -137,7 +137,7 @@ class RrhhStudyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhStudy  $rrhhDocuments
+     * @param  \App\Models\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -156,7 +156,7 @@ class RrhhStudyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhStudy  $rrhhDocuments
+     * @param  \App\Models\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -219,7 +219,7 @@ class RrhhStudyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhStudy  $rrhhDocuments
+     * @param  \App\Models\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

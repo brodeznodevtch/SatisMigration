@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Optics;
 
-use App\BusinessLocation;
-use App\ExpenseCategory;
-use App\Transaction;
-use App\User;
+use App\Models\BusinessLocation;
+use App\Models\ExpenseCategory;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use DB;

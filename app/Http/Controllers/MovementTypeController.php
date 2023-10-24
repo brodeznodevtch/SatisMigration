@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\MovementType;
+use App\Models\MovementType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 

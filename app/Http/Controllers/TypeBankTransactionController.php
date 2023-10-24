@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\BankTransaction;
-use App\TypeBankTransaction;
+use App\Models\BankTransaction;
+use App\Models\TypeBankTransaction;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -76,7 +76,7 @@ class TypeBankTransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\TypeBankTransaction  $typeBankTransaction
+     * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -89,7 +89,7 @@ class TypeBankTransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\TypeBankTransaction  $typeBankTransaction
+     * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -102,7 +102,7 @@ class TypeBankTransactionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\TypeBankTransaction  $typeBankTransaction
+     * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -145,7 +145,7 @@ class TypeBankTransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\TypeBankTransaction  $typeBankTransaction
+     * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

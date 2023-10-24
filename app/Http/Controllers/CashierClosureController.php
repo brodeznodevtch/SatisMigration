@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountBusinessLocation;
-use App\Business;
-use App\BusinessLocation;
-use App\Cashier;
-use App\CashierClosure;
-use App\DocumentCorrelative;
-use App\DocumentType;
-use App\Transaction;
-use App\TypeEntrie;
+use App\Models\AccountBusinessLocation;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Cashier;
+use App\Models\CashierClosure;
+use App\Models\DocumentCorrelative;
+use App\Models\DocumentType;
+use App\Models\Transaction;
+use App\Models\TypeEntrie;
 use App\Utils\AccountingUtil;
 use App\Utils\CashierUtil;
 use DB;

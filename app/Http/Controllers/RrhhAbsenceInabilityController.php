@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Employees;
-use App\RrhhAbsenceInability;
-use App\RrhhData;
+use App\Models\Employees;
+use App\Models\RrhhAbsenceInability;
+use App\Models\RrhhData;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
@@ -158,7 +158,7 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhAbsenceInability  $rrhhDocuments
+     * @param  \App\Models\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -178,7 +178,7 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\RrhhAbsenceInability  $rrhhDocuments
+     * @param  \App\Models\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -256,7 +256,7 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhAbsenceInability  $rrhhDocuments
+     * @param  \App\Models\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

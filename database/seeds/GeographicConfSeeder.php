@@ -1,9 +1,9 @@
 <?php
 
-use App\City;
-use App\Country;
-use App\State;
-use App\Zone;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\Zone;
 use Illuminate\Database\Seeder;
 
 class GeographicConfSeeder extends Seeder

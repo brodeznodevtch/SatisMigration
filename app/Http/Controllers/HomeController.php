@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
-use App\BusinessLocation;
-use App\Currency;
-use App\Image;
-use App\PurchaseLine;
-use App\Transaction;
-use App\User;
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\Currency;
+use App\Models\Image;
+use App\Models\PurchaseLine;
+use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\VariationLocationDetails;
+use App\Models\VariationLocationDetails;
 use Carbon\Carbon;
 use Charts;
 use DB;
