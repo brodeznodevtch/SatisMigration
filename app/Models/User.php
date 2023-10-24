@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Hash;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -70,7 +71,7 @@ class User extends Authenticatable
             'last_name' => $details['last_name'],
             'username' => $details['username'],
             'email' => $details['email'],
-            'password' => bcrypt($details['password']),
+            'password' => Hash::make($details['password']),
             'language' => ! empty($details['language']) ? $details['language'] : 'es',
         ]);
 

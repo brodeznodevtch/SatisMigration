@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class OldDummyBusinessSeeder extends Seeder
     {
         DB::beginTransaction();
 
-        $password = bcrypt('123456');
+        $password = Hash::make('123456');
 
         $today = \Carbon::now()->format('Y-m-d H:i:s');
         $yesterday = \Carbon::now()->subDays(2)->format('Y-m-d H:i:s');

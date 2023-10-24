@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\BankAccount;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
@@ -135,7 +136,7 @@ class PosController extends Controller
             $pos->location_id = trim($request->location_id);
             $pos->employee_id = trim($request->employee_id);
             $pos->status = trim($request->status);
-            $pos->authorization_key = bcrypt(trim($request->authorization_key));
+            $pos->authorization_key = Hash::make(trim($request->authorization_key));
             $pos->save();
 
             $output = [
@@ -209,7 +210,7 @@ class PosController extends Controller
             $pos->status = trim($request->status);
 
             if (! empty($request->authorization_key)) {
-                $pos->authorization_key = bcrypt(trim($request->authorization_key));
+                $pos->authorization_key = Hash::make(trim($request->authorization_key));
             }
 
             $pos->update();

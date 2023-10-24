@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Utils\InstallUtil;
 use Illuminate\Database\Seeder;
@@ -18,7 +19,7 @@ class DummyBusinessSeeder extends Seeder
     {
         DB::beginTransaction();
 
-        $password = bcrypt('123456');
+        $password = Hash::make('123456');
 
         // $timezone = 'America/Phoenix'
         // config(['app.timezone' => $timezone]);
