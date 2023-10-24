@@ -13,6 +13,6 @@ class RrhhDocumentFile extends Model
 
     public function rrhhDocument()
     {
-        return $this->belongsTo('App\RrhhDocuments');
+        return $this->belongsTo(\App\RrhhDocuments::class);
     }
 }

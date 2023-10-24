@@ -19,11 +19,11 @@ class RrhhDocuments extends Model
 
     public function state()
     {
-        return $this->belongsTo('App\State');
+        return $this->belongsTo(\App\State::class);
     }
 
     public function city()
     {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo(\App\City::class);
     }
 }

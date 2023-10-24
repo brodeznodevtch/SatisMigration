@@ -13,6 +13,6 @@ class RrhhTypeWage extends Model
 
     public function employees()
     {
-        return $this->hasMany('App\Employees', 'type_id');
+        return $this->hasMany(\App\Employees::class, 'type_id');
     }
 }

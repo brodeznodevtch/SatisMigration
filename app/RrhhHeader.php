@@ -11,6 +11,6 @@ class RrhhHeader extends Model
     public function data()
     {
 
-        return $this->hasMany('App\RrhhData');
+        return $this->hasMany(\App\RrhhData::class);
     }
 }

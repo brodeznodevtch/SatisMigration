@@ -48,7 +48,7 @@ class Warehouse extends Model
      */
     public function business_location()
     {
-        return $this->belongsTo('App\BusinessLocation');
+        return $this->belongsTo(\App\BusinessLocation::class);
     }
 
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
@@ -77,7 +77,7 @@ class Warehouse extends Model
 
     public function variation_location_details()
     {
-        return $this->hasMany('App\VariationLocationDetails');
+        return $this->hasMany(\App\VariationLocationDetails::class);
     }
 
     /**

@@ -28,7 +28,7 @@ class TaxGroup extends Model
      */
     public function tax_rates()
     {
-        return $this->belongsToMany('App\TaxRate', 'tax_rate_tax_group', 'tax_group_id', 'tax_rate_id');
+        return $this->belongsToMany(\App\TaxRate::class, 'tax_rate_tax_group', 'tax_group_id', 'tax_rate_id');
     }
 
     /**
@@ -36,11 +36,11 @@ class TaxGroup extends Model
      */
     public function transactions()
     {
-        return $this->hasMany('App\Transaction', 'tax_id', 'id');
+        return $this->hasMany(\App\Transaction::class, 'tax_id', 'id');
     }
 
     public function contacts()
     {
-        return $this->hasMany('App\Contact');
+        return $this->hasMany(\App\Contact::class);
     }
 }

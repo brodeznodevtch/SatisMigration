@@ -10,6 +10,6 @@ class TypeEntrie extends Model
 
     public function entrie()
     {
-        return $this->hasMany('App\AccountingEntrie');
+        return $this->hasMany(\App\AccountingEntrie::class);
     }
 }

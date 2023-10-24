@@ -20,7 +20,7 @@ class RrhhTypeIncomeDiscount extends Model
 
     public function rrhhIncomeDiscounts()
     {
-        return $this->hasMany('App\RrhhIncomeDiscount');
+        return $this->hasMany(\App\RrhhIncomeDiscount::class);
     }
 
     public static $payrollColumns = [

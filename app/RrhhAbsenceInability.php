@@ -19,11 +19,11 @@ class RrhhAbsenceInability extends Model
 
     public function typeInability()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function typeAbsence()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 }

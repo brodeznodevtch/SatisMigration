@@ -10,6 +10,6 @@ class Claim extends Model
 
     public function claimType()
     {
-        return $this->belongsTo('App\ClaimType');
+        return $this->belongsTo(\App\ClaimType::class);
     }
 }

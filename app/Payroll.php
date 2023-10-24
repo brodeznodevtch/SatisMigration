@@ -26,17 +26,17 @@ class Payroll extends Model
 
     public function payrollType()
     {
-        return $this->belongsTo('App\PayrollType');
+        return $this->belongsTo(\App\PayrollType::class);
     }
 
     public function payrollStatus()
     {
-        return $this->belongsTo('App\PayrollStatus');
+        return $this->belongsTo(\App\PayrollStatus::class);
     }
 
     public function paymentPeriod()
     {
-        return $this->belongsTo('App\PaymentPeriod');
+        return $this->belongsTo(\App\PaymentPeriod::class);
     }
 
     public function calculationType()
@@ -46,11 +46,11 @@ class Payroll extends Model
 
     public function payrollDetails()
     {
-        return $this->hasMany('App\PayrollDetail');
+        return $this->hasMany(\App\PayrollDetail::class);
     }
 
     public function business()
     {
-        return $this->belongsTo('App\Business');
+        return $this->belongsTo(\App\Business::class);
     }
 }

@@ -45,11 +45,11 @@ class Unit extends Model
      */
     public function unitGroupLines()
     {
-        return $this->hasMany('App\UnitGroupLines');
+        return $this->hasMany(\App\UnitGroupLines::class);
     }
 
     public function product()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasMany(\App\Product::class);
     }
 }

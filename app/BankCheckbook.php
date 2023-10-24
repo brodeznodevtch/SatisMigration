@@ -22,6 +22,6 @@ class BankCheckbook extends Model
 
     public function account()
     {
-        return $this->belongsTo('App\BankAccount');
+        return $this->belongsTo(\App\BankAccount::class);
     }
 }

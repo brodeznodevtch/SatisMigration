@@ -10,6 +10,6 @@ class CostCenterCategorie extends Model
 
     public function center()
     {
-        return $this->belongsTo('App\CostCenter');
+        return $this->belongsTo(\App\CostCenter::class);
     }
 }

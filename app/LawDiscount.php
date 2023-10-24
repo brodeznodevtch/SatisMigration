@@ -25,16 +25,16 @@ class LawDiscount extends Model
 
     public function paymentPeriod()
     {
-        return $this->belongsTo('App\PaymentPeriod');
+        return $this->belongsTo(\App\PaymentPeriod::class);
     }
 
     public function institutionLaw()
     {
-        return $this->belongsTo('App\InstitutionLaw');
+        return $this->belongsTo(\App\InstitutionLaw::class);
     }
 
     public function business()
     {
-        return $this->belongsTo('App\Business');
+        return $this->belongsTo(\App\Business::class);
     }
 }

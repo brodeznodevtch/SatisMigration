@@ -11,12 +11,12 @@ class Catalogue extends Model
 
     public function detail()
     {
-        return $this->hasMany('App\AccountingEntriesDetail');
+        return $this->hasMany(\App\AccountingEntriesDetail::class);
     }
 
     public function child()
     {
-        return $this->hasMany('App\Catalogue', 'parent')->select(['id', DB::raw("CONCAT(code, ' ', name) AS text"), 'parent']);
+        return $this->hasMany(\App\Catalogue::class, 'parent')->select(['id', DB::raw("CONCAT(code, ' ', name) AS text"), 'parent']);
     }
 
     public function children()
@@ -26,7 +26,7 @@ class Catalogue extends Model
 
     public function parent()
     {
-        return $this->belongsTo('App\Catalogue', 'parent')->select(['id', 'name', DB::raw("CONCAT(code, ' ', name) AS text"), 'parent']);
+        return $this->belongsTo(\App\Catalogue::class, 'parent')->select(['id', 'name', DB::raw("CONCAT(code, ' ', name) AS text"), 'parent']);
     }
 
     public function padre()
@@ -46,11 +46,11 @@ class Catalogue extends Model
 
     public function bankTransaction()
     {
-        return $this->hasMany('App\BankTransaction');
+        return $this->hasMany(\App\BankTransaction::class);
     }
 
     public function category()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsTo(\App\Category::class);
     }
 }

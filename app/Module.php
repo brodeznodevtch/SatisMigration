@@ -18,6 +18,6 @@ class Module extends Model
 
     public function permission()
     {
-        return $this->hasMany('App\Permission');
+        return $this->hasMany(\App\Permission::class);
     }
 }

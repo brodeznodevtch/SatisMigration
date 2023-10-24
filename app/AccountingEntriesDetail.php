@@ -10,7 +10,7 @@ class AccountingEntriesDetail extends Model
 
     public function account()
     {
-        return $this->belongsTo('App\Catalogue');
+        return $this->belongsTo(\App\Catalogue::class);
     }
 
     public function entrie()

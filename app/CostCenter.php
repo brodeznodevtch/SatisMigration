@@ -13,11 +13,11 @@ class CostCenter extends Model
 
     public function cost_center_main_account()
     {
-        return $this->hasOne('App\CostCenterMainAccount');
+        return $this->hasOne(\App\CostCenterMainAccount::class);
     }
 
     public function cost_center_operation_account()
     {
-        return $this->hasOne('App\CostCenterOperationAccount');
+        return $this->hasOne(\App\CostCenterOperationAccount::class);
     }
 }

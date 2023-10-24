@@ -13,11 +13,11 @@ class RrhhClassAction extends Model
 
     public function rrhhClassPersonnelAction()
     {
-        return $this->belongsTo('App\RrhhClassPersonnelAction');
+        return $this->belongsTo(\App\RrhhClassPersonnelAction::class);
     }
 
     public function rrhhRequiredAction()
     {
-        return $this->belongsTo('App\RrhhRequiredAction');
+        return $this->belongsTo(\App\RrhhRequiredAction::class);
     }
 }

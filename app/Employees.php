@@ -77,87 +77,87 @@ class Employees extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(\App\User::class);
     }
 
     public function afp()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function civilStatus()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function nationality()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function profession()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function rrhhTypeWage()
     {
-        return $this->belongsTo('App\RrhhTypeWage', 'type_id');
+        return $this->belongsTo(\App\RrhhTypeWage::class, 'type_id');
     }
 
     public function payment()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function bank()
     {
-        return $this->belongsTo('App\Bank');
+        return $this->belongsTo(\App\Bank::class);
     }
 
     public function country()
     {
-        return $this->belongsTo('App\Country');
+        return $this->belongsTo(\App\Country::class);
     }
 
     public function state()
     {
-        return $this->belongsTo('App\State');
+        return $this->belongsTo(\App\State::class);
     }
 
     public function city()
     {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo(\App\City::class);
     }
 
     public function positionHistories()
     {
-        return $this->hasMany('App\RrhhPositionHistory', 'employee_id');
+        return $this->hasMany(\App\RrhhPositionHistory::class, 'employee_id');
     }
 
     public function salaryHistories()
     {
-        return $this->hasMany('App\RrhhSalaryHistory', 'employee_id');
+        return $this->hasMany(\App\RrhhSalaryHistory::class, 'employee_id');
     }
 
     public function rrhhContracts()
     {
-        return $this->hasMany('App\RrhhContract');
+        return $this->hasMany(\App\RrhhContract::class);
     }
 
     public function rrhhDocuments()
     {
-        return $this->hasMany('App\RrhhDocuments');
+        return $this->hasMany(\App\RrhhDocuments::class);
     }
 
     public function rrhhIncomeDiscounts()
     {
-        return $this->hasMany('App\RrhhIncomeDiscount', 'employee_id');
+        return $this->hasMany(\App\RrhhIncomeDiscount::class, 'employee_id');
     }
 
     public function payrollDetails()
     {
-        return $this->hasMany('App\PayrollDetail', 'employee_id');
+        return $this->hasMany(\App\PayrollDetail::class, 'employee_id');
     }
 
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)

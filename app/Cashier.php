@@ -40,7 +40,7 @@ class Cashier extends Model
      */
     public function business_location()
     {
-        return $this->belongsTo('App\BusinessLocation');
+        return $this->belongsTo(\App\BusinessLocation::class);
     }
 
     /**

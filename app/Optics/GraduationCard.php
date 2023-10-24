@@ -62,7 +62,7 @@ class GraduationCard extends Model
      */
     public function patient()
     {
-        return $this->belongsTo('App\Optics\Patient');
+        return $this->belongsTo(\App\Optics\Patient::class);
     }
 
     /**

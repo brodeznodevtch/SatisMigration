@@ -21,12 +21,12 @@ class UnitGroup extends Model
      */
     public function business()
     {
-        return $this->belongsTo('App\Business');
+        return $this->belongsTo(\App\Business::class);
     }
 
     public function unit()
     {
-        return $this->belongsTo('App\Unit');
+        return $this->belongsTo(\App\Unit::class);
     }
 
     /**
@@ -34,7 +34,7 @@ class UnitGroup extends Model
      */
     public function unitGroupLines()
     {
-        return $this->hasMany('App\UnitGroupLines');
+        return $this->hasMany(\App\UnitGroupLines::class);
     }
 
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)

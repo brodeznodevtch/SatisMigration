@@ -23,6 +23,6 @@ class RrhhData extends Model
     public function header()
     {
 
-        return $this->belongsTo('App\RrhhHeader');
+        return $this->belongsTo(\App\RrhhHeader::class);
     }
 }

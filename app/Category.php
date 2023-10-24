@@ -86,6 +86,6 @@ class Category extends Model
 
     public function catalogue()
     {
-        return $this->belongsTo('App\Catalogue');
+        return $this->belongsTo(\App\Catalogue::class);
     }
 }

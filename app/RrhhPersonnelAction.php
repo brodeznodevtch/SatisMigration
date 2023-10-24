@@ -26,17 +26,17 @@ class RrhhPersonnelAction extends Model
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 
     public function payment()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function bank()
     {
-        return $this->belongsTo('App\Bank');
+        return $this->belongsTo(\App\Bank::class);
     }
 
     public function user()
@@ -46,6 +46,6 @@ class RrhhPersonnelAction extends Model
 
     public function personnelActionAuthorizers()
     {
-        return $this->hasMany('App\RrhhPersonnelActionAuthorizer');
+        return $this->hasMany(\App\RrhhPersonnelActionAuthorizer::class);
     }
 }

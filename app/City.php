@@ -10,6 +10,6 @@ class City extends Model
 
     public function state()
     {
-        return $this->belongsTo('App\State');
+        return $this->belongsTo(\App\State::class);
     }
 }

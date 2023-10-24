@@ -10,11 +10,11 @@ class RrhhSalaryHistory extends Model
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 
     public function rrhhPersonnelAction()
     {
-        return $this->belongsTo('App\RrhhPersonnelAction');
+        return $this->belongsTo(\App\RrhhPersonnelAction::class);
     }
 }

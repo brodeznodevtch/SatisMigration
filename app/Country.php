@@ -10,7 +10,7 @@ class Country extends Model
 
     public function state()
     {
-        return $this->hasMany('App\State');
+        return $this->hasMany(\App\State::class);
     }
 
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)

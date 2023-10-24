@@ -20,16 +20,16 @@ class BankAccount extends Model
 
     public function bank()
     {
-        return $this->belongsTo('App\Bank');
+        return $this->belongsTo(\App\Bank::class);
     }
 
     public function catalogue()
     {
-        return $this->belongsTo('App\Catalogue');
+        return $this->belongsTo(\App\Catalogue::class);
     }
 
     public function checkbook()
     {
-        return $this->hasMany('App\BankCheckbook');
+        return $this->hasMany(\App\BankCheckbook::class);
     }
 }

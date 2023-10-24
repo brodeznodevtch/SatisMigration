@@ -15,6 +15,6 @@ class RrhhPersonnelActionAuthorizer extends Model
 
     public function personnelAction()
     {
-        return $this->belongsTo('App\RrhhPersonnelAction');
+        return $this->belongsTo(\App\RrhhPersonnelAction::class);
     }
 }

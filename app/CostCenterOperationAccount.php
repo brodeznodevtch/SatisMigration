@@ -17,6 +17,6 @@ class CostCenterOperationAccount extends Model
 
     public function cost_center()
     {
-        return $this->belongsTo('App\CostCenter');
+        return $this->belongsTo(\App\CostCenter::class);
     }
 }

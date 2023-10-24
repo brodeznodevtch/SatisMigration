@@ -10,11 +10,11 @@ class AccountingPeriod extends Model
 
     public function year()
     {
-        return $this->belongsTo('App\FiscalYear');
+        return $this->belongsTo(\App\FiscalYear::class);
     }
 
     public function entrie()
     {
-        return $this->hasMany('App\AccountingEntrie');
+        return $this->hasMany(\App\AccountingEntrie::class);
     }
 }

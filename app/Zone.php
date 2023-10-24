@@ -10,6 +10,6 @@ class Zone extends Model
 
     public function state()
     {
-        return $this->hasMany('App\State');
+        return $this->hasMany(\App\State::class);
     }
 }

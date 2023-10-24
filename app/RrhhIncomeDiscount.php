@@ -24,16 +24,16 @@ class RrhhIncomeDiscount extends Model
 
     public function rrhhTypeIncomeDiscount()
     {
-        return $this->belongsTo('App\RrhhTypeIncomeDiscount');
+        return $this->belongsTo(\App\RrhhTypeIncomeDiscount::class);
     }
 
     public function paymentPeriod()
     {
-        return $this->belongsTo('App\PaymentPeriod');
+        return $this->belongsTo(\App\PaymentPeriod::class);
     }
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 }

@@ -12,6 +12,6 @@ class RrhhRequiredAction extends Model
 
     public function rrhhClassActions()
     {
-        return $this->hasMany('App\RrhhClassAction');
+        return $this->hasMany(\App\RrhhClassAction::class);
     }
 }

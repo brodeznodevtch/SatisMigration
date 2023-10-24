@@ -83,6 +83,6 @@ class TaxRate extends Model
      */
     public function tax_groups()
     {
-        return $this->belongsToMany('App\TaxGroup', 'tax_rate_tax_group', 'tax_rate_id', 'tax_group_id');
+        return $this->belongsToMany(\App\TaxGroup::class, 'tax_rate_tax_group', 'tax_rate_id', 'tax_group_id');
     }
 }

@@ -13,6 +13,6 @@ class PayrollStatus extends Model
 
     public function payrolls()
     {
-        return $this->hasMany('App\Payroll');
+        return $this->hasMany(\App\Payroll::class);
     }
 }

@@ -10,6 +10,6 @@ class FiscalYear extends Model
 
     public function period()
     {
-        return $this->hasMany('App\AccountingPeriod');
+        return $this->hasMany(\App\AccountingPeriod::class);
     }
 }

@@ -159,6 +159,6 @@ class Product extends Model
 
     public function variation_location_details()
     {
-        return $this->hasMany('App\VariationLocationDetails');
+        return $this->hasMany(\App\VariationLocationDetails::class);
     }
 }

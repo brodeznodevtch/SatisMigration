@@ -13,6 +13,6 @@ class InstitutionLaw extends Model
 
     public function business()
     {
-        return $this->belongsTo('App\Business');
+        return $this->belongsTo(\App\Business::class);
     }
 }

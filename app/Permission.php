@@ -18,7 +18,7 @@ class Permission extends Model
 
     public function module()
     {
-        return $this->belongsTo('App\Module');
+        return $this->belongsTo(\App\Module::class);
     }
 
     public static function checkPermissions()

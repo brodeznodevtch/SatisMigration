@@ -46,11 +46,11 @@ class RrhhContract extends Model
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 
     public function rrhhTypeContract()
     {
-        return $this->belongsTo('App\RrhhTypeContract');
+        return $this->belongsTo(\App\RrhhTypeContract::class);
     }
 }

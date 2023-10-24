@@ -10,21 +10,21 @@ class AccountingEntrie extends Model
 
     public function detail()
     {
-        return $this->hasMany('App\AccountingEntriesDetail');
+        return $this->hasMany(\App\AccountingEntriesDetail::class);
     }
 
     public function bankTransaction()
     {
-        return $this->hasOne('App\BankTransaction');
+        return $this->hasOne(\App\BankTransaction::class);
     }
 
     public function type()
     {
-        return $this->belongsTo('App\TypeEntrie', 'type_entrie_id');
+        return $this->belongsTo(\App\TypeEntrie::class, 'type_entrie_id');
     }
 
     public function period()
     {
-        return $this->belongsTo('App\AccountingPeriod');
+        return $this->belongsTo(\App\AccountingPeriod::class);
     }
 }

@@ -35,11 +35,11 @@ class PayrollDetail extends Model
 
     public function payroll()
     {
-        return $this->belongsTo('App\Payroll');
+        return $this->belongsTo(\App\Payroll::class);
     }
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 }

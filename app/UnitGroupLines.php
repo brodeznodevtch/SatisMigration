@@ -18,11 +18,11 @@ class UnitGroupLines extends Model
      */
     public function unitGroup()
     {
-        return $this->belongsTo('App\UnitGroup');
+        return $this->belongsTo(\App\UnitGroup::class);
     }
 
     public function unit()
     {
-        return $this->belongsTo('App\Unit');
+        return $this->belongsTo(\App\Unit::class);
     }
 }

@@ -10,12 +10,12 @@ class State extends Model
 
     public function zone()
     {
-        return $this->belongsTo('App\Zone');
+        return $this->belongsTo(\App\Zone::class);
     }
 
     public function country()
     {
-        return $this->belongsTo('App\Country');
+        return $this->belongsTo(\App\Country::class);
     }
 
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)

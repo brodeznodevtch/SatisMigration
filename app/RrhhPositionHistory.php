@@ -18,31 +18,31 @@ class RrhhPositionHistory extends Model
 
     public function previousDepartment()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function previousPosition1()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function newDepartment()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function newPosition1()
     {
-        return $this->belongsTo('App\RrhhData');
+        return $this->belongsTo(\App\RrhhData::class);
     }
 
     public function employee()
     {
-        return $this->belongsTo('App\Employees');
+        return $this->belongsTo(\App\Employees::class);
     }
 
     public function rrhhPersonnelAction()
     {
-        return $this->belongsTo('App\RrhhPersonnelAction');
+        return $this->belongsTo(\App\RrhhPersonnelAction::class);
     }
 }
