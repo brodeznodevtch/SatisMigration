@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFlowReasonsTable extends Migration
 {
@@ -18,9 +18,9 @@ class CreateFlowReasonsTable extends Migration
 
             $table->unsignedInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->string('reason');
-            
+
             $table->text('description')->nullable();
 
             $table->unsignedInteger('created_by')->nullable();

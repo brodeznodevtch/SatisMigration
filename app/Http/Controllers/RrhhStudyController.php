@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Employees;
 use App\RrhhStudy;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Carbon\Carbon;
-use Storage;
 use App\Utils\ModuleUtil;
+use DB;
+use Illuminate\Http\Request;
+use Storage;
 
 class RrhhStudyController extends Controller
 {
@@ -18,13 +16,14 @@ class RrhhStudyController extends Controller
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil)
     {
         $this->moduleUtil = $moduleUtil;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +34,9 @@ class RrhhStudyController extends Controller
         //
     }
 
-    public function getByEmployee($id) 
+    public function getByEmployee($id)
     {
-        if ( !auth()->user()->can('rrhh_study.view') ) {
+        if (! auth()->user()->can('rrhh_study.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -49,7 +48,7 @@ class RrhhStudyController extends Controller
             ->where('study.employee_id', $employee->id)
             ->where('type.rrhh_header_id', 12)
             ->get();
-        
+
         return view('rrhh.studies.index', compact('studies', 'employee'));
     }
 
@@ -58,14 +57,14 @@ class RrhhStudyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
         //
     }
 
-    function createStudy($id) 
+    public function createStudy($id)
     {
-        if ( !auth()->user()->can('rrhh_study.create') ) {
+        if (! auth()->user()->can('rrhh_study.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -79,47 +78,46 @@ class RrhhStudyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_study.create') ) {
+        if (! auth()->user()->can('rrhh_study.create')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate([
-            'type_study_id'   => 'required',
-            'title'           => 'required',
-            'institution'     => 'required',
-            'employee_id'     => 'required',
-            'study_status'    => 'required',
+            'type_study_id' => 'required',
+            'title' => 'required',
+            'institution' => 'required',
+            'employee_id' => 'required',
+            'study_status' => 'required',
             'year_graduation' => 'required',
         ]);
 
         try {
             $input_details = $request->all();
-            if($request->study_status == 'en_curso'){
+            if ($request->study_status == 'en_curso') {
                 $input_details['study_status'] = 'En curso';
-            }else{
+            } else {
                 $input_details['study_status'] = 'Finalizado';
             }
-            
+
             DB::beginTransaction();
-    
+
             $study = RrhhStudy::create($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -129,7 +127,6 @@ class RrhhStudyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhStudy $rrhhDocuments)
@@ -143,9 +140,9 @@ class RrhhStudyController extends Controller
      * @param  \App\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) 
+    public function edit($id)
     {
-        if ( !auth()->user()->can('rrhh_study.edit') ) {
+        if (! auth()->user()->can('rrhh_study.edit')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -159,60 +156,60 @@ class RrhhStudyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
-    public function updateStudy(Request $request) 
+    public function updateStudy(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_study.edit') ) {
+        if (! auth()->user()->can('rrhh_study.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'type_study_id'   => 'required',
-            'title'           => 'required',
-            'institution'     => 'required',
-            'employee_id'     => 'required',
-            'study_status'    => 'required',
+            'type_study_id' => 'required',
+            'title' => 'required',
+            'institution' => 'required',
+            'employee_id' => 'required',
+            'study_status' => 'required',
             'year_graduation' => 'required',
-            'status'          => 'required',
+            'status' => 'required',
         ]);
 
         try {
             $input_details = $request->all();
-            if($request->study_status == 'en_curso'){
+            if ($request->study_status == 'en_curso') {
                 $input_details['study_status'] = 'En curso';
-            }else{
+            } else {
                 $input_details['study_status'] = 'Finalizado';
             }
 
-            if($request->input('status') == 1){
+            if ($request->input('status') == 1) {
                 $input_details['status'] = 1;
-            }else{
+            } else {
                 $input_details['status'] = 0;
             }
             DB::beginTransaction();
-    
+
             $item = RrhhStudy::findOrFail($request->id);
             $study = $item->update($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -225,9 +222,10 @@ class RrhhStudyController extends Controller
      * @param  \App\RrhhStudy  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
-        if (!auth()->user()->can('rrhh_study.delete')) {
+        if (! auth()->user()->can('rrhh_study.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -235,18 +233,16 @@ class RrhhStudyController extends Controller
             try {
                 $item = RrhhStudy::findOrFail($id);
                 $item->forceDelete();
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }                
-
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
 

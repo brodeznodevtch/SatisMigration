@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Employees;
-use App\RrhhData;
 use App\RrhhAbsenceInability;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Carbon\Carbon;
-use Storage;
+use App\RrhhData;
 use App\Utils\ModuleUtil;
+use DB;
+use Illuminate\Http\Request;
+use Storage;
 
 class RrhhAbsenceInabilityController extends Controller
 {
@@ -19,13 +17,14 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil)
     {
         $this->moduleUtil = $moduleUtil;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,10 +34,10 @@ class RrhhAbsenceInabilityController extends Controller
     {
         //
     }
-    
-    public function getByEmployee($id) 
+
+    public function getByEmployee($id)
     {
-        if ( !auth()->user()->can('rrhh_absence_inability.view') ) {
+        if (! auth()->user()->can('rrhh_absence_inability.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -53,17 +52,17 @@ class RrhhAbsenceInabilityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
         //
     }
 
-    function createAbsenceInability($id) 
+    public function createAbsenceInability($id)
     {
-        if ( !auth()->user()->can('rrhh_absence_inability.create') ) {
+        if (! auth()->user()->can('rrhh_absence_inability.create')) {
             abort(403, 'Unauthorized action.');
         }
- 
+
         $business_id = request()->session()->get('user.business_id');
         $typeAbsences = RrhhData::where('rrhh_header_id', 13)->where('business_id', $business_id)->where('status', 1)->orderBy('id', 'DESC')->get();
         $typeInabilities = RrhhData::where('rrhh_header_id', 14)->where('business_id', $business_id)->where('status', 1)->orderBy('id', 'DESC')->get();
@@ -75,12 +74,11 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_absence_inability.create') ) {
+        if (! auth()->user()->can('rrhh_absence_inability.create')) {
             abort(403, 'Unauthorized action.');
         }
         $requiredStartDate = 'nullable';
@@ -89,10 +87,10 @@ class RrhhAbsenceInabilityController extends Controller
         $requiredTypeInability = 'nullable';
         $requiredAmount = 'nullable';
 
-        if($request->input('type') == 1){
+        if ($request->input('type') == 1) {
             $requiredTypeAbsence = 'required';
             $requiredAmount = 'required|numeric|min:1|max:8';
-        }else{
+        } else {
             $requiredEndDate = 'required';
             $requiredTypeInability = 'required';
         }
@@ -110,37 +108,37 @@ class RrhhAbsenceInabilityController extends Controller
         try {
             $input_details = $request->only([
                 'description',
-                'employee_id'
+                'employee_id',
             ]);
 
             $input_details['start_date'] = $this->moduleUtil->uf_date($request->input('start_date'));
 
-            if($request->input('type') == 1){
+            if ($request->input('type') == 1) {
                 $input_details['type'] = 'Ausencia';
                 $input_details['type_absence_id'] = $request->input('type_absence_id');
                 $input_details['amount'] = $request->input('amount');
-            }else{
+            } else {
                 $input_details['type'] = 'Incapacidad';
                 $input_details['type_inability_id'] = $request->input('type_inability_id');
                 $input_details['end_date'] = $this->moduleUtil->uf_date($request->input('end_date'));
             }
-            
+
             DB::beginTransaction();
-    
+
             $absenceInhability = RrhhAbsenceInability::create($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -150,7 +148,6 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhAbsenceInability $rrhhDocuments)
@@ -164,9 +161,9 @@ class RrhhAbsenceInabilityController extends Controller
      * @param  \App\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) 
+    public function edit($id)
     {
-        if ( !auth()->user()->can('rrhh_absence_inability.edit') ) {
+        if (! auth()->user()->can('rrhh_absence_inability.edit')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -181,17 +178,17 @@ class RrhhAbsenceInabilityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
-    public function updateAbsenceInability(Request $request) 
+    public function updateAbsenceInability(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_absence_inability.edit') ) {
+        if (! auth()->user()->can('rrhh_absence_inability.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -202,10 +199,10 @@ class RrhhAbsenceInabilityController extends Controller
         $requiredTypeInability = 'nullable';
         $requiredAmount = 'nullable';
 
-        if($absenceInability->type == 'Ausencia'){
+        if ($absenceInability->type == 'Ausencia') {
             $requiredTypeAbsence = 'required';
             $requiredAmount = 'required|numeric|min:1|max:8';
-        }else{
+        } else {
             $requiredEndDate = 'required';
             $requiredTypeInability = 'required';
         }
@@ -221,35 +218,35 @@ class RrhhAbsenceInabilityController extends Controller
 
         try {
             $input_details = $request->only([
-                'description'
+                'description',
             ]);
 
             $input_details['start_date'] = $this->moduleUtil->uf_date($request->input('start_date'));
 
-            if($absenceInability->type == 'Ausencia'){
+            if ($absenceInability->type == 'Ausencia') {
                 $input_details['type_absence_id'] = $request->input('type_absence_id');
                 $input_details['amount'] = $request->input('amount');
-            }else{
+            } else {
                 $input_details['type_inability_id'] = $request->input('type_inability_id');
                 $input_details['end_date'] = $this->moduleUtil->uf_date($request->input('end_date'));
             }
-            
+
             DB::beginTransaction();
-    
+
             $absenceInability->update($input_details);
-    
+
             DB::commit();
-    
+
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -262,9 +259,9 @@ class RrhhAbsenceInabilityController extends Controller
      * @param  \App\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) 
+    public function destroy($id)
     {
-        if (!auth()->user()->can('rrhh_absence_inability.delete')) {
+        if (! auth()->user()->can('rrhh_absence_inability.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -272,18 +269,16 @@ class RrhhAbsenceInabilityController extends Controller
             try {
                 $item = RrhhAbsenceInability::findOrFail($id);
                 $item->forceDelete();
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }                
-
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
 

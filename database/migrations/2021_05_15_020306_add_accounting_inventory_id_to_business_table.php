@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAccountingInventoryIdToBusinessTable extends Migration
 {
@@ -18,7 +18,7 @@ class AddAccountingInventoryIdToBusinessTable extends Migration
                 ->after('accounting_extra_expenses_id')
                 ->nullable()
                 ->default(null);
-            
+
             $table->foreign('accounting_inventory_id')
                 ->on('catalogues')
                 ->references('id');

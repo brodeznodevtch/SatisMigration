@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class PayrollDetail extends Model
 {
     use SoftDeletes;
@@ -12,31 +13,33 @@ class PayrollDetail extends Model
         'proportional',
         'start_date',
         'end_date',
-        'days', 
+        'days',
         'hours',
-        'montly_salary', 
-        'regular_salary', 
-        'commissions', 
+        'montly_salary',
+        'regular_salary',
+        'commissions',
         'extra_hours',
         'vacation_bonus',
         'bonus',
         'other_income',
-        'total_income', 
-        'isss', 
+        'total_income',
+        'isss',
         'afp',
-        'rent', 
-        'other_deductions', 
+        'rent',
+        'other_deductions',
         'total_deductions',
-        'total_to_pay', 
-        'employee_id', 
-        'payroll_id'
+        'total_to_pay',
+        'employee_id',
+        'payroll_id',
     ];
-    
-    public function payroll(){
+
+    public function payroll()
+    {
         return $this->belongsTo('App\Payroll');
     }
 
-    public function employee(){
+    public function employee()
+    {
         return $this->belongsTo('App\Employees');
-    }            
+    }
 }

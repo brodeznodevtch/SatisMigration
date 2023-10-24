@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_import_expense' => 'Add import expense',
     'added_success' => 'Import expense added successfully',

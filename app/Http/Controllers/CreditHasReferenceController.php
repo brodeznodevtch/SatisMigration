@@ -30,7 +30,6 @@ class CreditHasReferenceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class CreditHasReferenceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CreditHasReference  $creditHasReference
      * @return \Illuminate\Http\Response
      */
     public function show(CreditHasReference $creditHasReference)
@@ -52,7 +50,6 @@ class CreditHasReferenceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CreditHasReference  $creditHasReference
      * @return \Illuminate\Http\Response
      */
     public function edit(CreditHasReference $creditHasReference)
@@ -63,8 +60,6 @@ class CreditHasReferenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CreditHasReference  $creditHasReference
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CreditHasReference $creditHasReference)
@@ -75,7 +70,6 @@ class CreditHasReferenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CreditHasReference  $creditHasReference
      * @return \Illuminate\Http\Response
      */
     public function destroy(CreditHasReference $creditHasReference)

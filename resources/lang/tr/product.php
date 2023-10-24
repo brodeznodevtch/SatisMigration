@@ -59,4 +59,4 @@ return [
     'file_to_import' => 'İçe Aktarılacak Dosya',
     'file_imported_successfully' => 'Dosya başarıyla içe aktarıldı',
     'download_csv_file_template' => 'CSV dosyası şablonunu indir',
- ];
+];

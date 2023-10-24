@@ -1,4 +1,5 @@
 <?php
+
 return [
     'add_diagnostic' => 'Registrar Diagnóstico',
     'added_success' => 'Diagnóstico registrado exitosamente',

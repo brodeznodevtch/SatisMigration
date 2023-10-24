@@ -10,15 +10,16 @@ class RrhhTypeIncomeDiscount extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'type', 
-        'name', 
-        'payroll_column', 
-        'status', 
-        'business_id', 
-        'deleted_at'
+        'type',
+        'name',
+        'payroll_column',
+        'status',
+        'business_id',
+        'deleted_at',
     ];
 
-    public function rrhhIncomeDiscounts() {
+    public function rrhhIncomeDiscounts()
+    {
         return $this->hasMany('App\RrhhIncomeDiscount');
     }
 

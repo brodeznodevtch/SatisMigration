@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Suplies extends Model
 {
     //
-        protected $guarded = ['id'];
+    protected $guarded = ['id'];
 
-        protected $table = 'suplies';
+    protected $table = 'suplies';
 
-        protected $fillable = ['suply_name','stock'];
+    protected $fillable = ['suply_name', 'stock'];
 
-        public $timestamps = false;
+    public $timestamps = false;
 }

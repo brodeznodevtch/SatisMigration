@@ -76,12 +76,12 @@ return [
 
     'tax_groups' => 'Group Tax Rates - defined above, to be used in combination in Purchase/Sell sections.',
 
-    'unit_allow_decimal' => "Decimals allows you to sell the related products in fractions.",
+    'unit_allow_decimal' => 'Decimals allows you to sell the related products in fractions.',
 
     'print_label' => 'Add products ->Choose informations to show in Labels -> Select Barcode Setting -> Preview Labels -> Print',
 
     'expense_for' => 'Choose the user for which expense is related to. <i>(Optional)</i><br/><small>Example: Salary of an employee.</small>',
-    
+
     'all_location_permission' => 'If <b>All Locations</b> selected this role will have permission to access all business locations',
 
     'dashboard_permission' => 'If unchecked only Welcome message will be displayed in Home.',
@@ -90,7 +90,7 @@ return [
 
     'print_receipt_on_invoice' => 'Enable or Disable auto-printing of invoice on finalizing',
 
-    'receipt_printer_type' => "<i>Browser Based Printing</i>: Show print dialogue box in browser with preview of invoice <br/><br/> <i>Use Configured Receipt Printer</i>: Select a configured receipt/thermal printer for printing",
+    'receipt_printer_type' => '<i>Browser Based Printing</i>: Show print dialogue box in browser with preview of invoice <br/><br/> <i>Use Configured Receipt Printer</i>: Select a configured receipt/thermal printer for printing',
 
     'adjustment_type' => '<i>Normal</i>: Adjustment for normal reasons like Leakage, Damage etc. <br/><br/> <i>Abnormal</i>: Adjustment for reasons like Fire, Accident etc.',
 
@@ -110,10 +110,10 @@ return [
 
     'transaction_edit_days' => 'Number of days from Transaction Date till which a transaction can be edited.',
     'stock_expiry_alert' => "List of stocks expiring in :days days <br> <small class='text-muted'>You can set the no. of days in Business Settings </small>",
-    'sub_sku' => "Sku is optional. <br><br><small>Keep it blank to automatically generate sku.<small>",
-    'shipping' => "Set shipping details and shipping charges. Click on the edit icon below to add/update shipping details and charges.",
+    'sub_sku' => 'Sku is optional. <br><br><small>Keep it blank to automatically generate sku.<small>',
+    'shipping' => 'Set shipping details and shipping charges. Click on the edit icon below to add/update shipping details and charges.',
     'tax_rate_options' => 'negative percentages will be subtracted and positive percentages added',
-    'customer_name_help_text' => "Customer name that will be printed on document",
+    'customer_name_help_text' => 'Customer name that will be printed on document',
     'warehouse_select' => 'Warehouse from stock will be decrease',
     'cashier_select' => 'Cash register used',
     'check_dai' => 'Enable or disable DAI editing on purchase',
@@ -129,5 +129,5 @@ return [
     'charts_dashboard' => 'Indicate the charts that are displayed in the Dashboard',
     'parent_correlative_text' => '<b>Documento padre</b>. For returns with final customer invoices only',
     'export_expenses' => 'Export expenses included in Export Invoice',
-    'module_sidebar' => 'Indicate the modules to which the company will have access.'
+    'module_sidebar' => 'Indicate the modules to which the company will have access.',
 ];

@@ -13,7 +13,6 @@ class BusinessLocation extends Model
      */
     protected $guarded = ['id'];
 
-
     /**
      * Get the Business currency.
      */
@@ -25,10 +24,9 @@ class BusinessLocation extends Model
     /**
      * Return list of locations for a business
      *
-     * @param int $business_id
-     * @param boolean $show_all = false
-     * @param array $receipt_printer_type_attribute =
-     *
+     * @param  int  $business_id
+     * @param  bool  $show_all = false
+     * @param  array  $receipt_printer_type_attribute =
      * @return array
      */
     public static function forDropdown($business_id, $show_all = false, $receipt_printer_type_attribute = false)
@@ -48,7 +46,7 @@ class BusinessLocation extends Model
 
         if ($receipt_printer_type_attribute) {
             $attributes = collect($query->get())->mapWithKeys(function ($item) {
-                    return [$item->id => ['data-receipt_printer_type' => $item->receipt_printer_type]];
+                return [$item->id => ['data-receipt_printer_type' => $item->receipt_printer_type]];
             })->all();
 
             return ['locations' => $locations, 'attributes' => $attributes];

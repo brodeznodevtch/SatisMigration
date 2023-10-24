@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Category extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -22,17 +23,18 @@ class Category extends Model
      */
     protected $guarded = ['id'];
 
-    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false){
+    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    {
         $all_cat = Category::where('business_id', $business_id)
-        ->orderBy('name');
+            ->orderBy('name');
         $all_cat = $all_cat->pluck('name', 'id');
 
-        if($prepend_none){
-            $all_cat = $all_cat->prepend(__("lang_v1.none"), '');
+        if ($prepend_none) {
+            $all_cat = $all_cat->prepend(__('lang_v1.none'), '');
         }
 
-        if($prepend_all){
-            $all_cat = $all_cat->prepend(__("report.all"), '');
+        if ($prepend_all) {
+            $all_cat = $all_cat->prepend(__('report.all'), '');
         }
 
         return $all_cat;
@@ -41,29 +43,29 @@ class Category extends Model
     /**
      * Combines Category and sub-category
      *
-     * @param int $business_id
+     * @param  int  $business_id
      * @return array
      */
     public static function catAndSubCategories($business_id)
     {
         $categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', 0)
-                        ->orderBy('name', 'asc')
-                        ->get()
-                        ->toArray();
+            ->where('parent_id', 0)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->toArray();
 
         if (empty($categories)) {
             return [];
         }
 
         $sub_categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', '!=', 0)
-                            ->orderBy('name', 'asc')
-                            ->get()
-                            ->toArray();
+            ->where('parent_id', '!=', 0)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->toArray();
         $sub_cat_by_parent = [];
 
-        if (!empty($sub_categories)) {
+        if (! empty($sub_categories)) {
             foreach ($sub_categories as $sub_category) {
                 if (empty($sub_cat_by_parent[$sub_category['parent_id']])) {
                     $sub_cat_by_parent[$sub_category['parent_id']] = [];
@@ -74,7 +76,7 @@ class Category extends Model
         }
 
         foreach ($categories as $key => $value) {
-            if (!empty($sub_cat_by_parent[$value['id']])) {
+            if (! empty($sub_cat_by_parent[$value['id']])) {
                 $categories[$key]['sub_categories'] = $sub_cat_by_parent[$value['id']];
             }
         }
@@ -82,7 +84,8 @@ class Category extends Model
         return $categories;
     }
 
-    public function catalogue(){
+    public function catalogue()
+    {
         return $this->belongsTo('App\Catalogue');
     }
 }

@@ -6,13 +6,12 @@ use App\PaymentTerm;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PaymentTermController extends Controller
 {
     public function index()
     {
-        if (!auth()->user()->can('payment_term.view')) {
+        if (! auth()->user()->can('payment_term.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -30,19 +29,19 @@ class PaymentTermController extends Controller
                 'actions',
                 function ($row) {
                     $html = '<div class="btn-group">
-                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('customer.update')) {
-                        $html .= '<li><a href="#" data-href="' . action('PaymentTermController@edit', [$row->id]) . '" class="edit_payment_terms_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('PaymentTermController@edit', [$row->id]).'" class="edit_payment_terms_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
-
                     if (auth()->user()->can('customer.delete')) {
-                        $html .= '<li><a href="#" onClick="deletePaymentTerm(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="deletePaymentTerm('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';
+
                     return $html;
                 }
             )
@@ -55,10 +54,9 @@ class PaymentTermController extends Controller
         return view('payment_terms.create');
     }
 
-
     public function store(Request $request)
     {
-        if (!auth()->user()->can('payment_term.create')) {
+        if (! auth()->user()->can('payment_term.create')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
@@ -68,7 +66,7 @@ class PaymentTermController extends Controller
             ],
             [
                 'name.required' => 'El nombre es requerido',
-                'days.required' => 'El campo dia es requerido'
+                'days.required' => 'El campo dia es requerido',
             ]
         );
 
@@ -83,43 +81,41 @@ class PaymentTermController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __("payment.payment_terms_create"),
+                'msg' => __('payment.payment_terms_create'),
                 'payment_term_id' => $payment_terms->id,
                 'payment_term_name' => $payment_terms->name,
                 'payment_term_description' => $payment_terms->description,
                 'payment_term_days' => $payment_terms->days,
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
     }
-
 
     public function show($id)
     {
         //
     }
 
-
     public function edit($id)
     {
         $payment_term = PaymentTerm::findOrFail($id);
+
         return view('payment_terms.edit', compact('payment_term'));
     }
 
-
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('payment_term.update')) {
+        if (! auth()->user()->can('payment_term.update')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
             [
                 'name' => 'required',
-                'description' => 'required'
+                'description' => 'required',
             ],
             [
                 'name.required' => 'El nombre es requerido',
@@ -138,15 +134,15 @@ class PaymentTermController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __("payment.payment_terms_update"),
+                'msg' => __('payment.payment_terms_update'),
                 'payment_term_id' => $payment_terms->id,
                 'payment_term_name' => $payment_terms->name,
                 'payment_term_description' => $payment_terms->description,
                 'payment_term_days' => $payment_terms->days,
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -154,7 +150,7 @@ class PaymentTermController extends Controller
 
     public function destroy($id)
     {
-        if (!auth()->user()->can('payment_term.delete')) {
+        if (! auth()->user()->can('payment_term.delete')) {
             abort(403, 'Unauthorized action.');
         }
         try {
@@ -162,20 +158,21 @@ class PaymentTermController extends Controller
             PaymentTerm::find($id)->delete();
             $output = [
                 'success' => true,
-                'msg' => __("payment.payment_terms_delete"),
+                'msg' => __('payment.payment_terms_delete'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
     }
 
-    /** 
+    /**
      * Get payment terms
      */
-    public function getPaymentTerms(){
+    public function getPaymentTerms()
+    {
         $business_id = request()->session()->get('user.business_id');
 
         $payment_terms = PaymentTerm::where('business_id', $business_id)

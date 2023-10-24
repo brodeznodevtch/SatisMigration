@@ -4,11 +4,10 @@ namespace App\Providers;
 
 use App\Business;
 use App\Module;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
-use App\Utils\ModuleUtil;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
         if (request()->has('lang')) {
             \App::setLocale(request()->get('lang'));
         }
-        
+
         $asset_v = config('constants.asset_version', 1);
         View::share('asset_v', $asset_v);
 
@@ -39,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
 
         //This will fix "Specified key was too long; max key length is 767 bytes issue during migration"
         Schema::defaultStringLength(191);
-        
+
         //Blade directive to format number into required format.
         Blade::directive('num_format', function ($expression, $decimals = 2) {
             return "number_format($expression, $decimals, session('currency')['decimal_separator'], session('currency')['thousand_separator'])";
@@ -80,7 +79,7 @@ class AppServiceProvider extends ServiceProvider
 
         //Blade directive to convert.
         Blade::directive('format_date', function ($date) {
-            if (!empty($date)) {
+            if (! empty($date)) {
                 return "\Carbon::createFromTimestamp(strtotime($date))->format(session('business.date_format'))";
             } else {
                 return null;
@@ -89,11 +88,12 @@ class AppServiceProvider extends ServiceProvider
 
         //Blade directive to convert.
         Blade::directive('format_time', function ($date) {
-            if (!empty($date)) {
+            if (! empty($date)) {
                 $time_format = 'h:i A';
                 if (session('business.time_format') == 24) {
                     $time_format = 'H:i';
                 }
+
                 return "\Carbon::createFromTimestamp(strtotime($date))->format('$time_format')";
             } else {
                 return null;

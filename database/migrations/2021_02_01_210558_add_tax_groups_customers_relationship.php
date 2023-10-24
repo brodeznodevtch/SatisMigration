@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddTaxGroupsCustomersRelationship extends Migration
 {
@@ -14,13 +14,13 @@ class AddTaxGroupsCustomersRelationship extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->unsignedInteger("tax_group_id")
+            $table->unsignedInteger('tax_group_id')
                 ->nullable()
-                ->after("dni");
+                ->after('dni');
 
-            $table->foreign("tax_group_id")
-                ->on("tax_groups")
-                ->references("id");
+            $table->foreign('tax_group_id')
+                ->on('tax_groups')
+                ->references('id');
         });
     }
 
@@ -32,8 +32,8 @@ class AddTaxGroupsCustomersRelationship extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->dropForeign("tax_group_id");
-            $table->dropColumn("tax_group_id");
+            $table->dropForeign('tax_group_id');
+            $table->dropColumn('tax_group_id');
         });
     }
 }

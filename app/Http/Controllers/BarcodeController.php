@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Barcode;
-use Illuminate\Http\Request;
 use Datatables;
+use Illuminate\Http\Request;
 
 class BarcodeController extends Controller
 {
@@ -15,7 +15,7 @@ class BarcodeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -23,7 +23,7 @@ class BarcodeController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $barcodes = Barcode::where('business_id', $business_id)
-                        ->select(['name', 'description', 'id', 'is_default']);
+                ->select(['name', 'description', 'id', 'is_default']);
 
             return Datatables::of($barcodes)
                 ->addColumn(
@@ -40,9 +40,9 @@ class BarcodeController extends Controller
                 )
                 ->editColumn('name', function ($row) {
                     if ($row->is_default == 1) {
-                        return $row->name . ' &nbsp; <span class="label label-success">' . __("barcode.default") .'</span>' ;
+                        return $row->name.' &nbsp; <span class="label label-success">'.__('barcode.default').'</span>';
                     } else {
-                        return $row->name ;
+                        return $row->name;
                     }
                 })
                 ->removeColumn('id')
@@ -61,7 +61,7 @@ class BarcodeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -71,30 +71,29 @@ class BarcodeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             $input = $request->only(['name', 'description', 'width', 'height', 'top_margin',
-                                    'left_margin', 'row_distance', 'col_distance',
-                                    'stickers_in_one_row', 'paper_width']);
+                'left_margin', 'row_distance', 'col_distance',
+                'stickers_in_one_row', 'paper_width']);
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
 
-            if (!empty($request->input('is_default'))) {
+            if (! empty($request->input('is_default'))) {
                 //get_default
                 $default = Barcode::where('business_id', $business_id)
-                                ->where('is_default', 1)
-                                ->update(['is_default' => 0 ]);
+                    ->where('is_default', 1)
+                    ->update(['is_default' => 0]);
                 $input['is_default'] = 1;
             }
-            if (!empty($request->input('is_continuous'))) {
+            if (! empty($request->input('is_continuous'))) {
                 $input['is_continuous'] = 1;
                 $input['stickers_in_one_sheet'] = 28;
             } else {
@@ -104,14 +103,14 @@ class BarcodeController extends Controller
 
             $barcode = Barcode::create($input);
             $output = ['success' => 1,
-                            'msg' => __('barcode.added_success')
-                        ];
+                'msg' => __('barcode.added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('barcodes')->with('status', $output);
@@ -120,7 +119,6 @@ class BarcodeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Barcode  $barcode
      * @return \Illuminate\Http\Response
      */
     public function show(Barcode $barcode)
@@ -136,36 +134,35 @@ class BarcodeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $barcode = Barcode::where('business_id', $business_id)->find($id);
 
-            return view('barcode.edit')
+        return view('barcode.edit')
             ->with(compact('barcode'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('barcode_settings.update')) {
+        if (! auth()->user()->can('barcode_settings.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             $input = $request->only(['name', 'description', 'width', 'height', 'top_margin',
-                                  'left_margin', 'row_distance', 'col_distance',
-                                  'stickers_in_one_row', 'paper_width']);
+                'left_margin', 'row_distance', 'col_distance',
+                'stickers_in_one_row', 'paper_width']);
 
-            if (!empty($request->input('is_continuous'))) {
+            if (! empty($request->input('is_continuous'))) {
                 $input['is_continuous'] = 1;
                 $input['stickers_in_one_sheet'] = 28;
                 $input['paper_height'] = 0;
@@ -176,16 +173,16 @@ class BarcodeController extends Controller
             }
 
             $barcode = Barcode::where('id', $id)->update($input);
-            
+
             $output = ['success' => 1,
-                          'msg' => __('barcode.updated_success')
-                      ];
+                'msg' => __('barcode.updated_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                           'msg' => __("messages.something_went_wrong")
-                       ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('barcodes')->with('status', $output);
@@ -194,12 +191,12 @@ class BarcodeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -209,19 +206,19 @@ class BarcodeController extends Controller
                 if ($barcode->is_default != 1) {
                     $barcode->delete();
                     $output = ['success' => true,
-                                'msg' => __("barcode.deleted_success")
-                                ];
+                        'msg' => __('barcode.deleted_success'),
+                    ];
                 } else {
                     $output = ['success' => false,
-                                'msg' => __("messages.something_went_wrong")
-                                ];
+                        'msg' => __('messages.something_went_wrong'),
+                    ];
                 }
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -231,37 +228,38 @@ class BarcodeController extends Controller
     /**
      * Sets barcode setting as default
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function setDefault($id)
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if (request()->ajax()) {
             try {
                 //get_default
                 $business_id = request()->session()->get('user.business_id');
                 $default = Barcode::where('business_id', $business_id)
-                                ->where('is_default', 1)
-                                 ->update(['is_default' => 0 ]);
-                                 
+                    ->where('is_default', 1)
+                    ->update(['is_default' => 0]);
+
                 $barcode = Barcode::find($id);
                 $barcode->is_default = 1;
                 $barcode->save();
 
                 $output = ['success' => true,
-                            'msg' => __("barcode.default_set_success")
-                        ];
+                    'msg' => __('barcode.default_set_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
+
             return $output;
         }
     }

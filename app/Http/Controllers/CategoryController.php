@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Business;
 use App\Category;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-
 use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -17,12 +15,12 @@ class CategoryController extends Controller
      * All Utils instance.
      */
     protected $transactionUtil;
+
     private $productUtil;
 
     /**
      * Constructor
      *
-     * @param \App\Utils\TransactionUtil $transactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil)
@@ -44,7 +42,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('category.view') && !auth()->user()->can('category.create')) {
+        if (! auth()->user()->can('category.view') && ! auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -52,30 +50,30 @@ class CategoryController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $category = Category::where('business_id', $business_id)
-            ->select(['name', 'short_code', 'id', 'parent_id']);
+                ->select(['name', 'short_code', 'id', 'parent_id']);
 
             return Datatables::of($category)
-            ->addColumn(
-                'action',
-                '@can("category.update")
+                ->addColumn(
+                    'action',
+                    '@can("category.update")
                 <button data-href="{{action(\'CategoryController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_category_button"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
                 &nbsp;
                 @endcan
                 @can("category.delete")
                 <button data-href="{{action(\'CategoryController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_category_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                 @endcan'
-            )
-            ->editColumn('name', function ($row) {
-                if ($row->parent_id != 0) {
-                    return '--' . $row->name;
-                } else {
-                    return $row->name;
-                }
-            })
-            ->removeColumn('id')
-            ->removeColumn('parent_id')
-            ->rawColumns([2])
-            ->make(false);
+                )
+                ->editColumn('name', function ($row) {
+                    if ($row->parent_id != 0) {
+                        return '--'.$row->name;
+                    } else {
+                        return $row->name;
+                    }
+                })
+                ->removeColumn('id')
+                ->removeColumn('parent_id')
+                ->rawColumns([2])
+                ->make(false);
         }
 
         return view('category.index');
@@ -84,11 +82,12 @@ class CategoryController extends Controller
     public function getCategoriesData()
     {
         $categories = DB::table('categories as categorie')
-        ->leftJoin('catalogues as catalogue', 'catalogue.id', '=', 'categorie.catalogue_id')
-        ->select('categorie.id', 'categorie.name as name', DB::raw('CONCAT(catalogue.code, " ", catalogue.name) as account'))
-        ->where('parent_id', 0)
-        ->whereNull('categorie.deleted_at')
-        ->get();
+            ->leftJoin('catalogues as catalogue', 'catalogue.id', '=', 'categorie.catalogue_id')
+            ->select('categorie.id', 'categorie.name as name', DB::raw('CONCAT(catalogue.code, " ", catalogue.name) as account'))
+            ->where('parent_id', 0)
+            ->whereNull('categorie.deleted_at')
+            ->get();
+
         return DataTables::of($categories)->toJson();
     }
 
@@ -99,7 +98,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('category.create')) {
+        if (! auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -112,7 +111,7 @@ class CategoryController extends Controller
 
         $parent_categories = [];
 
-        if (!empty($categories)) {
+        if (! empty($categories)) {
             foreach ($categories as $category) {
                 $parent_categories[$category->id] = $category->name;
             }
@@ -137,18 +136,17 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('category.create')) {
+        if (! auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             $input = $request->only(['name', 'short_code']);
-            if (!empty($request->input('add_as_sub_cat')) &&  $request->input('add_as_sub_cat') == 1 && !empty($request->input('parent_id'))) {
+            if (! empty($request->input('add_as_sub_cat')) && $request->input('add_as_sub_cat') == 1 && ! empty($request->input('parent_id'))) {
                 $input['parent_id'] = $request->input('parent_id');
             } else {
                 $input['parent_id'] = 0;
@@ -178,15 +176,15 @@ class CategoryController extends Controller
             $output = [
                 'success' => true,
                 'data' => $category,
-                'msg' => __("category.added_success")
+                'msg' => __('category.added_success'),
             ];
-            
+
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = ['success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
 
         }
@@ -197,7 +195,6 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
     public function show(Category $category)
@@ -205,6 +202,7 @@ class CategoryController extends Controller
         $category = Category::where('id', $category->id)
             ->with('catalogue')
             ->first();
+
         return response()->json($category);
     }
 
@@ -216,41 +214,39 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('category.update')) {
+        if (! auth()->user()->can('category.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $category = Category::where('business_id', $business_id)->find($id);
-            
+
             $parent_categories = Category::where('business_id', $business_id)
-            ->where('parent_id', 0)
-            ->where('id', '!=', $id)
-            ->pluck('name', 'id');
-            
+                ->where('parent_id', 0)
+                ->where('id', '!=', $id)
+                ->pluck('name', 'id');
+
             $is_parent = false;
-            
+
             if ($category->parent_id == 0) {
                 $is_parent = true;
                 $selected_parent = null;
             } else {
-                $selected_parent = $category->parent_id ;
+                $selected_parent = $category->parent_id;
             }
 
             return view('category.edit')
-            ->with(compact('category', 'parent_categories', 'is_parent', 'selected_parent'));
+                ->with(compact('category', 'parent_categories', 'is_parent', 'selected_parent'));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function updateCatalogueId(Request $request)
     {
         if (request()->ajax()) {
@@ -279,23 +275,23 @@ class CategoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("category.updated_success")
+                    'msg' => __('category.updated_success'),
                 ];
-            }
-            catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
 
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('category.update')) {
+        if (! auth()->user()->can('category.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -314,7 +310,7 @@ class CategoryController extends Controller
 
                 $category->name = $input['name'];
                 $category->short_code = $input['short_code'];
-                if (!empty($request->input('add_as_sub_cat')) &&  $request->input('add_as_sub_cat') == 1 && !empty($request->input('parent_id'))) {
+                if (! empty($request->input('add_as_sub_cat')) && $request->input('add_as_sub_cat') == 1 && ! empty($request->input('parent_id'))) {
                     $category->parent_id = $request->input('parent_id');
                 } else {
                     $category->parent_id = 0;
@@ -339,15 +335,15 @@ class CategoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("category.updated_success")
+                    'msg' => __('category.updated_success'),
                 ];
             } catch (\Exception $e) {
                 DB::rollback();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -363,7 +359,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('category.delete')) {
+        if (! auth()->user()->can('category.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -390,23 +386,23 @@ class CategoryController extends Controller
 
                 /** Sync category */
                 if ($this->clone_product) {
-                    $this->productUtil->syncCategory($id, "", $category_old, $this->transactionUtil, $this->module_name);
+                    $this->productUtil->syncCategory($id, '', $category_old, $this->transactionUtil, $this->module_name);
                 }
 
                 DB::commit();
 
                 $output = [
                     'success' => true,
-                    'msg' => __("category.deleted_success")
+                    'msg' => __('category.deleted_success'),
                 ];
 
             } catch (\Exception $e) {
                 DB::rollback();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

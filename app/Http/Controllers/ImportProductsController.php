@@ -2,40 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Product;
 use App\Brands;
-use App\Category;
-use App\Unit;
-use App\TaxRate;
-use App\VariationTemplate;
-use App\ProductVariation;
-use App\Variation;
 use App\Business;
 use App\BusinessLocation;
+use App\Category;
 use App\Contact;
 use App\MovementType;
 use App\Optics\MaterialType;
-use App\Transaction;
-use App\VariationValueTemplate;
+use App\Product;
 use App\ProductHasSuppliers;
 use App\PurchaseLine;
 use App\TaxGroup;
+use App\Transaction;
+use App\Unit;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
+use App\Variation;
+use App\VariationValueTemplate;
 use App\Warehouse;
-use Excel;
 use DB;
+use Excel;
+use Illuminate\Http\Request;
 
 class ImportProductsController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     protected $taxUtil;
 
     private $barcode_types;
@@ -43,7 +39,7 @@ class ImportProductsController extends Controller
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(ProductUtil $productUtil, TaxUtil $taxUtil, TransactionUtil $transactionUtil)
@@ -66,7 +62,7 @@ class ImportProductsController extends Controller
      */
     public function indexOld()
     {
-        if (!auth()->user()->can('product.create')) {
+        if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -75,8 +71,8 @@ class ImportProductsController extends Controller
         //Check if zip extension it loaded or not.
         if ($zip_loaded === false) {
             $output = ['success' => 0,
-                            'msg' => 'Please install/enable PHP Zip archive for import'
-                        ];
+                'msg' => 'Please install/enable PHP Zip archive for import',
+            ];
 
             return view('import_products.index')
                 ->with('notification', $output);
@@ -92,7 +88,7 @@ class ImportProductsController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('product.create')) {
+        if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -104,12 +100,12 @@ class ImportProductsController extends Controller
         if ($zip_loaded === false) {
             $output = [
                 'success' => 0,
-                'msg' => __('messages.install_enable_zip')
+                'msg' => __('messages.install_enable_zip'),
             ];
 
             return view('import_products.index')->with([
                 'notification' => $output,
-                'errors' => $errors
+                'errors' => $errors,
             ]);
 
         } else {
@@ -120,12 +116,11 @@ class ImportProductsController extends Controller
     /**
      * Imports the uploaded file to database.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('product.create')) {
+        if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -148,41 +143,41 @@ class ImportProductsController extends Controller
                 $error_msg = '';
                 DB::beginTransaction();
                 foreach ($imported_data as $key => $value) {
-                    
+
                     $row_no = $key + 1;
                     $product_array = [];
                     $product_array['business_id'] = $business_id;
                     $product_array['created_by'] = $user_id;
-                    
+
                     //Add name
                     $product_name = trim($value[0]);
-                    if (!empty($product_name)) {
+                    if (! empty($product_name)) {
                         $product_array['name'] = $product_name;
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Product name is required in row no. $row_no";
                         break;
                     }
 
                     //Add clasificacion
                     $product_clasification = strtolower(trim($value[34]));
-                    if (!empty($product_clasification)) {
+                    if (! empty($product_clasification)) {
                         if (in_array($product_clasification, ['kits', 'product', 'service', 'material'])) {
                             $product_array['clasification'] = $product_clasification;
                         } else {
-                            $is_valid =  false;
+                            $is_valid = false;
                             $error_msg = "Invalid value for product clasification in row no. $row_no";
                             break;
                         }
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Product clasification is required in row no. $row_no";
                         break;
                     }
-                    
+
                     //image name
                     $image_name = trim($value[28]);
-                    if (!empty($image_name)) {
+                    if (! empty($image_name)) {
                         $product_array['image'] = $image_name;
                     } else {
                         $product_array['image'] = '';
@@ -228,33 +223,33 @@ class ImportProductsController extends Controller
 
                     //Add enable stock
                     $enable_stock = trim($value[7]);
-                    if (in_array($enable_stock, [0,1])) {
+                    if (in_array($enable_stock, [0, 1])) {
                         $product_array['enable_stock'] = $enable_stock;
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Invalid value for MANAGE STOCK in row no. $row_no";
                         break;
                     }
 
                     //Add product type
                     $product_type = strtolower(trim($value[13]));
-                    if (in_array($product_type, ['single','variable'])) {
+                    if (in_array($product_type, ['single', 'variable'])) {
                         $product_array['type'] = $product_type;
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Invalid value for PRODUCT TYPE in row no. $row_no";
                         break;
                     }
 
                     //Add unit
                     $unit_name = trim($value[2]);
-                    if (!empty($unit_name)) {
+                    if (! empty($unit_name)) {
                         $unit = Unit::where('business_id', $business_id)
-                                    ->where(function ($query) use ($unit_name) {
-                                        $query->where('short_name', $unit_name)
-                                            ->orWhere('actual_name', $unit_name);
-                                    })->first();
-                        if (!empty($unit)) {
+                            ->where(function ($query) use ($unit_name) {
+                                $query->where('short_name', $unit_name)
+                                    ->orWhere('actual_name', $unit_name);
+                            })->first();
+                        if (! empty($unit)) {
                             $product_array['unit_id'] = $unit->id;
                         } else {
                             $is_valid = false;
@@ -262,7 +257,7 @@ class ImportProductsController extends Controller
                             break;
                         }
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "UNIT is required in row no. $row_no";
                         break;
                     }
@@ -282,11 +277,11 @@ class ImportProductsController extends Controller
                     //Add Tax
                     $tax_name = trim($value[11]);
                     $tax_amount = 13;
-                    if (!empty($tax_name)) {
+                    if (! empty($tax_name)) {
                         $tax = TaxGroup::where('business_id', $business_id)
-                                        ->where('description', $tax_name)
-                                        ->first();
-                        if (!empty($tax)) {
+                            ->where('description', $tax_name)
+                            ->first();
+                        if (! empty($tax)) {
                             $product_array['tax'] = $tax->id;
                             $tax_amount = ($this->taxUtil->getTaxPercent($tax->id)) * 100;
                         } else {
@@ -313,7 +308,7 @@ class ImportProductsController extends Controller
                     //Add brand
                     //Check if brand exists else create new
                     $brand_name = trim($value[1]);
-                    if (!empty($brand_name)) {
+                    if (! empty($brand_name)) {
                         $brand = Brands::firstOrCreate(
                             ['business_id' => $business_id, 'name' => $brand_name],
                             ['created_by' => $user_id]
@@ -324,7 +319,7 @@ class ImportProductsController extends Controller
                     //Add Category
                     //Check if category exists else create new
                     $category_name = trim($value[3]);
-                    if (!empty($category_name)) {
+                    if (! empty($category_name)) {
                         $category = Category::firstOrCreate(
                             ['business_id' => $business_id, 'name' => $category_name],
                             ['created_by' => $user_id, 'parent_id' => 0]
@@ -334,7 +329,7 @@ class ImportProductsController extends Controller
 
                     //Add Sub-Category
                     $sub_category_name = trim($value[4]);
-                    if (!empty($sub_category_name)) {
+                    if (! empty($sub_category_name)) {
                         $sub_category = Category::firstOrCreate(
                             ['business_id' => $business_id, 'name' => $sub_category_name],
                             ['created_by' => $user_id, 'parent_id' => $category->id]
@@ -344,12 +339,12 @@ class ImportProductsController extends Controller
 
                     //Add SKU
                     $sku = trim($value[5]);
-                    if (!empty($sku)) {
+                    if (! empty($sku)) {
                         $product_array['sku'] = $sku;
                         //Check if product with same SKU already exist
                         $is_exist = Product::where('sku', $product_array['sku'])
-                                        ->where('business_id', $business_id)
-                                        ->exists();
+                            ->where('business_id', $business_id)
+                            ->exists();
                         if ($is_exist) {
                             $is_valid = false;
                             $error_msg = "$sku SKU already exist in row no. $row_no";
@@ -362,12 +357,12 @@ class ImportProductsController extends Controller
                     //Add product expiry
                     $expiry_period = $this->productUtil->num_uf(trim($value[9]));
                     $expiry_period_type = strtolower(trim($value[10]));
-                    if (!empty($expiry_period) && in_array($expiry_period_type, ['months', 'days'])) {
+                    if (! empty($expiry_period) && in_array($expiry_period_type, ['months', 'days'])) {
                         $product_array['expiry_period'] = $expiry_period;
                         $product_array['expiry_period_type'] = $expiry_period_type;
                     } else {
                         //If Expiry Date is set then make expiry_period 12 months.
-                        if (!empty($value[22])) {
+                        if (! empty($value[22])) {
                             $product_array['expiry_period'] = 12;
                             $product_array['expiry_period_type'] = 'months';
                         }
@@ -375,18 +370,18 @@ class ImportProductsController extends Controller
 
                     //Enable IMEI or Serial Number
                     $enable_sr_no = trim($value[23]);
-                    if (in_array($enable_sr_no, [0,1])) {
+                    if (in_array($enable_sr_no, [0, 1])) {
                         $product_array['enable_sr_no'] = $enable_sr_no;
                     } elseif (empty($enable_sr_no)) {
                         $product_array['enable_sr_no'] = 0;
                     } else {
-                        $is_valid =  false;
+                        $is_valid = false;
                         $error_msg = "Invalid value for ENABLE IMEI OR SERIAL NUMBER  in row no. $row_no";
                         break;
                     }
 
                     //Product supplier
-                    if(isset($value[35])){
+                    if (isset($value[35])) {
                         $supplier = Contact::where('business_id', $business_id)
                             ->where('contact_id', trim($value[35]))
                             ->first();
@@ -430,36 +425,36 @@ class ImportProductsController extends Controller
                             $error_msg = "PURCHASE PRICE is required in row no. $row_no";
                             break;
                         } else {
-                            $dpp_inc_tax = !empty($dpp_inc_tax) ? $this->productUtil->num_uf($dpp_inc_tax) : 0;
-                            $dpp_exc_tax = !empty($dpp_exc_tax) ? $this->productUtil->num_uf($dpp_exc_tax) : 0;
+                            $dpp_inc_tax = ! empty($dpp_inc_tax) ? $this->productUtil->num_uf($dpp_inc_tax) : 0;
+                            $dpp_exc_tax = ! empty($dpp_exc_tax) ? $this->productUtil->num_uf($dpp_exc_tax) : 0;
                         }
 
                         //Calculate Selling price
-                        $selling_price = !empty(trim($value[19])) ? $this->productUtil->num_uf(trim($value[19])) : 0 ;
+                        $selling_price = ! empty(trim($value[19])) ? $this->productUtil->num_uf(trim($value[19])) : 0;
 
                         //Calculate product prices
                         $product_prices = $this->calculateVariationPrices($dpp_exc_tax, $dpp_inc_tax, $selling_price, $tax_amount, $tax_type, $profit_margin);
-                        
+
                         //Assign Values
                         $product_array['variation']['dpp_inc_tax'] = $product_prices['dpp_inc_tax'];
                         $product_array['variation']['dpp_exc_tax'] = $product_prices['dpp_exc_tax'];
                         $product_array['variation']['dsp_inc_tax'] = $product_prices['dsp_inc_tax'];
                         $product_array['variation']['dsp_exc_tax'] = $product_prices['dsp_exc_tax'];
-                        
+
                         //Opening stock
-                        if (!empty($value[20]) && $enable_stock == 1) {
+                        if (! empty($value[20]) && $enable_stock == 1) {
                             $product_array['opening_stock_details']['quantity'] = $this->productUtil->num_uf(trim($value[20]));
 
                             /** Change business location by warehouse */
-                            if (!empty(trim($value[21]))) {
+                            if (! empty(trim($value[21]))) {
                                 $location_name = trim($value[21]);
                                 /* $location = BusinessLocation::where('name', $location_name)
                                                             ->where('business_id', $business_id)
                                                             ->first(); */
-                                $location =  Warehouse::where('code', $location_name)
+                                $location = Warehouse::where('code', $location_name)
                                     ->where('business_id', $business_id)
                                     ->first();
-                                if (!empty($location)) {
+                                if (! empty($location)) {
                                     $product_array['opening_stock_details']['location_id'] = $location->id;
                                 } else {
                                     $is_valid = false;
@@ -475,7 +470,7 @@ class ImportProductsController extends Controller
                             $product_array['opening_stock_details']['expiry_date'] = null;
 
                             //Stock expiry date
-                            if (!empty($value[22])) {
+                            if (! empty($value[22])) {
                                 $product_array['opening_stock_details']['exp_date'] = \Carbon::createFromFormat('m-d-Y', trim($value[22]))->format('Y-m-d');
                             } else {
                                 $product_array['opening_stock_details']['exp_date'] = null;
@@ -514,7 +509,7 @@ class ImportProductsController extends Controller
 
                         //Map Purchase price with variation values
                         $dpp_inc_tax = [];
-                        if (!empty($dpp_inc_tax_string)) {
+                        if (! empty($dpp_inc_tax_string)) {
                             $dpp_inc_tax = array_map([$this->productUtil, 'num_uf'], array_map('trim', explode(
                                 '|',
                                 $dpp_inc_tax_string
@@ -524,9 +519,9 @@ class ImportProductsController extends Controller
                                 $dpp_inc_tax[$k] = 0;
                             }
                         }
-                        
+
                         $dpp_exc_tax = [];
-                        if (!empty($dpp_exc_tax_string)) {
+                        if (! empty($dpp_exc_tax_string)) {
                             $dpp_exc_tax = array_map([$this->productUtil, 'num_uf'], array_map('trim', explode(
                                 '|',
                                 $dpp_exc_tax_string
@@ -539,7 +534,7 @@ class ImportProductsController extends Controller
 
                         //Map Selling price with variation values
                         $selling_price = [];
-                        if (!empty($selling_price_string)) {
+                        if (! empty($selling_price_string)) {
                             $selling_price = array_map(
                                 [$this->productUtil, 'num_uf'],
                                 array_map('trim', explode(
@@ -555,7 +550,7 @@ class ImportProductsController extends Controller
 
                         //Map profit margin with variation values
                         $profit_margin = [];
-                        if (!empty($profit_margin_string)) {
+                        if (! empty($profit_margin_string)) {
                             $profit_margin = array_map(
                                 [$this->productUtil, 'num_uf'],
                                 array_map('trim', explode(
@@ -589,16 +584,16 @@ class ImportProductsController extends Controller
 
                             //get variation value
                             $variation_value = $variation->values->filter(function ($item) use ($v) {
-                                  return strtolower($item->name) == strtolower($v);
+                                return strtolower($item->name) == strtolower($v);
                             })->first();
 
                             if (empty($variation_value)) {
                                 $variation_value = VariationValueTemplate::create([
-                                  'name' => $v,
-                                  'variation_template_id' => $variation->id
+                                    'name' => $v,
+                                    'variation_template_id' => $variation->id,
                                 ]);
                             }
-                            
+
                             //Assign Values
                             $product_array['variation']['variations'][] = [
                                 'value' => $v,
@@ -607,12 +602,12 @@ class ImportProductsController extends Controller
                                 'dpp_inc_tax' => $variation_prices['dpp_inc_tax'],
                                 'profit_percent' => $this->productUtil->num_f($profit_margin[$k]),
                                 'default_sell_price' => $variation_prices['dsp_exc_tax'],
-                                'sell_price_inc_tax' => $variation_prices['dsp_inc_tax']
+                                'sell_price_inc_tax' => $variation_prices['dsp_inc_tax'],
                             ];
                         }
 
                         //Opening stock
-                        if (!empty($value[20]) && $enable_stock == 1) {
+                        if (! empty($value[20]) && $enable_stock == 1) {
                             $variation_os = array_map([$this->productUtil, 'num_uf'], array_map('trim', explode('|', $value[20])));
 
                             //$product_array['opening_stock_details']['quantity'] = $variation_os;
@@ -625,12 +620,12 @@ class ImportProductsController extends Controller
                             }
 
                             /** Change business location by warehouse */
-                            if (!empty(trim($value[21]))) {
+                            if (! empty(trim($value[21]))) {
                                 $location_name = trim($value[21]);
                                 /* $location = BusinessLocation::where('name', $location_name)
                                                             ->where('business_id', $business_id)
                                                             ->first(); */
-                                $location =  Warehouse::where('code', $location_name)
+                                $location = Warehouse::where('code', $location_name)
                                     ->where('business_id', $business_id)
                                     ->first();
                                 if (empty($location)) {
@@ -647,8 +642,8 @@ class ImportProductsController extends Controller
                             foreach ($variation_os as $k => $v) {
                                 $product_array['variation']['variations'][$k]['opening_stock'] = $v;
                                 $product_array['variation']['variations'][$k]['opening_stock_exp_date'] = null;
-                                
-                                if (!empty($value[22])) {
+
+                                if (! empty($value[22])) {
                                     $product_array['variation']['variations'][$k]['opening_stock_exp_date'] = \Carbon::createFromFormat('m-d-Y', trim($value[22]))->format('Y-m-d');
                                 } else {
                                     $product_array['variation']['variations'][$k]['opening_stock_exp_date'] = null;
@@ -660,24 +655,24 @@ class ImportProductsController extends Controller
                     $formated_data[] = $product_array;
                 }
 
-                if (!$is_valid) {
+                if (! $is_valid) {
                     throw new \Exception($error_msg);
                 }
 
-                if (!empty($formated_data)) {
+                if (! empty($formated_data)) {
                     foreach ($formated_data as $index => $product_data) {
                         $variation_data = $product_data['variation'];
                         //return $product_data['supplier'];
                         $supplier = [];
-                        if(!empty($product_data['supplier'])){
+                        if (! empty($product_data['supplier'])) {
                             $supplier = $product_data['supplier'];
                             unset($product_data['supplier']);
                         }
-                        
+
                         unset($product_data['variation']);
 
                         $opening_stock = null;
-                        if (!empty($product_data['opening_stock_details'])) {
+                        if (! empty($product_data['opening_stock_details'])) {
                             $opening_stock = $product_data['opening_stock_details'];
                         }
                         if (isset($product_data['opening_stock_details'])) {
@@ -694,7 +689,7 @@ class ImportProductsController extends Controller
                         }
 
                         /** create product supplier */
-                        if(count($supplier) > 0){
+                        if (count($supplier) > 0) {
                             $product_supplier = new ProductHasSuppliers;
                             $product_supplier->product_id = $product->id;
                             $product_supplier->contact_id = $supplier['supplier_id'];
@@ -714,7 +709,7 @@ class ImportProductsController extends Controller
                             $imported_data[$index + 1][27],
                             $business_id,
                             $product->id,
-                            $index+1
+                            $index + 1
                         );
 
                         //Create single product variation
@@ -728,7 +723,7 @@ class ImportProductsController extends Controller
                                 $variation_data['dsp_exc_tax'],
                                 $variation_data['dsp_inc_tax']
                             );
-                            if (!empty($opening_stock)) {
+                            if (! empty($opening_stock)) {
                                 $this->addOpeningStock($opening_stock, $product, $business_id);
                             }
                         } elseif ($product->type == 'variable') {
@@ -739,7 +734,7 @@ class ImportProductsController extends Controller
                                 $business_id
                             );
 
-                            if (!empty($value[20]) && $enable_stock == 1) {
+                            if (! empty($value[20]) && $enable_stock == 1) {
                                 $this->addOpeningStockForVariable($variation_data, $product, $business_id);
                             }
                         }
@@ -749,19 +744,20 @@ class ImportProductsController extends Controller
                     }
                 }
             }
-            
+
             $output = ['success' => 1,
-                            'msg' => __('product.file_imported_successfully')
-                        ];
+                'msg' => __('product.file_imported_successfully'),
+            ];
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => $e->getMessage()
-                        ];
+                'msg' => $e->getMessage(),
+            ];
+
             return redirect('import-products')->with('notification', $output);
         }
 
@@ -816,29 +812,29 @@ class ImportProductsController extends Controller
             'dpp_exc_tax' => $this->productUtil->num_f($dpp_exc_tax, false, 6),
             'dpp_inc_tax' => $this->productUtil->num_f($dpp_inc_tax, false, 6),
             'dsp_exc_tax' => $this->productUtil->num_f($dsp_exc_tax, false, 6),
-            'dsp_inc_tax' => $this->productUtil->num_f($dsp_inc_tax, false, 6)
+            'dsp_inc_tax' => $this->productUtil->num_f($dsp_inc_tax, false, 6),
         ];
     }
 
     /**
      * Adds opening stock of a single product
      *
-     * @param array $opening_stock
-     * @param obj $product
-     * @param int $business_id
+     * @param  array  $opening_stock
+     * @param  obj  $product
+     * @param  int  $business_id
      * @return void
      */
     private function addOpeningStock($opening_stock, $product, $business_id)
     {
 
         $user_id = request()->session()->get('user.id');
-        
+
         $variation = Variation::where('product_id', $product->id)
             ->first();
 
         $total_before_tax = $opening_stock['quantity'] * $variation->dpp_inc_tax;
 
-        $transaction_date = request()->session()->get("financial_year.start");
+        $transaction_date = request()->session()->get('financial_year.start');
         $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
 
         /** Gets business location from warehouse */
@@ -847,38 +843,38 @@ class ImportProductsController extends Controller
         //Add opening stock transaction
         $transaction = Transaction::create(
             [
-                                'type' => 'opening_stock',
-                                'opening_stock_product_id' => $product->id,
-                                'status' => 'received',
-                                'business_id' => $business_id,
-                                'transaction_date' => $transaction_date,
-                                'total_before_tax' => $total_before_tax,
-                                // 'location_id' => $opening_stock['location_id'],
-                                'location_id' => $warehouse->business_location_id,
-                                'warehouse_id' => $warehouse->id,
-                                'final_total' => $total_before_tax,
-                                'payment_status' => 'paid',
-                                'created_by' => $user_id
-                            ]
+                'type' => 'opening_stock',
+                'opening_stock_product_id' => $product->id,
+                'status' => 'received',
+                'business_id' => $business_id,
+                'transaction_date' => $transaction_date,
+                'total_before_tax' => $total_before_tax,
+                // 'location_id' => $opening_stock['location_id'],
+                'location_id' => $warehouse->business_location_id,
+                'warehouse_id' => $warehouse->id,
+                'final_total' => $total_before_tax,
+                'payment_status' => 'paid',
+                'created_by' => $user_id,
+            ]
         );
         //Get product tax
-        $tax_percent = !empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
-        $tax_id = !empty($product->product_tax->id) ? $product->product_tax->id : null;
+        $tax_percent = ! empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
+        $tax_id = ! empty($product->product_tax->id) ? $product->product_tax->id : null;
 
         $item_tax = $this->productUtil->calc_percentage($variation->default_purchase_price, $tax_percent);
 
         //Create purchase line
         $transaction->purchase_lines()->create([
-                        'product_id' => $product->id,
-                        'variation_id' => $variation->id,
-                        'quantity' => $opening_stock['quantity'],
-                        'item_tax' => $item_tax,
-                        'tax_id' => $tax_id,
-                        'pp_without_discount' => $variation->default_purchase_price,
-                        'purchase_price' => $variation->default_purchase_price,
-                        'purchase_price_inc_tax' => $variation->dpp_inc_tax,
-                        'exp_date' => !empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null
-                    ]);
+            'product_id' => $product->id,
+            'variation_id' => $variation->id,
+            'quantity' => $opening_stock['quantity'],
+            'item_tax' => $item_tax,
+            'tax_id' => $tax_id,
+            'pp_without_discount' => $variation->default_purchase_price,
+            'purchase_price' => $variation->default_purchase_price,
+            'purchase_price_inc_tax' => $variation->dpp_inc_tax,
+            'exp_date' => ! empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null,
+        ]);
         //Update variation location details
         // $this->productUtil->updateProductQuantity($opening_stock['location_id'], $product->id, $variation->id, $opening_stock['quantity']);
         $this->productUtil->updateProductQuantity($warehouse->business_location_id, $product->id, $variation->id, $opening_stock['quantity'], 0, null, $warehouse->id);
@@ -896,7 +892,7 @@ class ImportProductsController extends Controller
             $movement_type = MovementType::create([
                 'name' => 'opening_stock',
                 'type' => 'input',
-                'business_id' => $business_id
+                'business_id' => $business_id,
             ]);
         }
 
@@ -904,17 +900,16 @@ class ImportProductsController extends Controller
         $this->transactionUtil->createOrUpdateInputLines(
             $movement_type,
             $transaction,
-            'OS' . $transaction->id,
+            'OS'.$transaction->id,
             $lines
         );
     }
-
 
     private function addOpeningStockForVariable($variations, $product, $business_id)
     {
         $user_id = request()->session()->get('user.id');
 
-        $transaction_date = request()->session()->get("financial_year.start");
+        $transaction_date = request()->session()->get('financial_year.start');
         $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
 
         $total_before_tax = 0;
@@ -928,26 +923,26 @@ class ImportProductsController extends Controller
             //Add opening stock transaction
             $transaction = Transaction::create(
                 [
-                                'type' => 'opening_stock',
-                                'opening_stock_product_id' => $product->id,
-                                'status' => 'received',
-                                'business_id' => $business_id,
-                                'transaction_date' => $transaction_date,
-                                'total_before_tax' => $total_before_tax,
-                                'location_id' => $location_id,
-                                'warehouse_id' => $warehouse->id,
-                                'final_total' => $total_before_tax,
-                                'payment_status' => 'paid',
-                                'created_by' => $user_id
-                            ]
+                    'type' => 'opening_stock',
+                    'opening_stock_product_id' => $product->id,
+                    'status' => 'received',
+                    'business_id' => $business_id,
+                    'transaction_date' => $transaction_date,
+                    'total_before_tax' => $total_before_tax,
+                    'location_id' => $location_id,
+                    'warehouse_id' => $warehouse->id,
+                    'final_total' => $total_before_tax,
+                    'payment_status' => 'paid',
+                    'created_by' => $user_id,
+                ]
             );
 
             foreach ($variations['variations'] as $variation_os) {
-                if (!empty($variation_os['opening_stock'])) {
+                if (! empty($variation_os['opening_stock'])) {
                     $variation = Variation::where('product_id', $product->id)
-                                    ->where('name', $variation_os['value'])
-                                    ->first();
-                    if (!empty($variation)) {
+                        ->where('name', $variation_os['value'])
+                        ->first();
+                    if (! empty($variation)) {
                         $opening_stock = [
                             'quantity' => $variation_os['opening_stock'],
                             'exp_date' => $variation_os['opening_stock_exp_date'],
@@ -957,22 +952,22 @@ class ImportProductsController extends Controller
                     }
 
                     //Get product tax
-                    $tax_percent = !empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
-                    $tax_id = !empty($product->product_tax->id) ? $product->product_tax->id : null;
+                    $tax_percent = ! empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
+                    $tax_id = ! empty($product->product_tax->id) ? $product->product_tax->id : null;
 
                     $item_tax = $this->productUtil->calc_percentage($variation->default_purchase_price, $tax_percent);
 
                     //Create purchase line
                     $transaction->purchase_lines()->create([
-                                    'product_id' => $product->id,
-                                    'variation_id' => $variation->id,
-                                    'quantity' => $opening_stock['quantity'],
-                                    'item_tax' => $item_tax,
-                                    'tax_id' => $tax_id,
-                                    'purchase_price' => $variation->default_purchase_price,
-                                    'purchase_price_inc_tax' => $variation->dpp_inc_tax,
-                                    'exp_date' => !empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null
-                                ]);
+                        'product_id' => $product->id,
+                        'variation_id' => $variation->id,
+                        'quantity' => $opening_stock['quantity'],
+                        'item_tax' => $item_tax,
+                        'tax_id' => $tax_id,
+                        'purchase_price' => $variation->default_purchase_price,
+                        'purchase_price_inc_tax' => $variation->dpp_inc_tax,
+                        'exp_date' => ! empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null,
+                    ]);
                     //Update variation location details
                     // $this->productUtil->updateProductQuantity($location_id, $product->id, $variation->id, $opening_stock['quantity']);
                     $this->productUtil->updateProductQuantity($location_id, $product->id, $variation->id, $opening_stock['quantity'], 0, null, $warehouse->id);
@@ -988,7 +983,7 @@ class ImportProductsController extends Controller
     private function rackDetails($rack_value, $row_value, $position_value, $business_id, $product_id, $row_no)
     {
 
-        if (!empty($rack_value) || !empty($row_value) || !empty($position_value)) {
+        if (! empty($rack_value) || ! empty($row_value) || ! empty($position_value)) {
             $locations = BusinessLocation::forDropdown($business_id);
             $loc_count = count($locations);
 
@@ -1020,7 +1015,7 @@ class ImportProductsController extends Controller
                 $counter += 1;
             }
 
-            if (!empty($rack_details)) {
+            if (! empty($rack_details)) {
                 $this->productUtil->addRackDetails($business_id, $product_id, $rack_details);
             }
         }
@@ -1028,8 +1023,7 @@ class ImportProductsController extends Controller
 
     /**
      * Check file to importer.
-     * 
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function checkFile(Request $request)
@@ -1061,7 +1055,6 @@ class ImportProductsController extends Controller
                  * PRODUCT SHEET
                  * ------------------------------------------------------------
                  */
-
                 $imported_data = Excel::toArray('', $file->getRealPath(), null, \Maatwebsite\Excel\Excel::XLSX)[1];
 
                 // Removing the header
@@ -1085,7 +1078,7 @@ class ImportProductsController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('product.products'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -1119,7 +1112,7 @@ class ImportProductsController extends Controller
                     $default_data = [
                         'type' => $type,
                         'enable_stock' => $enable_stock,
-                        'barcode_type' => $barcode_type
+                        'barcode_type' => $barcode_type,
                     ];
 
                     $result = $this->checkRow($row, $row_no, $default_data);
@@ -1139,7 +1132,6 @@ class ImportProductsController extends Controller
                  * SERVICE SHEET
                  * ------------------------------------------------------------
                  */
-
                 $imported_data = Excel::toArray('', $file->getRealPath(), null, \Maatwebsite\Excel\Excel::XLSX)[2];
 
                 // Removing the header
@@ -1163,7 +1155,7 @@ class ImportProductsController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('product.services'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no - 1]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -1197,7 +1189,7 @@ class ImportProductsController extends Controller
                     $default_data = [
                         'type' => $type,
                         'enable_stock' => $enable_stock,
-                        'barcode_type' => $barcode_type
+                        'barcode_type' => $barcode_type,
                     ];
 
                     $result = $this->checkRow($row, $row_no, $default_data);
@@ -1215,7 +1207,7 @@ class ImportProductsController extends Controller
 
             $status = [
                 'success' => 1,
-                'msg' => __('customer.successful_verified_file')
+                'msg' => __('customer.successful_verified_file'),
             ];
 
         } catch (\Exception $e) {
@@ -1223,20 +1215,20 @@ class ImportProductsController extends Controller
 
             $error_line = [
                 'row' => 'N/A',
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
 
             array_push($error_msg, $error_line);
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $status = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
-        // Session variables 
+        // Session variables
         session(['products' => $products]);
 
         $errors = $error_msg;
@@ -1260,7 +1252,7 @@ class ImportProductsController extends Controller
 
     /**
      * Check row data.
-     * 
+     *
      * @param  array  $row
      * @param  int  $row_no
      * @param  array  $default_data
@@ -1293,16 +1285,16 @@ class ImportProductsController extends Controller
             'created_by' => null,
 
             // Variation
-            'variation_name' =>  null,
-            'product_id' =>  null,
-            'sub_sku' =>  null,
-            'product_variation_id' =>  null,
-            'variation_value_id' =>  null,
-            'default_purchase_price' =>  null,
-            'dpp_inc_tax' =>  null,
-            'profit_percent' =>  null,
-            'default_sell_price' =>  null,
-            'sell_price_inc_tax' =>  null,
+            'variation_name' => null,
+            'product_id' => null,
+            'sub_sku' => null,
+            'product_variation_id' => null,
+            'variation_value_id' => null,
+            'default_purchase_price' => null,
+            'dpp_inc_tax' => null,
+            'profit_percent' => null,
+            'default_sell_price' => null,
+            'sell_price_inc_tax' => null,
 
             // Opening stock
             'quantity' => null,
@@ -1325,17 +1317,17 @@ class ImportProductsController extends Controller
                 if (in_array($clasification, ['product', 'producto'])) {
                     $product['clasification'] = 'product';
 
-                } else if (in_array($clasification, ['service', 'servicio'])) {
+                } elseif (in_array($clasification, ['service', 'servicio'])) {
                     $product['clasification'] = 'service';
 
                 } else {
                     $product['clasification'] = $clasification;
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.clasification_invalid')
+                    'msg' => __('product.clasification_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1344,7 +1336,7 @@ class ImportProductsController extends Controller
         } else {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('product.clasification_empty')
+                'msg' => __('product.clasification_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1358,7 +1350,7 @@ class ImportProductsController extends Controller
         if (empty($row['product_name'])) {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('product.product_name_empty')
+                'msg' => __('product.product_name_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1370,11 +1362,11 @@ class ImportProductsController extends Controller
             if (strlen($row['product_name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.product_name_length')
+                    'msg' => __('product.product_name_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-    
+
                 $name_error = true;
             }
         }
@@ -1393,31 +1385,31 @@ class ImportProductsController extends Controller
 
         if ($product['clasification'] == 'product') {
             $unit_error = false;
-    
+
             // Check empty
             if (empty($row['unit_name'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.unit_empty')
+                    'msg' => __('product.unit_empty'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-    
+
                 $unit_error = true;
-                
+
             } else {
                 // Check length
                 if (strlen($row['unit_name']) > 50) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.unit_length')
+                        'msg' => __('product.unit_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                     $unit_error = true;
                 }
-    
+
                 // Check exist
                 $unit = Unit::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -1425,19 +1417,19 @@ class ImportProductsController extends Controller
                             ->orWhereRaw('UPPER(actual_name) = UPPER(?)', [$row['unit_name']]);
                     })
                     ->first();
-    
+
                 if (empty($unit)) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.unit_exist')
+                        'msg' => __('product.unit_exist'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                     $unit_error = true;
                 }
             }
-    
+
             if (! $unit_error) {
                 $product['unit_id'] = $unit->id;
             }
@@ -1450,7 +1442,7 @@ class ImportProductsController extends Controller
             if (strlen($row['brand_name']) > 50) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.brand_length')
+                    'msg' => __('product.brand_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1469,7 +1461,7 @@ class ImportProductsController extends Controller
             if (strlen($row['category_name']) > 100) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.category_length')
+                    'msg' => __('product.category_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1490,11 +1482,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['sub_category_name']) > 100) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.sub_category_length')
+                        'msg' => __('product.sub_category_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['sub_category_name'] = $row['sub_category_name'];
                 }
@@ -1502,7 +1494,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sub_category_empty_category')
+                    'msg' => __('product.sub_category_empty_category'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1518,7 +1510,7 @@ class ImportProductsController extends Controller
             if (strlen($row['applied_tax']) > 25) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_length')
+                    'msg' => __('product.tax_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1534,7 +1526,7 @@ class ImportProductsController extends Controller
             if (empty($tax)) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_exist')
+                    'msg' => __('product.tax_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1559,11 +1551,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['tax_type'] = 'exclusive';
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_type_invalid')
+                    'msg' => __('product.tax_type_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1578,12 +1570,12 @@ class ImportProductsController extends Controller
 
         if ($product['enable_stock'] == 1) {
             $min_inventory_error = false;
-            
+
             // Check empty
             if (is_null($row['min_inventory'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.min_inventory_empty')
+                    'msg' => __('product.min_inventory_empty'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1595,11 +1587,11 @@ class ImportProductsController extends Controller
                 if (! is_numeric($row['min_inventory'])) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.min_inventory_numeric')
+                        'msg' => __('product.min_inventory_numeric'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-        
+
                     $min_inventory_error = true;
 
                 } else {
@@ -1607,11 +1599,11 @@ class ImportProductsController extends Controller
                     if ($row['min_inventory'] < 0) {
                         $error_line = [
                             'row' => $row_no,
-                            'msg' => __('product.min_inventory_zero')
+                            'msg' => __('product.min_inventory_zero'),
                         ];
-            
+
                         array_push($error_msg, $error_line);
-            
+
                         $min_inventory_error = true;
                     }
                 }
@@ -1634,7 +1626,7 @@ class ImportProductsController extends Controller
             if (strlen($row['sku']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sku_length')
+                    'msg' => __('product.sku_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1650,7 +1642,7 @@ class ImportProductsController extends Controller
             if ($is_exist) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sku_unique')
+                    'msg' => __('product.sku_unique'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1674,7 +1666,7 @@ class ImportProductsController extends Controller
             if (strlen($row['product_description']) > 255) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.product_description_length')
+                    'msg' => __('product.product_description_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1691,7 +1683,7 @@ class ImportProductsController extends Controller
             if (strlen($row['warranty']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.warranty_length')
+                    'msg' => __('product.warranty_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1715,11 +1707,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['status'] = 'inactive';
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.status_invalid')
+                    'msg' => __('product.status_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1728,7 +1720,7 @@ class ImportProductsController extends Controller
         } else {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('product.status_empty')
+                'msg' => __('product.status_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -1748,11 +1740,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['has_warranty'] = 0;
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.has_warranty_invalid')
+                    'msg' => __('product.has_warranty_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -1768,15 +1760,14 @@ class ImportProductsController extends Controller
          * VARIATION
          * ------------------------------------------------------------
          */
-
         if (! empty($row['cost_without_tax'])) {
             // Check numeric
             if (! is_numeric($row['cost_without_tax'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.cost_without_tax_numeric')
+                    'msg' => __('product.cost_without_tax_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
 
             } else {
@@ -1784,11 +1775,11 @@ class ImportProductsController extends Controller
                 if ($row['cost_without_tax'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.cost_without_tax_zero')
+                        'msg' => __('product.cost_without_tax_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['default_purchase_price'] = $this->productUtil->num_uf($row['cost_without_tax']);
                 }
@@ -1805,9 +1796,9 @@ class ImportProductsController extends Controller
             if (! is_numeric($row['sales_price_without_tax'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sales_price_without_tax_numeric')
+                    'msg' => __('product.sales_price_without_tax_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
 
             } else {
@@ -1815,9 +1806,9 @@ class ImportProductsController extends Controller
                 if ($row['sales_price_without_tax'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.sales_price_without_tax_zero')
+                        'msg' => __('product.sales_price_without_tax_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
 
                 } else {
@@ -1842,9 +1833,9 @@ class ImportProductsController extends Controller
             if (! is_numeric($row['quantity'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.quantity_numeric')
+                    'msg' => __('product.quantity_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
 
             } else {
@@ -1852,9 +1843,9 @@ class ImportProductsController extends Controller
                 if ($row['quantity'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.quantity_zero')
+                        'msg' => __('product.quantity_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
 
                 } else {
@@ -1874,7 +1865,6 @@ class ImportProductsController extends Controller
     /**
      * Imports the uploaded file to database.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function import(Request $request)
@@ -1924,7 +1914,7 @@ class ImportProductsController extends Controller
                     if (is_null($data['sku'])) {
                         $new_product['sku'] = ' ';
                     }
-                    
+
                     // Brand
                     if (! is_null($data['brand_name'])) {
                         $brand = Brands::where('business_id', $business_id)
@@ -1935,7 +1925,7 @@ class ImportProductsController extends Controller
                             $brand = Brands::create([
                                 'business_id' => $business_id,
                                 'name' => $data['brand_name'],
-                                'created_by' => $user_id
+                                'created_by' => $user_id,
                             ]);
                         }
 
@@ -1953,7 +1943,7 @@ class ImportProductsController extends Controller
                                 'business_id' => $business_id,
                                 'name' => $data['category_name'],
                                 'created_by' => $user_id,
-                                'parent_id' => 0
+                                'parent_id' => 0,
                             ]);
                         }
 
@@ -1971,7 +1961,7 @@ class ImportProductsController extends Controller
                                     'business_id' => $business_id,
                                     'name' => $data['sub_category_name'],
                                     'created_by' => $user_id,
-                                    'parent_id' => $category->id
+                                    'parent_id' => $category->id,
                                 ]);
                             }
 
@@ -2015,16 +2005,16 @@ class ImportProductsController extends Controller
                         $product_prices = $this->calculateVariationPrices($purchase_price, 0, $sell_price, $tax_amount, $data['tax_type'], $profit_margin);
 
                         $new_variation = [
-                            'name' =>  null,
-                            'product_id' =>  null,
-                            'sub_sku' =>  null,
-                            'product_variation_id' =>  null,
-                            'variation_value_id' =>  null,
-                            'default_purchase_price' =>  $product_prices['dpp_exc_tax'],
-                            'dpp_inc_tax' =>  $product_prices['dpp_inc_tax'],
-                            'profit_percent' =>  $profit_margin,
-                            'default_sell_price' =>  $product_prices['dsp_exc_tax'],
-                            'sell_price_inc_tax' =>  $product_prices['dsp_inc_tax'],
+                            'name' => null,
+                            'product_id' => null,
+                            'sub_sku' => null,
+                            'product_variation_id' => null,
+                            'variation_value_id' => null,
+                            'default_purchase_price' => $product_prices['dpp_exc_tax'],
+                            'dpp_inc_tax' => $product_prices['dpp_inc_tax'],
+                            'profit_percent' => $profit_margin,
+                            'default_sell_price' => $product_prices['dsp_exc_tax'],
+                            'sell_price_inc_tax' => $product_prices['dsp_inc_tax'],
                         ];
 
                         $opening_stock = null;
@@ -2069,7 +2059,7 @@ class ImportProductsController extends Controller
                     }
 
                     /** sync product */
-                    $this->productUtil->syncProduct($product->id, $product->sku, "store");
+                    $this->productUtil->syncProduct($product->id, $product->sku, 'store');
                 }
             }
 
@@ -2077,17 +2067,17 @@ class ImportProductsController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('product.file_imported_successfully')
+                'msg' => __('product.file_imported_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -2113,12 +2103,12 @@ class ImportProductsController extends Controller
         if ($zip_loaded === false) {
             $output = [
                 'success' => 0,
-                'msg' => __('messages.install_enable_zip')
+                'msg' => __('messages.install_enable_zip'),
             ];
 
             return view('import_products.index')->with([
                 'notification' => $output,
-                'errors' => $errors
+                'errors' => $errors,
             ]);
 
         } else {
@@ -2128,8 +2118,7 @@ class ImportProductsController extends Controller
 
     /**
      * Check file to importer.
-     * 
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function checkEditFile(Request $request)
@@ -2178,16 +2167,16 @@ class ImportProductsController extends Controller
                     $error_line = [
                         'row' => 'N/A',
                         'sheet' => 'N/A',
-                        'msg' => __('lang_v1.malformed_file')
+                        'msg' => __('lang_v1.malformed_file'),
                     ];
 
                     array_push($error_msg, $error_line);
 
-                    \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                    
+                    \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                     $status = [
                         'success' => 0,
-                        'msg' => __('lang_v1.malformed_file')
+                        'msg' => __('lang_v1.malformed_file'),
                     ];
 
                     $errors = $error_msg;
@@ -2229,7 +2218,7 @@ class ImportProductsController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('product.products'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -2328,7 +2317,7 @@ class ImportProductsController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('product.services'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no]),
                         ];
 
                         array_push($error_msg, $error_line);
@@ -2394,16 +2383,16 @@ class ImportProductsController extends Controller
                  * KIT SHEET
                  * ------------------------------------------------------------
                  */
-    
+
                 // Removing the header
                 unset($imported_data_3[0]);
                 unset($imported_data_3[1]);
                 unset($imported_data_3[2]);
                 unset($imported_data_3[3]);
-    
+
                 // Columns number
                 $col_no = 13;
-    
+
                 // Process file
                 foreach ($imported_data_3 as $key => $value) {
                     // Check columns number
@@ -2411,15 +2400,15 @@ class ImportProductsController extends Controller
                         $error_line = [
                             'row' => 'N/A',
                             'sheet' => __('product.kits'),
-                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no])
+                            'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no]),
                         ];
-    
+
                         array_push($error_msg, $error_line);
                     }
-    
+
                     // Row number
                     $row_no = $key + 1;
-    
+
                     // Row
                     $row = [
                         'sku' => trim($value[0]),
@@ -2439,12 +2428,12 @@ class ImportProductsController extends Controller
                         'clasification' => 'product',
                         'type' => 'single',
                     ];
-    
+
                     $result = $this->checkEditRow($row, $row_no);
-    
+
                     // Product result
                     array_push($products, $result['product']);
-    
+
                     // Error messages result
                     foreach ($result['error_msg'] as $item) {
                         $item['sheet'] = __('product.kits');
@@ -2457,7 +2446,6 @@ class ImportProductsController extends Controller
                  * MATERIAL SHEET
                  * ------------------------------------------------------------
                  */
-
                 if (config('app.business') == 'optics') {
                     // Removing the header
                     unset($imported_data_4[0]);
@@ -2475,7 +2463,7 @@ class ImportProductsController extends Controller
                             $error_line = [
                                 'row' => 'N/A',
                                 'sheet' => __('material.materials'),
-                                'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no])
+                                'msg' => __('product.number_of_columns_mismatch', ['number' => $col_no]),
                             ];
 
                             array_push($error_msg, $error_line);
@@ -2525,7 +2513,7 @@ class ImportProductsController extends Controller
 
             $status = [
                 'success' => 1,
-                'msg' => __('customer.successful_verified_file')
+                'msg' => __('customer.successful_verified_file'),
             ];
 
         } catch (\Exception $e) {
@@ -2534,20 +2522,20 @@ class ImportProductsController extends Controller
             $error_line = [
                 'row' => 'N/A',
                 'sheet' => 'N/A',
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
 
             array_push($error_msg, $error_line);
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $status = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
-        // Session variables 
+        // Session variables
         session(['products' => $products]);
 
         $errors = $error_msg;
@@ -2569,7 +2557,7 @@ class ImportProductsController extends Controller
 
     /**
      * Check row data.
-     * 
+     *
      * @param  array  $row
      * @param  int  $row_no
      * @return array
@@ -2600,8 +2588,8 @@ class ImportProductsController extends Controller
 
             // Variation
             'variation_id' => null,
-            'default_purchase_price' =>  null,
-            'sales_price' =>  null,
+            'default_purchase_price' => null,
+            'sales_price' => null,
         ];
 
         if (config('app.business') == 'optics') {
@@ -2633,7 +2621,7 @@ class ImportProductsController extends Controller
             if (strlen($row['sku']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sku_length')
+                    'msg' => __('product.sku_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2652,7 +2640,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sku_exist')
+                    'msg' => __('product.sku_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2663,7 +2651,7 @@ class ImportProductsController extends Controller
         } else {
             $error_line = [
                 'row' => $row_no,
-                'msg' => __('product.sku_empty')
+                'msg' => __('product.sku_empty'),
             ];
 
             array_push($error_msg, $error_line);
@@ -2685,11 +2673,11 @@ class ImportProductsController extends Controller
             if (strlen($row['name']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.product_name_length')
+                    'msg' => __('product.product_name_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-    
+
                 $name_error = true;
             }
         }
@@ -2709,14 +2697,14 @@ class ImportProductsController extends Controller
                 if (strlen($row['unit']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.unit_length')
+                        'msg' => __('product.unit_length'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $unit_error = true;
                 }
-                
+
                 // Check exist
                 $unit = Unit::where('business_id', $business_id)
                     ->where(function ($query) use ($row) {
@@ -2731,7 +2719,7 @@ class ImportProductsController extends Controller
                 } else {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.unit_exist')
+                        'msg' => __('product.unit_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
@@ -2739,7 +2727,7 @@ class ImportProductsController extends Controller
                     $unit_error = true;
                 }
             }
-    
+
             if (! $unit_error && $unit_id != 0) {
                 $product['unit_id'] = $unit_id;
             }
@@ -2755,14 +2743,14 @@ class ImportProductsController extends Controller
             if (strlen($row['brand']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.brand_length')
+                    'msg' => __('product.brand_length'),
                 ];
 
                 array_push($error_msg, $error_line);
 
                 $brand_error = true;
             }
-            
+
             // Check exist
             $brand = Brands::where('business_id', $business_id)
                 ->whereRaw('UPPER(name) = UPPER(?)', [$row['brand']])
@@ -2774,7 +2762,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.brand_exist')
+                    'msg' => __('product.brand_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2797,14 +2785,14 @@ class ImportProductsController extends Controller
             if (strlen($row['category']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.category_length')
+                    'msg' => __('product.category_length'),
                 ];
 
                 array_push($error_msg, $error_line);
 
                 $category_error = true;
             }
-            
+
             // Check exist
             $category = Category::where('business_id', $business_id)
                 ->whereRaw('UPPER(name) = UPPER(?)', [$row['category']])
@@ -2817,7 +2805,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.category_exist')
+                    'msg' => __('product.category_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2840,14 +2828,14 @@ class ImportProductsController extends Controller
             if (strlen($row['subcategory']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sub_category_length')
+                    'msg' => __('product.sub_category_length'),
                 ];
 
                 array_push($error_msg, $error_line);
 
                 $sub_category_error = true;
             }
-            
+
             // Check exist
             $sub_category = Category::where('business_id', $business_id)
                 ->whereRaw('UPPER(name) = UPPER(?)', [$row['subcategory']])
@@ -2860,7 +2848,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sub_category_exist')
+                    'msg' => __('product.sub_category_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2883,7 +2871,7 @@ class ImportProductsController extends Controller
             if (strlen($row['applied_tax']) > 25) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_length')
+                    'msg' => __('product.tax_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2902,7 +2890,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_exist')
+                    'msg' => __('product.tax_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2927,11 +2915,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['tax_type'] = 'exclusive';
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.tax_type_invalid')
+                    'msg' => __('product.tax_type_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -2941,18 +2929,18 @@ class ImportProductsController extends Controller
         // ----- ALERT QUANTITY -----
 
         $alert_quantity_error = false;
-        
+
         // Check empty
         if (! empty($row['alert_quantity'])) {
             // Check numeric
             if (! is_numeric($row['alert_quantity'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.alert_quantity_numeric')
+                    'msg' => __('product.alert_quantity_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-    
+
                 $alert_quantity_error = true;
 
             } else {
@@ -2960,11 +2948,11 @@ class ImportProductsController extends Controller
                 if ($row['alert_quantity'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.alert_quantity_zero')
+                        'msg' => __('product.alert_quantity_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-        
+
                     $alert_quantity_error = true;
                 }
             }
@@ -2986,7 +2974,7 @@ class ImportProductsController extends Controller
             if (! in_array($barcode_type, ['C39', 'C128', 'EAN13', 'EAN8', 'UPCA', 'UPCE'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.barcode_type_invalid')
+                    'msg' => __('product.barcode_type_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3013,11 +3001,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['enable_sr_no'] = 0;
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.enable_sr_no_invalid')
+                    'msg' => __('product.enable_sr_no_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3033,11 +3021,11 @@ class ImportProductsController extends Controller
             if (strlen($row['weight']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.weight_length')
+                    'msg' => __('product.weight_length'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
-    
+
                 $weight_error = true;
             }
         }
@@ -3053,7 +3041,7 @@ class ImportProductsController extends Controller
             if (strlen($row['product_description']) > 255) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.product_description_length')
+                    'msg' => __('product.product_description_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3070,7 +3058,7 @@ class ImportProductsController extends Controller
             if (strlen($row['warranty']) > 191) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.warranty_length')
+                    'msg' => __('product.warranty_length'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3094,11 +3082,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['status'] = 'inactive';
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.status_invalid')
+                    'msg' => __('product.status_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3119,11 +3107,11 @@ class ImportProductsController extends Controller
                 } else {
                     $product['has_warranty'] = 1;
                 }
-                
+
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.has_warranty_invalid')
+                    'msg' => __('product.has_warranty_invalid'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3137,11 +3125,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['model']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.model_length')
+                        'msg' => __('product.model_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['model'] = $row['model'];
                 }
@@ -3153,11 +3141,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['measurement']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.measurement_length')
+                        'msg' => __('product.measurement_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['measurement'] = $row['measurement'];
                 }
@@ -3172,11 +3160,11 @@ class ImportProductsController extends Controller
                 // Check invalid value
                 if (in_array($ar, ['green', 'blue', 'premium'])) {
                     $product['ar'] = $ar;
-                    
+
                 } else {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.ar_invalid')
+                        'msg' => __('product.ar_invalid'),
                     ];
 
                     array_push($error_msg, $error_line);
@@ -3193,14 +3181,14 @@ class ImportProductsController extends Controller
                 if (strlen($row['material']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.material_length')
+                        'msg' => __('product.material_length'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $material_error = true;
                 }
-                
+
                 // Check exist
                 $material = Product::where('business_id', $business_id)
                     ->whereRaw('UPPER(sku) = UPPER(?)', [$row['material']])
@@ -3212,7 +3200,7 @@ class ImportProductsController extends Controller
                 } else {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.material_exist')
+                        'msg' => __('product.material_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
@@ -3235,14 +3223,14 @@ class ImportProductsController extends Controller
                 if (strlen($row['material_type']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.material_type_length')
+                        'msg' => __('product.material_type_length'),
                     ];
 
                     array_push($error_msg, $error_line);
 
                     $material_type_error = true;
                 }
-                
+
                 // Check exist
                 $material_type = MaterialType::where('business_id', $business_id)
                     ->whereRaw('UPPER(name) = UPPER(?)', [$row['material_type']])
@@ -3254,7 +3242,7 @@ class ImportProductsController extends Controller
                 } else {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.material_type_exist')
+                        'msg' => __('product.material_type_exist'),
                     ];
 
                     array_push($error_msg, $error_line);
@@ -3273,11 +3261,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['image']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.image_length')
+                        'msg' => __('product.image_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['image'] = $row['image'];
                 }
@@ -3290,11 +3278,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['provider_code']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.provider_code_length')
+                        'msg' => __('product.provider_code_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['provider_code'] = $row['provider_code'];
                 }
@@ -3306,11 +3294,11 @@ class ImportProductsController extends Controller
                 if (strlen($row['drive_unit']) > 191) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.drive_unit_length')
+                        'msg' => __('product.drive_unit_length'),
                     ];
-    
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['drive_unit'] = $row['drive_unit'];
                 }
@@ -3341,7 +3329,7 @@ class ImportProductsController extends Controller
             } else {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sub_sku_exist')
+                    'msg' => __('product.sub_sku_exist'),
                 ];
 
                 array_push($error_msg, $error_line);
@@ -3361,9 +3349,9 @@ class ImportProductsController extends Controller
             if (! is_numeric($row['cost_without_tax'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.cost_without_tax_numeric')
+                    'msg' => __('product.cost_without_tax_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
 
             } else {
@@ -3371,11 +3359,11 @@ class ImportProductsController extends Controller
                 if ($row['cost_without_tax'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.cost_without_tax_zero')
+                        'msg' => __('product.cost_without_tax_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
-    
+
                 } else {
                     $product['default_purchase_price'] = $this->productUtil->num_uf($row['cost_without_tax']);
                 }
@@ -3389,9 +3377,9 @@ class ImportProductsController extends Controller
             if (! is_numeric($row['sales_price'])) {
                 $error_line = [
                     'row' => $row_no,
-                    'msg' => __('product.sales_price_without_tax_numeric')
+                    'msg' => __('product.sales_price_without_tax_numeric'),
                 ];
-    
+
                 array_push($error_msg, $error_line);
 
             } else {
@@ -3399,9 +3387,9 @@ class ImportProductsController extends Controller
                 if ($row['sales_price'] < 0) {
                     $error_line = [
                         'row' => $row_no,
-                        'msg' => __('product.sales_price_without_tax_zero')
+                        'msg' => __('product.sales_price_without_tax_zero'),
                     ];
-        
+
                     array_push($error_msg, $error_line);
 
                 } else {
@@ -3529,17 +3517,17 @@ class ImportProductsController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('product.file_imported_successfully')
+                'msg' => __('product.file_imported_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-            
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 

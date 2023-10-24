@@ -8,24 +8,25 @@ class Country extends Model
 {
     protected $fillable = ['name', 'short_name', 'code', 'flag', 'business_id'];
 
-	public function state()
-	{
-		return $this->hasMany('App\State');
-	}
-	
-	public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false){
-		
-		$all_cnt = Country::where('business_id', $business_id)->orderBy('name');
-		$all_cnt = $all_cnt->pluck('name', 'id');
+    public function state()
+    {
+        return $this->hasMany('App\State');
+    }
 
-		if($prepend_none){
-			$all_cnt = $all_cnt->prepend(__("geography.none_country"), '');
-		}
+    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    {
 
-		if($prepend_all){
-			$all_cnt = $all_cnt->prepend(__("geography.all_your_countries"), '');
-		}
+        $all_cnt = Country::where('business_id', $business_id)->orderBy('name');
+        $all_cnt = $all_cnt->pluck('name', 'id');
 
-		return $all_cnt;
-	}
+        if ($prepend_none) {
+            $all_cnt = $all_cnt->prepend(__('geography.none_country'), '');
+        }
+
+        if ($prepend_all) {
+            $all_cnt = $all_cnt->prepend(__('geography.all_your_countries'), '');
+        }
+
+        return $all_cnt;
+    }
 }

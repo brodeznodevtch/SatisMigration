@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddPositionIdToEmployeesTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddPositionIdToEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function(Blueprint $table){
+        Schema::table('employees', function (Blueprint $table) {
             $table->integer('position_id')->unsigned()->nullable()->after('mobile');
             $table->foreign('position_id')->references('id')->on('positions');
         });

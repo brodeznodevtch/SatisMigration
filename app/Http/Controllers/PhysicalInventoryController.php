@@ -17,24 +17,22 @@ use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use App\Variation;
 use App\VariationLocationDetails;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
 
 class PhysicalInventoryController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     protected $transactionUtil;
 
     /**
      * Constructor.
      *
-     * @param  ProductUtil  $productUtil
-     * @param  TransactionUtil  $transactionUtil
      * @return void
      */
     public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil)
@@ -95,27 +93,27 @@ class PhysicalInventoryController extends Controller
                     $query->whereRaw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.last_name, '')) like ?", ["%{$keyword}%"]);
                 })
                 ->addColumn(
-                    'action', function($row) {
+                    'action', function ($row) {
                         $flag = false;
 
                         $html = '<div class="btn-group">
-                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") .
+                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').
                                 ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('physical_inventory.view') && in_array($row->status, $this->can_view)) {
-                            $html .= '<li><a href="' . action('PhysicalInventoryController@show', [$row->id]) . '" class="show_physical_inventory_button"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
+                            $html .= '<li><a href="'.action('PhysicalInventoryController@show', [$row->id]).'" class="show_physical_inventory_button"><i class="fa fa-eye"></i> '.__('messages.view').'</a></li>';
                             $flag = true;
                         }
 
                         if (auth()->user()->can('physical_inventory.update') && in_array($row->status, $this->can_edit)) {
-                            $html .= '<li><a href="' . action('PhysicalInventoryController@edit', [$row->id]) . '"><i class="fa fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                            $html .= '<li><a href="'.action('PhysicalInventoryController@edit', [$row->id]).'"><i class="fa fa-edit"></i> '.__('messages.edit').'</a></li>';
                             $flag = true;
                         }
 
                         if (auth()->user()->can('physical_inventory.start') && $row->status == 'new' && now()->toDateString() >= $row->start_date) {
-                            $html .= '<li><a href="' . action('PhysicalInventoryController@edit', [$row->id]) . '"><i class="fa fa-play-circle"></i> ' . __("physical_inventory.start") . '</a></li>';
+                            $html .= '<li><a href="'.action('PhysicalInventoryController@edit', [$row->id]).'"><i class="fa fa-play-circle"></i> '.__('physical_inventory.start').'</a></li>';
                             $flag = true;
                         }
 
@@ -125,8 +123,8 @@ class PhysicalInventoryController extends Controller
                     }
                 )
                 ->editColumn(
-                    'status', function($row) {
-                        return __('physical_inventory.' . $row->status);
+                    'status', function ($row) {
+                        return __('physical_inventory.'.$row->status);
                     }
                 )
                 ->editColumn(
@@ -180,7 +178,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -212,7 +209,7 @@ class PhysicalInventoryController extends Controller
             }
 
             $physical_inventory = PhysicalInventory::create($input);
-            
+
             // Create physical inventory lines
             if ($request->get('autoload') == 1 || $request->get('autoload_rotation') == 1) {
                 $location_id = $physical_inventory->location_id;
@@ -220,10 +217,10 @@ class PhysicalInventoryController extends Controller
 
                 $variations = Variation::join('products as p', 'variations.product_id', 'p.id')
                     ->leftJoin('variation_location_details as vld',
-                        function($join) use ($location_id, $warehouse_id) {
+                        function ($join) use ($location_id, $warehouse_id) {
                             $join->on('variations.id', '=', 'vld.variation_id');
 
-                            $join->where(function($query) use ($location_id, $warehouse_id) {
+                            $join->where(function ($query) use ($location_id, $warehouse_id) {
                                 $query->where('vld.location_id', $location_id)
                                     ->where('vld.warehouse_id', $warehouse_id);
                             });
@@ -237,12 +234,12 @@ class PhysicalInventoryController extends Controller
                     if ($physical_inventory->category == 'product') {
                         $variations = $variations->where('p.clasification', 'product');
 
-                    // Only materials
-                    } else if ($physical_inventory->category == 'material') {
+                        // Only materials
+                    } elseif ($physical_inventory->category == 'material') {
                         $variations = $variations->where('p.clasification', 'material');
 
-                    // Only products and materials
-                    } else if ($physical_inventory->category == 'full') {
+                        // Only products and materials
+                    } elseif ($physical_inventory->category == 'full') {
                         $variations = $variations->whereIn('p.clasification', ['product', 'material']);
                     }
 
@@ -253,38 +250,38 @@ class PhysicalInventoryController extends Controller
                 // Product settings
                 $business = Business::find($business_id);
                 $product_settings = json_decode($business->product_settings, true);
-                
+
                 if ($request->get('autoload_rotation') == 1 && ! is_null($product_settings['product_rotation'])) {
                     $months = $product_settings['product_rotation'];
 
                     $variations = $variations->where(function ($query) use ($months, $location_id, $warehouse_id) {
-                        $query->whereRaw("(
+                        $query->whereRaw('(
                                 SELECT COUNT(tsl.id) FROM transaction_sell_lines AS tsl
                                 INNER JOIN transactions AS t ON t.id = tsl.transaction_id
                                 WHERE tsl.variation_id = variations.id
                                 AND t.transaction_date BETWEEN DATE_SUB(DATE(NOW()), INTERVAL ? MONTH) AND DATE(NOW())
                                 AND t.location_id = ?
                                 AND t.warehouse_id = ?
-                                ) > 0", [$months, $location_id, $warehouse_id]
-                            )
-                            ->orWhereRaw("(
+                                ) > 0', [$months, $location_id, $warehouse_id]
+                        )
+                            ->orWhereRaw('(
                                 SELECT COUNT(pl.id) FROM purchase_lines AS pl
                                 INNER JOIN transactions AS t ON t.id = pl.transaction_id
                                 WHERE pl.variation_id = variations.id
                                 AND t.transaction_date BETWEEN DATE_SUB(DATE(NOW()), INTERVAL ? MONTH) AND DATE(NOW())
                                 AND t.location_id = ?
                                 AND t.warehouse_id = ?
-                                ) > 0", [$months, $location_id, $warehouse_id]
+                                ) > 0', [$months, $location_id, $warehouse_id]
                             );
                     });
                 }
 
                 $variations = $variations->select(
-                        'variations.id as variation_id',
-                        'p.id as product_id',
-                        'variations.product_variation_id',
-                        'vld.id as vld_id'
-                    )
+                    'variations.id as variation_id',
+                    'p.id as product_id',
+                    'variations.product_variation_id',
+                    'vld.id as vld_id'
+                )
                     ->orderBy('variations.sub_sku', 'desc')
                     ->get();
 
@@ -295,7 +292,7 @@ class PhysicalInventoryController extends Controller
                         'variation_id' => $item->variation_id,
                         'quantity' => 0,
                         'created_by' => $user_id,
-                        'updated_by' => $user_id
+                        'updated_by' => $user_id,
                     ]);
 
                     // Create variation_location_details record if not exists
@@ -317,17 +314,17 @@ class PhysicalInventoryController extends Controller
             $output = [
                 'success' => true,
                 'data' => $physical_inventory,
-                'msg' => __('physical_inventory.physical_inventory_added_successfully')
+                'msg' => __('physical_inventory.physical_inventory_added_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -354,6 +351,7 @@ class PhysicalInventoryController extends Controller
 
         if (request()->ajax()) {
             $datatable = $this->getData($id, 0);
+
             return $datatable;
         }
 
@@ -394,6 +392,7 @@ class PhysicalInventoryController extends Controller
 
         if (request()->ajax()) {
             $datatable = $this->getData($id, 1);
+
             return $datatable;
         }
 
@@ -410,7 +409,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -447,7 +445,7 @@ class PhysicalInventoryController extends Controller
                 if (! empty($transaction)) {
                     // Delete kardex lines
                     $this->transactionUtil->deleteKardexByTransaction($physical_inventory->id, true);
-    
+
                     // Delete inputs
                     $delete_purchase_line_ids = [];
 
@@ -491,7 +489,7 @@ class PhysicalInventoryController extends Controller
                     $business = [
                         'id' => $transaction->business_id,
                         'accounting_method' => request()->session()->get('business.accounting_method'),
-                        'location_id' => $transaction->location_id
+                        'location_id' => $transaction->location_id,
                     ];
 
                     $this->transactionUtil->adjustMappingPurchaseSell(
@@ -512,7 +510,7 @@ class PhysicalInventoryController extends Controller
 
                 $output = [
                     'success' => 1,
-                    'msg' => __('physical_inventory.delete_success')
+                    'msg' => __('physical_inventory.delete_success'),
                 ];
 
                 DB::commit();
@@ -520,11 +518,11 @@ class PhysicalInventoryController extends Controller
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => 0,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -534,12 +532,13 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Change the status of the physical inventory.
-     * 
+     *
      * @param  int  $id
      * @param  string  $status
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus($id, $status) {
+    public function changeStatus($id, $status)
+    {
         // Check status
         if ($status == 'review') {
             if (! auth()->user()->can('physical_inventory.send_to_review')) {
@@ -573,17 +572,17 @@ class PhysicalInventoryController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => $msg
+                'msg' => $msg,
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -592,7 +591,7 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Change physical inventory status to finished and run stock adjustment.
-     * 
+     *
      * @param  int  $id
      * @param  string  $status
      * @return \Illuminate\Http\Response
@@ -629,29 +628,28 @@ class PhysicalInventoryController extends Controller
                     ->where('warehouse_id', $physical_inventory->warehouse_id)
                     ->where('location_id', $physical_inventory->location_id)
                     ->first();
-                
+
                 array_push($vld, $v->id);
             }
 
-            $pil = PhysicalInventoryLine::
-                leftJoin(
-                    'variation_location_details',
-                    function($join) use ($vld) {
-                        $join->on('variation_location_details.variation_id', '=', 'physical_inventory_lines.variation_id');
+            $pil = PhysicalInventoryLine::leftJoin(
+                'variation_location_details',
+                function ($join) use ($vld) {
+                    $join->on('variation_location_details.variation_id', '=', 'physical_inventory_lines.variation_id');
 
-                        $join->where(function($query) use ($vld) {
-                            $query->whereIn('variation_location_details.id', $vld);
-                        });
-                    }
-                )
-                ->where('physical_inventory_id', $id)
-                ->select(
-                    'physical_inventory_lines.*',
-                    'variation_location_details.qty_available as stock',
-                    DB::raw("(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = physical_inventory_lines.variation_id ORDER BY id DESC LIMIT 1) as price"),
-                    DB::raw("physical_inventory_lines.quantity - variation_location_details.qty_available as difference")
-                )
-                ->get();
+                    $join->where(function ($query) use ($vld) {
+                        $query->whereIn('variation_location_details.id', $vld);
+                    });
+                }
+            )
+                    ->where('physical_inventory_id', $id)
+                    ->select(
+                        'physical_inventory_lines.*',
+                        'variation_location_details.qty_available as stock',
+                        DB::raw('(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = physical_inventory_lines.variation_id ORDER BY id DESC LIMIT 1) as price'),
+                        DB::raw('physical_inventory_lines.quantity - variation_location_details.qty_available as difference')
+                    )
+                    ->get();
 
             foreach ($pil as $item) {
                 $pil_upd = PhysicalInventoryLine::find($item->id);
@@ -663,7 +661,7 @@ class PhysicalInventoryController extends Controller
 
                 if ($item->difference > 0) {
                     $mov_type = 'input';
-                } else if ($item->difference < 0) {
+                } elseif ($item->difference < 0) {
                     $mov_type = 'output';
                 } else {
                     $mov_type = null;
@@ -686,13 +684,13 @@ class PhysicalInventoryController extends Controller
                         ->where('type', $mov_type)
                         ->where('business_id', $business_id)
                         ->first();
-    
+
                     // Check if movement type is set else create it
                     if (empty($movement_type)) {
                         $movement_type = MovementType::create([
                             'name' => 'stock_adjustment',
                             'type' => $mov_type,
-                            'business_id' => $business_id
+                            'business_id' => $business_id,
                         ]);
                     }
 
@@ -705,7 +703,7 @@ class PhysicalInventoryController extends Controller
                         $date = $end_date->format('Y-m-d H:i:s');
                     }
 
-                    # Calculate balance
+                    // Calculate balance
                     $balance = $this->transactionUtil->calculateBalance(
                         $item->product,
                         $item->variation_id,
@@ -747,17 +745,17 @@ class PhysicalInventoryController extends Controller
 
             // Mapping and output
             $output = $this->mapping($id);
-            
+
             DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -766,7 +764,7 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Get data from physical inventory lines.
-     * 
+     *
      * @param  int  $id
      * @param  int  $is_editable
      * @return \Illuminate\Http\Response
@@ -803,10 +801,10 @@ class PhysicalInventoryController extends Controller
             ->leftjoin('units', 'products.unit_id', 'units.id')
             ->leftJoin(
                 'variation_location_details',
-                function($join) use ($vld) {
+                function ($join) use ($vld) {
                     $join->on('variation_location_details.variation_id', '=', 'physical_inventory_lines.variation_id');
 
-                    $join->where(function($query) use ($vld) {
+                    $join->where(function ($query) use ($vld) {
                         $query->whereIn('variation_location_details.id', $vld);
                     });
                 }
@@ -817,7 +815,7 @@ class PhysicalInventoryController extends Controller
                 'variations.sub_sku',
                 DB::raw("IF(product_variations.is_dummy = 0, CONCAT(products.name, ' (', product_variations.name, ':', variations.name, ')'), products.name) as product_name"),
                 DB::raw("IF(physical_inventory_lines.stock = 0, (IF(physical_inventories.status = 'finalized', physical_inventory_lines.stock, variation_location_details.qty_available)), physical_inventory_lines.stock) as qty_available"),
-                DB::raw("(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = variations.id ORDER BY id DESC LIMIT 1) as last_purchased_price"),
+                DB::raw('(SELECT purchase_price_inc_tax FROM purchase_lines WHERE variation_id = variations.id ORDER BY id DESC LIMIT 1) as last_purchased_price'),
                 'units.allow_decimal as unit_allow_decimal',
                 'products.id as product_id',
                 'variations.id as variation_id',
@@ -829,45 +827,45 @@ class PhysicalInventoryController extends Controller
             ->orderBy('physical_inventory_lines.id', 'desc');
 
         $datatable = Datatables::of($lines)
-            ->filterColumn('product_name', function($lines, $keyword) {
+            ->filterColumn('product_name', function ($lines, $keyword) {
                 $lines->whereRaw("IF(product_variations.is_dummy = 0, CONCAT(products.name, ' (', product_variations.name, ':', variations.name, ')'), products.name) like ?", ["%{$keyword}%"]);
             })
             ->editColumn(
-                'qty_available', function($row) {
+                'qty_available', function ($row) {
                     return $this->productUtil->num_f($row->qty_available);
                 }
             )
             ->editColumn(
-                'difference', function($row) {
+                'difference', function ($row) {
                     return $this->productUtil->num_f(abs($row->difference));
                 }
             )
             ->editColumn(
-                'last_purchased_price', function($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' . $this->productUtil->num_f($row->last_purchased_price) . '</span>';
+                'last_purchased_price', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">'.$this->productUtil->num_f($row->last_purchased_price).'</span>';
                 }
             );
 
         if ($is_editable == 1) {
             // Edit view
             $datatable = $datatable->editColumn(
-                    'quantity', function($row) {
-                        $html = 
-                        '<div class="input-group">
-                        <input type="text" data-line-id="' . $row->id . '"
-                            name="line-' . $row->id . '"
-                            data-line-quantity="' . $this->productUtil->num_f($row->quantity) . '"
-                            data-rule-allow-decimal="' . $row->unit_allow_decimal . '"
+                'quantity', function ($row) {
+                    $html =
+                    '<div class="input-group">
+                        <input type="text" data-line-id="'.$row->id.'"
+                            name="line-'.$row->id.'"
+                            data-line-quantity="'.$this->productUtil->num_f($row->quantity).'"
+                            data-rule-allow-decimal="'.$row->unit_allow_decimal.'"
                             class="form-control input_number quantity_pil"
-                            value="' . $this->productUtil->num_f($row->quantity) . '">
+                            value="'.$this->productUtil->num_f($row->quantity).'">
                         </div>';
-                        
-                        return $html;
-                    }
-                )
+
+                    return $html;
+                }
+            )
                 ->addColumn(
-                    'action', function($row) {
-                        $html = '<i  data-line-id="' . $row->id . '" class="fa fa-trash cursor-pointer delete_pil" aria-hidden="true"></i>';
+                    'action', function ($row) {
+                        $html = '<i  data-line-id="'.$row->id.'" class="fa fa-trash cursor-pointer delete_pil" aria-hidden="true"></i>';
 
                         return $html;
                     }
@@ -878,10 +876,10 @@ class PhysicalInventoryController extends Controller
         } else {
             // Show view
             $datatable = $datatable->editColumn(
-                    'quantity', function($row) {
-                        return $this->productUtil->num_f($row->quantity);
-                    }
-                )
+                'quantity', function ($row) {
+                    return $this->productUtil->num_f($row->quantity);
+                }
+            )
                 ->addColumn('action', '')
                 ->rawColumns(['quantity', 'qty_available', 'difference', 'last_purchased_price'])
                 ->toJson();
@@ -892,7 +890,7 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Get produts for search bar.
-     * 
+     *
      * @return json
      */
     public function getProducts()
@@ -913,13 +911,13 @@ class PhysicalInventoryController extends Controller
                 // Only products
                 if ($category == 'product') {
                     $products = $products->where('products.clasification', 'product');
-    
-                // Only materials
-                } else if ($category == 'material') {
+
+                    // Only materials
+                } elseif ($category == 'material') {
                     $products = $products->where('products.clasification', 'material');
-    
-                // Only products and materials
-                } else if ($category == 'full') {
+
+                    // Only products and materials
+                } elseif ($category == 'full') {
                     $products = $products->whereIn('products.clasification', ['product', 'material']);
                 }
             }
@@ -927,9 +925,9 @@ class PhysicalInventoryController extends Controller
             // Include search
             if (! empty($term)) {
                 $products->where(function ($query) use ($term) {
-                    $query->where('products.name', 'like', '%' . $term . '%');
-                    $query->orWhere('sku', 'like', '%' . $term . '%');
-                    $query->orWhere('sub_sku', 'like', '%' . $term . '%');
+                    $query->where('products.name', 'like', '%'.$term.'%');
+                    $query->orWhere('sku', 'like', '%'.$term.'%');
+                    $query->orWhere('sub_sku', 'like', '%'.$term.'%');
                 });
             }
 
@@ -952,7 +950,7 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Add a mapping between purchase and sell lines.
-     * 
+     *
      * @param  int  $id
      * @return array
      */
@@ -960,7 +958,7 @@ class PhysicalInventoryController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $physical_inventory = PhysicalInventory::find($id);
 
             $transaction = Transaction::create([
@@ -976,7 +974,7 @@ class PhysicalInventoryController extends Controller
             ]);
 
             $sell_lines = collect();
-            
+
             foreach ($physical_inventory->physical_inventory_lines as $item) {
                 if ($item->difference > 0) {
                     // Purchase line
@@ -986,10 +984,10 @@ class PhysicalInventoryController extends Controller
                         'variation_id' => $item->variation_id,
                         'quantity' => abs($item->difference),
                         'purchase_price' => $item->price,
-                        'purchase_price_inc_tax' => $item->price
+                        'purchase_price_inc_tax' => $item->price,
                     ]);
 
-                } else if ($item->difference < 0) {
+                } elseif ($item->difference < 0) {
                     // Sell line
                     $sell_line = TransactionSellLine::create([
                         'transaction_id' => $transaction->id,
@@ -999,7 +997,7 @@ class PhysicalInventoryController extends Controller
                         'unit_price' => $item->price,
                         'unit_price_inc_tax' => $item->price,
                         'unit_price_exc_tax' => $item->price,
-                        'tax_amount' => 0
+                        'tax_amount' => 0,
                     ]);
 
                     $sell_lines->push($sell_line);
@@ -1010,9 +1008,9 @@ class PhysicalInventoryController extends Controller
                 $business = [
                     'id' => $physical_inventory->business_id,
                     'accounting_method' => request()->session()->get('business.accounting_method'),
-                    'location_id' => $physical_inventory->location_id
+                    'location_id' => $physical_inventory->location_id,
                 ];
-                
+
                 $this->transactionUtil->mapPurchaseSell($business, $sell_lines, 'purchase');
             }
 
@@ -1020,17 +1018,17 @@ class PhysicalInventoryController extends Controller
 
             return [
                 'success' => 1,
-                'msg' => __('physical_inventory.successfully_finalized')
+                'msg' => __('physical_inventory.successfully_finalized'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             return [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
     }
@@ -1053,15 +1051,15 @@ class PhysicalInventoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('physical_inventory.execution_date_successfully_updated')
+                    'msg' => __('physical_inventory.execution_date_successfully_updated'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -1087,15 +1085,15 @@ class PhysicalInventoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('physical_inventory.code_successfully_updated')
+                    'msg' => __('physical_inventory.code_successfully_updated'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class RrhhRequiredAction extends Model
 {
     protected $fillable = [
-        'name'
+        'name',
     ];
-    
-    public function rrhhClassActions() {
+
+    public function rrhhClassActions()
+    {
         return $this->hasMany('App\RrhhClassAction');
     }
 }

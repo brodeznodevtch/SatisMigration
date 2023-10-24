@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToBusiness extends Migration
 {
@@ -15,7 +15,7 @@ class AddFieldsToBusiness extends Migration
     {
         Schema::table('business', function (Blueprint $table) {
             $table->boolean('enable_sub_accounts_in_bank_transactions')->default(1)->after('business_full_name');
-            
+
             $table->unsignedBigInteger('accounting_supplier_id')->after('enable_sub_accounts_in_bank_transactions')->nullable();
             $table->unsignedBigInteger('accounting_customer_id')->after('accounting_supplier_id')->nullable();
 

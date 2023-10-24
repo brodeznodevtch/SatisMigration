@@ -1,4 +1,5 @@
 <?php
+
 return [
     'active' => 'Activa',
     'add_cashier' => 'Registrar Caja',
@@ -9,7 +10,7 @@ return [
     'cashiers' => 'Cajas',
     'code' => 'Código',
     'confirm_button_delete' => '¡Sí, elimínala!',
-    "deleted_success" => "Caja eliminada exitosamente",
+    'deleted_success' => 'Caja eliminada exitosamente',
     'edit_cashier' => 'Actualizar Datos de Caja',
     'inactive' => 'Inactivo',
     'manage_cashiers' => 'Administrar Cajas',

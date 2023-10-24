@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Optics;
 
 use App\Module;
-use App\Permission;
 use App\Optics\StatusLabOrder;
 use App\Optics\StatusLabOrderStep;
+use App\Permission;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -17,7 +17,6 @@ class StatusLabOrderController extends Controller
     /**
      * Constructor.
      *
-     * @param  \App\Utils\Util  $util
      * @return void
      */
     public function __construct(Util $util)
@@ -34,12 +33,13 @@ class StatusLabOrderController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('status_lab_order.view') && !auth()->user()->can('status_lab_order.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('status_lab_order.view') && ! auth()->user()->can('status_lab_order.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $status_lab_order = StatusLabOrder::select(['code', 'name', 'color', 'status', 'id']);
+
             return Datatables::of($status_lab_order)
                 ->addColumn(
                     'action',
@@ -58,7 +58,7 @@ class StatusLabOrderController extends Controller
                     @else
                     <span class="badge" style="background-color: #d9534f;">{{ __("cashier.".$status) }}</span>
                     @endif'
-                    )
+                )
                 ->editColumn(
                     'color',
                     '<span class="dot" style="background-color: {{ $color }}"></span>'
@@ -100,7 +100,6 @@ class StatusLabOrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -112,7 +111,7 @@ class StatusLabOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            # Store status lab order
+            // Store status lab order
             $input = $request->only([
                 'code',
                 'name',
@@ -121,13 +120,13 @@ class StatusLabOrderController extends Controller
                 'color',
                 'print_order',
                 'transfer_sheet',
-                'save_and_print'
+                'save_and_print',
             ]);
 
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
 
-            # Make is_default unique
+            // Make is_default unique
             $input['is_default'] = $request->input('is_default', 0);
 
             if ($input['is_default'] == 1) {
@@ -139,7 +138,7 @@ class StatusLabOrderController extends Controller
                 }
             }
 
-            # Make second_time unique
+            // Make second_time unique
             $input['second_time'] = $request->input('second_time', 0);
 
             if ($input['second_time'] == 1) {
@@ -151,7 +150,7 @@ class StatusLabOrderController extends Controller
                 }
             }
 
-            # Make material_download unique
+            // Make material_download unique
             $input['material_download'] = $request->input('material_download', 0);
 
             if ($input['material_download'] == 1) {
@@ -163,7 +162,7 @@ class StatusLabOrderController extends Controller
                 }
             }
 
-            # Make print_order unique
+            // Make print_order unique
             $input['print_order'] = $request->input('print_order', 0);
 
             if ($input['print_order'] == 1) {
@@ -177,38 +176,38 @@ class StatusLabOrderController extends Controller
 
             $status_lab_order = StatusLabOrder::create($input);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->util->registerBinnacle($user_id, $this->module_name, 'create', $status_lab_order);
 
-            # Store status lab order steps
+            // Store status lab order steps
             $steps = $request->input('steps[]');
 
             if (! empty($steps)) {
                 foreach ($steps as $item) {
                     StatusLabOrderStep::create([
                         'status_id' => $status_lab_order->id,
-                        'step_id' => $item
+                        'step_id' => $item,
                     ]);
                 }
             }
 
-            # Create a new permission related to the created status lab order
+            // Create a new permission related to the created status lab order
             $module = Module::where('name', $this->module)->first();
 
             if (! empty($module)) {
-                $permission = Permission::where('name', 'status_lab_order.' . $status_lab_order->id)->first();
+                $permission = Permission::where('name', 'status_lab_order.'.$status_lab_order->id)->first();
 
                 if (empty($permission)) {
                     $permission = Permission::create([
-                        'name' => 'status_lab_order.' . $status_lab_order->id,
+                        'name' => 'status_lab_order.'.$status_lab_order->id,
                         'description' => $status_lab_order->name,
                         'module_id' => $module->id,
-                        'guard_name' => 'web'
+                        'guard_name' => 'web',
                     ]);
 
-                    # Store binnacle
+                    // Store binnacle
                     $this->util->registerBinnacle($user_id, 'permission', 'create', $permission);
                 }
             }
@@ -218,17 +217,17 @@ class StatusLabOrderController extends Controller
             $output = [
                 'success' => true,
                 'data' => $status_lab_order,
-                'msg' => __("status_lab_order.added_success")
+                'msg' => __('status_lab_order.added_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -277,7 +276,6 @@ class StatusLabOrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\StatusLabOrder  $statusLabOrder
      * @return \Illuminate\Http\Response
      */
@@ -291,7 +289,7 @@ class StatusLabOrderController extends Controller
             try {
                 DB::beginTransaction();
 
-                # Update status lab order
+                // Update status lab order
                 $input = $request->only([
                     'code',
                     'name',
@@ -300,15 +298,15 @@ class StatusLabOrderController extends Controller
                     'color',
                     'print_order',
                     'transfer_sheet',
-                    'save_and_print'
+                    'save_and_print',
                 ]);
-                
+
                 $status_lab_order = StatusLabOrder::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $status_lab_order_old = clone $status_lab_order;
 
-                # Make is_default unique
+                // Make is_default unique
                 $input['is_default'] = $request->input('is_default', 0);
 
                 if ($input['is_default'] == 1) {
@@ -327,7 +325,7 @@ class StatusLabOrderController extends Controller
                     }
                 }
 
-                # Make second_time unique
+                // Make second_time unique
                 $input['second_time'] = $request->input('second_time', 0);
 
                 if ($input['second_time'] == 1) {
@@ -346,7 +344,7 @@ class StatusLabOrderController extends Controller
                     }
                 }
 
-                # Make material_download unique
+                // Make material_download unique
                 $input['material_download'] = $request->input('material_download', 0);
 
                 if ($input['material_download'] == 1) {
@@ -365,7 +363,7 @@ class StatusLabOrderController extends Controller
                     }
                 }
 
-                # Make print_order unique
+                // Make print_order unique
                 $input['print_order'] = $request->input('print_order', 0);
 
                 if ($input['print_order'] == 1) {
@@ -387,37 +385,37 @@ class StatusLabOrderController extends Controller
                 $status_lab_order->fill($input);
                 $status_lab_order->save();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = $request->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'update', $status_lab_order_old, $status_lab_order);
 
-                # Delete status lab order steps
+                // Delete status lab order steps
                 DB::table('status_lab_order_steps')->where('status_id', $status_lab_order->id)->delete();
 
-                # Store status lab order steps
+                // Store status lab order steps
                 $steps = $request->input('steps');
 
                 if (! empty($steps)) {
                     foreach ($steps as $item) {
                         StatusLabOrderStep::create([
                             'status_id' => $status_lab_order->id,
-                            'step_id' => $item
+                            'step_id' => $item,
                         ]);
                     }
                 }
 
-                # Update permission
-                $permission = Permission::where('name', 'status_lab_order.' . $status_lab_order->id)->first();
+                // Update permission
+                $permission = Permission::where('name', 'status_lab_order.'.$status_lab_order->id)->first();
 
                 if (! empty($permission)) {
-                    # Clone record before action
+                    // Clone record before action
                     $permission_old = clone $permission;
 
                     $permission->description = $status_lab_order->name;
                     $permission->save();
 
-                    # Store binnacle
+                    // Store binnacle
                     $this->util->registerBinnacle($user_id, $this->module_name, 'update', $permission_old, $permission);
                 }
 
@@ -425,17 +423,17 @@ class StatusLabOrderController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('status_lab_order.updated_success')
+                    'msg' => __('status_lab_order.updated_success'),
                 ];
-                
+
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -451,7 +449,7 @@ class StatusLabOrderController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('status_lab_order.delete')) {
+        if (! auth()->user()->can('status_lab_order.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -459,26 +457,26 @@ class StatusLabOrderController extends Controller
             try {
                 $status_lab_order = StatusLabOrder::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $status_lab_order_old = clone $status_lab_order;
 
                 $status_lab_order->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'delete', $status_lab_order_old);
 
                 $output = [
                     'success' => true,
-                    'msg' => __("status_lab_order.deleted_success")
+                    'msg' => __('status_lab_order.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

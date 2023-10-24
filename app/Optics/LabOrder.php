@@ -14,7 +14,7 @@ class LabOrder extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-    	'no_order',
+        'no_order',
         'customer_id',
         'contact_id',
         'patient_id',
@@ -45,7 +45,7 @@ class LabOrder extends Model
         'business_location_id',
         'correlative',
         'transfer_date',
-        'is_annulled'
+        'is_annulled',
     ];
 
     public function transaction()

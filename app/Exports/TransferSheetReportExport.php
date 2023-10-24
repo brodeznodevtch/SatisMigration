@@ -4,22 +4,27 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class TransferSheetReportExport implements FromView, WithEvents, WithTitle
 {
     private $lines;
+
     private $size;
+
     private $business;
+
     private $enable_signature_column;
+
     private $delivers;
+
     private $receives;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $lines
      * @param  int  $size
      * @param  \App\Business  $business
@@ -30,7 +35,7 @@ class TransferSheetReportExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($lines, $size, $business, $enable_signature_column, $delivers, $receives)
     {
-    	$this->lines = $lines;
+        $this->lines = $lines;
         $this->size = $size;
         $this->business = $business;
         $this->enable_signature_column = $enable_signature_column;
@@ -40,27 +45,23 @@ class TransferSheetReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('lab_order.transfers_sheet');
+        return __('lab_order.transfers_sheet');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:G1500', 'Calibri');
-    			$event->sheet->setFontSize('A1:G1500', 10);
+                $event->sheet->setFontFamily('A1:G1500', 'Calibri');
+                $event->sheet->setFontSize('A1:G1500', 10);
 
                 $event->sheet->horizontalAlign('A1:G2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet->horizontalAlign('A4:G4', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -80,15 +81,13 @@ class TransferSheetReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.transfer_sheet_excel', [
-    		'lines' => $this->lines,
-    		'size' => $this->size,
-    		'business' => $this->business,
+        return view('reports.transfer_sheet_excel', [
+            'lines' => $this->lines,
+            'size' => $this->size,
+            'business' => $this->business,
             'enable_signature_column' => $this->enable_signature_column,
             'delivers' => $this->delivers,
             'receives' => $this->receives,

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PaymentPeriod extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = ['name', 'days', 'status', 'business_id', 'deleted_at'];
-    
-    public function business(){
+
+    public function business()
+    {
         return $this->belongsTo('App\Business');
     }
 }

@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Expr\AssignOp\Concat;
-Use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+
 class Employees extends Model
 {
     use Notifiable;
@@ -25,18 +25,16 @@ class Employees extends Model
      * @param $business_id int
      * @param $prepend_none = true (boolean)
      * @param $prepend_all = false (boolean)
-     *
      * @return array
      */
-
     protected $fillable = [
         'agent_code',
-        'first_name', 
+        'first_name',
         'last_name',
         'gender',
         'nationality_id',
-        'hired_date', 
-        'fired_date', 
+        'hired_date',
+        'fired_date',
         'birth_date',
         'dni',
         'approved',
@@ -70,78 +68,95 @@ class Employees extends Model
         'curriculum_vitae',
         'created_by',
         'business_id',
-        'user_id', 
+        'user_id',
         'short_name',
         'deleted_at',
         'position_id',
-        'location_id'
+        'location_id',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function afp() {
+    public function afp()
+    {
         return $this->belongsTo('App\RrhhData');
     }
 
-    public function civilStatus() {
+    public function civilStatus()
+    {
         return $this->belongsTo('App\RrhhData');
     }
 
-    public function nationality() {
+    public function nationality()
+    {
         return $this->belongsTo('App\RrhhData');
     }
 
-    public function profession() {
+    public function profession()
+    {
         return $this->belongsTo('App\RrhhData');
     }
 
-    public function rrhhTypeWage() {
+    public function rrhhTypeWage()
+    {
         return $this->belongsTo('App\RrhhTypeWage', 'type_id');
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->belongsTo('App\RrhhData');
     }
 
-    public function bank() {
+    public function bank()
+    {
         return $this->belongsTo('App\Bank');
     }
-    
-    public function country() {
+
+    public function country()
+    {
         return $this->belongsTo('App\Country');
     }
 
-    public function state() {
+    public function state()
+    {
         return $this->belongsTo('App\State');
     }
 
-    public function city() {
+    public function city()
+    {
         return $this->belongsTo('App\City');
     }
 
-    public function positionHistories(){
+    public function positionHistories()
+    {
         return $this->hasMany('App\RrhhPositionHistory', 'employee_id');
     }
 
-    public function salaryHistories(){
+    public function salaryHistories()
+    {
         return $this->hasMany('App\RrhhSalaryHistory', 'employee_id');
     }
-    
-    public function rrhhContracts(){
+
+    public function rrhhContracts()
+    {
         return $this->hasMany('App\RrhhContract');
     }
 
-    public function rrhhDocuments(){
+    public function rrhhDocuments()
+    {
         return $this->hasMany('App\RrhhDocuments');
     }
 
-    public function rrhhIncomeDiscounts(){
+    public function rrhhIncomeDiscounts()
+    {
         return $this->hasMany('App\RrhhIncomeDiscount', 'employee_id');
     }
 
-    public function payrollDetails(){
+    public function payrollDetails()
+    {
         return $this->hasMany('App\PayrollDetail', 'employee_id');
     }
 
@@ -154,23 +169,23 @@ class Employees extends Model
 
         //Prepend none
         if ($prepend_none) {
-            $all_emp = $all_emp->prepend(__("lang_v1.none"), '');
+            $all_emp = $all_emp->prepend(__('lang_v1.none'), '');
         }
 
         //Prepend none
         if ($prepend_all) {
-            $all_emp = $all_emp->prepend(__("report.all"), '');
+            $all_emp = $all_emp->prepend(__('report.all'), '');
         }
-        
+
         return $all_emp;
     }
 
     public static function SellersDropdown($business_id, $prepend_none = true)
-     {
+    {
 
         $all_cmmsn_agnts = Employees::where('business_id', $business_id)
-        ->whereNotNull('agent_code')
-        ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
+            ->whereNotNull('agent_code')
+            ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
 
         $users = $all_cmmsn_agnts->pluck('full_name', 'id');
 

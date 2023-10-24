@@ -1,12 +1,11 @@
 <?php
 
 use App\BonusCalculation;
-use App\CalculationType;
-use App\PaymentPeriod;
+use App\Business;
 use App\InstitutionLaw;
 use App\LawDiscount;
-use App\Business;
 use App\Module;
+use App\PaymentPeriod;
 use App\PayrollStatus;
 use App\PayrollType;
 use Illuminate\Database\Seeder;
@@ -78,8 +77,6 @@ class PayrollCatalogueSeeder extends Seeder
                 'business_id' => $item->id,
             ]);
 
-            
-
             PayrollType::firstOrCreate([
                 'name' => 'Planilla de sueldos',
                 'business_id' => $item->id,
@@ -110,8 +107,6 @@ class PayrollCatalogueSeeder extends Seeder
                 'business_id' => $item->id,
             ]);
 
-
-
             PayrollStatus::firstOrCreate([
                 'name' => 'Iniciada',
                 'business_id' => $item->id,
@@ -131,9 +126,6 @@ class PayrollCatalogueSeeder extends Seeder
                 'name' => 'Pagada',
                 'business_id' => $item->id,
             ]);
-
-
-
 
             InstitutionLaw::firstOrCreate([
                 'name' => 'Renta',
@@ -175,307 +167,297 @@ class PayrollCatalogueSeeder extends Seeder
                 'deleted_at' => null,
             ]);
 
-
-
             //ISSS
             //Quincenal
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 500, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 3, 
-                'employer_value' => 7.5, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 2, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 500,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 3,
+                'employer_value' => 7.5,
+                'payment_period_id' => 3,
+                'institution_law_id' => 2,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             //Mensual
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 1000, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 3, 
-                'employer_value' => 7.5, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 2, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 1000,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 3,
+                'employer_value' => 7.5,
+                'payment_period_id' => 6,
+                'institution_law_id' => 2,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
-
 
             //INSAFORP
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 200, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 0, 
-                'employer_value' => 1, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 5, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 200,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 0,
+                'employer_value' => 1,
+                'payment_period_id' => 3,
+                'institution_law_id' => 5,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
-
 
             //AFP
             //Quincenal
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 3250, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 7.25, 
-                'employer_value' => 7.75, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 3, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 3250,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 7.25,
+                'employer_value' => 7.75,
+                'payment_period_id' => 3,
+                'institution_law_id' => 3,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 3250, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 7.25, 
-                'employer_value' => 7.75, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 4, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 3250,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 7.25,
+                'employer_value' => 7.75,
+                'payment_period_id' => 3,
+                'institution_law_id' => 4,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
-
 
             //Mensual
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 6500, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 7.25, 
-                'employer_value' => 7.75, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 3, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 6500,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 7.25,
+                'employer_value' => 7.75,
+                'payment_period_id' => 6,
+                'institution_law_id' => 3,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 0, 
-                'until' => 6500, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 7.25, 
-                'employer_value' => 7.75, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 4, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0,
+                'until' => 6500,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 7.25,
+                'employer_value' => 7.75,
+                'payment_period_id' => 6,
+                'institution_law_id' => 4,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
-
 
             //RENTA
             //------Semanal
             LawDiscount::firstOrCreate([
-                'from'=> 0.01, 
-                'until' => 118, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 0, 
-                'employer_value' => 0, 
-                'payment_period_id' => 1, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0.01,
+                'until' => 118,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 0,
+                'employer_value' => 0,
+                'payment_period_id' => 1,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 118.01, 
-                'until' => 223.81, 
-                'base' => 118, 
-                'fixed_fee' => 4.42, 
-                'employee_percentage' => 10, 
-                'employer_value' => 0, 
-                'payment_period_id' => 1, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 118.01,
+                'until' => 223.81,
+                'base' => 118,
+                'fixed_fee' => 4.42,
+                'employee_percentage' => 10,
+                'employer_value' => 0,
+                'payment_period_id' => 1,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 223.82, 
-                'until' => 509.52, 
-                'base' => 223.81, 
-                'fixed_fee' => 15, 
-                'employee_percentage' => 20, 
-                'employer_value' => 0, 
-                'payment_period_id' => 1, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 223.82,
+                'until' => 509.52,
+                'base' => 223.81,
+                'fixed_fee' => 15,
+                'employee_percentage' => 20,
+                'employer_value' => 0,
+                'payment_period_id' => 1,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 509.53, 
-                'until' => 1000000000, 
-                'base' => 509.52, 
-                'fixed_fee' => 72.14, 
-                'employee_percentage' => 30, 
-                'employer_value' => 0, 
-                'payment_period_id' => 1, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 509.53,
+                'until' => 1000000000,
+                'base' => 509.52,
+                'fixed_fee' => 72.14,
+                'employee_percentage' => 30,
+                'employer_value' => 0,
+                'payment_period_id' => 1,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             //------Quincenal
             LawDiscount::firstOrCreate([
-                'from'=> 0.00, 
-                'until' => 236, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 0, 
-                'employer_value' => 0, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0.00,
+                'until' => 236,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 0,
+                'employer_value' => 0,
+                'payment_period_id' => 3,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 236.01, 
-                'until' => 447.62, 
-                'base' => 236, 
-                'fixed_fee' => 8.83, 
-                'employee_percentage' => 10, 
-                'employer_value' => 0, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 236.01,
+                'until' => 447.62,
+                'base' => 236,
+                'fixed_fee' => 8.83,
+                'employee_percentage' => 10,
+                'employer_value' => 0,
+                'payment_period_id' => 3,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 447.63, 
-                'until' => 1019.05, 
-                'base' => 447.62, 
-                'fixed_fee' => 30, 
-                'employee_percentage' => 20, 
-                'employer_value' => 0, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 447.63,
+                'until' => 1019.05,
+                'base' => 447.62,
+                'fixed_fee' => 30,
+                'employee_percentage' => 20,
+                'employer_value' => 0,
+                'payment_period_id' => 3,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 1019.06, 
-                'until' => 1000000000, 
-                'base' => 1019.05, 
-                'fixed_fee' => 144.28, 
-                'employee_percentage' => 30, 
-                'employer_value' => 0, 
-                'payment_period_id' => 3, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 1019.06,
+                'until' => 1000000000,
+                'base' => 1019.05,
+                'fixed_fee' => 144.28,
+                'employee_percentage' => 30,
+                'employer_value' => 0,
+                'payment_period_id' => 3,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             //-------Mensual
             LawDiscount::firstOrCreate([
-                'from'=> 0.00, 
-                'until' => 472, 
-                'base' => 0, 
-                'fixed_fee' => 0, 
-                'employee_percentage' => 0, 
-                'employer_value' => 0, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 0.00,
+                'until' => 472,
+                'base' => 0,
+                'fixed_fee' => 0,
+                'employee_percentage' => 0,
+                'employer_value' => 0,
+                'payment_period_id' => 6,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 472.01, 
-                'until' => 895.24, 
-                'base' => 472, 
-                'fixed_fee' => 17.67, 
-                'employee_percentage' => 10, 
-                'employer_value' => 0, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 472.01,
+                'until' => 895.24,
+                'base' => 472,
+                'fixed_fee' => 17.67,
+                'employee_percentage' => 10,
+                'employer_value' => 0,
+                'payment_period_id' => 6,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 895.25, 
-                'until' => 2038.10, 
-                'base' => 895.24, 
-                'fixed_fee' => 60, 
-                'employee_percentage' => 20, 
-                'employer_value' => 0, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 895.25,
+                'until' => 2038.10,
+                'base' => 895.24,
+                'fixed_fee' => 60,
+                'employee_percentage' => 20,
+                'employer_value' => 0,
+                'payment_period_id' => 6,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
 
             LawDiscount::firstOrCreate([
-                'from'=> 2038.11, 
-                'until' => 1000000000, 
-                'base' => 2038.10, 
-                'fixed_fee' => 288.57, 
-                'employee_percentage' => 30, 
-                'employer_value' => 0, 
-                'payment_period_id' => 6, 
-                'institution_law_id' => 1, 
-                'business_id' => $item->id, 
-                'deleted_at' => null
+                'from' => 2038.11,
+                'until' => 1000000000,
+                'base' => 2038.10,
+                'fixed_fee' => 288.57,
+                'employee_percentage' => 30,
+                'employer_value' => 0,
+                'payment_period_id' => 6,
+                'institution_law_id' => 1,
+                'business_id' => $item->id,
+                'deleted_at' => null,
             ]);
-
-
 
             //Tabla de cálculo de aguinaldo
             BonusCalculation::firstOrCreate([
-                'from' => 0, 
-                'until' => 1, 
-                'days' => 15, 
-                'proportional' => 1, 
-                'business_id' => $item->id, 
+                'from' => 0,
+                'until' => 1,
+                'days' => 15,
+                'proportional' => 1,
+                'business_id' => $item->id,
             ]);
 
             BonusCalculation::firstOrCreate([
-                'from' => 1, 
-                'until' => 3, 
-                'days' => 15, 
-                'proportional' => 0, 
-                'business_id' => $item->id, 
+                'from' => 1,
+                'until' => 3,
+                'days' => 15,
+                'proportional' => 0,
+                'business_id' => $item->id,
             ]);
 
             BonusCalculation::firstOrCreate([
-                'from' => 3, 
-                'until' => 10, 
-                'days' => 19, 
-                'proportional' => 0, 
-                'business_id' => $item->id, 
+                'from' => 3,
+                'until' => 10,
+                'days' => 19,
+                'proportional' => 0,
+                'business_id' => $item->id,
             ]);
 
             BonusCalculation::firstOrCreate([
-                'from' => 10, 
-                'until' => 9999, 
-                'days' => 21, 
-                'proportional' => 0, 
-                'business_id' => $item->id, 
+                'from' => 10,
+                'until' => 9999,
+                'days' => 21,
+                'proportional' => 0,
+                'business_id' => $item->id,
             ]);
         }
-
-
 
         $module = Module::updateOrCreate(
             ['name' => 'Catálogo de planillas'],
@@ -501,7 +483,6 @@ class PayrollCatalogueSeeder extends Seeder
             ['name' => 'payroll_catalogues.delete'],
             ['description' => 'Eliminar catálogos de planilla', 'guard_name' => 'web', 'module_id' => $module->id]
         );
-
 
         $modulePayroll = Module::updateOrCreate(
             ['name' => 'Planillas'],

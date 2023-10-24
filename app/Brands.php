@@ -2,21 +2,21 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use DB;
 class Brands extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -29,14 +29,14 @@ class Brands extends Model
         'name',
         'description',
         'logo',
-        'created_by'
+        'created_by',
     ];
 
     public static function brandsDropdown($business_id, $exclude_default = false, $prepend_none = true)
     {
 
-            $all_data = Brands::where('business_id', $business_id)
-                        ->select('id', DB::raw("name as customer"));
+        $all_data = Brands::where('business_id', $business_id)
+            ->select('id', DB::raw('name as customer'));
 
         $result = $all_data->pluck('customer', 'id');
 

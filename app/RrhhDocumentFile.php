@@ -8,10 +8,11 @@ class RrhhDocumentFile extends Model
 {
     protected $fillable = [
         'rrhh_document_id',
-        'file'
+        'file',
     ];
 
-    public function rrhhDocument() {
+    public function rrhhDocument()
+    {
         return $this->belongsTo('App\RrhhDocuments');
     }
 }

@@ -12,10 +12,11 @@ class CostCenterOperationAccount extends Model
         'admin_expense_account',
         'finantial_expense_account',
         'non_dedu_expense_account',
-        'updated_by'
+        'updated_by',
     ];
 
-    public function cost_center(){
+    public function cost_center()
+    {
         return $this->belongsTo('App\CostCenter');
     }
 }

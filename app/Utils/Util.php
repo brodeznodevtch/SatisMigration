@@ -6,35 +6,33 @@ use App\Binnacle;
 use App\Business;
 use App\BusinessLocation;
 use App\Cashier;
-use App\TaxGroup;
 use App\CustomerPortfolio;
 use App\Module;
 use App\Optics\LabOrder;
 use App\Optics\Patient;
-use App\ReferenceCount;
 use App\Optics\StatusLabOrder;
+use App\ReferenceCount;
+use App\TaxGroup;
 use App\User;
 use App\Warehouse;
-use DB;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
 use Carbon\Carbon;
+use DB;
+use GuzzleHttp\Client;
 
 class Util
 {
     /**
      * This function unformats a number and returns them in plain eng format
      *
-     * @param int $input_number
-     *
+     * @param  int  $input_number
      * @return float
      */
     public function num_uf($input_number, $currency_details = [])
     {
-          $thousand_separator  = '';
-          $decimal_separator  = '';
+        $thousand_separator = '';
+        $decimal_separator = '';
 
-        if (!empty($currency_details)) {
+        if (! empty($currency_details)) {
             $thousand_separator = $currency_details->thousand_separator;
             $decimal_separator = $currency_details->decimal_separator;
         } else {
@@ -45,52 +43,49 @@ class Util
         $num = str_replace($thousand_separator, '', $input_number);
         $num = str_replace($decimal_separator, '.', $num);
 
-        return (float)$num;
+        return (float) $num;
     }
 
     /**
      * This function formats a number and returns them in specified format
      *
-     * @param int $input_number
-     * @param boolean $add_symbol = false
-     *
+     * @param  int  $input_number
+     * @param  bool  $add_symbol = false
      * @return string
      */
     public function num_f($input_number, $add_symbol = false, $precision = 2)
     {
-          $formatted = number_format($input_number, $precision, session('currency')['decimal_separator'], session('currency')['thousand_separator']);
+        $formatted = number_format($input_number, $precision, session('currency')['decimal_separator'], session('currency')['thousand_separator']);
 
         if ($add_symbol) {
             if (session('business.currency_symbol_placement') == 'after') {
-                $formatted = $formatted . ' ' . session('currency')['symbol'];
+                $formatted = $formatted.' '.session('currency')['symbol'];
             } else {
-                $formatted = session('currency')['symbol'] . ' ' . $formatted;
+                $formatted = session('currency')['symbol'].' '.$formatted;
             }
         }
 
-          return $formatted;
+        return $formatted;
     }
 
-     /**
+    /**
      * Calculates percentage for a given number
      *
-     * @param int $number
-     * @param int $percent
-     * @param int $addition default = 0
-     *
+     * @param  int  $number
+     * @param  int  $percent
+     * @param  int  $addition default = 0
      * @return float
      */
     public function calc_percentage($number, $percent, $addition = 0)
     {
-        return ($addition + ($number * ($percent / 100)));
+        return $addition + ($number * ($percent / 100));
     }
 
     /**
      * Calculates base value on which percentage is calculated
      *
-     * @param int $number
-     * @param int $percent
-     *
+     * @param  int  $number
+     * @param  int  $percent
      * @return float
      */
     public function calc_percentage_base($number, $percent)
@@ -102,9 +97,8 @@ class Util
     /**
      * Calculates percentage
      *
-     * @param int $base
-     * @param int $number
-     *
+     * @param  int  $base
+     * @param  int  $number
      * @return float
      */
     public function get_percent($base, $number)
@@ -120,24 +114,26 @@ class Util
     //Returns all avilable purchase statuses
     public function orderStatuses()
     {
-        return [ 'received' => __('lang_v1.received'), 'pending' => __('lang_v1.pending'), 'ordered' => __('lang_v1.ordered')];
+        return ['received' => __('lang_v1.received'), 'pending' => __('lang_v1.pending'), 'ordered' => __('lang_v1.ordered')];
     }
 
     /**
      * Get total percent from tax groups given
-     * @param int $tax_group_id
-     * @param float $amount
+     *
+     * @param  int  $tax_group_id
+     * @param  float  $amount
      * @return float
      */
-    public function getTaxPercent($tax_group_id) {
-        if(is_null($tax_group_id)) {
+    public function getTaxPercent($tax_group_id)
+    {
+        if (is_null($tax_group_id)) {
             return null;
         }
 
         $tax_rates = TaxGroup::find($tax_group_id)->tax_rates;
 
         $percent = 0;
-        if(!empty($tax_rates)) {
+        if (! empty($tax_rates)) {
             foreach ($tax_rates as $tax_rate) {
                 $percent += $tax_rate->percent;
             }
@@ -148,19 +144,21 @@ class Util
 
     /**
      * Returns printing formats | array index represent file name format
+     *
      * @return array
      */
-    public function print_formats(){
+    public function print_formats()
+    {
         $print_formats = [
-            "invoice" => __("document_type.invoice"),
-            "fiscal_credit" => __("document_type.fiscal_credit"),
-            "export_invoice" => __("document_type.export_invoice"),
-            "ticket" => __('document_type.ticket'),
-            "proof_fiscal_credit" => __("document_type.proof_fiscal_credit"),
-            "referral_note" => __("document_type.referral_note"),
-            "fiscal_credit_return" => __("document_type.fiscal_credit_return"),
-            "excluded_subject" => __("document_type.excluded_subject"),
-            "commercial_invoice" => __("document_type.commercial_invoice"),
+            'invoice' => __('document_type.invoice'),
+            'fiscal_credit' => __('document_type.fiscal_credit'),
+            'export_invoice' => __('document_type.export_invoice'),
+            'ticket' => __('document_type.ticket'),
+            'proof_fiscal_credit' => __('document_type.proof_fiscal_credit'),
+            'referral_note' => __('document_type.referral_note'),
+            'fiscal_credit_return' => __('document_type.fiscal_credit_return'),
+            'excluded_subject' => __('document_type.excluded_subject'),
+            'commercial_invoice' => __('document_type.commercial_invoice'),
         ];
 
         return $print_formats;
@@ -177,7 +175,7 @@ class Util
             'cash' => __('lang_v1.cash'),
             'card' => __('lang_v1.card'),
             'check' => __('lang_v1.check'),
-            'bank_transfer' => __('lang_v1.bank_transfer')
+            'bank_transfer' => __('lang_v1.bank_transfer'),
         ];
 
         return $payment_types;
@@ -192,6 +190,7 @@ class Util
     {
         $nameModules = Module::where('status', 1)->orderBy('name', 'ASC')->get()->pluck('name');
         $enabled_modules = $nameModules->all();
+
         return $enabled_modules;
         //Module::has('Restaurant');
     }
@@ -215,8 +214,8 @@ class Util
     /**
      * Converts date in business format to mysql format
      *
-     * @param string $date
-     * @param bool $time (default = false)
+     * @param  string  $date
+     * @param  bool  $time (default = false)
      * @return strin
      */
     public function uf_date($date, $time = false)
@@ -225,9 +224,9 @@ class Util
         $mysql_format = 'Y-m-d';
         if ($time) {
             if (session('business.time_format') == 12) {
-                $date_format = $date_format . ' h:i A';
+                $date_format = $date_format.' h:i A';
             } else {
-                $date_format = $date_format . ' H:i';
+                $date_format = $date_format.' H:i';
             }
             $mysql_format = 'Y-m-d H:i:s';
         }
@@ -238,7 +237,7 @@ class Util
     /**
      * Converts time in business format to mysql format
      *
-     * @param string $time
+     * @param  string  $time
      * @return strin
      */
     public function uf_time($time)
@@ -247,13 +246,14 @@ class Util
         if (session('business.time_format') == 12) {
             $time_format = 'h:i A';
         }
+
         return \Carbon::createFromFormat($time_format, $time)->format('H:i');
     }
 
     /**
      * Converts time in business format to mysql format
      *
-     * @param string $time
+     * @param  string  $time
      * @return strin
      */
     public function format_time($time)
@@ -262,27 +262,28 @@ class Util
         if (session('business.time_format') == 12) {
             $time_format = 'h:i A';
         }
+
         return \Carbon::createFromFormat('H:i:s', $time)->format($time_format);
     }
 
     /**
      * Converts date in business format to mysql format
      *
-     * @param string $date
-     * @param bool $time (default = false)
+     * @param  string  $date
+     * @param  bool  $time (default = false)
      * @return strin
      */
     public function format_date($date, $show_time = false)
     {
         $format = session('business.date_format');
-        if (!empty($show_time)) {
+        if (! empty($show_time)) {
             if (session('business.time_format') == 12) {
                 $format .= ' h:i A';
             } else {
                 $format .= ' H:i';
             }
         }
-        
+
         return \Carbon::createFromTimestamp(strtotime($date))->format($format);
     }
 
@@ -290,10 +291,9 @@ class Util
      * Increments reference count for a given type and given business
      * and gives the updated reference count
      *
-     * @param string $type
-     * @param int $business_id
-     * @param bool $setter
-     *
+     * @param  string  $type
+     * @param  int  $business_id
+     * @param  bool  $setter
      * @return int
      */
     public function setAndGetReferenceCount($type, $business_id = null, $setter = true)
@@ -303,9 +303,9 @@ class Util
         }
 
         $ref = ReferenceCount::where('ref_type', $type)
-                          ->where('business_id', $business_id)
-                          ->first();
-        if (!empty($ref)) {
+            ->where('business_id', $business_id)
+            ->first();
+        if (! empty($ref)) {
             $ref->ref_count += 1;
 
             if ($setter) {
@@ -318,7 +318,7 @@ class Util
             $new_ref = ReferenceCount::create([
                 'ref_type' => $type,
                 'business_id' => $business_id,
-                'ref_count' => 1
+                'ref_count' => 1,
             ]);
 
             return $new_ref->ref_count;
@@ -328,9 +328,8 @@ class Util
     /**
      * Generates reference number
      *
-     * @param string $type
-     * @param int $business_id
-     *
+     * @param  string  $type
+     * @param  int  $business_id
      * @return int
      */
     public function generateReferenceNumber($type, $ref_count, $business_id = null)
@@ -338,22 +337,22 @@ class Util
 
         $prefix = '';
 
-        if (session()->has('business') && !empty(request()->session()->get('business.ref_no_prefixes')[$type])) {
+        if (session()->has('business') && ! empty(request()->session()->get('business.ref_no_prefixes')[$type])) {
             $prefix = request()->session()->get('business.ref_no_prefixes')[$type];
         }
-        if (!empty($business_id)) {
+        if (! empty($business_id)) {
             $business = Business::find($business_id);
             $prefixes = $business->ref_no_prefixes;
             $prefix = $prefixes[$type];
         }
 
-        $ref_digits =  str_pad($ref_count, 4, 0, STR_PAD_LEFT);
+        $ref_digits = str_pad($ref_count, 4, 0, STR_PAD_LEFT);
 
-        if (!in_array($type, ['contacts', 'business_location', 'username'])) {
+        if (! in_array($type, ['contacts', 'business_location', 'username'])) {
             $ref_year = \Carbon::now()->year;
-            $ref_number = $prefix . $ref_year . '/' . $ref_digits;
+            $ref_number = $prefix.$ref_year.'/'.$ref_digits;
         } else {
-            $ref_number = $prefix . $ref_digits;
+            $ref_number = $prefix.$ref_digits;
         }
 
         return $ref_number;
@@ -364,16 +363,16 @@ class Util
         $business_id = request()->session()->get('user.business_id');
         $portfolios_prefix = Business::where('id', $business_id)->value('portfolio_prefix');
         $last_id = CustomerPortfolio::where('business_id', $business_id);
-        if(!empty($last_id)){
+        if (! empty($last_id)) {
             $last_id = $last_id->max('id');
         }
-        if(!empty($last_id)){
+        if (! empty($last_id)) {
             $new_id = $last_id + 1;
-        }else{
+        } else {
             $new_id = 1;
         }
-        
-        return $portfolios_prefix . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+
+        return $portfolios_prefix.str_pad($new_id, 4, '0', STR_PAD_LEFT);
     }
 
     public function generateCashierCode()
@@ -381,57 +380,58 @@ class Util
         $business_id = request()->session()->get('user.business_id');
         $cashier_prefix = Business::where('id', $business_id)->value('cashier_prefix');
         $last_id = Cashier::where('business_id', $business_id);
-        if(!empty($last_id)){
+        if (! empty($last_id)) {
             $last_id = $last_id->max('id');
         }
-        if(!empty($last_id)){
+        if (! empty($last_id)) {
             $new_id = $last_id + 1;
-        }else{
+        } else {
             $new_id = 1;
         }
-        
-        return $cashier_prefix . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+
+        return $cashier_prefix.str_pad($new_id, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Get fixed asset prefix
-     * @param int $business_id
+     *
+     * @param  int  $business_id
      * @return string
      */
-    public function generateFixedAssetPrefix($business_id, $last_id){
+    public function generateFixedAssetPrefix($business_id, $last_id)
+    {
         $business = Business::find($business_id);
 
-        $prefix = "";
-        if(!empty($business->fixed_asset_prefix)){
+        $prefix = '';
+        if (! empty($business->fixed_asset_prefix)) {
             $prefix = $business->fixed_asset_prefix;
         }
 
         $suffix = 1;
-        if(!empty($business->fixed_asset_prefix)){
+        if (! empty($business->fixed_asset_prefix)) {
             $fixed_asset_prefix = $business->fixed_asset_prefix;
         }
 
-        if(!is_null($last_id)){
+        if (! is_null($last_id)) {
             $suffix = $last_id + 1;
         }
 
-        return $prefix . str_pad($suffix, 4, 0, STR_PAD_LEFT);
+        return $prefix.str_pad($suffix, 4, 0, STR_PAD_LEFT);
     }
 
-     /**
+    /**
      * Checks if the given user is admin
      *
-     * @param obj $user
-     * @param int $business_id
-     *
+     * @param  obj  $user
+     * @param  int  $business_id
      * @return bool
      */
     public function is_admin($user, $business_id)
     {
-        return $user->hasRole('Admin#' . $business_id) ? true : false;
+        return $user->hasRole('Admin#'.$business_id) ? true : false;
     }
 
-     /**
+    /**
      * Checks if the feature is allowed in demo
      *
      * @return mixed
@@ -441,8 +441,8 @@ class Util
         //Disable in demo
         if (config('app.env') == 'demo') {
             $output = ['success' => 0,
-                    'msg' => __('lang_v1.disabled_in_demo')
-                ];
+                'msg' => __('lang_v1.disabled_in_demo'),
+            ];
             if (request()->ajax()) {
                 return $output;
             } else {
@@ -454,7 +454,7 @@ class Util
     /**
      * Sends SMS notification.
      *
-     * @param  array $data
+     * @param  array  $data
      * @return void
      */
     public function sendSms($data)
@@ -465,37 +465,37 @@ class Util
             $sms_settings['msg_param_name'] => $data['sms_body'],
         ];
 
-        if (!empty($sms_settings['param_1']) && !empty($sms_settings['param_val_1'])) {
+        if (! empty($sms_settings['param_1']) && ! empty($sms_settings['param_val_1'])) {
             $request_data[$sms_settings['param_1']] = $sms_settings['param_val_1'];
         }
-        if (!empty($sms_settings['param_2']) && !empty($sms_settings['param_val_2'])) {
+        if (! empty($sms_settings['param_2']) && ! empty($sms_settings['param_val_2'])) {
             $request_data[$sms_settings['param_2']] = $sms_settings['param_val_2'];
         }
-        if (!empty($sms_settings['param_3']) && !empty($sms_settings['param_val_3'])) {
+        if (! empty($sms_settings['param_3']) && ! empty($sms_settings['param_val_3'])) {
             $request_data[$sms_settings['param_3']] = $sms_settings['param_val_3'];
         }
-        if (!empty($sms_settings['param_4']) && !empty($sms_settings['param_val_4'])) {
+        if (! empty($sms_settings['param_4']) && ! empty($sms_settings['param_val_4'])) {
             $request_data[$sms_settings['param_4']] = $sms_settings['param_val_4'];
         }
-        if (!empty($sms_settings['param_5']) && !empty($sms_settings['param_val_5'])) {
+        if (! empty($sms_settings['param_5']) && ! empty($sms_settings['param_val_5'])) {
             $request_data[$sms_settings['param_5']] = $sms_settings['param_val_5'];
         }
 
         $client = new Client();
 
         if ($sms_settings['request_method'] == 'get') {
-            $response = $client->get($sms_settings['url'] . '?'. http_build_query($request_data));
+            $response = $client->get($sms_settings['url'].'?'.http_build_query($request_data));
         } else {
             $response = $client->post($sms_settings['url'], [
-                'form_params' => $request_data
+                'form_params' => $request_data,
             ]);
         }
     }
 
     /**
      * Uploads document to the server if present in the request
-     * @param obj $request, string $file_name, string dir_name
      *
+     * @param  obj  $request, string $file_name, string dir_name
      * @return string
      */
     public function uploadFile($request, $file_name, $dir_name)
@@ -504,16 +504,17 @@ class Util
         if (config('app.env') == 'demo') {
             return null;
         }
-        
+
         $uploaded_file_name = null;
         if ($request->hasFile($file_name) && $request->file($file_name)->isValid()) {
             if ($request->$file_name->getSize() <= config('constants.document_size_limit')) {
-                $new_file_name = time() . '_' . $request->$file_name->getClientOriginalName();
-                if($request->$file_name->storeAs($dir_name, $new_file_name)) {
+                $new_file_name = time().'_'.$request->$file_name->getClientOriginalName();
+                if ($request->$file_name->storeAs($dir_name, $new_file_name)) {
                     $uploaded_file_name = $new_file_name;
                 }
             }
         }
+
         return $uploaded_file_name;
     }
 
@@ -522,20 +523,21 @@ class Util
         $business_id = request()->session()->get('user.business_id');
         $warehouse_prefix = Business::where('id', $business_id)->value('warehouse_prefix');
         $count = Warehouse::where('business_id', $business_id)->count();
-        $count ++;
+        $count++;
 
-        return $warehouse_prefix . str_pad($count, 4, '0', STR_PAD_LEFT);
+        return $warehouse_prefix.str_pad($count, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Get banks list.
-     * 
+     *
      * @return array
      */
-    public function checkbook_formats() {
+    public function checkbook_formats()
+    {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::find($business_id);
-        
+
         switch ($business->check_format_kit) {
             case 1:
                 $print_formats = [
@@ -558,17 +560,17 @@ class Util
                     'hipotecario' => 'Banco Hipotecario',
                     'promerica' => 'Banco Promérica',
                     'constelacion' => 'S.A.C. Constelación',
-                    'industrial' => 'Banco Industrial'
+                    'industrial' => 'Banco Industrial',
                 ];
                 break;
         }
-        
+
         return $print_formats;
     }
 
     /**
      * First and last day of the month of the date set as parameter.
-     * 
+     *
      * @param  mixed  $actual_date,
      * @return array
      */
@@ -580,7 +582,7 @@ class Util
         $first_day = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));
 
         // Actual month last day
-        $day = date("d", mktime(0, 0, 0, $month + 1, 0, $year));
+        $day = date('d', mktime(0, 0, 0, $month + 1, 0, $year));
         $last_day = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
 
         return [
@@ -591,7 +593,7 @@ class Util
 
     /**
      * Generate lab order code.
-     * 
+     *
      * @param  int  $location_id
      * @return string
      */
@@ -617,12 +619,12 @@ class Util
             $new_id = 1;
         }
 
-        return $laborder_prefix . $location_id . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+        return $laborder_prefix.$location_id.str_pad($new_id, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Generate status lab order code.
-     * 
+     *
      * @return string
      */
     public function generateStatusLabOrderCode()
@@ -642,12 +644,12 @@ class Util
             $new_id = 1;
         }
 
-        return $slo_prefix . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+        return $slo_prefix.str_pad($new_id, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Generate patient code.
-     * 
+     *
      * @return string
      */
     public function generatePatientsCode()
@@ -659,7 +661,7 @@ class Util
         if (! empty($last_id)) {
             $last_id = $last_id->max('id');
         }
-        
+
         if (! empty($last_id)) {
             $new_id = $last_id + 1;
 
@@ -667,25 +669,25 @@ class Util
             $new_id = 1;
         }
 
-        return $patients_prefix . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+        return $patients_prefix.str_pad($new_id, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Returns all avilable sexs.
-     * 
+     *
      * @return array
      */
     public function Sexs()
     {
         return [
             'female' => __('lang_v1.female'),
-            'male' => __('lang_v1.male'), 'other' => __('lang_v1.other')
+            'male' => __('lang_v1.male'), 'other' => __('lang_v1.other'),
         ];
     }
 
     /**
      * Register action in binnacle.
-     * 
+     *
      * @param  string  $module
      * @param  string  $action
      * @param  string  $reference
@@ -697,29 +699,29 @@ class Util
     {
         $business = Business::find(request()->session()->get('user.business_id'));
         $globalUtil = new GlobalUtil;
-        $ip = $globalUtil->getUserIP();  
+        $ip = $globalUtil->getUserIP();
         $infoClient = $this->getDataClient($ip);
         $machineName = dns_get_record($ip, DNS_PTR);
 
-        if($business){
+        if ($business) {
             //Bitacoras
             if ($business->enable_binnacle) {
                 $user = User::find(\Auth::user()->id);
-    
-                $params = ['user' => $user->first_name . ' ' . $user->last_name];
+
+                $params = ['user' => $user->first_name.' '.$user->last_name];
                 if (! is_null($reference)) {
                     $params['reference'] = $reference;
                 }
-                
+
                 $binnacle['user_id'] = $user->id;
                 $binnacle['module'] = $module;
                 $binnacle['reference'] = $reference;
-                $binnacle['action'] = __('binnacle.' . $module . '_' . $action, $params);
-        
+                $binnacle['action'] = __('binnacle.'.$module.'_'.$action, $params);
+
                 if (! is_null($old_record)) {
                     $binnacle['old_record'] = json_encode($old_record);
                 }
-        
+
                 if (! is_null($new_record)) {
                     $binnacle['new_record'] = json_encode($new_record);
                 }
@@ -734,15 +736,15 @@ class Util
 
                 Binnacle::create($binnacle);
             }
-        }else{
+        } else {
             //Bitacora para inicio de sesion
-            if($action == 'login'){
+            if ($action == 'login') {
                 $binnacle['user_id'] = $module;
                 $binnacle['module'] = null;
                 $binnacle['reference'] = null;
                 $binnacle['action'] = $action;
                 $binnacle['old_record'] = null;
-                $binnacle['new_record'] = null;    
+                $binnacle['new_record'] = null;
                 $binnacle['realized_in'] = Carbon::now()->timezone('America/El_Salvador')->format('Y-m-d H:i:s');
                 $binnacle['ip'] = $ip;
                 $binnacle['city'] = (array_key_exists('city', $infoClient)) ? $infoClient['city'] : null;
@@ -752,14 +754,14 @@ class Util
                 $binnacle['domain'] = request()->getHttpHost();
                 $binnacle['machine_name'] = gethostname();
 
-                Binnacle::create($binnacle);            
+                Binnacle::create($binnacle);
             }
         }
     }
 
     /**
      * Generate reference for quote.
-     * 
+     *
      * @return  string
      */
     public function generateQuoteReference()
@@ -780,17 +782,19 @@ class Util
         }
 
         $cont = str_pad($correlative, 5, '0', STR_PAD_LEFT);
-        
-        return $business->quote_prefix . $cont;
+
+        return $business->quote_prefix.$cont;
     }
 
-    public function getDataClient($inClient){
+    public function getDataClient($inClient)
+    {
         $apiURL = 'http://ipwho.is/'.$inClient;
-        $curl = curl_init($apiURL);  
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);  
-        $response = curl_exec($curl); 
-        curl_close($curl);  
+        $curl = curl_init($apiURL);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        curl_close($curl);
         $information = json_decode($response, true);
+
         return $information;
     }
 }

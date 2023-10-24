@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Business;
 use App\Catalogue;
 use App\ExpenseCategory;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
 
 class ExpenseCategoryController extends Controller
 {
@@ -18,12 +18,12 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('expense_category.access')) {
+        if (! auth()->user()->can('expense_category.access')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
 
-        if (request()->ajax()) {        
+        if (request()->ajax()) {
             $expense_category = DB::table('expense_categories')
                 ->select('expense_categories.id', 'expense_categories.name', DB::raw("CONCAT(COALESCE(catalogues.code,''),' ',COALESCE(catalogues.name,'')) as account_name"))
                 ->leftjoin('catalogues', 'expense_categories.account_id', '=', 'catalogues.id')
@@ -42,7 +42,7 @@ class ExpenseCategoryController extends Controller
                 ->make(false);
         }
         $accountBusiness = Business::where('id', $business_id)->first();
-        $verifiedAccount = $accountBusiness->accounting_expense_id != null || !empty($accountBusiness->accounting_expense_id) ? true : false;
+        $verifiedAccount = $accountBusiness->accounting_expense_id != null || ! empty($accountBusiness->accounting_expense_id) ? true : false;
 
         return view('expense_category.index', compact('verifiedAccount'));
     }
@@ -54,7 +54,7 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('expense_category.create')) {
+        if (! auth()->user()->can('expense_category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -62,7 +62,7 @@ class ExpenseCategoryController extends Controller
         $expense_account_id = Business::where('id', $business_id)->first();
         $expense_prefix = Catalogue::where('id', $expense_account_id->accounting_expense_id)->first();
 
-        $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code . '%')
+        $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code.'%')
             ->select('id', DB::raw("CONCAT(COALESCE(code,''),' ',COALESCE(name,'')) as account_name"))
             ->pluck('account_name', 'id');
 
@@ -73,12 +73,11 @@ class ExpenseCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('expense_category.create')) {
+        if (! auth()->user()->can('expense_category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -89,14 +88,14 @@ class ExpenseCategoryController extends Controller
             ExpenseCategory::create($input);
             $output = [
                 'success' => true,
-                'msg' => __("expense.added_success")
+                'msg' => __('expense.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
 
@@ -106,7 +105,6 @@ class ExpenseCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
     public function show(ExpenseCategory $expenseCategory)
@@ -122,7 +120,7 @@ class ExpenseCategoryController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('expense_category.update')) {
+        if (! auth()->user()->can('expense_category.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -132,21 +130,22 @@ class ExpenseCategoryController extends Controller
         $expense_account_id = Business::where('id', $business_id)->first();
         $expense_prefix = Catalogue::where('id', $expense_account_id->accounting_expense_id)->first();
 
-        if (!is_object($expense_prefix)) {
+        if (! is_object($expense_prefix)) {
             $output = [
                 'success' => false,
-                'msg' => 'Aun no has configurado la cuenta principal de gastos de la empresa'
+                'msg' => 'Aun no has configurado la cuenta principal de gastos de la empresa',
             ];
+
             return $output;
         } else {
-            $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code . '%')
+            $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code.'%')
                 ->select('id', DB::raw("CONCAT(COALESCE(code,''),' ',COALESCE(name,'')) as account_name"))
                 ->pluck('account_name', 'id');
 
             $expense_account_id = Business::where('id', $business_id)->first();
             $expense_prefix = Catalogue::where('id', $expense_account_id->accounting_expense_id)->first();
 
-            $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code . '%')
+            $expenses_accounts = Catalogue::where('code', 'like', $expense_prefix->code.'%')
                 ->select('id', DB::raw("CONCAT(COALESCE(code,''),' ',COALESCE(name,'')) as account_name"))
                 ->pluck('account_name', 'id');
 
@@ -159,13 +158,12 @@ class ExpenseCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('expense_category.update')) {
+        if (! auth()->user()->can('expense_category.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -181,14 +179,14 @@ class ExpenseCategoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("expense.updated_success")
+                    'msg' => __('expense.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -204,7 +202,7 @@ class ExpenseCategoryController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('expense_category.delete')) {
+        if (! auth()->user()->can('expense_category.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -217,14 +215,14 @@ class ExpenseCategoryController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("expense.deleted_success")
+                    'msg' => __('expense.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

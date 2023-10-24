@@ -2,44 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Pos;
 use App\Bank;
+use App\Business;
+use App\BusinessLocation;
 use App\Contact;
 use App\Country;
-use App\TaxRate;
-use App\Business;
-use App\Employees;
-use App\Warehouse;
-use App\PaymentTerm;
-use App\Transaction;
-use App\MovementType;
-use App\PurchaseLine;
 use App\CustomerGroup;
-use App\Utils\TaxUtil;
-use App\BusinessLocation;
+use App\Employees;
+use App\MovementType;
+use App\PaymentTerm;
+use App\Pos;
+use App\PurchaseLine;
+use App\TaxRate;
+use App\Transaction;
+use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
-use App\Utils\BusinessUtil;
-use Illuminate\Http\Request;
+use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
+use App\Warehouse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\CreateInternationalPurchaseValidate;
 
 class InternationalPurchaseController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     protected $transactionUtil;
+
     protected $taxUtil;
+
     protected $moduleUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(
@@ -78,7 +79,7 @@ class InternationalPurchaseController extends Controller
             'bank_transfer_account_number' => '',
             'bank_transfer_reference' => '',
             'is_return' => 0,
-            'transaction_no' => ''
+            'transaction_no' => '',
         ];
         /** Business types */
         $this->business_type = ['small_business', 'medium_business', 'large_business'];
@@ -103,14 +104,14 @@ class InternationalPurchaseController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('purchase.create')) {
+        if (! auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = auth()->user()->business_id;
 
         //Check if subscribed or not
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         }
 
@@ -164,13 +165,14 @@ class InternationalPurchaseController extends Controller
         /** Payment conditions */
         $payment_conditions = $this->payment_conditions;
 
-        # Gets warehouses
+        // Gets warehouses
         $warehouses = Warehouse::forDropdown($business_id);
 
         $countries = Country::forDropdown($business_id);
         // Payments terms
         $payment_terms = PaymentTerm::forDropdown($business_id);
         $countries = Country::forDropdown($business_id);
+
         return view('purchase.international.create')
             ->with(compact(
                 'taxes',
@@ -199,22 +201,22 @@ class InternationalPurchaseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         // dd($request);
-        if (!auth()->user()->can('purchase.create')) {
+        if (! auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if(!auth()->user()->can('is_close_book') &&
-            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0){
+        if (! auth()->user()->can('is_close_book') &&
+            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0) {
             $output = [
                 'success' => 0,
-                'msg' => __('purchase.month_closed')
+                'msg' => __('purchase.month_closed'),
             ];
+
             return redirect('purchases')->with('status', $output);
         }
 
@@ -227,19 +229,19 @@ class InternationalPurchaseController extends Controller
                 'location_id' => 'required',
                 'warehouse_id' => 'required',
                 'final_total' => 'required',
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ]);
 
             $business_id = auth()->user()->business_id;
             //Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
             }
 
             $transaction_data = $request->only([
                 'ref_no', 'status', 'freight', 'contact_id', 'transaction_date', 'tax_amount', 'total_before_tax',
                 'freight_amount', 'deconsolidation_amount', 'import_type', 'dai_amount', 'internal_storage', 'external_storage', 'local_freight_amount', 'location_id', 'final_total',
-                'customs_procedure_amount', 'additional_notes', 'warehouse_id', 'purchase_type'
+                'customs_procedure_amount', 'additional_notes', 'warehouse_id', 'purchase_type',
             ]);
 
             $user_id = auth()->user()->id;
@@ -298,10 +300,10 @@ class InternationalPurchaseController extends Controller
                     'customs_procedure_amount' => $this->productUtil->num_uf($purchase['line_customs_procedure_amount']),
                 ];
 
-                if (!empty($purchase['mfg_date'])) {
+                if (! empty($purchase['mfg_date'])) {
                     $new_purchase_line['mfg_date'] = $this->productUtil->uf_date($purchase['mfg_date']);
                 }
-                if (!empty($purchase['exp_date'])) {
+                if (! empty($purchase['exp_date'])) {
                     $new_purchase_line['exp_date'] = $this->productUtil->uf_date($purchase['exp_date']);
                 }
 
@@ -315,7 +317,7 @@ class InternationalPurchaseController extends Controller
                 }
 
                 $uac = $new_purchase_line;
-                # Update average cost
+                // Update average cost
                 if ($enable_editing_avg_cost == 1) {
                     $this->productUtil->updateAverageCost(
                         $uac['variation_id'],
@@ -326,7 +328,7 @@ class InternationalPurchaseController extends Controller
 
                 // Update quantity only if status is "received"
                 if ($transaction_data['status'] == 'received') {
-                    # Add warehouse in parameters
+                    // Add warehouse in parameters
                     $this->productUtil->updateProductQuantity(
                         $transaction_data['location_id'],
                         $purchase['product_id'],
@@ -339,19 +341,19 @@ class InternationalPurchaseController extends Controller
                 }
 
                 //Add Purchase payments
-                if (!empty($request->input('payment'))) {
+                if (! empty($request->input('payment'))) {
                     $this->transactionUtil->createOrUpdatePaymentLines($transaction, $request->input('payment'));
                 }
                 //update payment status
                 $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
             }
 
-            if (!empty($purchase_lines)) {
+            if (! empty($purchase_lines)) {
                 $transaction->purchase_lines()->createMany($purchase_lines);
             }
 
             if ($transaction_data['status'] == 'received') {
-                # Data to create or update kardex lines
+                // Data to create or update kardex lines
                 $lines = PurchaseLine::where('transaction_id', $transaction->id)->get();
 
                 $movement_type = MovementType::where('name', 'purchase')
@@ -359,31 +361,32 @@ class InternationalPurchaseController extends Controller
                     ->where('business_id', $business_id)
                     ->first();
 
-                # Check if movement type is set else create it
+                // Check if movement type is set else create it
                 if (empty($movement_type)) {
                     $movement_type = MovementType::create([
                         'name' => 'purchase',
                         'type' => 'input',
-                        'business_id' => $business_id
+                        'business_id' => $business_id,
                     ]);
                 }
-                # Store kardex
+                // Store kardex
                 $this->transactionUtil->createOrUpdateInputLines($movement_type, $transaction, $transaction->ref_no, $lines);
             }
             DB::commit();
             $output = [
                 'success' => 1,
-                'msg' => __('purchase.purchase_add_success')
+                'msg' => __('purchase.purchase_add_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return redirect('purchases')->with('status', $output);
     }
 
@@ -395,7 +398,7 @@ class InternationalPurchaseController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('purchase.view')) {
+        if (! auth()->user()->can('purchase.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -418,13 +421,14 @@ class InternationalPurchaseController extends Controller
         $payment_methods = $this->productUtil->payment_types('purchase', $business_id);
 
         $purchase_taxes = [];
-        if (!empty($purchase->tax)) {
+        if (! empty($purchase->tax)) {
             if ($purchase->tax->is_tax_group) {
                 $purchase_taxes = $this->transactionUtil->sumGroupTaxDetails($this->transactionUtil->groupTaxDetails($purchase->tax, $purchase->tax_amount));
             } else {
                 $purchase_taxes[$purchase->tax->name] = $purchase->tax_amount;
             }
         }
+
         return view('purchase.international.show')
             ->with(compact('taxes', 'purchase', 'payment_methods', 'purchase_taxes'));
     }
@@ -437,24 +441,24 @@ class InternationalPurchaseController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('purchase.update')) {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = auth()->user()->business_id;
 
         //Check if subscribed or not
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
         }
 
         //Check if the transaction can be edited or not.
         $edit_days = request()->session()->get('business.transaction_edit_days');
-        if (!$this->transactionUtil->canBeEdited($id, $edit_days)) {
+        if (! $this->transactionUtil->canBeEdited($id, $edit_days)) {
             return back()
                 ->with('status', [
                     'success' => 0,
-                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days])
+                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days]),
                 ]);
         }
 
@@ -462,7 +466,7 @@ class InternationalPurchaseController extends Controller
         if ($this->transactionUtil->isReturnExist($id)) {
             return back()->with('status', [
                 'success' => 0,
-                'msg' => __('lang_v1.return_exist')
+                'msg' => __('lang_v1.return_exist'),
             ]);
         }
 
@@ -502,7 +506,7 @@ class InternationalPurchaseController extends Controller
         $business_details = $this->businessUtil->getDetails($business_id);
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
 
-        # Gets warehouses
+        // Gets warehouses
         $warehouses = Warehouse::forDropdown($business_id);
 
         $business_type = $this->business_type;
@@ -529,12 +533,13 @@ class InternationalPurchaseController extends Controller
         $payment_terms = PaymentTerm::forDropdown($business_id);
 
         /** Validate NIT and NRC */
-        $verify_tax_reg = Contact::where("id", $purchase->contact_id)
-            ->whereNotNull("nit")
-            ->whereNotNull("tax_number")
+        $verify_tax_reg = Contact::where('id', $purchase->contact_id)
+            ->whereNotNull('nit')
+            ->whereNotNull('tax_number')
             ->count();
 
         $verify_tax_reg = $verify_tax_reg ?? 0;
+
         return view('purchase.international.edit', compact(
             'contacts',
             'payment_conditions',
@@ -563,23 +568,23 @@ class InternationalPurchaseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         // dd($request);
-        if (!auth()->user()->can('purchase.update')) {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
 
-        if(!auth()->user()->can('is_close_book') &&
-            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0){
+        if (! auth()->user()->can('is_close_book') &&
+            $this->transactionUtil->isClosed($request->input('transaction_date')) > 0) {
             $output = [
                 'success' => 0,
-                'msg' => __('purchase.month_closed')
+                'msg' => __('purchase.month_closed'),
             ];
+
             return redirect('purchases')->with('status', $output);
         }
 
@@ -588,7 +593,7 @@ class InternationalPurchaseController extends Controller
 
             //Validate document size
             $request->validate([
-                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
             ]);
 
             $transaction = Transaction::findOrFail($id);
@@ -597,7 +602,6 @@ class InternationalPurchaseController extends Controller
             $enable_product_editing = null; //$request->session()->get('business.enable_editing_product_from_purchase');
 
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
-
 
             $update_data = $request->only([
                 'ref_no', 'status', 'freight', 'contact_id', 'transaction_date', 'tax_amount', 'total_before_tax',
@@ -625,7 +629,7 @@ class InternationalPurchaseController extends Controller
 
             //upload document
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
-            if (!empty($document_name)) {
+            if (! empty($document_name)) {
                 $update_data['document'] = $document_name;
             }
 
@@ -635,7 +639,7 @@ class InternationalPurchaseController extends Controller
             $transaction->update($update_data);
 
             if ($transaction->status == 'received') {
-                # Data to create or update kardex lines
+                // Data to create or update kardex lines
                 $lines_before = PurchaseLine::where('transaction_id', $transaction->id)->get();
             }
 
@@ -728,9 +732,9 @@ class InternationalPurchaseController extends Controller
                 $purchase_line->local_freight_amount = $this->productUtil->num_uf($purchase['line_local_freight_amount']);
                 $purchase_line->customs_procedure_amount = $this->productUtil->num_uf($purchase['line_customs_procedure_amount']);
                 $purchase_line->quantity = $this->productUtil->num_uf($purchase['quantity']);
-                $purchase_line->lot_number = !empty($purchase['lot_number']) ? $purchase['lot_number'] : null;
-                $purchase_line->mfg_date = !empty($purchase['mfg_date']) ? $this->productUtil->uf_date($purchase['mfg_date']) : null;
-                $purchase_line->exp_date = !empty($purchase['exp_date']) ? $this->productUtil->uf_date($purchase['exp_date']) : null;
+                $purchase_line->lot_number = ! empty($purchase['lot_number']) ? $purchase['lot_number'] : null;
+                $purchase_line->mfg_date = ! empty($purchase['mfg_date']) ? $this->productUtil->uf_date($purchase['mfg_date']) : null;
+                $purchase_line->exp_date = ! empty($purchase['exp_date']) ? $this->productUtil->uf_date($purchase['exp_date']) : null;
 
                 $updated_purchase_lines[] = $purchase_line;
 
@@ -745,7 +749,7 @@ class InternationalPurchaseController extends Controller
 
             //unset deleted purchase lines
             $delete_purchase_line_ids = [];
-            if (!empty($updated_purchase_line_ids)) {
+            if (! empty($updated_purchase_line_ids)) {
                 $delete_purchase_lines = PurchaseLine::where('transaction_id', $transaction->id)
                     ->whereNotIn('id', $updated_purchase_line_ids)
                     ->get();
@@ -774,12 +778,12 @@ class InternationalPurchaseController extends Controller
             }
 
             //update purchase lines
-            if (!empty($updated_purchase_lines)) {
+            if (! empty($updated_purchase_lines)) {
                 $transaction->purchase_lines()->saveMany($updated_purchase_lines);
             }
 
             if ($transaction->status == 'received') {
-                # Data to create or update kardex lines
+                // Data to create or update kardex lines
                 $lines = PurchaseLine::where('transaction_id', $transaction->id)->get();
 
                 $movement_type = MovementType::where('name', 'purchase')
@@ -787,19 +791,19 @@ class InternationalPurchaseController extends Controller
                     ->where('business_id', $business_id)
                     ->first();
 
-                # Check if movement type is set else create it
+                // Check if movement type is set else create it
                 if (empty($movement_type)) {
                     $movement_type = MovementType::create([
                         'name' => 'purchase',
                         'type' => 'input',
-                        'business_id' => $business_id
+                        'business_id' => $business_id,
                     ]);
                 }
 
-                # Store kardex lines
+                // Store kardex lines
                 $this->transactionUtil->createOrUpdateInputLines($movement_type, $transaction, $transaction->ref_no, $lines, $lines_before);
             } else {
-                # Delete kardex lines
+                // Delete kardex lines
                 $this->transactionUtil->deleteKardexByTransaction($transaction->id);
             }
 
@@ -810,16 +814,17 @@ class InternationalPurchaseController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('purchase.purchase_update_success')
+                'msg' => __('purchase.purchase_update_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
+
             return back()->with('status', $output);
         }
 

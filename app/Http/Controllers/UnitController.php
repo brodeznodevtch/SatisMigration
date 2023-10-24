@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Business;
+use App\Product;
 use App\Unit;
 use App\UnitGroup;
 use App\UnitGroupLines;
-use App\Product;
-use App\Business;
-
-use DB;
 use App\Utils\ProductUtil;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class UnitController extends Controller
 {
     private $productUtil;
+
     private $clone_product;
 
     public function __construct(ProductUtil $productUtil)
@@ -33,7 +33,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('unit.view') && !auth()->user()->can('unit.create')) {
+        if (! auth()->user()->can('unit.view') && ! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -45,31 +45,30 @@ class UnitController extends Controller
         if (request()->ajax()) {
 
             $unit = Unit::where('business_id', $business_id)
-            ->select(['actual_name', 'short_name', 'allow_decimal', 'id']);
+                ->select(['actual_name', 'short_name', 'allow_decimal', 'id']);
 
             return Datatables::of($unit)
-            ->addColumn(
-                'action',
-                '@can("unit.update")
+                ->addColumn(
+                    'action',
+                    '@can("unit.update")
                 <button id="edit_unit" data-href="{{action(\'UnitController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_unit_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                 &nbsp;
                 @endcan
                 @can("unit.delete")
                 <button id="delete_unit" data-href="{{action(\'UnitController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_unit_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                 @endcan'
-            )
-            ->editColumn('allow_decimal', function ($row) {
-                if ($row->allow_decimal) {
-                    return __('messages.yes');
-                } else {
-                    return __('messages.no');
-                }
-            })
-            ->removeColumn('id')
-            ->rawColumns([3])
-            ->make(false);
+                )
+                ->editColumn('allow_decimal', function ($row) {
+                    if ($row->allow_decimal) {
+                        return __('messages.yes');
+                    } else {
+                        return __('messages.no');
+                    }
+                })
+                ->removeColumn('id')
+                ->rawColumns([3])
+                ->make(false);
         }
-        
 
         return view('unit.index', compact('units', 'conf_units'));
     }
@@ -81,28 +80,27 @@ class UnitController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('unit.create')) {
+        if (! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $quick_add = false;
-        if (!empty(request()->input('quick_add'))) {
+        if (! empty(request()->input('quick_add'))) {
             $quick_add = true;
         }
 
         return view('unit.create')
-        ->with(compact('quick_add'));
+            ->with(compact('quick_add'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('unit.create')) {
+        if (! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -125,19 +123,19 @@ class UnitController extends Controller
             $output = [
                 'success' => true,
                 'data' => $unit,
-                'msg' => __("unit.added_success")
+                'msg' => __('unit.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = ['success' => false,
-            'msg' => __("messages.something_went_wrong")
-        ];
-    }
+                'msg' => __('messages.something_went_wrong'),
+            ];
+        }
 
 return $output;
-}
+    }
 
     /**
      * Display the specified resource.
@@ -148,6 +146,7 @@ return $output;
     public function show($id)
     {
         $unit = Unit::where('id', $id)->first();
+
         return response()->json($unit);
     }
 
@@ -159,7 +158,7 @@ return $output;
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('unit.update')) {
+        if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -168,20 +167,19 @@ return $output;
             $unit = Unit::where('business_id', $business_id)->find($id);
 
             return view('unit.edit')
-            ->with(compact('unit'));
+                ->with(compact('unit'));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('unit.update')) {
+        if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -209,15 +207,15 @@ return $output;
 
                 $output = [
                     'success' => true,
-                    'msg' => __("unit.updated_success")
+                    'msg' => __('unit.updated_success'),
                 ];
             } catch (\Exception $e) {
                 DB::rollback();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -233,12 +231,12 @@ return $output;
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('unit.delete')) {
+        if (! auth()->user()->can('unit.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
-            try{
+            try {
                 $business_id = request()->user()->business_id;
 
                 $unit = Unit::where('business_id', $business_id)->findOrFail($id);
@@ -246,44 +244,46 @@ return $output;
                 $groups = UnitGroup::where('unit_id', $id)->count();
                 $groupLines = UnitGroupLines::where('unit_id', $id)->count();
 
-                if(($groups > 0) || ($groupLines > 0)){
+                if (($groups > 0) || ($groupLines > 0)) {
                     $output = [
                         'success' => false,
-                        'msg' => __("unit.has_children")
+                        'msg' => __('unit.has_children'),
                     ];
-                }
-                else{
+                } else {
                     $old_unit = clone $unit;
 
                     $unit->delete();
-                    
+
                     /** Sync unit */
                     if ($this->clone_product) {
-                        $this->productUtil->syncUnit($unit->id, "", $old_unit);
+                        $this->productUtil->syncUnit($unit->id, '', $old_unit);
                     }
 
                     $output = [
                         'success' => true,
-                        'msg' => __("unit.deleted_success")
+                        'msg' => __('unit.deleted_success'),
                     ];
                 }
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
-    public function getUnits(){
-        if (!auth()->user()->can('unit.view') && !auth()->user()->can('unit.create')) {
+
+    public function getUnits()
+    {
+        if (! auth()->user()->can('unit.view') && ! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $units = Unit::select('id', 'actual_name')->where('business_id', $business_id)->get();
+
         return $units;
     }
 }

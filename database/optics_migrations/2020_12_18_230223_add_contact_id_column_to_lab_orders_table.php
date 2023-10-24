@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddContactIdColumnToLabOrdersTable extends Migration
 {
@@ -14,13 +14,13 @@ class AddContactIdColumnToLabOrdersTable extends Migration
     public function up()
     {
         Schema::table('lab_orders', function (Blueprint $table) {
-            $table->unsignedInteger("contact_id")
+            $table->unsignedInteger('contact_id')
                 ->nullable()
-                ->after("customer_id");
+                ->after('customer_id');
 
-            $table->foreign("contact_id")
-                ->references("id")
-                ->on("contacts");
+            $table->foreign('contact_id')
+                ->references('id')
+                ->on('contacts');
         });
     }
 
@@ -32,8 +32,8 @@ class AddContactIdColumnToLabOrdersTable extends Migration
     public function down()
     {
         Schema::table('lab_orders', function (Blueprint $table) {
-            $table->dropForeign("contact_id");
-            $table->dropColumn("contact_id");
+            $table->dropForeign('contact_id');
+            $table->dropColumn('contact_id');
         });
     }
 }

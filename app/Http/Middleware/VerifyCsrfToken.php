@@ -14,6 +14,6 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         '/install/details',
         '/install/post-details',
-        '/install/install-alternate'
+        '/install/install-alternate',
     ];
 }

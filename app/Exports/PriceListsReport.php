@@ -2,51 +2,46 @@
 
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class PriceListsReport implements WithEvents, WithTitle
 {
     private $business_name;
+
     private $price_lists;
 
     /**
      * Constructor.
-     * 
-     * @param string $business_name
-     * @param collect $price_lists
-     * 
+     *
+     * @param  string  $business_name
+     * @param  collect  $price_lists
      * @return void
      */
-    public function __construct($business_name, $price_lists) {
+    public function __construct($business_name, $price_lists)
+    {
         $this->business_name = $business_name;
         $this->price_lists = $price_lists;
     }
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.list_price_report');
+        return __('report.list_price_report');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
                 /** General setup */
-    			$event->sheet->setOrientation("landscape");
+                $event->sheet->setOrientation('landscape');
                 $event->sheet->setShowGridlines(false);
 
                 /** Header */
@@ -54,7 +49,7 @@ class PriceListsReport implements WithEvents, WithTitle
                 $event->sheet->mergeCells('A2:K2');
                 $event->sheet->rowHeight('1', 20);
                 $event->sheet->verticalAlign('A1:K1', 'center');
-                $event->sheet->horizontalAlign('A1:K2', "center");
+                $event->sheet->horizontalAlign('A1:K2', 'center');
                 $event->sheet->setBold('A1:K2');
                 $event->sheet->setFontSize('A1:K1', 14);
                 $event->sheet->setFontSize('A2:K2', 12);
@@ -89,34 +84,34 @@ class PriceListsReport implements WithEvents, WithTitle
                 $event->sheet->setCellValue('I3', 'PRECIO 3');
                 $event->sheet->setCellValue('J3', mb_strtoupper(__('kardex.stock')));
                 $event->sheet->setCellValue('K3', mb_strtoupper(__('product.status')));
-                
+
                 /** table body */
                 $row = 4;
-                foreach($this->price_lists as $pl) {
-                    $event->sheet->setCellValue('A'. $row, $pl->sku);
-                    $event->sheet->setCellValue('B'. $row, $pl->product);
-                    $event->sheet->setCellValue('C'. $row, $pl->category);
-                    $event->sheet->setCellValue('D'. $row, $pl->sub_category);
-                    $event->sheet->setCellValue('E'. $row, $pl->brand);
-                    $event->sheet->setCellValue('F'. $row, $pl->cost);
-                    $event->sheet->setCellValue('G'. $row, $pl->price_1);
-                    $event->sheet->setCellValue('H'. $row, $pl->price_2);
-                    $event->sheet->setCellValue('I'. $row, $pl->price_3);
-                    $event->sheet->setCellValue('J'. $row, $pl->stock);
-                    $event->sheet->setCellValue('K'. $row, mb_strtoupper(__('product.status_'. $pl->status)));
+                foreach ($this->price_lists as $pl) {
+                    $event->sheet->setCellValue('A'.$row, $pl->sku);
+                    $event->sheet->setCellValue('B'.$row, $pl->product);
+                    $event->sheet->setCellValue('C'.$row, $pl->category);
+                    $event->sheet->setCellValue('D'.$row, $pl->sub_category);
+                    $event->sheet->setCellValue('E'.$row, $pl->brand);
+                    $event->sheet->setCellValue('F'.$row, $pl->cost);
+                    $event->sheet->setCellValue('G'.$row, $pl->price_1);
+                    $event->sheet->setCellValue('H'.$row, $pl->price_2);
+                    $event->sheet->setCellValue('I'.$row, $pl->price_3);
+                    $event->sheet->setCellValue('J'.$row, $pl->stock);
+                    $event->sheet->setCellValue('K'.$row, mb_strtoupper(__('product.status_'.$pl->status)));
 
-                    $row ++;
+                    $row++;
                 }
-                $row --;
+                $row--;
 
                 /** set font size and family, set borders */
-    			$event->sheet->setFontSize('A3:K'. $row, 10);
-                $event->sheet->setFormat('A4:E'. $row, '@');
-                $event->sheet->setFormat('F4:H'. $row, '$ #,##0.00_-');
-                $event->sheet->setFormat('J4:J'. $row, '0.00');
-                $event->sheet->setFormat('K4:K'. $row, '@');
-                $event->sheet->setAllBorders('A3:K'. $row, 'thin');
-                $event->sheet->setFontFamily('A1:K'. $row, 'Calibri');
+                $event->sheet->setFontSize('A3:K'.$row, 10);
+                $event->sheet->setFormat('A4:E'.$row, '@');
+                $event->sheet->setFormat('F4:H'.$row, '$ #,##0.00_-');
+                $event->sheet->setFormat('J4:J'.$row, '0.00');
+                $event->sheet->setFormat('K4:K'.$row, '@');
+                $event->sheet->setAllBorders('A3:K'.$row, 'thin');
+                $event->sheet->setFontFamily('A1:K'.$row, 'Calibri');
             },
         ];
     }

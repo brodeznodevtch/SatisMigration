@@ -3,37 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Business;
-use App\Transaction;
-use App\TransactionSellLine;
-
-use Illuminate\Http\Request;
-
 use App\BusinessLocation;
 use App\MovementType;
 use App\PurchaseLine;
-use App\Warehouse;
-
+use App\Transaction;
+use App\TransactionSellLine;
+use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
-use App\Utils\ModuleUtil;
 use App\Variation;
+use App\Warehouse;
 use Datatables;
 use DB;
+use Illuminate\Http\Request;
 
 class StockAdjustmentController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $productUtil;
+
     protected $transactionUtil;
+
     protected $moduleUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, ModuleUtil $moduleUtil)
@@ -50,7 +48,7 @@ class StockAdjustmentController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('stock_adjustment.view') && !auth()->user()->can('stock_adjustment.create')) {
+        if (! auth()->user()->can('stock_adjustment.view') && ! auth()->user()->can('stock_adjustment.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -91,14 +89,14 @@ class StockAdjustmentController extends Controller
             $start_date = request()->get('start_date');
             $end_date = request()->get('end_date');
 
-            if (!empty($start_date) && !empty($end_date)) {
+            if (! empty($start_date) && ! empty($end_date)) {
                 $stock_adjustments->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
                 $hide = 'hide';
             }
 
             $location_id = request()->get('location_id');
 
-            if (!empty($location_id)) {
+            if (! empty($location_id)) {
                 $stock_adjustments->where('transactions.location_id', $location_id);
             }
 
@@ -106,7 +104,7 @@ class StockAdjustmentController extends Controller
             $business = Business::find($business_id);
             $product_settings = empty($business->product_settings) ? null : json_decode($business->product_settings, true);
             $show_costs_or_prices = is_null($product_settings) ? 'costs' : $product_settings['show_costs_or_prices'];
-            
+
             return Datatables::of($stock_adjustments)
                 ->filterColumn('responsable', function ($query, $keyword) {
                     $query->whereRaw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.last_name, '')) like ?", ["%{$keyword}%"]);
@@ -133,7 +131,7 @@ class StockAdjustmentController extends Controller
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="delete_stock_adjustment ' . $hide . '" data-href="{{ action("StockAdjustmentController@destroy", [$id]) }}">
+                                <a href="#" class="delete_stock_adjustment '.$hide.'" data-href="{{ action("StockAdjustmentController@destroy", [$id]) }}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     @lang("messages.delete")
                                 </a>
@@ -153,11 +151,11 @@ class StockAdjustmentController extends Controller
                             $final_total = $row->final_total_price;
                         }
 
-                        return '<span class="display_currency" data-currency_symbol="true">' . $final_total . '</span>';
+                        return '<span class="display_currency" data-currency_symbol="true">'.$final_total.'</span>';
                     }
                 )
                 ->editColumn('adjustment_type', function ($row) {
-                    return __('stock_adjustment.' . $row->adjustment_type);
+                    return __('stock_adjustment.'.$row->adjustment_type);
                 })
                 ->rawColumns(['transaction_date', 'final_total', 'action'])
                 ->make(true);
@@ -173,14 +171,14 @@ class StockAdjustmentController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('stock_adjustment.create')) {
+        if (! auth()->user()->can('stock_adjustment.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
 
         //Check if subscribed or not
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse(action('StockAdjustmentController@index'));
         }
 
@@ -188,7 +186,7 @@ class StockAdjustmentController extends Controller
         /** Warehouses */
         $warehouses = Warehouse::forDropdown($business_id, false);
 
-        # Reference count
+        // Reference count
         $ref_count = $this->productUtil->setAndGetReferenceCount('stock_adjustment', null, false);
 
         // Product settings
@@ -198,32 +196,31 @@ class StockAdjustmentController extends Controller
         $decimals_in_inventories = is_null($product_settings) ? 2 : $product_settings['decimals_in_inventories'];
 
         return view('stock_adjustment.create')
-                ->with(compact('warehouses', 'ref_count', 'show_costs_or_prices', 'decimals_in_inventories'));
+            ->with(compact('warehouses', 'ref_count', 'show_costs_or_prices', 'decimals_in_inventories'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('stock_adjustment.create')) {
+        if (! auth()->user()->can('stock_adjustment.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             DB::beginTransaction();
 
-            $input_data = $request->only([ 'location_id', 'warehouse_id', 'transaction_date', 'adjustment_type', 'additional_notes', 'total_amount_recovered', 'final_total', 'ref_no']);
+            $input_data = $request->only(['location_id', 'warehouse_id', 'transaction_date', 'adjustment_type', 'additional_notes', 'total_amount_recovered', 'final_total', 'ref_no']);
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('StockAdjustmentController@index'));
             }
-        
+
             $user_id = $request->session()->get('user.id');
 
             $input_data['type'] = 'stock_adjustment';
@@ -241,7 +238,7 @@ class StockAdjustmentController extends Controller
 
             $products = $request->input('products');
 
-            if (!empty($products)) {
+            if (! empty($products)) {
                 $product_data = [];
 
                 // Edit avarage cost
@@ -250,7 +247,7 @@ class StockAdjustmentController extends Controller
                 foreach ($products as $product) {
                     $variation = Variation::find($product['variation_id']);
 
-                    if ($input_data["adjustment_type"] == "normal") {
+                    if ($input_data['adjustment_type'] == 'normal') {
                         /**purchase_lines */
                         $adjustment_line = [
                             'product_id' => $product['product_id'],
@@ -258,7 +255,7 @@ class StockAdjustmentController extends Controller
                             'quantity' => $this->productUtil->num_uf($product['quantity']),
                             'purchase_price' => $this->productUtil->num_uf($product['unit_price']),
                             'purchase_price_inc_tax' => $this->productUtil->num_uf($product['unit_price']),
-                            'sale_price' => $variation->sell_price_inc_tax
+                            'sale_price' => $variation->sell_price_inc_tax,
                         ];
 
                         /** Increment quantity */
@@ -289,7 +286,7 @@ class StockAdjustmentController extends Controller
                             $input_data['warehouse_id']
                         );
 
-                    } else if($input_data["adjustment_type"] == "abnormal") {
+                    } elseif ($input_data['adjustment_type'] == 'abnormal') {
                         /** transactions_sell_lines */
                         $qty = $this->productUtil->num_uf($product['quantity']);
                         $unit_price = $this->productUtil->num_uf($product['unit_price']);
@@ -306,7 +303,7 @@ class StockAdjustmentController extends Controller
                             'unit_price_exc_tax' => $unit_price * $qty,
                             'unit_cost_exc_tax' => $unit_price,
                             'unit_cost_inc_tax' => $unit_price,
-                            'sale_price' => $variation->sell_price_inc_tax
+                            'sale_price' => $variation->sell_price_inc_tax,
                         ];
 
                         //Decrease available quantity
@@ -325,11 +322,11 @@ class StockAdjustmentController extends Controller
 
                 $stock_adjustment = Transaction::create($input_data);
 
-                if($input_data["adjustment_type"] == "normal"){
+                if ($input_data['adjustment_type'] == 'normal') {
                     //$stock_adjustment->stock_adjustment_lines()->createMany($product_data);
                     $stock_adjustment->purchase_lines()->createMany($product_data);
 
-                    # Data to create or update kardex lines
+                    // Data to create or update kardex lines
                     $lines = PurchaseLine::where('transaction_id', $stock_adjustment->id)->get();
 
                     $movement_type = MovementType::where('name', 'stock_adjustment')
@@ -337,23 +334,23 @@ class StockAdjustmentController extends Controller
                         ->where('business_id', $business_id)
                         ->first();
 
-                    # Check if movement type is set else create it
+                    // Check if movement type is set else create it
                     if (empty($movement_type)) {
                         $movement_type = MovementType::create([
                             'name' => 'stock_adjustment',
                             'type' => 'input',
-                            'business_id' => $business_id
+                            'business_id' => $business_id,
                         ]);
                     }
 
-                    # Store kardex
+                    // Store kardex
                     $this->transactionUtil->createOrUpdateInputLines($movement_type, $stock_adjustment, $stock_adjustment->ref_no, $lines);
 
-                } else if($input_data["adjustment_type"] == "abnormal"){
+                } elseif ($input_data['adjustment_type'] == 'abnormal') {
                     //$stock_adjustment->sell_lines()->saveMany($sell_lines);
                     $this->transactionUtil->createOrUpdateSellLines($stock_adjustment, $product_data, $input_data['location_id']);
 
-                    # Data to create or update output lines
+                    // Data to create or update output lines
                     $lines = TransactionSellLine::where('transaction_id', $stock_adjustment->id)->get();
 
                     $movement_type = MovementType::where('name', 'stock_adjustment')
@@ -361,27 +358,27 @@ class StockAdjustmentController extends Controller
                         ->where('business_id', $business_id)
                         ->first();
 
-                    # Check if movement type is set else create it
+                    // Check if movement type is set else create it
                     if (empty($movement_type)) {
                         $movement_type = MovementType::create([
                             'name' => 'stock_adjustment',
                             'type' => 'output',
-                            'business_id' => $business_id
+                            'business_id' => $business_id,
                         ]);
                     }
 
-                    # Store kardex
+                    // Store kardex
                     $this->transactionUtil->createOrUpdateOutputLines($movement_type, $stock_adjustment, $stock_adjustment->ref_no, $lines);
-                    
+
                     $business = ['id' => $business_id,
-                                'accounting_method' => $request->session()->get('business.accounting_method'),
-                                'location_id' => $input_data['location_id']
-                            ];
+                        'accounting_method' => $request->session()->get('business.accounting_method'),
+                        'location_id' => $input_data['location_id'],
+                    ];
                     $this->transactionUtil->mapPurchaseSell($business, $stock_adjustment->sell_lines, 'purchase');
                 }
             }
 
-            # Get purchase_lines if it's input and transaction_sell_lines if it's output
+            // Get purchase_lines if it's input and transaction_sell_lines if it's output
             if ($stock_adjustment->adjustment_type == 'normal') {
                 $lines = $stock_adjustment->purchase_lines;
             } else {
@@ -391,7 +388,7 @@ class StockAdjustmentController extends Controller
             $output = [
                 'success' => 1,
                 'msg' => __('stock_adjustment.stock_adjustment_added_successfully'),
-                'receipt' => []
+                'receipt' => [],
             ];
 
             // Product settings
@@ -408,16 +405,16 @@ class StockAdjustmentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
         return $output;
-        # return redirect('stock-adjustments')->with('status', $output);
+        // return redirect('stock-adjustments')->with('status', $output);
     }
 
     /**
@@ -428,56 +425,54 @@ class StockAdjustmentController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('stock_adjustment.view')) {
+        if (! auth()->user()->can('stock_adjustment.view')) {
             abort(403, 'Unauthorized action.');
         }
-        $stock_adjustment = Transaction::where("id", $id)->first();
+        $stock_adjustment = Transaction::where('id', $id)->first();
 
-        if($stock_adjustment->adjustment_type == 'normal'){
-            $stock_adjustment_details = Transaction::
-                    leftJoin('purchase_lines as pl', 'transactions.id', 'pl.transaction_id')
-                    ->join('products as p', 'pl.product_id', 'p.id')
-                    ->join('variations as v', 'pl.variation_id', 'v.id')
-                    ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
-                    ->where('transactions.id', $id)
-                    ->where('transactions.type', 'stock_adjustment')
-                    ->select(
-                        'p.name as product',
-                        'p.type as type',
-                        'pv.name as product_variation',
-                        'v.name as variation',
-                        'v.sub_sku',
-                        'pl.quantity',
-                        'pl.purchase_price as unit_price',
-                        'pl.lot_number',
-                        'pl.exp_date',
-                        'pl.sale_price'
-                    )
-                    ->groupBy('pl.id')
-                    ->get();
+        if ($stock_adjustment->adjustment_type == 'normal') {
+            $stock_adjustment_details = Transaction::leftJoin('purchase_lines as pl', 'transactions.id', 'pl.transaction_id')
+                        ->join('products as p', 'pl.product_id', 'p.id')
+                        ->join('variations as v', 'pl.variation_id', 'v.id')
+                        ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
+                        ->where('transactions.id', $id)
+                        ->where('transactions.type', 'stock_adjustment')
+                        ->select(
+                            'p.name as product',
+                            'p.type as type',
+                            'pv.name as product_variation',
+                            'v.name as variation',
+                            'v.sub_sku',
+                            'pl.quantity',
+                            'pl.purchase_price as unit_price',
+                            'pl.lot_number',
+                            'pl.exp_date',
+                            'pl.sale_price'
+                        )
+                        ->groupBy('pl.id')
+                        ->get();
 
-        } else if($stock_adjustment->adjustment_type == 'abnormal'){
-            $stock_adjustment_details = Transaction::
-                    leftJoin('transaction_sell_lines as tsl', 'transactions.id', 'tsl.transaction_id')
-                    ->join('products as p', 'tsl.product_id', 'p.id')
-                    ->join('variations as v', 'tsl.variation_id', 'v.id')
-                    ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
-                    ->where('transactions.id', $id)
-                    ->where('transactions.type', 'stock_adjustment')
-                    ->select(
-                        'p.name as product',
-                        'p.type as type',
-                        'pv.name as product_variation',
-                        'v.name as variation',
-                        'v.sub_sku',
-                        'tsl.quantity',
-                        'tsl.unit_price',
-                        'tsl.unit_price as lot_number', // Not will be used
-                        'tsl.unit_price as exp_date', // Not will be used
-                        'tsl.sale_price'
-                    )
-                    ->groupBy('tsl.id')
-                    ->get();
+        } elseif ($stock_adjustment->adjustment_type == 'abnormal') {
+            $stock_adjustment_details = Transaction::leftJoin('transaction_sell_lines as tsl', 'transactions.id', 'tsl.transaction_id')
+                        ->join('products as p', 'tsl.product_id', 'p.id')
+                        ->join('variations as v', 'tsl.variation_id', 'v.id')
+                        ->join('product_variations as pv', 'v.product_variation_id', 'pv.id')
+                        ->where('transactions.id', $id)
+                        ->where('transactions.type', 'stock_adjustment')
+                        ->select(
+                            'p.name as product',
+                            'p.type as type',
+                            'pv.name as product_variation',
+                            'v.name as variation',
+                            'v.sub_sku',
+                            'tsl.quantity',
+                            'tsl.unit_price',
+                            'tsl.unit_price as lot_number', // Not will be used
+                            'tsl.unit_price as exp_date', // Not will be used
+                            'tsl.sale_price'
+                        )
+                        ->groupBy('tsl.id')
+                        ->get();
         }
 
         $lot_n_exp_enabled = false;
@@ -493,13 +488,12 @@ class StockAdjustmentController extends Controller
         $decimals_in_inventories = $product_settings['decimals_in_inventories'];
 
         return view('stock_adjustment.partials.details')
-                ->with(compact('stock_adjustment_details', 'lot_n_exp_enabled', 'show_costs_or_prices', 'decimals_in_inventories'));
+            ->with(compact('stock_adjustment_details', 'lot_n_exp_enabled', 'show_costs_or_prices', 'decimals_in_inventories'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Transaction  $stockAdjustment
      * @return \Illuminate\Http\Response
      */
     public function edit(Transaction $stockAdjustment)
@@ -510,8 +504,6 @@ class StockAdjustmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Transaction  $stockAdjustment
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Transaction $stockAdjustment)
@@ -522,12 +514,12 @@ class StockAdjustmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('stock_adjustment.delete')) {
+        if (! auth()->user()->can('stock_adjustment.delete')) {
             abort(403, 'Unauthorized action.');
         }
         try {
@@ -538,10 +530,10 @@ class StockAdjustmentController extends Controller
                     ->where('type', 'stock_adjustment')
                     ->first();
 
-                # Delete kardex lines
+                // Delete kardex lines
                 $this->transactionUtil->deleteKardexByTransaction($stock_adjustment->id);
 
-                if($stock_adjustment->adjustment_type == 'normal') {
+                if ($stock_adjustment->adjustment_type == 'normal') {
                     $variation_ids = PurchaseLine::where('transaction_id', $stock_adjustment->id)->pluck('variation_id');
 
                     $delete_purchase_line_ids = [];
@@ -557,8 +549,8 @@ class StockAdjustmentController extends Controller
                         );
                     }
                     PurchaseLine::where('transaction_id', $stock_adjustment->id)
-                                ->whereIn('id', $delete_purchase_line_ids)
-                                ->delete();
+                        ->whereIn('id', $delete_purchase_line_ids)
+                        ->delete();
 
                     //Update mapping of purchase & Sell.
                     $this->transactionUtil->adjustMappingPurchaseSellAfterEditingPurchase($stock_adjustment->status, $stock_adjustment, $stock_adjustment->purchase_lines);
@@ -571,8 +563,8 @@ class StockAdjustmentController extends Controller
                     //         $this->productUtil->recalculateProductCost($variation_id);
                     //     }
                     // }
-        
-                } else if($stock_adjustment->adjustment_type == 'abnormal'){
+
+                } elseif ($stock_adjustment->adjustment_type == 'abnormal') {
                     $deleted_sell_lines = $stock_adjustment->sell_lines;
                     $deleted_sell_lines_ids = $deleted_sell_lines->pluck('id')->toArray();
                     $this->transactionUtil->deleteSellLines(
@@ -584,7 +576,7 @@ class StockAdjustmentController extends Controller
                     $stock_adjustment->status = 'draft';
                     $business = ['id' => $stock_adjustment->business_id,
                         'accounting_method' => request()->session()->get('business.accounting_method'),
-                        'location_id' => $stock_adjustment->location_id
+                        'location_id' => $stock_adjustment->location_id,
                     ];
 
                     $this->transactionUtil->adjustMappingPurchaseSell('final', $stock_adjustment, $business, $deleted_sell_lines_ids);
@@ -593,26 +585,26 @@ class StockAdjustmentController extends Controller
                 $stock_adjustment->delete();
 
                 $output = ['success' => 1,
-                            'msg' => __('stock_adjustment.delete_success')
-                        ];
+                    'msg' => __('stock_adjustment.delete_success'),
+                ];
 
                 DB::commit();
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
+
         return $output;
     }
 
     /**
      * Return product rows
      *
-     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function getProductRow(Request $request)
@@ -644,7 +636,7 @@ class StockAdjustmentController extends Controller
             $product_settings = empty($business->product_settings) ? null : json_decode($business->product_settings, true);
             $show_costs_or_prices = is_null($product_settings) ? 'costs' : $product_settings['show_costs_or_prices'];
             $decimals_in_inventories = is_null($product_settings) ? 2 : $product_settings['decimals_in_inventories'];
-            
+
             return view('stock_adjustment.partials.product_table_row')
                 ->with(compact('product', 'row_index', 'check_qty_available', 'show_costs_or_prices', 'decimals_in_inventories'));
         }
@@ -653,22 +645,22 @@ class StockAdjustmentController extends Controller
     /**
      * Sets expired purchase line as stock adjustmnet
      *
-     * @param int $purchase_line_id
+     * @param  int  $purchase_line_id
      * @return json $output
      */
     public function removeExpiredStock($purchase_line_id)
     {
 
-        if (!auth()->user()->can('stock_adjustment.delete')) {
+        if (! auth()->user()->can('stock_adjustment.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             $purchase_line = PurchaseLine::where('id', $purchase_line_id)
-                                    ->with(['transaction'])
-                                    ->first();
+                ->with(['transaction'])
+                ->first();
 
-            if (!empty($purchase_line)) {
+            if (! empty($purchase_line)) {
                 DB::beginTransaction();
 
                 $qty_unsold = $purchase_line->quantity - $purchase_line->quantity_sold - $purchase_line->quantity_adjusted - $purchase_line->quantity_returned;
@@ -689,7 +681,7 @@ class StockAdjustmentController extends Controller
                     'location_id' => $purchase_line->transaction->location_id,
                     'adjustment_type' => 'normal',
                     'final_total' => $final_total,
-                    'ref_no' => $this->productUtil->generateReferenceNumber('stock_adjustment', $ref_count)
+                    'ref_no' => $this->productUtil->generateReferenceNumber('stock_adjustment', $ref_count),
                 ];
 
                 //Create stock adjustment transaction
@@ -700,7 +692,7 @@ class StockAdjustmentController extends Controller
                     'variation_id' => $purchase_line->variation_id,
                     'quantity' => $qty_unsold,
                     'unit_price' => $purchase_line->purchase_price_inc_tax,
-                    'removed_purchase_line' => $purchase_line->id
+                    'removed_purchase_line' => $purchase_line->id,
                 ];
 
                 //Create stock adjustment line with the purchase line
@@ -716,25 +708,26 @@ class StockAdjustmentController extends Controller
 
                 //Map Stock adjustment & Purchase.
                 $business = ['id' => $business_id,
-                                'accounting_method' => request()->session()->get('business.accounting_method'),
-                                'location_id' => $purchase_line->transaction->location_id
-                            ];
+                    'accounting_method' => request()->session()->get('business.accounting_method'),
+                    'location_id' => $purchase_line->transaction->location_id,
+                ];
                 $this->transactionUtil->mapPurchaseSell($business, $stock_adjustment->stock_adjustment_lines, 'stock_adjustment', false, $purchase_line->id);
 
                 DB::commit();
 
                 $output = ['success' => 1,
-                            'msg' => __('lang_v1.stock_removed_successfully')
-                        ];
+                    'msg' => __('lang_v1.stock_removed_successfully'),
+                ];
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
+
         return $output;
     }
 
@@ -754,7 +747,7 @@ class StockAdjustmentController extends Controller
                 ->where('type', 'stock_adjustment')
                 ->first();
 
-            # Get purchase_lines if it's input and transaction_sell_lines if it's output
+            // Get purchase_lines if it's input and transaction_sell_lines if it's output
             if ($stock_adjustment->adjustment_type == 'normal') {
                 $lines = $stock_adjustment->purchase_lines;
             } else {
@@ -769,18 +762,18 @@ class StockAdjustmentController extends Controller
 
             $output = [
                 'success' => 1,
-                'receipt' => []
+                'receipt' => [],
             ];
 
             $output['receipt']['html_content'] = view('stock_adjustment.print',
                 compact('stock_adjustment', 'lines', 'show_costs_or_prices', 'decimals_in_inventories'))->render();
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -789,7 +782,7 @@ class StockAdjustmentController extends Controller
 
     /**
      * Gets reference number for stock adjustment.
-     * 
+     *
      * @param  int  $ref_count
      * @param  string  $type
      * @return json
@@ -797,6 +790,7 @@ class StockAdjustmentController extends Controller
     public function getReference($ref_count, $type)
     {
         $reference = $this->productUtil->generateReferenceNumber($type, $ref_count);
+
         return ['reference' => $reference];
     }
 }

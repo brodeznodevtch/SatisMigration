@@ -2,9 +2,8 @@
 
 namespace App\Optics;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaterialType extends Model
 {
@@ -35,7 +34,7 @@ class MaterialType extends Model
         'business_id',
         'name',
         'description',
-        'created_by'
+        'created_by',
     ];
 
     /**
@@ -51,16 +50,15 @@ class MaterialType extends Model
     /**
      * Return list of material types
      *
-     * @param int $business_id
-     * @param boolean $show_all = false
-     * @param array $receipt_printer_type_attribute
-     *
+     * @param  int  $business_id
+     * @param  bool  $show_all = false
+     * @param  array  $receipt_printer_type_attribute
      * @return array
      */
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
     {
         $query = MaterialType::where('business_id', $business_id);
-        
+
         /*
         $permitted_material_types = MaterialType::permittedMaterialTypes();
         if ($permitted_material_types != 'all') {
@@ -72,14 +70,14 @@ class MaterialType extends Model
 
         //Prepend none
         if ($prepend_none) {
-            $material_types = $material_types->prepend(__("lang_v1.none"), '');
+            $material_types = $material_types->prepend(__('lang_v1.none'), '');
         }
 
         //Prepend none
         if ($prepend_all) {
-            $material_types = $material_types->prepend(__("report.all"), '');
+            $material_types = $material_types->prepend(__('report.all'), '');
         }
-        
+
         return $material_types;
     }
 
@@ -97,13 +95,13 @@ class MaterialType extends Model
             $business_id = request()->session()->get('user.business_id');
             $permitted_cashiers = [];
             $all_cashiers = Cashier::where('business_id', $business_id)->get();
-            
+
             foreach ($all_cashiers as $cashier) {
                 if (auth()->user()->can('cashier.' . $cashier->id)) {
                     $permitted_cashiers[] = $cashier->id;
                 }
             }
-    
+
             return $permitted_cashiers;
         }
     }

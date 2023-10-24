@@ -8,11 +8,13 @@ class RrhhPersonnelActionAuthorizer extends Model
 {
     protected $fillable = ['rrhh_personnel_action_id', 'user_id', 'authorized'];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(\App\User::class, 'user_id');
     }
-    
-    public function personnelAction(){
+
+    public function personnelAction()
+    {
         return $this->belongsTo('App\RrhhPersonnelAction');
     }
 }

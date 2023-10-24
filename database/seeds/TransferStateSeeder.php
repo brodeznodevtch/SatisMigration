@@ -13,11 +13,11 @@ class TransferStateSeeder extends Seeder
     {
         try {
             \DB::beginTransaction();
-    
-            # Clean table
+
+            // Clean table
             \DB::table('transfer_states')->delete();
-    
-            # Insert data
+
+            // Insert data
             \DB::table('transfer_states')->insert([
                 0 => ['id' => 1, 'name' => 'created', 'created_at' => \Carbon::now(), 'updated_at' => \Carbon::now()],
                 1 => ['id' => 2, 'name' => 'processed', 'created_at' => \Carbon::now(), 'updated_at' => \Carbon::now()],
@@ -30,7 +30,7 @@ class TransferStateSeeder extends Seeder
         } catch (\Exception $e) {
             \DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
         }
     }
 }

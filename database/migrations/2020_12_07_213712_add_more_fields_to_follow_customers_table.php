@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddMoreFieldsToFollowCustomersTable extends Migration
 {
@@ -37,7 +37,7 @@ class AddMoreFieldsToFollowCustomersTable extends Migration
             $table->string('notes')->nullable()->after('products_not_found_desc');
 
             $table->date('date')->nullable()->after('notes');
-            
+
             $table->unsignedInteger('register_by')->nullable()->after('date');
             $table->foreign('register_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

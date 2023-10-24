@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddExtraFieldsToLabOrdersTable extends Migration
 {
@@ -43,7 +43,7 @@ class AddExtraFieldsToLabOrdersTable extends Migration
 
             $table->boolean('is_urgent')->default(0)->after('external_lab_id');
 
-            DB::statement("ALTER TABLE lab_orders CHANGE correlative no_order VARCHAR(191)");
+            DB::statement('ALTER TABLE lab_orders CHANGE correlative no_order VARCHAR(191)');
         });
     }
 

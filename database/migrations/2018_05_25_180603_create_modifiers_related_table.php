@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateModifiersRelatedTable extends Migration
 {
@@ -16,7 +16,7 @@ class CreateModifiersRelatedTable extends Migration
         Schema::create('res_product_modifier_sets', function (Blueprint $table) {
             $table->integer('modifier_set_id')->unsigned();
             $table->foreign('modifier_set_id')->references('id')->on('products')->onDelete('cascade');
-            $table->integer('product_id')->unsigned()->comment("Table use to store the modifier sets applicable for a product");
+            $table->integer('product_id')->unsigned()->comment('Table use to store the modifier sets applicable for a product');
         });
     }
 

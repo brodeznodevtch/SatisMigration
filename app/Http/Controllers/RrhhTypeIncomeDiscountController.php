@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\RrhhIncomeDiscount;
-use Illuminate\Http\Request;
 use App\RrhhTypeIncomeDiscount;
-use DB;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class RrhhTypeIncomeDiscountController extends Controller
 {
@@ -19,44 +19,48 @@ class RrhhTypeIncomeDiscountController extends Controller
     {
         //
     }
-    public function getTypeIncomeDiscountData() {
 
-        if ( !auth()->user()->can('rrhh_catalogues.view') ) {
+    public function getTypeIncomeDiscountData()
+    {
+
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $business_id =  request()->session()->get('user.business_id');
+        $business_id = request()->session()->get('user.business_id');
         $data = DB::table('rrhh_type_income_discounts')
-        ->select('rrhh_type_income_discounts.*')
-        ->where('business_id', $business_id)
-        ->where('deleted_at', null);
+            ->select('rrhh_type_income_discounts.*')
+            ->where('business_id', $business_id)
+            ->where('deleted_at', null);
 
         return DataTables::of($data)
-        ->addColumn(
-            'type',
-            function ($row) {
-                if ($row->type == 1) {
+            ->addColumn(
+                'type',
+                function ($row) {
+                    if ($row->type == 1) {
 
-                    $html = __('rrhh.income');
-                } else {
+                        $html = __('rrhh.income');
+                    } else {
 
-                    $html = __('rrhh.discount');
+                        $html = __('rrhh.discount');
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )->addColumn(
-            'status',
-            function ($row) {
-                if ($row->status == 1) {
+            )->addColumn(
+                'status',
+                function ($row) {
+                    if ($row->status == 1) {
 
-                    $html = 'Activo';
-                } else {
+                        $html = 'Activo';
+                    } else {
 
-                    $html = 'Inactivo';
+                        $html = 'Inactivo';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )->toJson();
+            )->toJson();
     }
 
     /**
@@ -64,64 +68,66 @@ class RrhhTypeIncomeDiscountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
-        }        
+        }
 
         $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
+
         return view('rrhh.catalogues.types_income_discounts.create', compact('payrollColumns'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {      
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+    public function store(Request $request)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'name' => 'required',     
+            'name' => 'required',
             'type' => 'required',
-            'payroll_column' => 'required',           
+            'payroll_column' => 'required',
         ]);
 
         try {
             $type = new RrhhTypeIncomeDiscount;
             $input_details = $request->all();
             $payrollColumns = $type->payrollColumns;
-            for ($i=0; $i < count($payrollColumns); $i++) { 
-                if($request->payroll_column == $i){
+            for ($i = 0; $i < count($payrollColumns); $i++) {
+                if ($request->payroll_column == $i) {
                     $input_details['payroll_column'] = $payrollColumns[$i];
                 }
             }
 
-            $input_details['business_id'] =  request()->session()->get('user.business_id');
+            $input_details['business_id'] = request()->session()->get('user.business_id');
 
             RrhhTypeIncomeDiscount::create($input_details);
             $output = [
                 'success' => true,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => false,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
+
         return $output;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhTypeIncomeDiscount  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhTypeIncomeDiscount $rrhhTypeWage)
@@ -135,9 +141,10 @@ class RrhhTypeIncomeDiscountController extends Controller
      * @param  \App\RrhhTypeIncomeDiscount  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -150,43 +157,44 @@ class RrhhTypeIncomeDiscountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\RrhhTypeIncomeDiscount  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+    public function update(Request $request, $id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'name' => 'required',     
+            'name' => 'required',
             'type' => 'required',
-            'payroll_column' => 'required',           
+            'payroll_column' => 'required',
         ]);
 
         try {
             $input_details = $request->all();
             $payrollColumns = RrhhTypeIncomeDiscount::$payrollColumns;
-            for ($i=0; $i < count($payrollColumns); $i++) { 
-                if($request->payroll_column == $i){
+            for ($i = 0; $i < count($payrollColumns); $i++) {
+                if ($request->payroll_column == $i) {
                     $input_details['payroll_column'] = $payrollColumns[$i];
                 }
-            }            
+            }
 
             $item = RrhhTypeIncomeDiscount::findOrFail($id);
             $item->update($input_details);
             $output = [
                 'success' => true,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
             ];
         }
+
         return $output;
     }
 
@@ -196,8 +204,9 @@ class RrhhTypeIncomeDiscountController extends Controller
      * @param  \App\RrhhTypeIncomeDiscount  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        if (!auth()->user()->can('rrhh_catalogues.delete')) {
+    public function destroy($id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -210,24 +219,24 @@ class RrhhTypeIncomeDiscountController extends Controller
                 if ($count > 0) {
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
                 } else {
                     $item = RrhhTypeIncomeDiscount::findOrFail($id);
                     $item->delete();
                     $output = [
                         'success' => true,
-                        'msg' => __('rrhh.deleted_successfully')
+                        'msg' => __('rrhh.deleted_successfully'),
                     ];
-                }               
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\TypeBankTransaction;
 use App\BankTransaction;
-use Illuminate\Http\Request;
+use App\TypeBankTransaction;
 use DataTables;
 use DB;
+use Illuminate\Http\Request;
 
 class TypeBankTransactionController extends Controller
 {
@@ -33,7 +33,6 @@ class TypeBankTransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -52,24 +51,24 @@ class TypeBankTransactionController extends Controller
             ]
         );
         $type_details = $request->only(['name', 'type', 'type_entrie_id', 'enable_checkbook', 'enable_headline', 'enable_date_constraint']);
-        
-        if($request->ajax())
-        {
+
+        if ($request->ajax()) {
             try {
                 $transaction_type = TypeBankTransaction::create($type_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('accounting.added_successfully')
+                    'msg' => __('accounting.added_successfully'),
                 ];
 
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -83,6 +82,7 @@ class TypeBankTransactionController extends Controller
     public function show($id)
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
+
         return response()->json($typeBankTransaction);
     }
 
@@ -95,13 +95,13 @@ class TypeBankTransactionController extends Controller
     public function edit($id)
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
+
         return response()->json($typeBankTransaction);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
@@ -120,24 +120,24 @@ class TypeBankTransactionController extends Controller
             ]
         );
         $type_details = $request->only(['name', 'type', 'type_entrie_id', 'enable_checkbook', 'enable_headline', 'enable_date_constraint']);
-        
-        if($request->ajax())
-        {
+
+        if ($request->ajax()) {
             try {
                 $typeBankTransaction->update($type_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('accounting.updated_successfully')
+                    'msg' => __('accounting.updated_successfully'),
                 ];
 
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -152,29 +152,28 @@ class TypeBankTransactionController extends Controller
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
         if (request()->ajax()) {
-            try{
+            try {
                 $bankTransactions = BankTransaction::where('type_bank_transaction_id', $typeBankTransaction->id)->count();
 
-                if($bankTransactions > 0){
+                if ($bankTransactions > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('accounting.type_has_transactions')
+                        'msg' => __('accounting.type_has_transactions'),
                     ];
-                }
-                else{
+                } else {
                     $typeBankTransaction->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('accounting.deleted_successfully')
+                        'msg' => __('accounting.deleted_successfully'),
                     ];
                 }
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -182,31 +181,33 @@ class TypeBankTransactionController extends Controller
     public function getTypeBankTransactions()
     {
         $types = TypeBankTransaction::select('id', 'name')->get();
+
         return response()->json($types);
     }
 
     public function getTypeBankTransactionsData()
     {
         $types = DB::table('type_bank_transactions as type')
-        ->join('type_entries as entrie', 'entrie.id', '=', 'type.type_entrie_id')
-        ->select('type.*', 'entrie.name as entrie_type');
+            ->join('type_entries as entrie', 'entrie.id', '=', 'type.type_entrie_id')
+            ->select('type.*', 'entrie.name as entrie_type');
 
         return DataTables::of($types)->toJson();
     }
 
     /**
      * Get bank transactions type enabled checkbook
-     * 
+     *
      * @param  int  $bank_transaction_type_id
      * @return int
      */
-    public function getIfEnableCheckbook($bank_transaction_type_id) {
+    public function getIfEnableCheckbook($bank_transaction_type_id)
+    {
         if (! empty($bank_transaction_type_id)) {
             $bank_transaction_type = TypeBankTransaction::find($bank_transaction_type_id);
 
             if (! empty($bank_transaction_type)) {
                 return $bank_transaction_type->enable_checkbook;
-            
+
             } else {
                 return 0;
             }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddTransactionsCustomerIdForeignKeyToTransactionsTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddTransactionsCustomerIdForeignKeyToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->foreign("contact_id")->references("id")->on("customers");
+            $table->foreign('contact_id')->references('id')->on('customers');
         });
     }
 

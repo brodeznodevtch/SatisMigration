@@ -8,23 +8,21 @@ use App\Optics\GraduationCard;
 use App\Optics\GraduationCardHasDiagnostic;
 use App\Optics\Patient;
 use App\Utils\Util;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
 
 class GraduationCardController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $util;
 
     /**
      * Constructor
      *
-     * @param \App\Utils\Util $util
      * @return void
      */
     public function __construct(Util $util)
@@ -40,14 +38,14 @@ class GraduationCardController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('graduation_card.view') && !auth()->user()->can('graduation_card.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('graduation_card.view') && ! auth()->user()->can('graduation_card.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $graduation_cards = GraduationCard::join('patients as p', 'graduation_cards.patient_id', 'p.id')
                 ->select('p.full_name', 'graduation_cards.id');
-            
+
             return Datatables::of($graduation_cards)
                 ->addColumn(
                     'action',
@@ -74,7 +72,7 @@ class GraduationCardController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('graduation_card.create')) {
+        if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -93,12 +91,11 @@ class GraduationCardController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('graduation_card.create')) {
+        if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -115,7 +112,7 @@ class GraduationCardController extends Controller
                 'attended_by',
                 'optometrist',
                 'observations',
-                'dnsp_os', 'dnsp_od', 'ap'
+                'dnsp_os', 'dnsp_od', 'ap',
             ]);
 
             $business_id = $request->session()->get('user.business_id');
@@ -123,19 +120,19 @@ class GraduationCardController extends Controller
 
             $diagnostics = $request->input('diagnostics');
 
-            $input['is_prescription'] = !empty($request->input('is_prescription')) ? 1 : 0;
+            $input['is_prescription'] = ! empty($request->input('is_prescription')) ? 1 : 0;
 
             DB::beginTransaction();
             // Saves graduation card
             $graduation_card = GraduationCard::create($input);
 
-            # Store binnacle
+            // Store binnacle
             $user_id = $request->session()->get('user.id');
 
             $this->util->registerBinnacle($user_id, $this->module_name, 'create', $graduation_card);
 
             // Saves diagnostics
-            if (!empty($diagnostics)) {
+            if (! empty($diagnostics)) {
                 foreach ($diagnostics as $diag) {
                     $diagnostic = new GraduationCardHasDiagnostic;
                     $diagnostic->graduation_card_id = $graduation_card->id;
@@ -144,18 +141,18 @@ class GraduationCardController extends Controller
                 }
             }
             DB::commit();
-    
+
             $output = ['success' => true,
                 'data' => $graduation_card,
-                'msg' => __("graduation_card.added_success")
+                'msg' => __('graduation_card.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -181,7 +178,7 @@ class GraduationCardController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('graduation_card.update')) {
+        if (! auth()->user()->can('graduation_card.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -215,13 +212,12 @@ class GraduationCardController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\GraduationCard  $graduationCard
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('graduation_card.update')) {
+        if (! auth()->user()->can('graduation_card.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -239,16 +235,16 @@ class GraduationCardController extends Controller
                     'attended_by',
                     'optometrist',
                     'observations',
-                    'dnsp_os', 'dnsp_od', 'ap'
+                    'dnsp_os', 'dnsp_od', 'ap',
                 ]);
 
                 $diagnostics = $request->input('diagnostics');
 
-                $input['is_prescription'] = !empty($request->input('is_prescription')) ? 1 : 0;
+                $input['is_prescription'] = ! empty($request->input('is_prescription')) ? 1 : 0;
 
                 $graduation_card = GraduationCard::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $graduation_card_old = clone $graduation_card;
 
                 $graduation_card->fill($input);
@@ -261,13 +257,13 @@ class GraduationCardController extends Controller
                 // Saves graduation card
                 $graduation_card->save();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = $request->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'update', $graduation_card_old, $graduation_card);
 
                 // Saves diagnostics
-                if (!empty($diagnostics)) {
+                if (! empty($diagnostics)) {
                     GraduationCardHasDiagnostic::where('graduation_card_id', $id)->forceDelete();
 
                     foreach ($diagnostics as $diag) {
@@ -282,15 +278,15 @@ class GraduationCardController extends Controller
                 DB::commit();
 
                 $output = ['success' => true,
-                    'msg' => __("graduation_card.updated_success")
+                    'msg' => __('graduation_card.updated_success'),
                 ];
             } catch (\Exception $e) {
                 DB::rollBack();
-                
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -306,7 +302,7 @@ class GraduationCardController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('graduation_card.delete')) {
+        if (! auth()->user()->can('graduation_card.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -314,24 +310,24 @@ class GraduationCardController extends Controller
             try {
                 $graduation_card = GraduationCard::findOrFail($id);
 
-                # Clone record before action
+                // Clone record before action
                 $graduation_card_old = clone $graduation_card;
 
                 $graduation_card->delete();
 
-                # Store binnacle
+                // Store binnacle
                 $user_id = request()->session()->get('user.id');
 
                 $this->util->registerBinnacle($user_id, $this->module_name, 'delete', $graduation_card_old);
 
                 $output = ['success' => true,
-                    'msg' => __("graduation_card.deleted_success")
+                    'msg' => __('graduation_card.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -339,10 +335,9 @@ class GraduationCardController extends Controller
         }
     }
 
-
     public function createOrder()
     {
-        if (!auth()->user()->can('graduation_card.create')) {
+        if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');
         }
 

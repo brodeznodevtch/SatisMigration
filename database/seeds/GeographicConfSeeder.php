@@ -27,11 +27,11 @@ class GeographicConfSeeder extends Seeder
             [
                 'name' => 'El Salvador',
                 'short_name' => 'SV',
-                'business_id' => $business_id
+                'business_id' => $business_id,
             ],
             [
                 'code' => '503',
-                'flag' => '1603645631ESA.png'
+                'flag' => '1603645631ESA.png',
             ]
         );
 
@@ -41,14 +41,14 @@ class GeographicConfSeeder extends Seeder
             'ORIENTAL',
             'OCCIDENTAL',
             'PARACENTRAL',
-            'NORTE'    
+            'NORTE',
         ];
 
         foreach ($zones as $zone) {
             Zone::updateOrCreate(
                 [
                     'name' => $zone,
-                    'business_id' => $business_id
+                    'business_id' => $business_id,
                 ]
             );
         }
@@ -68,7 +68,7 @@ class GeographicConfSeeder extends Seeder
             ['name' => 'Sonsonate', 'zip_code' => '', 'zone' => 'OCCIDENTAL'],
             ['name' => 'Cuscatlán', 'zip_code' => '00000', 'zone' => 'PARACENTRAL'],
             ['name' => 'La Paz', 'zip_code' => '', 'zone' => 'PARACENTRAL'],
-            ['name' => 'Chalatenango', 'zip_code' => '01301', 'zone' => 'NORTE']            
+            ['name' => 'Chalatenango', 'zip_code' => '01301', 'zone' => 'NORTE'],
         ];
 
         $zones = Zone::where('business_id', $business_id)
@@ -80,7 +80,7 @@ class GeographicConfSeeder extends Seeder
             State::updateOrCreate(
                 [
                     'name' => $s['name'],
-                    'business_id' => $business_id
+                    'business_id' => $business_id,
                 ],
                 [
                     'zip_code' => $s['zip_code'],
@@ -353,7 +353,7 @@ class GeographicConfSeeder extends Seeder
             ['name' => 'San Francisco Javier', 'status' => '1', 'state' => 'Usulután'],
             ['name' => 'Santiago de María', 'status' => '1', 'state' => 'Usulután'],
             ['name' => 'Tecapán', 'status' => '1', 'state' => 'Usulután'],
-            ['name' => 'Puerto El Triunfo', 'status' => '1', 'state' => 'Usulután']            
+            ['name' => 'Puerto El Triunfo', 'status' => '1', 'state' => 'Usulután'],
         ];
 
         $states = State::where('business_id', $business_id)
@@ -366,10 +366,10 @@ class GeographicConfSeeder extends Seeder
                 [
                     'name' => $c['name'],
                     'state_id' => $state->id,
-                    'business_id' => $business_id
+                    'business_id' => $business_id,
                 ],
                 [
-                    'status' => $c['status']
+                    'status' => $c['status'],
                 ]
             );
         }

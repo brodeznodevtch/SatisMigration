@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTaxGroupTransactionTable extends Migration
 {
@@ -17,7 +17,7 @@ class CreateTaxGroupTransactionTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('tax_group_id');
             $table->unsignedInteger('transaction_id');
-            
+
             $table->timestamps();
         });
 

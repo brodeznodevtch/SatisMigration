@@ -69,5 +69,5 @@ return [
     'edit_sale' => 'Satışı Düzenle',
     'shipping' => 'Nakliye',
     'shipping_details' => 'Nakliye detayları',
-    'shipping_charges' => 'Nakliye Ücretleri'
+    'shipping_charges' => 'Nakliye Ücretleri',
 ];

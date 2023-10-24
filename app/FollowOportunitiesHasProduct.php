@@ -10,6 +10,6 @@ class FollowOportunitiesHasProduct extends Model
         'follow_oportunitie_id',
         'variation_id',
         'quantity',
-        'required_quantity'
+        'required_quantity',
     ];
 }

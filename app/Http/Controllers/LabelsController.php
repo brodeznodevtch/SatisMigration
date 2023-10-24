@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Product;
 use App\Barcode;
-use App\Utils\TransactionUtil;
+use App\Product;
 use App\Utils\ProductUtil;
+use App\Utils\TransactionUtil;
+use Illuminate\Http\Request;
 
 class LabelsController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $transactionUtil;
+
     protected $productUtil;
 
     /**
      * Constructor
      *
-     * @param TransactionUtil $TransactionUtil
+     * @param  TransactionUtil  $TransactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil)
@@ -50,8 +49,8 @@ class LabelsController extends Controller
         }
 
         $barcode_settings = Barcode::where('business_id', $business_id)
-                                ->orWhereNull('business_id')
-                                ->pluck('name', 'id');
+            ->orWhereNull('business_id')
+            ->pluck('name', 'id');
 
         return view('labels.show')
             ->with(compact('products', 'barcode_settings'));
@@ -68,13 +67,13 @@ class LabelsController extends Controller
             $product_id = $request->input('product_id');
             $variation_id = $request->input('variation_id');
             $business_id = $request->session()->get('user.business_id');
-            
-            if (!empty($product_id)) {
+
+            if (! empty($product_id)) {
                 $index = $request->input('row_count');
                 $products = $this->productUtil->getDetailsFromProduct($business_id, $product_id, $variation_id);
-                
+
                 return view('labels.partials.show_table_rows')
-                        ->with(compact('products', 'index'));
+                    ->with(compact('products', 'index'));
             }
         }
     }
@@ -112,8 +111,8 @@ class LabelsController extends Controller
 
                 $page_height = null;
                 if ($barcode_details->is_continuous) {
-                    $rows = ceil($total_qty/$barcode_details->stickers_in_one_row) + 0.4;
-                    $barcode_details->paper_height = $barcode_details->top_margin + ($rows*$height) + ($rows*$barcode_details->row_distance);
+                    $rows = ceil($total_qty / $barcode_details->stickers_in_one_row) + 0.4;
+                    $barcode_details->paper_height = $barcode_details->top_margin + ($rows * $height) + ($rows * $barcode_details->row_distance);
                 }
 
                 // Configure number of name lines
@@ -148,16 +147,16 @@ class LabelsController extends Controller
                 $output = [
                     'html' => $html,
                     'success' => true,
-                    'msg' => ''
+                    'msg' => '',
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = ['html' => '',
-                        'success' => false,
-                        'msg' =>  __('lang_v1.barcode_label_error')
-                    ];
+                    'success' => false,
+                    'msg' => __('lang_v1.barcode_label_error'),
+                ];
             }
 
                 return $output;
@@ -166,14 +165,16 @@ class LabelsController extends Controller
 
     /**
      * Get barcode setting
+     *
      * @param  int  $has_logo
      * @return json
      */
-    public function getBarcodeSetting($has_logo = 0) {
+    public function getBarcodeSetting($has_logo = 0)
+    {
         $name = $has_logo ? 'name_with_logo' : 'name';
 
-        $barcode_setting = Barcode::select('id', $name . ' as name')->get();
-        
+        $barcode_setting = Barcode::select('id', $name.' as name')->get();
+
         return response()->json($barcode_setting);
     }
 }

@@ -4,22 +4,27 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class KardexReportExport implements FromView, WithEvents, WithTitle
 {
     private $kardex;
+
     private $start;
+
     private $end;
+
     private $business;
+
     private $warehouse;
+
     private $variation;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $kardex
      * @param  string  $date
      * @param  \App\Business  $business
@@ -29,7 +34,7 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($kardex, $start, $end, $business, $warehouse, $variation)
     {
-    	$this->kardex = $kardex;
+        $this->kardex = $kardex;
         $this->start = $start;
         $this->end = $end;
         $this->business = $business;
@@ -39,23 +44,19 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('kardex.kardex');
+        return __('kardex.kardex');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
                 $view_costs = auth()->user()->can('product.view_costs');
 
                 if ($view_costs) {
@@ -64,16 +65,16 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
                     $letter = 'H';
                 }
 
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:K7500', 'Calibri');
-    			$event->sheet->setFontSize('A1:K7500', 10);
+                $event->sheet->setFontFamily('A1:K7500', 'Calibri');
+                $event->sheet->setFontSize('A1:K7500', 10);
 
-    			$event->sheet->mergeCells('A1:' . $letter . '1');
-    			$event->sheet->mergeCells('A2:' . $letter . '2');
+                $event->sheet->mergeCells('A1:'.$letter.'1');
+                $event->sheet->mergeCells('A2:'.$letter.'2');
 
-                $event->sheet->horizontalAlign('A1:' . $letter . '2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                $event->sheet->horizontalAlign('A6:' . $letter . '6', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->horizontalAlign('A1:'.$letter.'2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->horizontalAlign('A6:'.$letter.'6', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $event->sheet->columnWidth('A', 18.86);
                 $event->sheet->columnWidth('B', 17.00);
@@ -96,16 +97,14 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.kardex_report_excel', [
-    		'kardex' => $this->kardex,
-    		'start' => $this->start,
+        return view('reports.kardex_report_excel', [
+            'kardex' => $this->kardex,
+            'start' => $this->start,
             'end' => $this->end,
-    		'business' => $this->business,
+            'business' => $this->business,
             'warehouse' => $this->warehouse,
             'variation' => $this->variation,
         ]);

@@ -30,6 +30,6 @@ $factory->define(App\Employees::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'lastname' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
-        'mobile' => $faker->mobile
+        'mobile' => $faker->mobile,
     ];
 });

@@ -21,6 +21,6 @@ class AccountBusinessLocation extends Model
         'admin_expense_id',
         'financial_expense_id',
         'local_sale_id',
-        'exports_id'
+        'exports_id',
     ];
 }

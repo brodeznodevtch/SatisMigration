@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class Add4DecimalsInPurchaseLines extends Migration
 {
@@ -22,15 +22,15 @@ class Add4DecimalsInPurchaseLines extends Migration
                 CHANGE `discount_percent` `discount_percent` 
                     DECIMAL(8,4) NOT NULL DEFAULT '0.0000' 
                         COMMENT 'Inline discount percentage'");
-            DB::statement("ALTER TABLE `purchase_lines` 
+            DB::statement('ALTER TABLE `purchase_lines` 
                 CHANGE `purchase_price` `purchase_price` 
-                    DECIMAL(20,4) NULL DEFAULT NULL");
+                    DECIMAL(20,4) NULL DEFAULT NULL');
             DB::statement("ALTER TABLE `purchase_lines` 
                 CHANGE `purchase_price_inc_tax` `purchase_price_inc_tax` 
                     DECIMAL(20,4) NOT NULL DEFAULT '0.0000'");
-            DB::statement("ALTER TABLE `purchase_lines` 
+            DB::statement('ALTER TABLE `purchase_lines` 
                 CHANGE `item_tax` `item_tax` 
-                    DECIMAL(20,4) NULL DEFAULT NULL");
+                    DECIMAL(20,4) NULL DEFAULT NULL');
         });
     }
 

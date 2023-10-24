@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyQuantityColumnOnQuoteLinesTable extends Migration
 {
@@ -13,7 +13,7 @@ class ModifyQuantityColumnOnQuoteLinesTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `quote_lines` CHANGE `quantity` `quantity` DECIMAL(8,2) NOT NULL");
+        DB::statement('ALTER TABLE `quote_lines` CHANGE `quantity` `quantity` DECIMAL(8,2) NOT NULL');
         Schema::table('quote_lines', function (Blueprint $table) {
             //$table->decimal("quantity", 10, 2)->change();
         });

@@ -2,12 +2,10 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class OrderTransactionExport implements FromView, WithTitle, WithEvents
@@ -16,8 +14,11 @@ class OrderTransactionExport implements FromView, WithTitle, WithEvents
      * @return \Illuminate\Support\Collection
      */
     private $lines;
+
     private $business;
+
     private $initial_date;
+
     private $final_date;
 
     public function __construct($quote_trans, $business, $initial_date, $final_date)
@@ -27,10 +28,12 @@ class OrderTransactionExport implements FromView, WithTitle, WithEvents
         $this->initial_date = $initial_date;
         $this->final_date = $final_date;
     }
+
     public function title(): string
     {
         return __('report.dispatch_report');
     }
+
     public function registerEvents(): array
     {
         return [
@@ -57,9 +60,10 @@ class OrderTransactionExport implements FromView, WithTitle, WithEvents
             },
         ];
     }
+
     public function view(): View
     {
-        $months = array(__('accounting.january'), __('accounting.february'), __('accounting.march'), __('accounting.april'), __('accounting.may'), __('accounting.june'), __('accounting.july'), __('accounting.august'), __('accounting.september'), __('accounting.october'), __('accounting.november'), __('accounting.december'));
+        $months = [__('accounting.january'), __('accounting.february'), __('accounting.march'), __('accounting.april'), __('accounting.may'), __('accounting.june'), __('accounting.july'), __('accounting.august'), __('accounting.september'), __('accounting.october'), __('accounting.november'), __('accounting.december')];
         $initial_month = $months[($this->initial_date->format('n')) - 1];
         $final_month = $months[($this->final_date->format('n')) - 1];
         $initial_year = $this->initial_date->format('Y');
@@ -73,7 +77,7 @@ class OrderTransactionExport implements FromView, WithTitle, WithEvents
             'initial_year' => $initial_year,
             'final_year' => $final_year,
             'initial_date' => $this->initial_date,
-            'final_date' => $this->final_date
+            'final_date' => $this->final_date,
         ]);
     }
 }

@@ -8,11 +8,11 @@ class DiscountCard extends Model
 {
     //
 
-     protected $guarded = ['id'];
+    protected $guarded = ['id'];
 
-      protected $table ='discount_cards';
+    protected $table = 'discount_cards';
 
-     protected $fillable = ['value_'];
+    protected $fillable = ['value_'];
 
-	 public $timestamps = false;
+    public $timestamps = false;
 }

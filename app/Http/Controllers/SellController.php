@@ -2,47 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\TaxRate;
 use App\Business;
+use App\BusinessLocation;
 use App\Customer;
-use App\Transaction;
+use App\CustomerGroup;
+use App\CustomerPortfolio;
 use App\DiscountCard;
 use App\DocumentType;
-use App\CustomerGroup;
-use App\Utils\TaxUtil;
-use App\BusinessLocation;
-use App\CustomerPortfolio;
-use App\Employees;
-use App\Utils\ModuleUtil;
 use App\SellingPriceGroup;
-use App\Utils\ContactUtil;
-use App\Utils\ProductUtil;
+use App\TaxRate;
+use App\Transaction;
 use App\TransactionPayment;
-use App\Utils\BusinessUtil;
 use App\TransactionSellLine;
-use Illuminate\Http\Request;
+use App\User;
+use App\Utils\BusinessUtil;
+use App\Utils\ContactUtil;
+use App\Utils\ModuleUtil;
+use App\Utils\ProductUtil;
+use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-
 
 class SellController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $contactUtil;
-    protected $businessUtil;
-    protected $transactionUtil;
-    protected $taxUtil;
 
+    protected $businessUtil;
+
+    protected $transactionUtil;
+
+    protected $taxUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtils $product
+     * @param  ProductUtils  $product
      * @return void
      */
     public function __construct(ContactUtil $contactUtil, BusinessUtil $businessUtil, TransactionUtil $transactionUtil, TaxUtil $taxUtil, ModuleUtil $moduleUtil, ProductUtil $productUtil)
@@ -68,16 +67,16 @@ class SellController extends Controller
             'cheque_number' => '',
             'bank_account_number' => '',
             'is_return' => 0,
-            'transaction_no' => ''
+            'transaction_no' => '',
         ];
 
         // Payment status
         $this->payment_status = [
-            'all' => __("kardex.all"),
+            'all' => __('kardex.all'),
             'paid' => __('sale.paid'),
-            'pending' => __('sale.pending')
+            'pending' => __('sale.pending'),
         ];
-        
+
         if (config('app.disable_sql_req_pk')) {
             DB::statement('SET SESSION sql_require_primary_key=0');
         }
@@ -98,21 +97,21 @@ class SellController extends Controller
 
         if (request()->ajax()) {
             $business = Business::where('id', $business_id)->select('annull_sale_expiry')->first();
-            
+
             $discount = DiscountCard::where('business_id', '=', $business_id)->get();
 
             // Set maximum php execution time
             if (request()->get('length') == -1) {
                 ini_set('max_execution_time', 0);
             }
-            
+
             // Parameters
             $params = [
                 // Filters
                 'created_by' => request()->input('created_by'),
                 'location_id' => request()->input('location_id'),
                 'customer_id' => request()->customer_id,
-                'seller_id' => request()->get("seller_id", 0),
+                'seller_id' => request()->get('seller_id', 0),
                 'start_date' => request()->start_date,
                 'end_date' => request()->end_date,
                 'is_direct_sale' => request()->is_direct_sale,
@@ -124,7 +123,7 @@ class SellController extends Controller
                 'start_record' => request()->get('start'),
                 'page_size' => request()->get('length'),
                 'search' => request()->get('search'),
-                'order' => request()->get('order')
+                'order' => request()->get('order'),
             ];
 
             // Sales
@@ -134,8 +133,8 @@ class SellController extends Controller
                 ->addColumn(
                     'action',
                     '<div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-transaction-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">' .
-                            __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-transaction-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">'.
+                            __('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <div id="loading" class="text-center">
@@ -147,35 +146,35 @@ class SellController extends Controller
                 ->editColumn(
                     'method', function ($row) {
                         if ($row->status != 'annulled') {
-                            $method = "";
+                            $method = '';
 
-                            if ($row->payment_condition == 'cash' && !is_null($row->method)) {
+                            if ($row->payment_condition == 'cash' && ! is_null($row->method)) {
                                 if ($row->count_payments > 1) {
                                     $method = __('lang_v1.checkout_multi_pay');
                                 } else {
-                                    $method = __("lang_v1." . $row->method);
+                                    $method = __('lang_v1.'.$row->method);
                                 }
 
                             } else {
-                                $method = __("lang_v1.credit");
+                                $method = __('lang_v1.credit');
                             }
 
                             return $method;
 
                         } else {
-                            return "";
+                            return '';
                         }
                     }
                 )
                 ->removeColumn('payment_condition')
                 ->editColumn(
-                    'final_total', function($row) {
-                        $total = '<p class="text-right" style="margin-bottom: 0; color: #000;"><span class="display_currency final-total" data-currency_symbol="true" data-orig-value="' . $row->final_total . '">"' . $row->final_total . '"</span>';
+                    'final_total', function ($row) {
+                        $total = '<p class="text-right" style="margin-bottom: 0; color: #000;"><span class="display_currency final-total" data-currency_symbol="true" data-orig-value="'.$row->final_total.'">"'.$row->final_total.'"</span>';
 
                         if ($row->amount_return > 0) {
-                            $total .= '<br><strong>' . __('sale.return') . ':</strong><br>';
-                            $total .= '<a href="' . action('SellReturnController@show', [$row->id]) . '" class="btn-modal">';
-                            $total .= '<span class="display_currency" data-currency_symbol="true">' . $row->amount_return . '</span></a>';
+                            $total .= '<br><strong>'.__('sale.return').':</strong><br>';
+                            $total .= '<a href="'.action('SellReturnController@show', [$row->id]).'" class="btn-modal">';
+                            $total .= '<span class="display_currency" data-currency_symbol="true">'.$row->amount_return.'</span></a>';
                         }
 
                         $total .= '</p>';
@@ -185,12 +184,13 @@ class SellController extends Controller
                 )
                 ->editColumn(
                     'discount_amount',
-                    function($row) {
+                    function ($row) {
                         $discount_amount = 0.00;
                         if ($row->status != 'annulled') {
                             $discount_amount = $this->transactionUtil->getDiscountValue($row->total_before_tax, $row->discount_type, $row->discount_amount);
                         }
-                        return '<span class="display_currency discount_amount" data-currency_symbol="true" data-orig-value="' . $discount_amount . '">' . $discount_amount . '</span>';
+
+                        return '<span class="display_currency discount_amount" data-currency_symbol="true" data-orig-value="'.$discount_amount.'">'.$discount_amount.'</span>';
                     }
                 )
                 ->editColumn(
@@ -203,11 +203,12 @@ class SellController extends Controller
                             if ($row->tax_inc) {
                                 $discount_amount = $this->transactionUtil->getDiscountValue($row->total_before_tax, $row->discount_type, $row->discount_amount);
                                 $tax_amount = $this->taxUtil->getTaxAmount($row->id, 'sell', $discount_amount);
-                                return '<span class="display_currency tax-amount" data-currency_symbol="true" data-orig-value="' . $tax_amount . '">' . $tax_amount . '</span>';
+
+                                return '<span class="display_currency tax-amount" data-currency_symbol="true" data-orig-value="'.$tax_amount.'">'.$tax_amount.'</span>';
                             } else {
                                 return '<span class="display_currency tax-amount" data-currency_symbol="true" data-orig-value="0.00">0.00</span>';
                             }
-                            
+
                         } else {
                             return '<span class="display_currency tax-amount" data-currency_symbol="true" data-orig-value="0.00">0.00</span>';
                         }
@@ -224,7 +225,7 @@ class SellController extends Controller
                 ->editColumn(
                     'customer_name', function ($row) {
                         if ($row->status == 'annulled') {
-                            return "<strong style='color: red;'>" . $row->customer_name . ' ' . __('lang_v1.annulled') . "</strong>";
+                            return "<strong style='color: red;'>".$row->customer_name.' '.__('lang_v1.annulled').'</strong>';
                         } else {
                             return $row->customer_name;
                         }
@@ -232,41 +233,45 @@ class SellController extends Controller
                 )
                 ->addColumn(
                     'total_remaining', function ($row) {
-                        $total_remaining =  $row->final_total - $row->total_paid;
+                        $total_remaining = $row->final_total - $row->total_paid;
                         if ($row->status == 'annulled') {
                             $total_remaining = 0.00;
                         }
-                        $total_remaining_html = '<span class="display_currency total_remaining" data-currency_symbol="true" data-orig-value="' . $total_remaining . '">' . $total_remaining . '</span>';
+                        $total_remaining_html = '<span class="display_currency total_remaining" data-currency_symbol="true" data-orig-value="'.$total_remaining.'">'.$total_remaining.'</span>';
+
                         return $total_remaining_html;
                     }
                 )
                 ->editColumn(
                     'total_paid', function ($row) {
                         $total_paid = $row->total_paid > 0 ? $row->total_paid : 0;
-                        $total_paid_html = '<span class="display_currency total_paid" data-currency_symbol="true" data-orig-value="' . $total_paid . '">' . $total_paid . '</span>';
+                        $total_paid_html = '<span class="display_currency total_paid" data-currency_symbol="true" data-orig-value="'.$total_paid.'">'.$total_paid.'</span>';
+
                         return $total_paid_html;
                     }
                 )
                 ->addColumn(
-                    'final_total_bc', function($row) {
+                    'final_total_bc', function ($row) {
                         $final_total = $row->final_total > 0 ? $row->final_total : 0;
-                        $final_total_html =  '<span class="display_currency final_total_bc" data-currency_symbol="true" data-orig-value="' . $final_total . '">' . $final_total . '</span>';
+                        $final_total_html = '<span class="display_currency final_total_bc" data-currency_symbol="true" data-orig-value="'.$final_total.'">'.$final_total.'</span>';
+
                         return $final_total_html;
                     }
                 )
                 ->addColumn(
                     'actions', function ($row) {
                         $html = '<div class="btn-group">
-                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' .
-                                __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.
+                                __('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('sell.payments')) {
-                            $html .= '<li><a href="' . action('TransactionPaymentController@addPayment', [$row->id]) . '" class="add_payment_customer" style="cursor: p"><i class="fa fa-credit-card"></i> ' . __("messages.add_payment") . '</a></li>';
+                            $html .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->id]).'" class="add_payment_customer" style="cursor: p"><i class="fa fa-credit-card"></i> '.__('messages.add_payment').'</a></li>';
                         }
 
                         $html .= '</ul></div>';
+
                         return $html;
                     }
                 );
@@ -274,12 +279,12 @@ class SellController extends Controller
             if (request()->get('length') != -1) {
                 $datatable = $datatable->setRowAttr([
                     'data-href' => function ($row) {
-                        if (auth()->user()->can("sell.view")) {
-                            return  action('SellController@show', [$row->id]);
+                        if (auth()->user()->can('sell.view')) {
+                            return action('SellController@show', [$row->id]);
                         } else {
                             return '';
                         }
-                    }
+                    },
                 ]);
             }
 
@@ -295,7 +300,7 @@ class SellController extends Controller
                     'payment_status',
                     'actions',
                     'final_total_bc',
-                    'discount_amount'
+                    'discount_amount',
                 ])
                 ->setTotalRecords($sales['count'])
                 ->setFilteredRecords($sales['count'])
@@ -304,7 +309,7 @@ class SellController extends Controller
 
             return $datatable;
         }
-        
+
         // Locations
         $locations = BusinessLocation::forDropdown($business_id, false, false);
 
@@ -315,15 +320,15 @@ class SellController extends Controller
             foreach ($locations as $id => $name) {
                 $default_location = $id;
             }
-            
-        // Access to all locations
-        } else if (auth()->user()->permitted_locations() == 'all') {
-            $locations = $locations->prepend(__("kardex.all_2"), 'all');
+
+            // Access to all locations
+        } elseif (auth()->user()->permitted_locations() == 'all') {
+            $locations = $locations->prepend(__('kardex.all_2'), 'all');
         }
 
         // Document types
         $document_types = DocumentType::forDropdown($business_id, false, false);
-        $document_types = $document_types->prepend(__("kardex.all"), 'all');
+        $document_types = $document_types->prepend(__('kardex.all'), 'all');
 
         /***  */
         $sellers = CustomerPortfolio::pluck('name', 'id');
@@ -348,16 +353,16 @@ class SellController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
 
         //Check if subscribed or not, then check for users quota
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
-        } elseif (!$this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
+        } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
             return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellController@index'));
         }
 
@@ -426,7 +431,6 @@ class SellController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -442,7 +446,7 @@ class SellController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('sell.view') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -457,15 +461,15 @@ class SellController extends Controller
             ->first();
         $payment_types = $this->transactionUtil->payment_types();
 
-        $customer = Customer::leftJoin("countries as cnt", "customers.country_id", "cnt.id")
-            ->leftJoin("states as st", "customers.state_id", "st.id")
-            ->leftJoin("cities as ct", "customers.city_id", "ct.id")
-            ->where("customers.id", $sell->customer_id)
+        $customer = Customer::leftJoin('countries as cnt', 'customers.country_id', 'cnt.id')
+            ->leftJoin('states as st', 'customers.state_id', 'st.id')
+            ->leftJoin('cities as ct', 'customers.city_id', 'ct.id')
+            ->where('customers.id', $sell->customer_id)
             ->select(
-                "cnt.name as country",
-                "st.name as state",
-                "ct.name as city",
-                "customers.*"
+                'cnt.name as country',
+                'st.name as state',
+                'ct.name as city',
+                'customers.*'
             )
             ->first();
 
@@ -480,7 +484,7 @@ class SellController extends Controller
         $discount_amount = $this->transactionUtil->getDiscountValue($sell->total_before_tax, $sell->discount_type, $sell->discount_amount);
         $tax_percent = $this->taxUtil->getLinesTaxPercent($sell->id);
 
-        $order_taxes =  ($sell->total_before_tax - $discount_amount) * $tax_percent; //$this->taxUtil->getTaxAmount($sell->id, "sell", $discount_amount);
+        $order_taxes = ($sell->total_before_tax - $discount_amount) * $tax_percent; //$this->taxUtil->getTaxAmount($sell->id, "sell", $discount_amount);
 
         return view('sale_pos.show')
             ->with(compact('taxes', 'sell', 'customer', 'payment_types', 'order_taxes'));
@@ -494,17 +498,17 @@ class SellController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         //Check if the transaction can be edited or not.
         $edit_days = request()->session()->get('business.transaction_edit_days');
-        if (!$this->transactionUtil->canBeEdited($id, $edit_days)) {
+        if (! $this->transactionUtil->canBeEdited($id, $edit_days)) {
             return back()
                 ->with('status', [
                     'success' => 0,
-                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days])
+                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days]),
                 ]);
         }
 
@@ -512,7 +516,7 @@ class SellController extends Controller
         if ($this->transactionUtil->isReturnExist($id)) {
             return back()->with('status', [
                 'success' => 0,
-                'msg' => __('lang_v1.return_exist')
+                'msg' => __('lang_v1.return_exist'),
             ]);
         }
 
@@ -529,11 +533,11 @@ class SellController extends Controller
         $location_printer_type = BusinessLocation::find($location_id)->receipt_printer_type;
 
         $sell_details = TransactionSellLine::join(
-                'products AS p',
-                'transaction_sell_lines.product_id',
-                '=',
-                'p.id'
-            )
+            'products AS p',
+            'transaction_sell_lines.product_id',
+            '=',
+            'p.id'
+        )
             ->join(
                 'variations AS variations',
                 'transaction_sell_lines.variation_id',
@@ -580,7 +584,7 @@ class SellController extends Controller
                 DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
             )
             ->get();
-        if (!empty($sell_details)) {
+        if (! empty($sell_details)) {
             foreach ($sell_details as $key => $value) {
                 $sell_details[$key]->formatted_qty_available = $this->transactionUtil->num_f($value->qty_available);
 
@@ -634,7 +638,7 @@ class SellController extends Controller
 
     public function editInvoiceTrans($id)
     {
-        if (!auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -659,9 +663,9 @@ class SellController extends Controller
                 'additional_notes'
             )
             ->findOrFail($id);
-        
-        $parent_doc_date = "";
-        if (!empty($transaction->parent_correlative)) {
+
+        $parent_doc_date = '';
+        if (! empty($transaction->parent_correlative)) {
             $parent_doc_date = Transaction::where('id', $transaction->return_parent_id)
                 ->select(DB::raw('DATE_FORMAT(transaction_date, "%d/%m/%Y") as date'))
                 ->first()->date;
@@ -671,7 +675,7 @@ class SellController extends Controller
         $document_types = DocumentType::where('business_id', $business_id)->pluck('document_name', 'id');
 
         $transaction->transaction_date = $this->transactionUtil->format_date($transaction->transaction_date, true);
-        
+
         // metodos de pago
         $payment_types = $this->transactionUtil->payment_types();
 
@@ -702,10 +706,9 @@ class SellController extends Controller
         ));
     }
 
-
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('sell.update')) {
+        if (! auth()->user()->can('sell.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -716,7 +719,7 @@ class SellController extends Controller
 
             $old_date = $transaction->transaction_date;
             $input_date = $this->transactionUtil->uf_date($request->input('transaction_date'));
-            $new_date = substr($input_date, 0, 10) . ' ' . substr($transaction->transaction_date, 11, 18);
+            $new_date = substr($input_date, 0, 10).' '.substr($transaction->transaction_date, 11, 18);
 
             $transaction->transaction_date = $new_date;
 
@@ -728,9 +731,9 @@ class SellController extends Controller
             $transaction->commission_agent = isset($request->commission_agent) ? $request->commission_agent : $transaction->commission_agent;
             $transaction->staff_note = isset($request->staff_note) ? $request->staff_note : $transaction->staff_note;
             $transaction->additional_notes = isset($request->additional_notes) ? $request->additional_notes : $transaction->additional_notes;
-            
+
             /** Update parent document */
-            if (!empty($transaction->parent_correlative)) {
+            if (! empty($transaction->parent_correlative)) {
                 $transaction->return_parent_id = $request->get('return_parent_id', null);
                 $transaction->parent_correlative = $request->get('parent_correlative', null);
             }
@@ -741,32 +744,33 @@ class SellController extends Controller
             }
 
             $transaction->save();
-            
+
             DB::commit();
-            
+
             $output = [
                 'success' => true,
-                'msg' => __("messages.update_invoice"),
+                'msg' => __('messages.update_invoice'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
     /**
      * Update transaction payments paid_on date
-     * 
-     * @param int $transaction_id
-     * @param datetime $old_date
-     * @param datetime $new_date
-     * 
+     *
+     * @param  int  $transaction_id
+     * @param  datetime  $old_date
+     * @param  datetime  $new_date
      * @return void
      */
-    private function updatePaidOn($transaction_id, $old_date, $new_date) {
+    private function updatePaidOn($transaction_id, $old_date, $new_date)
+    {
         $payments = TransactionPayment::where('transaction_id', $transaction_id)
             ->whereRaw('DATE(paid_on) = DATE(?)', [$old_date])
             ->get();
@@ -784,7 +788,7 @@ class SellController extends Controller
      */
     public function getDrafts()
     {
-        if (!auth()->user()->can('sell.draft') && !auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('sell.draft') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -798,7 +802,7 @@ class SellController extends Controller
      */
     public function getQuotations()
     {
-        if (!auth()->user()->can('sell.quotation') && !auth()->user()->can('direct_sell.access')) {
+        if (! auth()->user()->can('sell.quotation') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -807,24 +811,26 @@ class SellController extends Controller
 
     /**
      * Get invoice parent correlative for final customer documents
-     * 
+     *
      * @param \Illuminate\Http\Request
      * @return json
+     *
      * @author Arquímides Martínez
      */
-    public function getParentCorrelative(Request $request) {
+    public function getParentCorrelative(Request $request)
+    {
         $q = $request->get('q');
         $location_id = $request->input('location');
         $customer_id = $request->input('customer');
         $data = collect();
 
-        if (!empty($q)) {
-            $data = Transaction::join("document_types as dt", "transactions.document_types_id", "dt.id")
-                ->where("location_id", $location_id)
-                ->where("customer_id", $customer_id)
-                ->whereNull("parent_correlative")
-                ->where("correlative", "LIKE", "%{$q}%")
-                ->where("dt.short_name", "FCF")
+        if (! empty($q)) {
+            $data = Transaction::join('document_types as dt', 'transactions.document_types_id', 'dt.id')
+                ->where('location_id', $location_id)
+                ->where('customer_id', $customer_id)
+                ->whereNull('parent_correlative')
+                ->where('correlative', 'LIKE', "%{$q}%")
+                ->where('dt.short_name', 'FCF')
                 ->select(
                     'transactions.id',
                     'transactions.correlative',
@@ -838,24 +844,23 @@ class SellController extends Controller
 
     /**
      * Get transactions due by customer
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param int $customer_id
+     *
+     * @param  int  $customer_id
      * @return json
-     * 
      */
-    public function getTransDueByCustomer(Request $request, $customer_id) {
+    public function getTransDueByCustomer(Request $request, $customer_id)
+    {
         $q = $request->get('q');
         $business_id = auth()->user()->business_id;
 
         $data = [];
-        if (!empty($q)) {
+        if (! empty($q)) {
             $data = Transaction::join('customers as c', 'transactions.customer_id', 'c.id')
                 ->select(
                     'transactions.id',
                     'transactions.correlative',
                     DB::raw("DATE_FORMAT(transactions.transaction_date, '%d/%m/%Y') as transaction_date"),
-                    DB::raw("(transactions.final_total - transactions.payment_balance) as balance"),
+                    DB::raw('(transactions.final_total - transactions.payment_balance) as balance'),
                     'transactions.final_total',
                     DB::raw("CONCAT(DATE_FORMAT(transactions.transaction_date, '%d/%m/%Y'), ' - #', transactions.correlative, ' - $', ROUND(transactions.final_total)) as text")
                 )
@@ -906,9 +911,9 @@ class SellController extends Controller
                 $sells->whereIn('transactions.location_id', $permitted_locations);
             }
 
-            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+            if (! empty(request()->start_date) && ! empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end =  request()->end_date;
+                $end = request()->end_date;
                 $sells->whereDate('transaction_date', '>=', $start)
                     ->whereDate('transaction_date', '<=', $end);
             }
@@ -935,12 +940,12 @@ class SellController extends Controller
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->setRowAttr([
                     'data-href' => function ($row) {
-                        if (auth()->user()->can("sell.view")) {
-                            return  action('SellController@show', [$row->id]);
+                        if (auth()->user()->can('sell.view')) {
+                            return action('SellController@show', [$row->id]);
                         } else {
                             return '';
                         }
-                    }
+                    },
                 ])
                 ->rawColumns(['action', 'invoice_no', 'transaction_date'])
                 ->make(true);
@@ -955,7 +960,7 @@ class SellController extends Controller
      */
     public function duplicateSell($id)
     {
-        if (!auth()->user()->can('sell.create')) {
+        if (! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -968,13 +973,13 @@ class SellController extends Controller
                 ->findorfail($id);
             $duplicate_transaction_data = [];
             foreach ($transaction->toArray() as $key => $value) {
-                if (!in_array($key, ['id', 'created_at', 'updated_at'])) {
+                if (! in_array($key, ['id', 'created_at', 'updated_at'])) {
                     $duplicate_transaction_data[$key] = $value;
                 }
             }
             $duplicate_transaction_data['status'] = 'draft';
             $duplicate_transaction_data['payment_status'] = null;
-            $duplicate_transaction_data['transaction_date'] =  \Carbon::now();
+            $duplicate_transaction_data['transaction_date'] = \Carbon::now();
             $duplicate_transaction_data['created_by'] = $user_id;
 
             DB::beginTransaction();
@@ -989,7 +994,7 @@ class SellController extends Controller
             foreach ($transaction->sell_lines as $sell_line) {
                 $new_sell_line = [];
                 foreach ($sell_line->toArray() as $key => $value) {
-                    if (!in_array($key, ['id', 'transaction_id', 'created_at', 'updated_at', 'lot_no_line_id'])) {
+                    if (! in_array($key, ['id', 'transaction_id', 'created_at', 'updated_at', 'lot_no_line_id'])) {
                         $new_sell_line[$key] = $value;
                     }
                 }
@@ -1003,15 +1008,15 @@ class SellController extends Controller
 
             $output = [
                 'success' => 0,
-                'msg' => trans("lang_v1.duplicate_sell_created_successfully")
+                'msg' => trans('lang_v1.duplicate_sell_created_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => trans("messages.something_went_wrong")
+                'msg' => trans('messages.something_went_wrong'),
             ];
         }
 
@@ -1024,7 +1029,7 @@ class SellController extends Controller
 
     /**
      * Get sales data.
-     * 
+     *
      * @param  array  $params
      * @return array
      */
@@ -1064,10 +1069,10 @@ class SellController extends Controller
         // Date filter
         if (! empty($params['start_date']) && ! empty($params['end_date'])) {
             $start = $params['start_date'];
-            $end =  $params['end_date'];
+            $end = $params['end_date'];
         } else {
             $start = '';
-            $end =  '';
+            $end = '';
         }
 
         // Direct sale filter
@@ -1108,7 +1113,7 @@ class SellController extends Controller
         // Count sales
         $count = DB::select(
             'CALL count_all_sales(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            array(
+            [
                 $business_id,
                 $location_id,
                 $document_type_id,
@@ -1120,8 +1125,8 @@ class SellController extends Controller
                 $is_direct_sale,
                 $commission_agent,
                 $payment_status,
-                $search
-            )
+                $search,
+            ]
         );
 
         if (config('app.business') == 'optics') {
@@ -1140,7 +1145,7 @@ class SellController extends Controller
                 $start_record,
                 $page_size,
                 $order[0]['column'],
-                $order[0]['dir']
+                $order[0]['dir'],
             ];
 
             $sales = DB::select(
@@ -1166,7 +1171,7 @@ class SellController extends Controller
                 $start_record,
                 $page_size,
                 $order[0]['column'],
-                $order[0]['dir']
+                $order[0]['dir'],
             ];
 
             $sales = DB::select(
@@ -1177,7 +1182,7 @@ class SellController extends Controller
 
         $result = [
             'data' => $sales,
-            'count' => $count[0]->count
+            'count' => $count[0]->count,
         ];
 
         return $result;
@@ -1185,7 +1190,7 @@ class SellController extends Controller
 
     /**
      * Get sales togle dropdown.
-     * 
+     *
      * @param  array  $params
      * @return @return \Illuminate\Http\Response
      */
@@ -1210,7 +1215,7 @@ class SellController extends Controller
 
             $parent_doc = null;
             $sale_accounting_entry_mode = $business->sale_accounting_entry_mode;
-            if (!empty($transaction->parent_correlative)) {
+            if (! empty($transaction->parent_correlative)) {
                 $parent_doc = Transaction::where('id', $transaction->return_parent_id)
                     ->where('location_id', $transaction->location_id)
                     //->where('customer_id', $transaction->customer_id)
@@ -1222,9 +1227,9 @@ class SellController extends Controller
                     'parent_doc', 'transaction_date', 'business', 'doc_type', 'enable_sell_delete',
                     'sale_accounting_entry_mode', 'accounting_entry_id'))
                 ->render();
-            
+
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output['success'] = false;
             $output['msg'] = __('messages.something_went_wrong');
@@ -1235,10 +1240,11 @@ class SellController extends Controller
 
     /**
      * Update field payment_balance of transactions table.
-     * 
+     *
      * @return string
      */
-    public function updatePaymentBalance() {
+    public function updatePaymentBalance()
+    {
         try {
             \Log::info('--- START ---');
 
@@ -1270,8 +1276,8 @@ class SellController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = 'FAIL';
         }

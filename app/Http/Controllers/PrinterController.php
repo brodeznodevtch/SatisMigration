@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Datatables;
 use App\Printer;
+use Datatables;
+use Illuminate\Http\Request;
 
 class PrinterController extends Controller
 {
@@ -19,8 +19,8 @@ class PrinterController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $printer = Printer::where('business_id', $business_id)
-                        ->select(['name', 'connection_type',
-                            'capability_profile', 'char_per_line', 'ip_address', 'port', 'path', 'id']);
+                ->select(['name', 'connection_type',
+                    'capability_profile', 'char_per_line', 'ip_address', 'port', 'path', 'id']);
 
             return Datatables::of($printer)
                 ->editColumn('capability_profile', function ($row) {
@@ -64,7 +64,6 @@ class PrinterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -75,7 +74,6 @@ class PrinterController extends Controller
 
             $input['business_id'] = $business_id;
             $input['created_by'] = $request->session()->get('user.id');
-            ;
 
             if ($input['connection_type'] == 'network') {
                 $input['path'] = '';
@@ -88,14 +86,14 @@ class PrinterController extends Controller
             $printer->fill($input)->save();
 
             $output = ['success' => 1,
-                            'msg' => __('printer.added_success')
-                        ];
+                'msg' => __('printer.added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('printers')->with('status', $output);
@@ -133,7 +131,6 @@ class PrinterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -155,14 +152,14 @@ class PrinterController extends Controller
             $printer->fill($input)->save();
 
             $output = ['success' => true,
-                        'msg' => __("printer.updated_success")
-                        ];
+                'msg' => __('printer.updated_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-        
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                        'msg' => __("messages.something_went_wrong")
-                    ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return redirect('printers')->with('status', $output);
@@ -185,14 +182,14 @@ class PrinterController extends Controller
                 $printer->delete();
 
                 $output = ['success' => true,
-                            'msg' => __("printer.deleted_success")
-                            ];
+                    'msg' => __('printer.deleted_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

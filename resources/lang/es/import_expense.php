@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_import_expense' => 'Registrar gasto de importación',
     'added_success' => 'Gasto de importación registrado exitosamente',

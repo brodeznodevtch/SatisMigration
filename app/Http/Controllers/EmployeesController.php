@@ -2,40 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\System;
-use App\Employees;
-use App\Positions;
-use App\RrhhSalaryHistory;
-use App\RrhhPositionHistory;
 use App\Bank;
 use App\Business;
+use App\Employees;
+use App\Notifications\NewNotification;
 use App\RrhhAbsenceInability;
 use App\RrhhContract;
-use App\Notifications\NewNotification;
+use App\RrhhPositionHistory;
 use App\RrhhSalarialConstance;
+use App\RrhhSalaryHistory;
 use App\RrhhTypeWage;
+use App\System;
+use App\User;
 use App\Utils\EmployeeUtil;
-use Spatie\Permission\Models\Role;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Carbon\Carbon;
-use Storage;
-use Illuminate\Validation\Rule;
-use App\Utils\ProductUtil;
 use App\Utils\ModuleUtil;
+use App\Utils\ProductUtil;
+use Carbon\Carbon;
+use DataTables;
+use DB;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Storage;
 
 class EmployeesController extends Controller
 {
     protected $productUtil;
+
     protected $moduleUtil;
+
     protected $employeeUtil;
 
     /**
      * Constructor
      *
-     * @param ProductUtil $product
+     * @param  ProductUtil  $product
      * @return void
      */
     public function __construct(ProductUtil $productUtil, ModuleUtil $moduleUtil, EmployeeUtil $employeeUtil)
@@ -50,47 +50,50 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() 
+    public function index()
     {
-        if(!auth()->user()->can('rrhh_employees.view')){
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('rrhh_employees.view')) {
+            abort(403, 'Unauthorized action.');
         }
+
         return view('rrhh.employees.index');
     }
 
-
     //Mostrar Lista de Empleados
-    public function getEmployees(){
-        if ( !auth()->user()->can('rrhh_employees.view') ) {
+    public function getEmployees()
+    {
+        if (! auth()->user()->can('rrhh_employees.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $data = DB::table('employees as e')
-        ->select('e.id as id', 'e.agent_code', 'e.first_name', 'e.dni', 'e.email', 'e.curriculum_vitae as curriculum_vitae', 'e.status as status', 'e.type_id as type_id', DB::raw("CONCAT(e.first_name, ' ', e.last_name) as full_name"))
-        ->where('e.business_id', $business_id)
-        ->where('e.deleted_at', null)
-        ->get();
-        
+            ->select('e.id as id', 'e.agent_code', 'e.first_name', 'e.dni', 'e.email', 'e.curriculum_vitae as curriculum_vitae', 'e.status as status', 'e.type_id as type_id', DB::raw("CONCAT(e.first_name, ' ', e.last_name) as full_name"))
+            ->where('e.business_id', $business_id)
+            ->where('e.deleted_at', null)
+            ->get();
+
         return DataTables::of($data)->editColumn('department', function ($data) {
             $position = RrhhPositionHistory::where('employee_id', $data->id)->where('current', 1)->first();
-            return (!empty($position)) ? $position->newDepartment->value : __('rrhh.not_assigned');
+
+            return (! empty($position)) ? $position->newDepartment->value : __('rrhh.not_assigned');
         })->editColumn('position', function ($data) {
             $position = RrhhPositionHistory::where('employee_id', $data->id)->where('current', 1)->first();
-            return (!empty($position)) ? $position->newPosition1->value : __('rrhh.not_assigned');
+
+            return (! empty($position)) ? $position->newPosition1->value : __('rrhh.not_assigned');
         })->editColumn('status', function ($data) {
-            if($data->status == 1){
+            if ($data->status == 1) {
                 return __('rrhh.active');
-            }else{
+            } else {
                 return __('rrhh.inactive');
             }
         })->addColumn('salarial_constances', function ($data) {
-            if($data->type_id != null){
+            if ($data->type_id != null) {
                 $business_id = request()->session()->get('user.business_id');
                 $type = RrhhTypeWage::where('id', $data->type_id)->where('business_id', $business_id)->first();
-                if($type->name == "Asalariado"){
+                if ($type->name == 'Asalariado') {
                     $constance = RrhhSalarialConstance::where('status', 1)->where('business_id', $business_id)->get();
-                    if(count($constance) > 0){
+                    if (count($constance) > 0) {
                         return 'Descargar';
                     }
                 }
@@ -103,9 +106,9 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
-        if ( !auth()->user()->can('rrhh_employees.create') ) {
+        if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -123,7 +126,7 @@ class EmployeesController extends Controller
         $countries = DB::table('countries')->pluck('name', 'id');
         $states = DB::table('states')->where('country_id')->pluck('name', 'id');
         $cities = DB::table('cities')->where('state_id')->pluck('name', 'id');
-        
+
         $roles = DB::table('roles')
             ->select(DB::raw("left(roles.name,LOCATE('#', roles.name) - 1) as rol, id"))
             ->where('business_id', $business_id)
@@ -133,7 +136,7 @@ class EmployeesController extends Controller
         return view('rrhh.employees.create', compact(
             'nationalities',
             'civil_statuses',
-            'countries', 
+            'countries',
             'professions',
             'departments',
             'positions',
@@ -152,31 +155,30 @@ class EmployeesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        if ( !auth()->user()->can('rrhh_employees.create') ) {
+        if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'first_name'             => 'required',
-            'last_name'              => 'required',
-            'gender'                 => 'required',
-            'birth_date'             => 'required',
-            'dni'                    => 'required|regex:/^\d{8}-\d$/',
-            'address'                => 'required',
-            'email'                  => 'required|email',
-            'date_admission'         => 'required',
-            'nationality_id'         => 'required', 
-            'civil_status_id'        => 'required', 
-            'department_id'          => 'required',
-            'position1_id'           => 'required', 
-            'salary'                 => 'required|numeric|min:1',
-            'payment_id'             => 'required',
-            'afp_number'             => 'nullable|regex:/^[0-9]+$/',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'gender' => 'required',
+            'birth_date' => 'required',
+            'dni' => 'required|regex:/^\d{8}-\d$/',
+            'address' => 'required',
+            'email' => 'required|email',
+            'date_admission' => 'required',
+            'nationality_id' => 'required',
+            'civil_status_id' => 'required',
+            'department_id' => 'required',
+            'position1_id' => 'required',
+            'salary' => 'required|numeric|min:1',
+            'payment_id' => 'required',
+            'afp_number' => 'nullable|regex:/^[0-9]+$/',
             'social_security_number' => 'nullable|regex:/^[0-9]+$/',
         ]);
 
@@ -184,42 +186,42 @@ class EmployeesController extends Controller
             $hasUser_mode = $request->input('chk_has_user');
             $commss_opt = $request->input('commission');
 
-            if($hasUser_mode == 'has_user'){
+            if ($hasUser_mode == 'has_user') {
                 $password_mode = $request->input('rdb_pass_mode');
 
                 $pass = $request->input('password');
                 $password_mode = $request->input('rdb_pass_mode');
                 $user_details = $request->only(['first_name', 'last_name', 'username', 'email', 'password']);
                 $user_details['business_id'] = $request->session()->get('user.business_id');
-                $user_details['status']      = 'pending';
-                $user_details['language']    = 'es';
+                $user_details['status'] = 'pending';
+                $user_details['language'] = 'es';
 
-                if($password_mode == 'generated'){
-                    $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-                    $password = "";
-                    for($i = 0; $i < 9; $i ++){
-                        $password .= substr($str, rand(0,61), 1);
+                if ($password_mode == 'generated') {
+                    $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+                    $password = '';
+                    for ($i = 0; $i < 9; $i++) {
+                        $password .= substr($str, rand(0, 61), 1);
                     }
                     $user_details['password'] = bcrypt($password);
-                }else{
+                } else {
                     $password = $request->input('password');
                     $user_details['password'] = bcrypt($user_details['password']);
                 }
 
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');
-                if(blank($user_details['username'])){
+                if (blank($user_details['username'])) {
                     $user_details['username'] = $this->moduleUtil->generateReferenceNumber('username', $ref_count);
                 }
 
                 $username_ext = $this->getUsernameExtension();
-                if(!empty($username_ext)){
+                if (! empty($username_ext)) {
                     $user_details['username'] .= $username_ext;
                 }
 
-                if($commss_opt == 'has_commission'){
+                if ($commss_opt == 'has_commission') {
                     $user_details['is_cmmsn_agnt'] = 1;
                     $user_details['cmmsn_percent'] = $request->input('commision_amount');
-                }else{
+                } else {
                     $user_details['is_cmmsn_agnt'] = 0;
                 }
 
@@ -233,9 +235,9 @@ class EmployeesController extends Controller
             }
 
             $input_details = $request->only([
-                'first_name', 
-                'last_name', 
-                'username', 
+                'first_name',
+                'last_name',
+                'username',
                 'email',
                 'last_name',
                 'gender',
@@ -257,44 +259,44 @@ class EmployeesController extends Controller
                 'state_id',
                 'city_id',
                 'profession_id',
-                'type_id'
+                'type_id',
             ]);
-            if($request->approved){
+            if ($request->approved) {
                 $input_details['approved'] = 1;
                 $input_details['tax_number'] = $request->input('dni');
-            }else{
+            } else {
                 $input_details['approved'] = 0;
                 $input_details['tax_number'] = $request->input('tax_number');
             }
-            $input_details['birth_date']     = $this->moduleUtil->uf_date($request->input('birth_date'));
+            $input_details['birth_date'] = $this->moduleUtil->uf_date($request->input('birth_date'));
             $input_details['date_admission'] = $this->moduleUtil->uf_date($request->input('date_admission'));
 
             $business_id = request()->session()->get('user.business_id');
             $folderName = 'business_'.$business_id;
             if ($request->hasFile('photo')) {
-                if (!Storage::disk('employee_photo')->exists($folderName)) {
+                if (! Storage::disk('employee_photo')->exists($folderName)) {
                     \File::makeDirectory(public_path().'/uploads/employee_photo/'.$folderName, $mode = 0755, true, true);
                 }
                 $file = $request->file('photo');
                 $name = time().'_'.$file->getClientOriginalName();
-                Storage::disk('employee_photo')->put($folderName.'/'.$name,  \File::get($file));
+                Storage::disk('employee_photo')->put($folderName.'/'.$name, \File::get($file));
                 $input_details['photo'] = $name;
             }
 
             if ($request->hasFile('curriculum_vitae')) {
-                if (!Storage::disk('employee_curriculum_vitae')->exists($folderName)) {
+                if (! Storage::disk('employee_curriculum_vitae')->exists($folderName)) {
                     \File::makeDirectory(public_path().'/uploads/employee_curriculum_vitae/'.$folderName, $mode = 0755, true, true);
                 }
                 $file1 = $request->file('curriculum_vitae');
                 $name1 = time().'_'.$file1->getClientOriginalName();
-                Storage::disk('employee_curriculum_vitae')->put($folderName.'/'.$name1,  \File::get($file1));
+                Storage::disk('employee_curriculum_vitae')->put($folderName.'/'.$name1, \File::get($file1));
                 $input_details['curriculum_vitae'] = $name1;
             }
 
-            $input_details['created_by']     = $request->session()->get('user.id');
-            $input_details['business_id']    = $request->session()->get('user.business_id');
+            $input_details['created_by'] = $request->session()->get('user.id');
+            $input_details['business_id'] = $request->session()->get('user.business_id');
 
-            $input_details['agent_code']     = $this->employeeUtil->generateCorrelative($input_details['date_admission'], $business_id);
+            $input_details['agent_code'] = $this->employeeUtil->generateCorrelative($input_details['date_admission'], $business_id);
 
             $employee = Employees::create($input_details);
 
@@ -311,21 +313,21 @@ class EmployeesController extends Controller
             $output = [
                 'success' => 1,
                 'id' => $employee->id,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
         if ($request->input('submit_type') == 'complete') {
             return redirect()->action('EmployeesController@edit', [$employee->id]);
-        } else if ($request->input('submit_type') == 'other') {
+        } elseif ($request->input('submit_type') == 'other') {
             return redirect()->action('EmployeesController@create')->with('status', $output);
         } else {
             return redirect('rrhh-employees')->with('status', $output);
@@ -338,9 +340,10 @@ class EmployeesController extends Controller
      * @param  \App\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id) {
+    public function show(Request $request, $id)
+    {
 
-        if ( !auth()->user()->can('rrhh_employees.view') ) {
+        if (! auth()->user()->can('rrhh_employees.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -355,14 +358,14 @@ class EmployeesController extends Controller
             'state',
             'payment'
         )
-        ->first();
+            ->first();
 
         $business_id = request()->session()->get('user.business_id');
         $folderName = 'business_'.$business_id;
         if ($employee->photo == '') {
-            if($employee->gender == 'F'){
+            if ($employee->gender == 'F') {
                 $route = '/img/Avatar-F.png';
-            }else{
+            } else {
                 $route = '/img/Avatar-M.png';
             }
         } else {
@@ -387,7 +390,7 @@ class EmployeesController extends Controller
             ->where('study.employee_id', $employee->id)
             ->where('type.rrhh_header_id', 12)
             ->get();
-        
+
         $economicDependences = DB::table('rrhh_economic_dependences as economicDependence')
             ->join('rrhh_datas as type', 'type.id', '=', 'economicDependence.type_relationship_id')
             ->join('employees as employee', 'employee.id', '=', 'economicDependence.employee_id')
@@ -410,10 +413,9 @@ class EmployeesController extends Controller
             ->where('rrhh_contracts.employee_id', $employee->id)
             ->orderBy('id', 'DESC')
             ->get();
-    
+
         $current_date = Carbon::now()->format('Y-m-d');
-    
-        
+
         foreach ($contracts as $contract) {
             if ($contract->contract_status == 'Vigente') {
                 if ($contract->contract_end_date != null) {
@@ -436,9 +438,10 @@ class EmployeesController extends Controller
      * @param  \App\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
 
-        if ( !auth()->user()->can('rrhh_employees.update') ) {
+        if (! auth()->user()->can('rrhh_employees.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -460,32 +463,32 @@ class EmployeesController extends Controller
         $countries = DB::table('countries')->pluck('name', 'id');
         $states = DB::table('states')->where('country_id', $employee->country_id)->pluck('name', 'id');
         $cities = DB::table('cities')->where('state_id', $employee->state_id)->pluck('name', 'id');
-        
+
         $documents = DB::table('rrhh_documents as document')
-        ->join('rrhh_datas as type', 'type.id', '=', 'document.document_type_id')
-        ->select('document.id as id', 'type.value as type', 'type.date_required as date_required', 'document.number as number', 'document.document_type_id as document_type_id', 'document.date_expedition as date_expedition', 'document.date_expiration as date_expiration')
-        ->where('document.employee_id', $employee->id)
-        ->get();
+            ->join('rrhh_datas as type', 'type.id', '=', 'document.document_type_id')
+            ->select('document.id as id', 'type.value as type', 'type.date_required as date_required', 'document.number as number', 'document.document_type_id as document_type_id', 'document.date_expedition as date_expedition', 'document.date_expiration as date_expiration')
+            ->where('document.employee_id', $employee->id)
+            ->get();
 
         $type_documents = DB::table('rrhh_datas')->where('rrhh_header_id', 9)->where('business_id', $business_id)->where('status', 1)->where('deleted_at', null)->orderBy('value', 'DESC')->get();
-       
-        for ($i=0; $i < count($documents); $i++) { 
-            if(isset($type_documents)){
-                if(!empty($type_documents)){
-                    for ($j=0; $j < count($type_documents); $j++) {
-                        if($type_documents[$j]->id == $documents[$i]->document_type_id){
+
+        for ($i = 0; $i < count($documents); $i++) {
+            if (isset($type_documents)) {
+                if (! empty($type_documents)) {
+                    for ($j = 0; $j < count($type_documents); $j++) {
+                        if ($type_documents[$j]->id == $documents[$i]->document_type_id) {
                             $type_documents[$j]->value = '';
                         }
                     }
                 }
             }
         }
-    
+
         return view('rrhh.employees.edit', compact(
             'employee',
             'nationalities',
             'civil_statuses',
-            'states', 
+            'states',
             'professions',
             'departments',
             'positions',
@@ -499,18 +502,18 @@ class EmployeesController extends Controller
             'type_documents',
             'position',
             'salary'
-        ));        
+        ));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        if ( !auth()->user()->can('rrhh_employees.update') ) {
+    public function update(Request $request, $id)
+    {
+        if (! auth()->user()->can('rrhh_employees.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -522,43 +525,43 @@ class EmployeesController extends Controller
         $requiredPosition = 'nullable';
         $requiredSalary = 'nullable';
         $requiredPayment = 'nullable';
-        if($position == 0){
+        if ($position == 0) {
             $requiredDepartment = 'required';
             $requiredPosition = 'required';
         }
 
-        if($salary == 0){
+        if ($salary == 0) {
             $requiredSalary = 'required|numeric|min:1';
         }
 
-        if($employee->payment_id == null){
+        if ($employee->payment_id == null) {
             $requiredPayment = 'required';
         }
 
         $request->validate([
-            'first_name'             => 'required',
-            'last_name'              => 'required',
-            'gender'                 => 'required',
-            'birth_date'             => 'required',
-            'dni'                    => 'required|regex:/^\d{8}-\d$/',
-            'address'                => 'required',
-            'email'                  => 'required|email',
-            'date_admission'         => 'required',
-            'nationality_id'         => 'required', 
-            'civil_status_id'        => 'required', 
-            'department_id'          => $requiredDepartment,
-            'position1_id'           => $requiredPosition, 
-            'salary'                 => $requiredSalary,
-            'payment_id'             => $requiredPayment,
-            'afp_number'             => 'nullable|regex:/^[0-9]+$/',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'gender' => 'required',
+            'birth_date' => 'required',
+            'dni' => 'required|regex:/^\d{8}-\d$/',
+            'address' => 'required',
+            'email' => 'required|email',
+            'date_admission' => 'required',
+            'nationality_id' => 'required',
+            'civil_status_id' => 'required',
+            'department_id' => $requiredDepartment,
+            'position1_id' => $requiredPosition,
+            'salary' => $requiredSalary,
+            'payment_id' => $requiredPayment,
+            'afp_number' => 'nullable|regex:/^[0-9]+$/',
             'social_security_number' => 'nullable|regex:/^[0-9]+$/',
         ]);
 
         try {
             $input_details = $request->only([
-                'first_name', 
-                'last_name', 
-                'username', 
+                'first_name',
+                'last_name',
+                'username',
                 'email',
                 'institutional_email',
                 'last_name',
@@ -584,12 +587,12 @@ class EmployeesController extends Controller
                 'bank_id',
                 'bank_account',
                 'state_id',
-                'city_id'
+                'city_id',
             ]);
-            if($request->input('approved')){
+            if ($request->input('approved')) {
                 $input_details['approved'] = 1;
                 $input_details['tax_number'] = $request->input('dni');
-            }else{
+            } else {
                 $input_details['approved'] = 0;
                 $input_details['tax_number'] = $request->input('tax_number');
             }
@@ -599,49 +602,47 @@ class EmployeesController extends Controller
             } else {
                 $input_details['status'] = 0;
             }
-            
-            
+
             $business_id = request()->session()->get('user.business_id');
             $folderName = 'business_'.$business_id;
             if ($request->hasFile('photo')) {
-                if (!Storage::disk('employee_photo')->exists($folderName)) {
+                if (! Storage::disk('employee_photo')->exists($folderName)) {
                     \File::makeDirectory(public_path().'/uploads/employee_photo/'.$folderName, $mode = 0755, true, true);
                 }
                 $file = $request->file('photo');
                 $name = time().'_'.$file->getClientOriginalName();
-                Storage::disk('employee_photo')->put($folderName.'/'.$name,  \File::get($file));
+                Storage::disk('employee_photo')->put($folderName.'/'.$name, \File::get($file));
                 $input_details['photo'] = $name;
             }
 
             if ($request->hasFile('curriculum_vitae')) {
-                if (!Storage::disk('employee_curriculum_vitae')->exists($folderName)) {
+                if (! Storage::disk('employee_curriculum_vitae')->exists($folderName)) {
                     \File::makeDirectory(public_path().'/uploads/employee_curriculum_vitae/'.$folderName, $mode = 0755, true, true);
                 }
                 $file = $request->file('curriculum_vitae');
                 $name = time().'_'.$file->getClientOriginalName();
-                Storage::disk('employee_curriculum_vitae')->put($folderName.'/'.$name,  \File::get($file));
+                Storage::disk('employee_curriculum_vitae')->put($folderName.'/'.$name, \File::get($file));
                 $input_details['curriculum_vitae'] = $name;
             }
-            
 
             $input_details['date_admission'] = $this->moduleUtil->uf_date($request->input('date_admission'));
-            $input_details['birth_date']     = $this->moduleUtil->uf_date($request->input('birth_date'));     
-            if ($employee->payment_id == null){
-                $input_details['payment_id']   = $request->input('payment_id');
-                $input_details['bank_id']      = $request->input('bank_id');
+            $input_details['birth_date'] = $this->moduleUtil->uf_date($request->input('birth_date'));
+            if ($employee->payment_id == null) {
+                $input_details['payment_id'] = $request->input('payment_id');
+                $input_details['bank_id'] = $request->input('bank_id');
                 $input_details['bank_account'] = $request->input('bank_account');
             }
-            
-            if($employee->agent_code == null){
-                $input_details['agent_code']     = $this->employeeUtil->generateCorrelative($input_details['date_admission'], $business_id);
+
+            if ($employee->agent_code == null) {
+                $input_details['agent_code'] = $this->employeeUtil->generateCorrelative($input_details['date_admission'], $business_id);
             }
             $employee->update($input_details);
 
-            if($position == 0){
+            if ($position == 0) {
                 RrhhPositionHistory::insert(
                     ['new_department_id' => $request->input('department_id'), 'new_position1_id' => $request->input('position1_id'), 'employee_id' => $employee->id, 'current' => 1]
                 );
-            }else{
+            } else {
                 $position = RrhhPositionHistory::where('employee_id', $employee->id)->where('current', 1)->orderBy('id', 'DESC')->first();
                 $position->delete();
 
@@ -650,11 +651,11 @@ class EmployeesController extends Controller
                 );
             }
 
-            if($salary == 0){
+            if ($salary == 0) {
                 RrhhSalaryHistory::insert(
                     ['employee_id' => $employee->id, 'new_salary' => $request->input('salary'), 'current' => 1]
                 );
-            }else{
+            } else {
                 $salary = RrhhSalaryHistory::where('employee_id', $employee->id)->where('current', 1)->orderBy('id', 'DESC')->first();
                 $salary->delete();
 
@@ -665,15 +666,16 @@ class EmployeesController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
+
         return redirect('rrhh-employees')->with('status', $output);
     }
 
@@ -683,9 +685,9 @@ class EmployeesController extends Controller
      * @param  \App\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) 
+    public function destroy($id)
     {
-        if (!auth()->user()->can('rrhh_employees.delete')) {
+        if (! auth()->user()->can('rrhh_employees.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -696,20 +698,19 @@ class EmployeesController extends Controller
                 $item->delete();
                 $output = [
                     'success' => true,
-                    'msg' => __('rrhh.deleted_successfully')
+                    'msg' => __('rrhh.deleted_successfully'),
                 ];
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }
-
 
     public function verifiedIfExistsDocument($type, $value, $id = null)
     {
@@ -718,84 +719,88 @@ class EmployeesController extends Controller
 
             //verifica si hay registtos en la base de datos
             if ($type == 'dni') {
-                if(is_null($id)){
+                if (is_null($id)) {
                     $employee = Employees::where('dni', $value)->where('business_id', $business_id)->exists();
-                }else{
+                } else {
                     $employee = Employees::where('id', '<>', $id)->where('dni', $value)->where('business_id', $business_id)->exists();
                 }
                 if ($employee) {
                     $output = [
                         'success' => true,
-                        'msg' => trans('customer.DNI_invalid')
+                        'msg' => trans('customer.DNI_invalid'),
                     ];
-                    return  $output;
-                } 
-            } else if ($type == 'tax_number') {
-                if(is_null($id)){
+
+                    return $output;
+                }
+            } elseif ($type == 'tax_number') {
+                if (is_null($id)) {
                     $employee = Employees::where('tax_number', $value)->where('business_id', $business_id)->exists();
-                }else{
+                } else {
                     $employee = Employees::where('id', '<>', $id)->where('tax_number', $value)->where('business_id', $business_id)->exists();
                 }
                 if ($employee) {
                     $output2 = [
                         'success' => true,
-                        'msg' => trans('customer.validate_tax_number_error')
+                        'msg' => trans('customer.validate_tax_number_error'),
                     ];
-                    return  $output2;
+
+                    return $output2;
                 }
             }
         }
     }
 
-    public function getPhoto($id) {
+    public function getPhoto($id)
+    {
 
-        if($id != null){
-            if ( !auth()->user()->can('rrhh_employees.view') ) {
+        if ($id != null) {
+            if (! auth()->user()->can('rrhh_employees.view')) {
                 abort(403, 'Unauthorized action.');
             }
-            
+
             $employee = Employees::findOrFail($id);
             $business_id = request()->session()->get('user.business_id');
             $folderName = 'business_'.$business_id;
-            
+
             if ($employee->photo == null) {
                 $route = 'uploads/img/defualt.png';
             } else {
                 $route = 'uploads/employee_photo/'.$folderName.'/'.$employee->photo;
             }
-            
+
             return view('rrhh.employees.photo', compact('route'));
         }
     }
 
+    public function downloadCv($id)
+    {
 
-    public function downloadCv($id) {
-
-        if($id != null){
-            if ( !auth()->user()->can('rrhh_employees.view') ) {
+        if ($id != null) {
+            if (! auth()->user()->can('rrhh_employees.view')) {
                 abort(403, 'Unauthorized action.');
             }
-            
+
             $business_id = request()->session()->get('user.business_id');
             $employee = Employees::where('id', $id)->where('business_id', $business_id)->firstOrFail();
             $folderName = 'business_'.$business_id;
-            
+
             if ($employee->curriculum_vitae != null) {
                 $route = '/uploads/employee_curriculum_vitae/'.$folderName.'/'.$employee->curriculum_vitae;
             }
-            
+
             return response()->download(public_path($route));
         }
     }
 
-
     private function getUsernameExtension()
     {
-        $extension = !empty(System::getProperty('enable_business_based_username')) ? '-' .str_pad(session()->get('business.id'), 2, 0, STR_PAD_LEFT) : null;
+        $extension = ! empty(System::getProperty('enable_business_based_username')) ? '-'.str_pad(session()->get('business.id'), 2, 0, STR_PAD_LEFT) : null;
+
         return $extension;
     }
 
-    public function getImportEmployees(){
-        
+    public function getImportEmployees()
+    {
+
     }
 }

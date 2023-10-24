@@ -1,9 +1,9 @@
 <?php
 
 use App\DocumentClass;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDocumentClassesTable extends Migration
 {
@@ -23,12 +23,12 @@ class CreateDocumentClassesTable extends Migration
 
         DocumentClass::create([
             'code' => 1,
-            'name' => 'IMPRESO POR IMPRENTA O TIQUETES'
+            'name' => 'IMPRESO POR IMPRENTA O TIQUETES',
         ]);
 
         DocumentClass::create([
             'code' => 2,
-            'name' => 'FORMULARIO ÚNICO'
+            'name' => 'FORMULARIO ÚNICO',
         ]);
     }
 

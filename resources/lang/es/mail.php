@@ -1,4 +1,5 @@
 <?php
+
 return [
     'welcome' => 'Te damos la bienvenida a ',
     'password_reset' => 'Reseteo de contraseña ',
@@ -10,5 +11,5 @@ return [
     'username' => 'Usuario',
     'password' => 'Contraseña',
     'click_to_login' => 'Clic para iniciar sessión',
-    'best_regards' => 'Saludos cordiales'
+    'best_regards' => 'Saludos cordiales',
 ];

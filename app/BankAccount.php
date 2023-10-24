@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BankAccount extends Model
 {
-	use SoftDeletes;
-	protected $dates = ['deleted_at'];
-	protected $fillable = ['business_id', 'bank_id', 'catalogue_id', 'name', 'description', 'type', 'number'];
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
+    protected $fillable = ['business_id', 'bank_id', 'catalogue_id', 'name', 'description', 'type', 'number'];
 
     public function bankTransaction()
     {
-    	return $this->hasMany('App\bankTransaction');
+        return $this->hasMany('App\bankTransaction');
     }
 
     public function bank()
     {
-    	return $this->belongsTo('App\Bank');
+        return $this->belongsTo('App\Bank');
     }
 
     public function catalogue()
@@ -30,5 +32,4 @@ class BankAccount extends Model
     {
         return $this->hasMany('App\BankCheckbook');
     }
-    
 }

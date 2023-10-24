@@ -20,7 +20,7 @@ class Business extends Model
      */
     protected $guarded = ['id', 'woocommerce_api_settings'];
 
-   /**
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -80,8 +80,8 @@ class Business extends Model
     }
 
     /**
-    * Get the Business subscriptions.
-    */
+     * Get the Business subscriptions.
+     */
     public function subscriptions()
     {
         return $this->hasMany('\Modules\Superadmin\Entities\Subscription');
@@ -111,19 +111,20 @@ class Business extends Model
     public static function create_business($details)
     {
         $business = Business::create($details);
+
         return $business;
     }
 
     /**
      * Updates a business based on the input provided.
-     * @param int $business_id
-     * @param array $details
      *
+     * @param  int  $business_id
+     * @param  array  $details
      * @return object
      */
     public static function update_business($business_id, $details)
     {
-        if (!empty($details)) {
+        if (! empty($details)) {
             Business::where('id', $business_id)
                 ->update($details);
         }

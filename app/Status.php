@@ -8,7 +8,8 @@ class Status extends Model
 {
     //
 
-    public function cashier(){
+    public function cashier()
+    {
         return belongsTo(App\Cashier::class);
     }
 }

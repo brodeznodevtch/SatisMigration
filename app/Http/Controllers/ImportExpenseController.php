@@ -18,7 +18,6 @@ class ImportExpenseController extends Controller
     /**
      * Constructor
      *
-     * @param  \App\Utils\TransactionUtil  $transactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil)
@@ -34,12 +33,12 @@ class ImportExpenseController extends Controller
     public function index()
     {
         if (! auth()->user()->can('import_expense.view') && ! auth()->user()->can('import_expense.create')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = $business_id = request()->session()->get('user.business_id');
-            
+
             $import_expenses = ImportExpense::where('business_id', $business_id)
                 ->select('name', 'type', 'id');
 
@@ -88,7 +87,6 @@ class ImportExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -108,15 +106,15 @@ class ImportExpenseController extends Controller
             $output = [
                 'success' => true,
                 'data' => $import_expense,
-                'msg' => __("import_expense.added_success")
+                'msg' => __('import_expense.added_success'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -126,7 +124,6 @@ class ImportExpenseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ImportExpense  $importExpense
      * @return \Illuminate\Http\Response
      */
     public function show(ImportExpense $importExpense)
@@ -156,7 +153,6 @@ class ImportExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\ImportExpense  $importExpense
      * @return \Illuminate\Http\Response
      */
@@ -176,15 +172,15 @@ class ImportExpenseController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("import_expense.updated_success")
+                    'msg' => __('import_expense.updated_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -212,15 +208,15 @@ class ImportExpenseController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("import_expense.deleted_success")
+                    'msg' => __('import_expense.deleted_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -247,7 +243,7 @@ class ImportExpenseController extends Controller
 
             $import_expenses = ImportExpense::where('business_id', $business_id)
                 ->where('type', $type)
-                ->where('name', 'like', '%' . $term . '%')
+                ->where('name', 'like', '%'.$term.'%')
                 ->select('id', 'name as text')
                 ->get();
 

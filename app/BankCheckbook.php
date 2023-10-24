@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BankCheckbook extends Model
 {
-    protected $table = "bank_checkbooks";
+    protected $table = 'bank_checkbooks';
 
     protected $fillable = [
         'business_id',
@@ -17,11 +17,11 @@ class BankCheckbook extends Model
         'final_correlative',
         'actual_correlative',
         'bank_account_id',
-        'status'
+        'status',
     ];
 
     public function account()
     {
-    	return $this->belongsTo('App\BankAccount');
+        return $this->belongsTo('App\BankAccount');
     }
 }

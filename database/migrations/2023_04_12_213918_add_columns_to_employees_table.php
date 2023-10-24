@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnsToEmployeesTable extends Migration
 {
@@ -37,7 +37,7 @@ class AddColumnsToEmployeesTable extends Migration
 
             $table->string('afp_number')->nullable()->after('afp_id');
             $table->date('date_admission')->nullable()->after('afp_number');
-            
+
             $table->string('photo')->nullable()->after('mobile');
             $table->boolean('status')->default(1)->after('photo');
 

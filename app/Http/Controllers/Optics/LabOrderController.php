@@ -18,15 +18,14 @@ use App\StockAdjustmentLine;
 use App\Transaction;
 use App\TransactionSellLine;
 use App\Utils\TransactionUtil;
-use App\Warehouse;
 use App\Utils\Util;
 use App\Variation;
 use App\VariationLocationDetails;
+use App\Warehouse;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use DB;
-use stdClass;
 use Yajra\DataTables\DataTables;
 
 class LabOrderController extends Controller
@@ -37,7 +36,7 @@ class LabOrderController extends Controller
         $this->transactionUtil = $transactionUtil;
 
         $this->crystal_warehouse = 1;
-        
+
         // Binnacle data
         $this->module_name = 'lab_order';
 
@@ -54,7 +53,7 @@ class LabOrderController extends Controller
     public function index(Request $request)
     {
         if (! auth()->user()->can('lab_order.view')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -79,7 +78,7 @@ class LabOrderController extends Controller
                 'start_record' => request()->get('start'),
                 'page_size' => request()->get('length'),
                 'search' => request()->get('search'),
-                'order' => request()->get('order')
+                'order' => request()->get('order'),
             ];
 
             // Lab orders
@@ -89,10 +88,11 @@ class LabOrderController extends Controller
                 ->editColumn(
                     'correlative', function ($row) {
                         if ($row->is_annulled) {
-                            $html = '<span style="color: red;">' . $row->correlative . '<br><small>' . $row->document . ' - ' . __('lab_order.annulled') . '</small></span>';
+                            $html = '<span style="color: red;">'.$row->correlative.'<br><small>'.$row->document.' - '.__('lab_order.annulled').'</small></span>';
                         } else {
-                            $html = $row->correlative . '<br><small>' . $row->document . '</small>';
+                            $html = $row->correlative.'<br><small>'.$row->document.'</small>';
                         }
+
                         return $html;
                     }
                 )
@@ -103,34 +103,36 @@ class LabOrderController extends Controller
                 ->editColumn(
                     'status', function ($row) {
                         if ($row->is_annulled) {
-                            $html = '<i class="fa fa-circle" style="color: red;"></i>&nbsp; <span style="color: red;">' . __('lab_order.annulled') . '</span>';
+                            $html = '<i class="fa fa-circle" style="color: red;"></i>&nbsp; <span style="color: red;">'.__('lab_order.annulled').'</span>';
                         } else {
-                            $html = '<i class="fa fa-circle" style="color: ' . $row->color . ';"></i>&nbsp; ' . $row->status;
+                            $html = '<i class="fa fa-circle" style="color: '.$row->color.';"></i>&nbsp; '.$row->status;
                         }
+
                         return $html;
                     }
                 )
                 ->editColumn(
                     'no_order', function ($row) {
                         if ($row->is_annulled) {
-                            $html = '<span style="color: red;">' . $row->no_order . '</span>';
+                            $html = '<span style="color: red;">'.$row->no_order.'</span>';
                             if ($row->number_times > 1) {
-                                $html .= '<br><span style="color: red;"><small>' . __('lab_order.number_times_msg', ['number' => $row->number_times]) . '</small></span>';
+                                $html .= '<br><span style="color: red;"><small>'.__('lab_order.number_times_msg', ['number' => $row->number_times]).'</small></span>';
                             }
                         } else {
                             $html = $row->no_order;
                             if ($row->number_times > 1) {
-                                $html .= '<br><small>' . __('lab_order.number_times_msg', ['number' => $row->number_times]) . '</small>';
+                                $html .= '<br><small>'.__('lab_order.number_times_msg', ['number' => $row->number_times]).'</small>';
                             }
                         }
+
                         return $html;
                     }
                 )
                 ->addColumn(
                     'action',
                     '<div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-lab-order-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">' .
-                            __("messages.actions") .
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-lab-order-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">'.
+                            __('messages.actions').
                             ' <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
@@ -149,7 +151,7 @@ class LabOrderController extends Controller
                     'status',
                     'no_order',
                     'action',
-                    'checkbox'
+                    'checkbox',
                 ])
                 ->setTotalRecords($lab_orders['count'])
                 ->setFilteredRecords($lab_orders['count'])
@@ -158,33 +160,33 @@ class LabOrderController extends Controller
 
             return $datatable;
         }
-        
+
         $external_labs = ExternalLab::pluck('name', 'id');
 
         $business_locations = BusinessLocation::pluck('name', 'id');
 
         $default_location = null;
-        
+
         // Warehouses
         $warehouses = Warehouse::select('id', 'name')
             ->where('status', 'active')
             ->pluck('name', 'id');
 
         $default_warehouse = $this->crystal_warehouse;
-        
+
         $employees = Employees::select('id', DB::raw("CONCAT(COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"));
         $employees = $employees->pluck('full_name', 'id');
 
         // Header text and columns
         $auxiliar = 0;
-        if (!empty(request()->get('opc'))) {
+        if (! empty(request()->get('opc'))) {
             $auxiliar = request()->get('opc');
         }
 
         // Locations
         if (auth()->user()->can('lab_order.update')) {
             $locations = BusinessLocation::all()->pluck('name', 'id');
-            $locations = $locations->prepend(__("kardex.all_2"), 'all');
+            $locations = $locations->prepend(__('kardex.all_2'), 'all');
 
             $default_location = null;
 
@@ -198,10 +200,10 @@ class LabOrderController extends Controller
                 foreach ($locations as $id => $name) {
                     $default_location = $id;
                 }
-                
-            // Access to all locations
-            } else if (auth()->user()->permitted_locations() == 'all') {
-                $locations = $locations->prepend(__("kardex.all_2"), 'all');
+
+                // Access to all locations
+            } elseif (auth()->user()->permitted_locations() == 'all') {
+                $locations = $locations->prepend(__('kardex.all_2'), 'all');
             }
         }
 
@@ -244,7 +246,7 @@ class LabOrderController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('lab_order.create')) {
+        if (! auth()->user()->can('lab_order.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -261,10 +263,10 @@ class LabOrderController extends Controller
             ->where('status', 'active')
             ->orderBy('name')
             ->get();
-        
+
         $external_labs = ExternalLab::where('business_id', $business_id)
             ->pluck('name', 'id');
-        
+
         $products = Product::where('business_id', $business_id)
             ->pluck('name', 'id');
 
@@ -303,12 +305,11 @@ class LabOrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('lab_order.create')) {
+        if (! auth()->user()->can('lab_order.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -317,18 +318,18 @@ class LabOrderController extends Controller
             'hoop_type' => 'required',
             'delivery' => 'required',
             'lab_customer_id' => 'required',
-            'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
+            'document' => 'file|max:'.(config('constants.document_size_limit') / 1000),
         ];
 
         if (empty($request->input('transaction_id'))) {
             $validate['location_lo'] = 'required';
 
-            if (!auth()->user()->can('lab_order.create_without_invoice')) {
+            if (! auth()->user()->can('lab_order.create_without_invoice')) {
                 $validate['invoice_lo'] = 'required';
             }
         }
 
-        if (!empty($request->input('is_reparation'))) {
+        if (! empty($request->input('is_reparation'))) {
             if ($request->input('is_reparation') != 1) {
                 if (empty($request->input('di'))) {
                     $validate['dnsp_os'] = 'required';
@@ -364,12 +365,12 @@ class LabOrderController extends Controller
             'dnsp_od.required' => __('lab_order.dnsp_od_validation'),
             'di.required' => __('lab_order.di_validation'),
             'document.file' => __('lab_order.document_file_validation'),
-            'document.max' => __('lab_order.document_max_validation', ['number' => config('constants.document_size_limit') / 1000])
+            'document.max' => __('lab_order.document_max_validation', ['number' => config('constants.document_size_limit') / 1000]),
         ];
 
         $request->validate($validate, $validate_msg);
 
-        $msg_error = __("messages.something_went_wrong");
+        $msg_error = __('messages.something_went_wrong');
 
         try {
             $input = $request->only([
@@ -388,7 +389,7 @@ class LabOrderController extends Controller
                 'is_own_hoop',
                 'hoop_type',
                 'glass_os',
-                'glass_od'
+                'glass_od',
             ]);
 
             $input_graduation_card = $request->only([
@@ -411,7 +412,7 @@ class LabOrderController extends Controller
                 'optometrist',
                 'is_prescription',
                 'balance_os',
-                'balance_od'
+                'balance_od',
             ]);
 
             $input_graduation_card['optometrist'] = $input_graduation_card['optometrist'] == 0 ? null : $input_graduation_card['optometrist'];
@@ -420,7 +421,7 @@ class LabOrderController extends Controller
             $input['business_id'] = $business_id;
             $input_graduation_card['business_id'] = $business_id;
 
-            if (!empty($request->input('transaction_id'))) {
+            if (! empty($request->input('transaction_id'))) {
                 $input['transaction_id'] = $request->input('transaction_id');
 
             } elseif (empty($request->input('invoice_lo'))) {
@@ -438,12 +439,12 @@ class LabOrderController extends Controller
                 $input['transaction_id'] = $transaction->id;
             }
 
-            $msg_error = __("messages.something_went_wrong");
+            $msg_error = __('messages.something_went_wrong');
 
-            $delivery =  Carbon::createFromFormat('d/m/Y H:i', $request->input('delivery'));
+            $delivery = Carbon::createFromFormat('d/m/Y H:i', $request->input('delivery'));
             $input['delivery'] = $delivery;
 
-            if (!empty($input['is_own_hoop'])) {
+            if (! empty($input['is_own_hoop'])) {
                 if ($input['is_own_hoop'] == 1) {
                     $input['hoop_name'] = $request->input('hoop_name');
                 }
@@ -468,7 +469,7 @@ class LabOrderController extends Controller
                 null,
                 $graduation_card
             );
-            
+
             // Lab Order
             $input['graduation_card_id'] = $graduation_card->id;
 
@@ -495,11 +496,10 @@ class LabOrderController extends Controller
             $quantity = $request->input('quantity');
             $location_ids = $request->input('location_id');
             $warehouse_ids = $request->input('warehouse_id');
-    
-            if (!empty($variation_ids)) {
-                $cont = 0;                
-                while($cont < count($variation_ids))
-                {
+
+            if (! empty($variation_ids)) {
+                $cont = 0;
+                while ($cont < count($variation_ids)) {
                     $detail = new LabOrderDetail;
                     $detail->lab_order_id = $lab_order->id;
                     $detail->variation_id = $variation_ids[$cont];
@@ -517,7 +517,7 @@ class LabOrderController extends Controller
                     $stock->save();
 
                     $cont = $cont + 1;
-                } 
+                }
             }
 
             DB::commit();
@@ -525,16 +525,16 @@ class LabOrderController extends Controller
             $output = [
                 'success' => true,
                 'data' => $lab_order,
-                'msg' => __("lab_order.added_success")
+                'msg' => __('lab_order.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = [
                 'success' => false,
-                'msg' => $msg_error
+                'msg' => $msg_error,
             ];
         }
 
@@ -549,7 +549,7 @@ class LabOrderController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('sell.view')) {
+        if (! auth()->user()->can('sell.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -605,7 +605,7 @@ class LabOrderController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('lab_order.update')) {
+        if (! auth()->user()->can('lab_order.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -616,11 +616,11 @@ class LabOrderController extends Controller
         $order = collect(DB::select('CALL get_lab_order(?, ?)', [$id, $slo_id]))->first();
 
         $hoop = collect(DB::select('CALL get_lab_order_products(?)', [$order->hoop]))->first();
-        
+
         $glass = collect(DB::select('CALL get_lab_order_products(?)', [$order->glass]))->first();
-        
+
         $glass_os = collect(DB::select('CALL get_lab_order_products(?)', [$order->glass_os]))->first();
-        
+
         $glass_od = collect(DB::select('CALL get_lab_order_products(?)', [$order->glass_od]))->first();
 
         $result_array = [
@@ -677,10 +677,10 @@ class LabOrderController extends Controller
             'balance_os' => $order->balance_os,
             'balance_od' => $order->balance_od,
             'show_fields' => $order->show_fields,
-            'save_and_print' => $order->save_and_print
+            'save_and_print' => $order->save_and_print,
         ];
 
-        $result = json_decode(json_encode($result_array), FALSE);
+        $result = json_decode(json_encode($result_array), false);
 
         return response()->json($result);
     }
@@ -688,18 +688,17 @@ class LabOrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\LabOrder  $labOrder
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('lab_order.update')) {
+        if (! auth()->user()->can('lab_order.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
-            $msg_error = __("messages.something_went_wrong");
+            $msg_error = __('messages.something_went_wrong');
 
             try {
                 $lab_order = LabOrder::findOrFail($id);
@@ -725,7 +724,7 @@ class LabOrderController extends Controller
                 $lab_details['is_own_hoop'] = $request->input('eis_own_hoop');
                 $lab_details['employee_id'] = $request->input('eemployee_id');
                 $lab_details['reason'] = $request->input('ereason');
-                $lab_details['return_stock'] = !empty($request->input('ereturn_stock')) ? $request->input('ereturn_stock') : 0;
+                $lab_details['return_stock'] = ! empty($request->input('ereturn_stock')) ? $request->input('ereturn_stock') : 0;
 
                 $graduation_card = GraduationCard::findOrFail($lab_order->graduation_card_id);
 
@@ -749,8 +748,8 @@ class LabOrderController extends Controller
                 $gc_details['dnsp_os'] = $request->input('ednsp_os');
                 $gc_details['dnsp_od'] = $request->input('ednsp_od');
                 $gc_details['ap'] = $request->input('eap');
-                $gc_details['balance_os'] = !empty($request->input('ebalance_os')) ? $request->input('ebalance_os') : 0;
-                $gc_details['balance_od'] = !empty($request->input('ebalance_od')) ? $request->input('ebalance_od') : 0;
+                $gc_details['balance_os'] = ! empty($request->input('ebalance_os')) ? $request->input('ebalance_os') : 0;
+                $gc_details['balance_od'] = ! empty($request->input('ebalance_od')) ? $request->input('ebalance_od') : 0;
 
                 $slo = StatusLabOrder::find($request->input('estatus_lab_order_id'));
 
@@ -760,22 +759,22 @@ class LabOrderController extends Controller
 
                 if (empty($request->input('einvoice_lo'))) {
                     $lab_details['business_location_id'] = $request->input('elocation_lo');
-    
+
                 } else {
                     $msg_error = __('lab_order.exception_location_correlative');
-    
+
                     $transaction = Transaction::where('location_id', $request->input('elocation_lo'))
                         ->where('correlative', $request->input('einvoice_lo'))
                         ->where('customer_id', $lab_details['customer_id'])
                         // ->where('business_id', $business_id)
                         ->first();
-    
+
                     $lab_details['transaction_id'] = $transaction->id;
                 }
 
-                $msg_error = __("messages.something_went_wrong");
+                $msg_error = __('messages.something_went_wrong');
 
-                $delivery =  Carbon::createFromFormat('d/m/Y H:i', $request->input('edelivery'));
+                $delivery = Carbon::createFromFormat('d/m/Y H:i', $request->input('edelivery'));
                 $lab_details['delivery'] = $delivery;
 
                 // Upload document
@@ -824,11 +823,11 @@ class LabOrderController extends Controller
                 if (empty($item_ids)) {
                     $auxiliar = false;
 
-                // Return stock
-                } elseif ($lab_details['return_stock'] == 1 && !empty($lab_details['status_lab_order_id'])) {
+                    // Return stock
+                } elseif ($lab_details['return_stock'] == 1 && ! empty($lab_details['status_lab_order_id'])) {
                     $status = StatusLabOrder::find($lab_details['status_lab_order_id']);
 
-                    if (!empty($status)) {
+                    if (! empty($status)) {
                         if ($status->name == 'Anulado') {
                             $auxiliar = false;
                         }
@@ -840,28 +839,28 @@ class LabOrderController extends Controller
 
                 if ($auxiliar) {
                     $cont = 0;
-                    $items = array();
-                    $rows = array();
+                    $items = [];
+                    $rows = [];
 
-                    while($cont < count($item_ids)) {
+                    while ($cont < count($item_ids)) {
                         $wh = Warehouse::find($warehouse_ids[$cont]);
 
                         // Items anteriores
                         if ($item_ids[$cont] > 0) {
-                            $detail = array(
+                            $detail = [
                                 'id' => $item_ids[$cont],
                                 'lab_order_id' => $lab_order->id,
                                 'variation_id' => $variation_ids[$cont],
                                 'location_id' => $wh->business_location_id,
                                 'warehouse_id' => $warehouse_ids[$cont],
-                                'quantity' => $quantity[$cont]
-                            );
+                                'quantity' => $quantity[$cont],
+                            ];
 
                             array_push($items, $item_ids[$cont]);
 
                             array_push($rows, $detail);
 
-                        // Items nuevos
+                            // Items nuevos
                         } else {
                             if (! $this->validateStock($warehouse_ids[$cont], $variation_ids[$cont], $quantity[$cont], 0)) {
                                 $variation = Variation::find($variation_ids[$cont]);
@@ -873,7 +872,7 @@ class LabOrderController extends Controller
 
                                 $output = [
                                     'success' => false,
-                                    'msg' => $mismatch_error
+                                    'msg' => $mismatch_error,
                                 ];
 
                                 return $output;
@@ -902,7 +901,7 @@ class LabOrderController extends Controller
                     }
 
                     // Borrar items ya existentes
-                    if (!empty($items)) {
+                    if (! empty($items)) {
                         $deleted_items = DB::table('lab_order_details as item')
                             ->leftjoin('lab_orders as lo', 'lo.id', 'item.lab_order_id')
                             ->select('item.*', 'lo.no_order')
@@ -930,7 +929,7 @@ class LabOrderController extends Controller
                         }
                     }
 
-                    $items = json_decode(json_encode($rows), FALSE);
+                    $items = json_decode(json_encode($rows), false);
 
                     // Actualizar items ya existentes
                     foreach ($items as $row) {
@@ -948,7 +947,7 @@ class LabOrderController extends Controller
 
                                 $output = [
                                     'success' => false,
-                                    'msg' => $mismatch_error
+                                    'msg' => $mismatch_error,
                                 ];
 
                                 return $output;
@@ -1015,7 +1014,7 @@ class LabOrderController extends Controller
                         ->where('lab_order_details.lab_order_id', $lab_order->id)
                         ->select('lab_order_details.*', 'lo.no_order')
                         ->get();
-                   
+
                     foreach ($deleted_items as $item) {
                         $stock = VariationLocationDetails::where('variation_id', $item->variation_id)
                             ->where('location_id', $item->location_id)
@@ -1051,18 +1050,18 @@ class LabOrderController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("lab_order.updated_success"),
-                    'lab_order_id' => $lab_order->id
+                    'msg' => __('lab_order.updated_success'),
+                    'lab_order_id' => $lab_order->id,
                 ];
 
             } catch (\Exception $e) {
                 DB::rollBack();
 
-                \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => $msg_error
+                    'msg' => $msg_error,
                 ];
             }
 
@@ -1078,7 +1077,7 @@ class LabOrderController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('lab_order.delete')) {
+        if (! auth()->user()->can('lab_order.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1097,7 +1096,7 @@ class LabOrderController extends Controller
                         ->where('location_id', $item->location_id)
                         ->where('warehouse_id', $item->warehouse_id)
                         ->first();
-    
+
                     $stock->qty_available = $stock->qty_available + $item->quantity;
 
                     $stock->save();
@@ -1120,15 +1119,15 @@ class LabOrderController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("lab_order.deleted_success")
+                    'msg' => __('lab_order.deleted_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -1155,9 +1154,9 @@ class LabOrderController extends Controller
             // TODO: Gets color
             $query = Product::leftJoin('variations as v', 'products.id', 'v.product_id')
                 ->where(function ($query) use ($term) {
-                    $query->where('products.name', 'like', '%' . $term .'%');
-                    $query->orWhere('sku', 'like', '%' . $term .'%');
-                    $query->orWhere('sub_sku', 'like', '%' . $term .'%');
+                    $query->where('products.name', 'like', '%'.$term.'%');
+                    $query->orWhere('sku', 'like', '%'.$term.'%');
+                    $query->orWhere('sub_sku', 'like', '%'.$term.'%');
                 })
                 ->where('business_id', $business_id)
                 ->whereNull('v.deleted_at')
@@ -1171,12 +1170,12 @@ class LabOrderController extends Controller
     public function addMaterial($variation_id, $warehouse_id)
     {
         $products = DB::table('variations as variation')
-        ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
-        ->leftJoin('variation_location_details as VLD', 'VLD.variation_id', '=', 'variation.id')
-        ->select('variation.id as variation_id', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'variation.sell_price_inc_tax as price', 'VLD.qty_available')
-        ->where('variation.id', $variation_id)
-        ->where('VLD.warehouse_id', $warehouse_id)
-        ->first();
+            ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
+            ->leftJoin('variation_location_details as VLD', 'VLD.variation_id', '=', 'variation.id')
+            ->select('variation.id as variation_id', 'product.name as name_product', 'variation.name as name_variation', 'product.sku as sku', 'variation.sub_sku as sub_sku', 'variation.sell_price_inc_tax as price', 'VLD.qty_available')
+            ->where('variation.id', $variation_id)
+            ->where('VLD.warehouse_id', $warehouse_id)
+            ->first();
 
         return response()->json($products);
     }
@@ -1204,15 +1203,16 @@ class LabOrderController extends Controller
     }
 
     public function getProductsByOrder($id)
-    {   
+    {
         $products = $this->getMaterialsByOrder($id);
 
         return response()->json($products);
     }
 
-    public function getReport(Request $request, $id) {
-        if (!auth()->user()->can('lab_order.view')) {
-            abort(403, "Unauthorized action.");
+    public function getReport(Request $request, $id)
+    {
+        if (! auth()->user()->can('lab_order.view')) {
+            abort(403, 'Unauthorized action.');
         }
 
         $lab_order = DB::table('lab_orders as lo')
@@ -1252,22 +1252,22 @@ class LabOrderController extends Controller
 
         $materials = $this->getMaterialsByOrder($id);
 
-        #$pdf = \PDF::loadView('optics.lab_order.report', compact('lab_order', 'materials'));
-        #$pdf->setPaper('letter', 'portrait');
-        #return $pdf->stream();
+        //$pdf = \PDF::loadView('optics.lab_order.report', compact('lab_order', 'materials'));
+        //$pdf->setPaper('letter', 'portrait');
+        //return $pdf->stream();
         return view('optics.lab_order.report')
             ->with(compact('lab_order', 'materials'));
     }
 
     public function getOrdersExternalLab()
     {
-        if (!auth()->user()->can('external_lab.view')) {
+        if (! auth()->user()->can('external_lab.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
-            
+
             $lab_order = LabOrder::leftJoin('contacts as c', 'lab_orders.contact_id', 'c.id')
                 ->leftJoin('graduation_cards as gc', 'lab_orders.graduation_card_id', 'gc.id')
                 ->leftJoin('patients as p', 'gc.patient_id', 'p.id')
@@ -1278,26 +1278,27 @@ class LabOrderController extends Controller
                     'lab_orders.no_order', 'c.name as customer',
                     'p.full_name as patient', 'slo.name',
                     DB::raw('DATE_FORMAT(lab_orders.delivery, "%d/%m/%Y - %h:%i %p") as delivery'),
-                    'lab_orders.id'
+                    'lab_orders.id',
                 ]);
 
             return Datatables::of($lab_order)
                 ->addColumn(
-                    'action', function($row) {
+                    'action', function ($row) {
                         $html = '<div class="btn-group">
-                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") .
+                            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').
                                 '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                         if (auth()->user()->can('lab_order.view')) {
-                            $html .= '<li><a href="#" onClick="printOrder(' . $row->id . ')"><i class="fa fa-print"></i> ' . __("messages.print") . '</a></li>';
+                            $html .= '<li><a href="#" onClick="printOrder('.$row->id.')"><i class="fa fa-print"></i> '.__('messages.print').'</a></li>';
                         }
                         if (auth()->user()->can('lab_order.update')) {
-                            $html .= '<li><a href="#" onClick="editOrder(' . $row->id . ')"><i class="fa fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                            $html .= '<li><a href="#" onClick="editOrder('.$row->id.')"><i class="fa fa-edit"></i> '.__('messages.edit').'</a></li>';
                         }
                         if (auth()->user()->can('lab_order.delete')) {
-                            $html .= '<li><a href="#" onClick="deleteOrder(' . $row->id . ')"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                            $html .= '<li><a href="#" onClick="deleteOrder('.$row->id.')"><i class="fa fa-trash"></i> '.__('messages.delete').'</a></li>';
                         }
+
                         return $html;
                     }
                 )
@@ -1311,62 +1312,64 @@ class LabOrderController extends Controller
 
     public function fillHoopFields($variation_id, $transaction_id)
     {
-        $hoop_values = TransactionSellLine::join("variations as v", "transaction_sell_lines.variation_id", "v.id")
-            ->join("products as p", "v.product_id", "p.id")
-            ->join("categories as c", "p.category_id", "c.id")
-            ->where("transaction_sell_lines.transaction_id", $transaction_id)
-            ->where("v.id", $variation_id)
-            ->where("c.name", "AROS")
+        $hoop_values = TransactionSellLine::join('variations as v', 'transaction_sell_lines.variation_id', 'v.id')
+            ->join('products as p', 'v.product_id', 'p.id')
+            ->join('categories as c', 'p.category_id', 'c.id')
+            ->where('transaction_sell_lines.transaction_id', $transaction_id)
+            ->where('v.id', $variation_id)
+            ->where('c.name', 'AROS')
             ->select(
-                "v.id as id",
-                "p.name as name",
-                "p.measurement as size",
-                DB::raw("(SELECT name FROM `variation_value_templates` WHERE code = (SUBSTRING(p.sku, (COUNT(p.sku)) - 4, 3))) as color")
+                'v.id as id',
+                'p.name as name',
+                'p.measurement as size',
+                DB::raw('(SELECT name FROM `variation_value_templates` WHERE code = (SUBSTRING(p.sku, (COUNT(p.sku)) - 4, 3))) as color')
             )
             ->first();
-        
+
         return response()->json($hoop_values);
     }
 
     public function fillHoopFields2($variation_id)
     {
-        $hoop_values = DB::table("variations as v")
-            ->join("products as p", "v.product_id", "p.id")
-            ->join("categories as c", "p.category_id", "c.id")
-            ->where("v.id", $variation_id)
-            ->where("c.name", "AROS")
+        $hoop_values = DB::table('variations as v')
+            ->join('products as p', 'v.product_id', 'p.id')
+            ->join('categories as c', 'p.category_id', 'c.id')
+            ->where('v.id', $variation_id)
+            ->where('c.name', 'AROS')
             ->select(
-                "v.id as id",
-                "p.name as name",
-                "p.measurement as size",
-                DB::raw("(SELECT name FROM `variation_value_templates` WHERE code = (SUBSTRING(p.sku, (COUNT(p.sku)) - 4, 3))) as color")
+                'v.id as id',
+                'p.name as name',
+                'p.measurement as size',
+                DB::raw('(SELECT name FROM `variation_value_templates` WHERE code = (SUBSTRING(p.sku, (COUNT(p.sku)) - 4, 3))) as color')
             )
             ->first();
-        
+
         return response()->json($hoop_values);
     }
 
     /**
      * Get lab order for transaction
-     * @param int $transaction_id
+     *
+     * @param  int  $transaction_id
      */
-    public function createLabOrder(){
+    public function createLabOrder()
+    {
         if (request()->ajax()) {
-            $business_id = request()->session()->get("user.business_id");
+            $business_id = request()->session()->get('user.business_id');
 
             // Optometrists
             $employees = Employees::select('id', DB::raw("CONCAT(COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"));
             $employees = $employees->pluck('full_name', 'id');
 
             // AR
-            $has_ar = DB::table("variations as v")
-                ->join("products as p", "v.product_id", "p.id")
-                ->where("p.clasification", "service")
-                ->where("p.business_id", $business_id)
-                ->whereIn("p.ar", ["green", "blue", "premium"])
-                ->where("p.status", "active")
-                ->select("p.ar", "p.name");
-            
+            $has_ar = DB::table('variations as v')
+                ->join('products as p', 'v.product_id', 'p.id')
+                ->where('p.clasification', 'service')
+                ->where('p.business_id', $business_id)
+                ->whereIn('p.ar', ['green', 'blue', 'premium'])
+                ->where('p.status', 'active')
+                ->select('p.ar', 'p.name');
+
             // Date
             $date_delivery = Carbon::now()->addDay(3)->format('d/m/Y H:i');
 
@@ -1403,24 +1406,24 @@ class LabOrderController extends Controller
             $patient_id = null;
             $transaction_id = null;
 
-            return view("optics.lab_order.create_lab_order")
+            return view('optics.lab_order.create_lab_order')
                 ->with(compact(
-                    "transaction",
-                    "status_lab_orders",
-                    "external_labs",
-                    "products",
-                    "code",
-                    "warehouses",
-                    "business_locations",
-                    "default_location",
-                    "has_ar",
-                    "date_delivery",
-                    "transaction_id",
-                    "own_hoop_aux",
-                    "hoop_values",
-                    "employees",
-                    "ar_aux",
-                    "patient_id"
+                    'transaction',
+                    'status_lab_orders',
+                    'external_labs',
+                    'products',
+                    'code',
+                    'warehouses',
+                    'business_locations',
+                    'default_location',
+                    'has_ar',
+                    'date_delivery',
+                    'transaction_id',
+                    'own_hoop_aux',
+                    'hoop_values',
+                    'employees',
+                    'ar_aux',
+                    'patient_id'
                 ));
         }
     }
@@ -1433,7 +1436,7 @@ class LabOrderController extends Controller
     public function getLabOrdersByLocation(Request $request)
     {
         if (! auth()->user()->can('sell.view')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -1442,7 +1445,7 @@ class LabOrderController extends Controller
             $all_locations = BusinessLocation::where('business_id', $business_id)->get();
 
             foreach ($all_locations as $location) {
-                if (auth()->user()->can('location.' . $location->id)) {
+                if (auth()->user()->can('location.'.$location->id)) {
                     $permitted_locations[] = $location->id;
                 }
             }
@@ -1464,16 +1467,16 @@ class LabOrderController extends Controller
                     //DB::raw('DATE_FORMAT(lab_orders.delivery, "%d/%m/%Y - %h:%i %p") as delivery'),
                     'lab_orders.delivery',
                     'lab_orders.id',
-                    'slo.color'
+                    'slo.color',
                 ])
                 ->orderBy('lab_orders.created_at', 'desc');
-            
+
             return Datatables::of($lab_order)
                 ->addColumn(
                     'action',
                     '<div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-lab-order-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">' .
-                        __("messages.actions") .
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs btn-actions" data-lab-order-id="{{ $id }}" data-toggle="dropdown" aria-expanded="false">'.
+                        __('messages.actions').
                         ' <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
@@ -1519,22 +1522,23 @@ class LabOrderController extends Controller
                     </div>'
                 )
                 ->editColumn(
-                    'status_value', function($row) {
+                    'status_value', function ($row) {
                         $html = '';
-                        if (!empty($row->status_value)) {
-                            $html .= '<i class="fa fa-circle" style="color:' . $row->color . ';"></i> ' . $row->status_value;
+                        if (! empty($row->status_value)) {
+                            $html .= '<i class="fa fa-circle" style="color:'.$row->color.';"></i> '.$row->status_value;
                         }
+
                         return $html;
                     }
                 )
                 ->setRowAttr([
                     'data-href' => function ($row) {
-                        if (auth()->user()->can("sell.view")) {
-                            return action('Optics\LabOrderController@show', [$row->id]) ;
+                        if (auth()->user()->can('sell.view')) {
+                            return action('Optics\LabOrderController@show', [$row->id]);
                         } else {
                             return '';
                         }
-                    }
+                    },
                 ])
                 ->removeColumn('id', 'color')
                 ->rawColumns([5, 8])
@@ -1544,37 +1548,39 @@ class LabOrderController extends Controller
         return view('optics.lab_order.by_location');
     }
 
-    public function markPrinted($id) {
-        if (!auth()->user()->can('lab_order.update')) {
+    public function markPrinted($id)
+    {
+        if (! auth()->user()->can('lab_order.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
             $slo = StatusLabOrder::where('name', 'Impreso')->first();
-            if (!empty($slo)) {
+            if (! empty($slo)) {
                 $lab_order = LabOrder::find($id);
-                if (!empty($lab_order)) {
+                if (! empty($lab_order)) {
                     $lab_order->status_lab_order_id = $slo->id;
                     $lab_order->save();
                 }
             }
 
             $output = [
-                'success' => true
+                'success' => true,
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
-                'success' => false
+                'success' => false,
             ];
         }
 
         return $output;
     }
 
-    public function createOrderSecondTime($id) {
-        if (!auth()->user()->can('lab_order.update')) {
+    public function createOrderSecondTime($id)
+    {
+        if (! auth()->user()->can('lab_order.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1582,7 +1588,7 @@ class LabOrderController extends Controller
             try {
                 $lab_order = LabOrder::find($id);
                 $lab_order_clone = $lab_order->replicate();
-                
+
                 $slo = StatusLabOrder::where('second_time', 1)->first();
                 $lab_order_clone->status_lab_order_id = $slo->id;
 
@@ -1590,13 +1596,13 @@ class LabOrderController extends Controller
 
                 $output = [
                     'success' => true,
-                    'id' => $lab_order_clone->id
+                    'id' => $lab_order_clone->id,
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
                 $output = [
-                    'success' => false
+                    'success' => false,
                 ];
             }
 
@@ -1613,12 +1619,12 @@ class LabOrderController extends Controller
     public function print($id)
     {
         if (! auth()->user()->can('lab_order.print')) {
-            abort(403, "Unauthorized action.");
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             try {
-                # Get data
+                // Get data
                 $lab_order = DB::table('lab_orders as lo')
                     ->leftJoin('graduation_cards as gc', 'gc.id', 'lo.graduation_card_id')
                     ->leftJoin('variations as vh', 'vh.id', 'lo.hoop')
@@ -1655,26 +1661,26 @@ class LabOrderController extends Controller
                     )
                     ->where('lo.id', $id)
                     ->first();
-        
+
                 $materials = $this->getMaterialsByOrder($id);
-                
+
                 $output = [
                     'success' => 1,
-                    'order' => []
+                    'order' => [],
                 ];
 
                 $output['order']['html_content'] = view('optics.lab_order.report',
                     compact('lab_order', 'materials'))->render();
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => 0,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
-    
+
             return $output;
         }
     }
@@ -1686,9 +1692,10 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndPrint($id, $status_id) {
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
-            abort(403, "Unauthorized action.");
+    public function changeStatusAndPrint($id, $status_id)
+    {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -1710,7 +1717,7 @@ class LabOrderController extends Controller
                     $lo_old,
                     $lo
                 );
-    
+
                 // Get data to print
                 $lab_order = DB::table('lab_orders as lo')
                     ->leftJoin('graduation_cards as gc', 'gc.id', 'lo.graduation_card_id')
@@ -1748,12 +1755,12 @@ class LabOrderController extends Controller
                     )
                     ->where('lo.id', $id)
                     ->first();
-        
+
                 $materials = $this->getMaterialsByOrder($id);
-                
+
                 $output = [
                     'success' => 1,
-                    'order' => []
+                    'order' => [],
                 ];
 
                 $output['order']['html_content'] = view('optics.lab_order.report',
@@ -1761,28 +1768,28 @@ class LabOrderController extends Controller
                     ->render();
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => 0,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
-    
+
             return $output;
         }
     }
 
     /**
      * Change lab order status.
-     * 
+     *
      * @param  int  $order_id
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatus($order_id, $status_id)
     {
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1809,14 +1816,14 @@ class LabOrderController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __('lab_order.updated_success')
+                'msg' => __('lab_order.updated_success'),
             ];
 
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
-                'success' => false
+                'success' => false,
             ];
         }
 
@@ -1833,7 +1840,7 @@ class LabOrderController extends Controller
                 ->where('warehouse_id', $l->warehouse_id)
                 ->where('location_id', $l->location_id)
                 ->first();
-            
+
             array_push($vld, $v->id);
         }
 
@@ -1843,10 +1850,10 @@ class LabOrderController extends Controller
             // ->leftJoin('variation_location_details as vld', 'vld.variation_id', 'v.id')
             ->leftJoin(
                 'variation_location_details as vld',
-                function($join) use ($vld) {
+                function ($join) use ($vld) {
                     $join->on('vld.variation_id', '=', 'lod.variation_id');
 
-                    $join->where(function($query) use ($vld) {
+                    $join->where(function ($query) use ($vld) {
                         $query->whereIn('vld.id', $vld);
                     });
                 }
@@ -1862,13 +1869,13 @@ class LabOrderController extends Controller
                 DB::raw('IF(vld.qty_available > 0, round(vld.qty_available, 2), 0.00) as qty_available')
             )
             ->get();
-        
+
         return $materials;
     }
 
     /**
      * Get data for lab orders report.
-     * 
+     *
      * @param  array  $params
      * @return array
      */
@@ -1891,10 +1898,10 @@ class LabOrderController extends Controller
         // Date filter
         if (! empty($params['start_date']) && ! empty($params['end_date'])) {
             $start = $params['start_date'];
-            $end =  $params['end_date'];
+            $end = $params['end_date'];
         } else {
             $start = '';
-            $end =  '';
+            $end = '';
         }
 
         // Datatable parameters
@@ -1907,19 +1914,19 @@ class LabOrderController extends Controller
         // Count lab orders
         $count = DB::select(
             'CALL count_all_lab_orders(?, ?, ?, ?, ?)',
-            array(
+            [
                 $location_id,
                 $status_id,
                 $start,
                 $end,
-                $search
-            )
+                $search,
+            ]
         );
 
         // Lab orders
         $lab_orders = DB::select(
             'CALL all_lab_orders(?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            array(
+            [
                 $location_id,
                 $status_id,
                 $start,
@@ -1928,13 +1935,13 @@ class LabOrderController extends Controller
                 $start_record,
                 $page_size,
                 $order[0]['column'],
-                $order[0]['dir']
-            )
+                $order[0]['dir'],
+            ]
         );
 
         $result = [
             'data' => $lab_orders,
-            'count' => $count[0]->count
+            'count' => $count[0]->count,
         ];
 
         return $result;
@@ -1942,7 +1949,7 @@ class LabOrderController extends Controller
 
     /**
      * Get sales togle dropdown.
-     * 
+     *
      * @param  array  $params
      * @return @return \Illuminate\Http\Response
      */
@@ -1973,9 +1980,9 @@ class LabOrderController extends Controller
                     'is_annulled'
                 ))
                 ->render();
-            
+
         } catch (\Exception $e) {
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output['success'] = false;
             $output['msg'] = __('messages.something_went_wrong');
@@ -1991,9 +1998,10 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndTransfer($id, $status_id) {
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
-            abort(403, "Unauthorized action.");
+    public function changeStatusAndTransfer($id, $status_id)
+    {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -2005,7 +2013,7 @@ class LabOrderController extends Controller
 
                 // Change status
                 $lab_order->status_lab_order_id = $status_id;
-                
+
                 // Transfer lab order
                 $lab_order->transfer_date = \Carbon::now()->format('Y-m-d');
 
@@ -2019,21 +2027,21 @@ class LabOrderController extends Controller
                     $lab_order_old,
                     $lab_order
                 );
-                
+
                 $output = [
                     'success' => true,
-                    'msg' => __('lab_order.updated_success')
+                    'msg' => __('lab_order.updated_success'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
-    
+
             return $output;
         }
     }
@@ -2045,9 +2053,10 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndCopy($id, $status_id) {
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
-            abort(403, "Unauthorized action.");
+    public function changeStatusAndCopy($id, $status_id)
+    {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -2074,21 +2083,21 @@ class LabOrderController extends Controller
                     $lab_order_clone->no_order,
                     $lab_order_clone
                 );
-                
+
                 $output = [
                     'success' => true,
-                    'id' => $lab_order_clone->id
+                    'id' => $lab_order_clone->id,
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
-    
+
             return $output;
         }
     }
@@ -2100,9 +2109,10 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndEdit($id, $status_id) {
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
-            abort(403, "Unauthorized action.");
+    public function changeStatusAndEdit($id, $status_id)
+    {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
@@ -2125,21 +2135,21 @@ class LabOrderController extends Controller
                     $lab_order_old,
                     $lab_order
                 );
-                
+
                 $output = [
                     'success' => true,
-                    'id' => $id
+                    'id' => $id,
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
-    
+
             return $output;
         }
     }
@@ -2183,7 +2193,7 @@ class LabOrderController extends Controller
 
     /**
      * Change status to multiple lab order.
-     * 
+     *
      * @param  int  $order_id
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
@@ -2193,7 +2203,7 @@ class LabOrderController extends Controller
         $lab_orders = request()->input('lab_orders');
         $status_id = request()->input('status_id');
 
-        if (! auth()->user()->can('status_lab_order.' . $status_id)) {
+        if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -2204,12 +2214,12 @@ class LabOrderController extends Controller
 
             foreach ($lab_orders as $lab_order_id) {
                 $lab_order = LabOrder::find($lab_order_id);
-    
+
                 // Change status
                 if (! empty($lab_order)) {
                     // Clone record before action
                     $lab_order_old = clone $lab_order;
-    
+
                     $lab_order->status_lab_order_id = $status_id;
 
                     // Transfer lab order
@@ -2218,7 +2228,7 @@ class LabOrderController extends Controller
                     }
 
                     $lab_order->save();
-    
+
                     // Store binnacle
                     $this->util->registerBinnacle(
                         $this->module_name,
@@ -2234,16 +2244,16 @@ class LabOrderController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('lab_order.multiple_updated_success')
+                'msg' => __('lab_order.multiple_updated_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
-                'success' => 0
+                'success' => 0,
             ];
         }
 

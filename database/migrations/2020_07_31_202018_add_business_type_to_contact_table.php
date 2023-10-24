@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddBusinessTypeToContactTable extends Migration
 {
@@ -16,7 +16,7 @@ class AddBusinessTypeToContactTable extends Migration
         Schema::table('contacts', function (Blueprint $table) {
             $table->enum('business_type', ['small_business', 'medium_business', 'large_business'])
                 ->nullable()
-                ->after("nit")
+                ->after('nit')
                 ->default(null);
         });
     }

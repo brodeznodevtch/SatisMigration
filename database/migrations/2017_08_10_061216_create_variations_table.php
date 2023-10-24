@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVariationsTable extends Migration
 {
@@ -25,7 +25,7 @@ class CreateVariationsTable extends Migration
             $table->decimal('dpp_inc_tax', 8, 2)->default(0);
             $table->decimal('profit_percent', 8, 2)->default(0);
             $table->decimal('default_sell_price', 8, 2)->nullable();
-            $table->decimal('sell_price_inc_tax', 8, 2)->comment("Sell price including tax")->nullable();
+            $table->decimal('sell_price_inc_tax', 8, 2)->comment('Sell price including tax')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

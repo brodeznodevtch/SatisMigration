@@ -35,7 +35,7 @@ return [
     'header_text' => 'Başlık metni',
     'invoice_no_prefix' => 'Fatura no. etiketi(kısmı)',
     'invoice_heading' => 'Fatura başlığı',
-    'sub_total_label' =>'Ara toplam etiketi(kısmı)',
+    'sub_total_label' => 'Ara toplam etiketi(kısmı)',
     'discount_label' => 'İndirim etiketi(kısmı)',
     'tax_label' => 'Vergi etiketi(kısmı)',
     'total_label' => 'Toplam etiketi(kısmı)',
@@ -64,5 +64,5 @@ return [
     'show_payments' => 'Ödeme bilgilerini göster',
     'show_customer' => 'Müşteri bilgilerini göster',
     'paid_label' => 'Ödenen Miktar Etiketi(kısmı)',
-    'customer_label' => 'Müşteri Etiketi(kısmı)'
+    'customer_label' => 'Müşteri Etiketi(kısmı)',
 ];

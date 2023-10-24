@@ -32,6 +32,6 @@ class CashDetail extends Model
         'cash_register_id',
         'cashier_id',
         'business_id',
-        'location_id'
+        'location_id',
     ];
 }

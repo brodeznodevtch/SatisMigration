@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TaxRate extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -28,7 +29,6 @@ class TaxRate extends Model
      * @param $business_id int
      * @param $prepend_none = true (boolean)
      * @param $include_attributes = false (boolean)
-     *
      * @return array['tax_rates', 'attributes']
      */
     public static function forBusinessDropdown(
@@ -36,7 +36,7 @@ class TaxRate extends Model
         $prepend_none = true,
         $include_attributes = false
     ) {
-    
+
         //$all_taxes = TaxRates::where('business_id', $business_id);
         //$tax_rates = $all_taxes->pluck('name', 'id');
 
@@ -57,6 +57,7 @@ class TaxRate extends Model
         }
 
         $output = ['tax_rates' => $tax_rates, 'attributes' => $tax_attributes];
+
         return $output;
     }
 
@@ -68,9 +69,9 @@ class TaxRate extends Model
     public static function forBusiness($business_id)
     {
         $tax_rates = TaxRate::where('business_id', $business_id)
-                        ->select(['id', 'name', 'percent'])
-                        ->get()
-                        ->toArray();
+            ->select(['id', 'name', 'percent'])
+            ->get()
+            ->toArray();
 
         return $tax_rates;
     }
@@ -80,7 +81,8 @@ class TaxRate extends Model
      *
      * @return object
      */
-    public function tax_groups() {
+    public function tax_groups()
+    {
         return $this->belongsToMany('App\TaxGroup', 'tax_rate_tax_group', 'tax_rate_id', 'tax_group_id');
     }
 }

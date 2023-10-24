@@ -1,14 +1,14 @@
 <?php
 
+use App\City;
 use App\Contact;
 use App\Country;
-use App\State;
-use App\City;
 use App\PaymentTerm;
+use App\State;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class ModifyColumnsContactsTable extends Migration
 {
@@ -23,20 +23,20 @@ class ModifyColumnsContactsTable extends Migration
 
         foreach ($contacts as $contact) {
 
-            $country = Country::whereRaw('upper(name) = upper("' . $contact->country . '")')->first();
+            $country = Country::whereRaw('upper(name) = upper("'.$contact->country.'")')->first();
             //Check if country exist to set the state and city
-            if (!empty($country)) {
+            if (! empty($country)) {
                 $contact->country = $country->id;
 
-                $state = State::whereRaw('upper(name) = upper("' . $contact->state . '")')
+                $state = State::whereRaw('upper(name) = upper("'.$contact->state.'")')
                     ->where('country_id', $country->id)->first();
 
-                if (!empty($state)) {
+                if (! empty($state)) {
                     $contact->state = $state->id;
 
-                    $city = City::whereRaw('upper(name) = upper("' . $contact->city . '")')->where('state_id', $state->id)->first();
+                    $city = City::whereRaw('upper(name) = upper("'.$contact->city.'")')->where('state_id', $state->id)->first();
 
-                    if (!empty($city)) {
+                    if (! empty($city)) {
                         $contact->city = $city->id;
                     } else {
                         $contact->city = null;
@@ -47,24 +47,24 @@ class ModifyColumnsContactsTable extends Migration
                 }
             } else {
                 //Check if state exist to set the country and city
-                $state = State::whereRaw('upper(name) = upper("' . $contact->state . '")')->first();
+                $state = State::whereRaw('upper(name) = upper("'.$contact->state.'")')->first();
 
-                if (!empty($state)) {
+                if (! empty($state)) {
                     $contact->country = $state->country_id;
                     $contact->state = $state->id;
 
-                    $city = City::whereRaw('upper(name) = upper("' . $contact->city . '")')->where('state_id', $state->id)->first();
+                    $city = City::whereRaw('upper(name) = upper("'.$contact->city.'")')->where('state_id', $state->id)->first();
 
-                    if (!empty($city)) {
+                    if (! empty($city)) {
                         $contact->city = $city->id;
                     } else {
                         $contact->city = null;
                     }
                 } else {
                     //Check if city exist to set the state and country
-                    $city = City::whereRaw('upper(name) = upper("' . $contact->city . '")')->first();
+                    $city = City::whereRaw('upper(name) = upper("'.$contact->city.'")')->first();
 
-                    if (!empty($city)) {
+                    if (! empty($city)) {
                         $state = State::where('id', $city->state_id)->first();
 
                         $contact->city = $city->id;
@@ -82,14 +82,14 @@ class ModifyColumnsContactsTable extends Migration
             if (empty($contact->pay_term_type)) {
                 $contact->pay_term_number = null;
             } else {
-                if ($contact->pay_term_type == "months") {
-                    if (!empty($contact->pay_term_number)) {
+                if ($contact->pay_term_type == 'months') {
+                    if (! empty($contact->pay_term_number)) {
                         $contact->pay_term_number = $contact->pay_term_number * 30;
                     }
                 }
 
                 $payment_term = PaymentTerm::where('days', $contact->pay_term_number)->first();
-                if (!empty($payment_term)) {
+                if (! empty($payment_term)) {
                     $contact->pay_term_number = $payment_term->id;
                 } else {
                     $contact->pay_term_number = null;
@@ -98,7 +98,6 @@ class ModifyColumnsContactsTable extends Migration
 
             $contact->save();
         }
-
 
         Schema::table('contacts', function (Blueprint $table) {
             $table->integer('country_id')->unsigned()->nullable()->default(null)->after('provider_catalogue_id');

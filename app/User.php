@@ -2,14 +2,12 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Support\Facades\Session;
-use App\BusinessLocation;
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Session;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -17,14 +15,13 @@ class User extends Authenticatable
     use SoftDeletes;
     use HasRoles;
 
-    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'username', 'email', 'password', 'business_id', 'cmmsn_percent', 'is_cmmsn_agnt', 'contact_no', 'address', 'language', 'status', 'deleted_at'
+        'first_name', 'last_name', 'username', 'email', 'password', 'business_id', 'cmmsn_percent', 'is_cmmsn_agnt', 'contact_no', 'address', 'language', 'status', 'deleted_at',
     ];
 
     /**
@@ -74,13 +71,11 @@ class User extends Authenticatable
             'username' => $details['username'],
             'email' => $details['email'],
             'password' => bcrypt($details['password']),
-            'language' => !empty($details['language']) ? $details['language'] : 'es'
+            'language' => ! empty($details['language']) ? $details['language'] : 'es',
         ]);
 
         return $user;
     }
-
-
 
     /**
      * Gives locations permitted for the logged in user
@@ -96,11 +91,11 @@ class User extends Authenticatable
             $permitted_locations = [];
             $all_locations = BusinessLocation::where('business_id', $business_id)->get();
             foreach ($all_locations as $location) {
-                if (auth()->user()->can('location.' . $location->id)) {
+                if (auth()->user()->can('location.'.$location->id)) {
                     $permitted_locations[] = $location->id;
                 }
             }
-            
+
             return $permitted_locations;
         }
     }
@@ -109,12 +104,13 @@ class User extends Authenticatable
      * Returns if a user can access the input location
      *
      * @param: int $location_id
-     * @return boolean
+     *
+     * @return bool
      */
     public static function can_access_this_location($location_id)
     {
         $permitted_locations = User::permitted_locations();
-        
+
         if ($permitted_locations == 'all' || in_array($location_id, $permitted_locations)) {
             return true;
         }
@@ -128,14 +124,13 @@ class User extends Authenticatable
      * @param $business_id int
      * @param $prepend_none = true (boolean)
      * @param $include_commission_agents = false (boolean)
-     *
      * @return array users
      */
     public static function forDropdown($business_id, $prepend_none = true, $include_commission_agents = false, $prepend_all = false)
     {
 
         $query = User::where('business_id', $business_id);
-        if (!$include_commission_agents) {
+        if (! $include_commission_agents) {
             $query->where('is_cmmsn_agnt', 0);
         }
 
@@ -149,7 +144,7 @@ class User extends Authenticatable
         }
 
         //Prepend all
-        if($prepend_all){
+        if ($prepend_all) {
             $users = $users->prepend(__('messages.all'), '');
         }
 
@@ -189,20 +184,19 @@ class User extends Authenticatable
         return $users;
     }
 
-     /**
+    /**
      * Return list of sales commission agents dropdown for a business
      *
      * @param $business_id int
      * @param $prepend_none = true (boolean)
-     *
      * @return array users
      */
-     public static function saleCommissionAgentsDropdown($business_id, $prepend_none = true)
-     {
+    public static function saleCommissionAgentsDropdown($business_id, $prepend_none = true)
+    {
 
         $all_cmmsn_agnts = User::where('business_id', $business_id)
-        ->where('is_cmmsn_agnt', 1)
-        ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
+            ->where('is_cmmsn_agnt', 1)
+            ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
 
         $users = $all_cmmsn_agnts->pluck('full_name', 'id');
 
@@ -241,14 +235,13 @@ class User extends Authenticatable
      *
      * @param $business_id int
      * @param $prepend_none = true (boolean)
-     *
      * @return array users
      */
     public static function allUsersDropdown($business_id, $prepend_none = true)
     {
 
         $all_users = User::where('business_id', $business_id)
-        ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
+            ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
 
         $users = $all_users->pluck('full_name', 'id');
 
@@ -278,27 +271,29 @@ class User extends Authenticatable
     /**
      * Return true/false based on selected_contact access
      *
-     * @return boolean
+     * @return bool
      */
     public static function isSelectedContacts($user_id)
     {
         $user = User::findOrFail($user_id);
 
-        return (boolean)$user->selected_contacts;
+        return (bool) $user->selected_contacts;
     }
 
-    public function permittedBusiness() {
+    public function permittedBusiness()
+    {
         return User::where('username', $this->username)
             ->pluck('business_id')
             ->toArray();
     }
 
-    public static function CustodiansDropdown($business_id, $prepend_none = true){
+    public static function CustodiansDropdown($business_id, $prepend_none = true)
+    {
         $all_custodians = User::where('business_id', $business_id)
-        ->whereIn('id', function($query){
-            $query->select('user_id')->from('special_permisions')->where('custodian', 1);
-        })
-        ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
+            ->whereIn('id', function ($query) {
+                $query->select('user_id')->from('special_permisions')->where('custodian', 1);
+            })
+            ->select('id', DB::raw("CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) as full_name"));
 
         $custodians = $all_custodians->pluck('full_name', 'id');
 

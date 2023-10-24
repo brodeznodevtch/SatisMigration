@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnToContactsTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddColumnToContactsTable extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->boolean("is_excluded_subject")->nullable()->after("is_exempt")->default(false);
+            $table->boolean('is_excluded_subject')->nullable()->after('is_exempt')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddColumnToContactsTable extends Migration
     public function down()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->dropColumn("is_excluded_subject");
+            $table->dropColumn('is_excluded_subject');
         });
     }
 }

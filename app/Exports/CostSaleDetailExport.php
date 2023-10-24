@@ -4,20 +4,23 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class CostSaleDetailExport implements FromView, WithEvents, WithTitle
 {
     private $query;
+
     private $business;
+
     private $start;
+
     private $end;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $query
      * @param  \App\Business  $business
      * @param  string  $start
@@ -26,7 +29,7 @@ class CostSaleDetailExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($query, $business, $start, $end)
     {
-    	$this->query = $query;
+        $this->query = $query;
         $this->business = $business;
         $this->start = $start;
         $this->end = $end;
@@ -34,30 +37,26 @@ class CostSaleDetailExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.cost_of_sale');
+        return __('report.cost_of_sale');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:I1500', 'Calibri');
-    			$event->sheet->setFontSize('A1:I1500', 10);
+                $event->sheet->setFontFamily('A1:I1500', 'Calibri');
+                $event->sheet->setFontSize('A1:I1500', 10);
 
-    			$event->sheet->mergeCells('A1:I1');
-    			$event->sheet->mergeCells('A2:I2');
+                $event->sheet->mergeCells('A1:I1');
+                $event->sheet->mergeCells('A2:I2');
 
                 $event->sheet->horizontalAlign('A1:I2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
@@ -78,15 +77,13 @@ class CostSaleDetailExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.cost_of_sale_detail_report_excel', [
-    		'query' => $this->query,
-    		'business' => $this->business,
-    		'start' => $this->start,
+        return view('reports.cost_of_sale_detail_report_excel', [
+            'query' => $this->query,
+            'business' => $this->business,
+            'start' => $this->start,
             'end' => $this->end,
         ]);
     }

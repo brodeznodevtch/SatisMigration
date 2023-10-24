@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddWarehouseIdToVariationLocationDetailsTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddWarehouseIdToVariationLocationDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::table('variation_location_details', function(Blueprint $table){
+        Schema::table('variation_location_details', function (Blueprint $table) {
             $table->integer('warehouse_id')->unsigned()->nullable()->after('location_id');
             $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade')->onUpdate('cascade');
         });

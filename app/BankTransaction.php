@@ -10,11 +10,11 @@ class BankTransaction extends Model
 
     public function bankAccount()
     {
-    	return $this->belongsTo('App\BankAccount');
+        return $this->belongsTo('App\BankAccount');
     }
 
     public function entrie()
     {
-    	return $this->belongsTo('App\AccountingEntrie', 'accounting_entrie_id');
+        return $this->belongsTo('App\AccountingEntrie', 'accounting_entrie_id');
     }
 }

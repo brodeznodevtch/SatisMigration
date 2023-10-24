@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessLocation;
+use App\BusinessType;
+use App\Category;
 use App\City;
-use App\Zone;
-use App\State;
 use App\Contact;
 use App\Country;
-use App\Category;
+use App\CRMContactMode;
+use App\CRMContactReason;
 use App\Customer;
-use App\Variation;
+use App\CustomerContact;
+use App\CustomerGroup;
+use App\CustomerPortfolio;
+use App\FollowCustomer;
+use App\FollowCustomersHasProduct;
+use App\FollowOportunities;
+use App\FollowOportunitiesHasProduct;
 use App\Oportunity;
 use App\PaymentTerm;
-use App\BusinessType;
-use App\CustomerGroup;
-use App\Utils\TaxUtil;
-use App\CRMContactMode;
-use App\FollowCustomer;
-use App\CustomerContact;
-use App\BusinessLocation;
-use App\CRMContactReason;
-use App\CustomerPortfolio;
 use App\SellingPriceGroup;
-use App\FollowOportunities;
+use App\State;
+use App\Utils\TaxUtil;
+use App\Variation;
+use App\Zone;
 use Illuminate\Http\Request;
-use App\FollowCustomersHasProduct;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\FollowOportunitiesHasProduct;
 use Yajra\DataTables\Facades\DataTables;
 
 class OportunityController extends Controller
@@ -36,6 +35,7 @@ class OportunityController extends Controller
     {
         $this->taxUtil = $taxUtil;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -43,14 +43,14 @@ class OportunityController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('oportunities.view') && !auth()->user()->can('oportunities.create')) {
+        if (! auth()->user()->can('oportunities.view') && ! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $type = request()->get('type');
 
         if ($type != 'all_oportunities' && $type != 'my_oportunities') {
-            die("Not Found");
+            exit('Not Found');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -86,7 +86,7 @@ class OportunityController extends Controller
 
     public function getOportunityData()
     {
-        if (!auth()->user()->can('oportunities.view') && !auth()->user()->can('oportunities.create')) {
+        if (! auth()->user()->can('oportunities.view') && ! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = auth()->user()->business_id;
@@ -97,8 +97,8 @@ class OportunityController extends Controller
             ->where('oportunities.business_id', $business_id)
             ->where('oportunities.status', 'oportunity')
             ->select(
-                DB::raw("upper(oportunities.contact_type) as contact_type"),
-                DB::raw("crm_contact_reasons.name as reason"),
+                DB::raw('upper(oportunities.contact_type) as contact_type'),
+                DB::raw('crm_contact_reasons.name as reason'),
                 'oportunities.name',
                 'oportunities.company',
                 'oportunities.id',
@@ -107,14 +107,14 @@ class OportunityController extends Controller
                 DB::raw('CONCAT(user.first_name, " ", user.last_name) as full_name_user')
             );
 
-        if ($type != "all_oportunities") {
+        if ($type != 'all_oportunities') {
             $oportunity->where('oportunities.created_by', $user_id);
         }
 
         // Date filter
-        if (!empty(request()->start_date) && !empty(request()->end_date)) {
+        if (! empty(request()->start_date) && ! empty(request()->end_date)) {
             $start = trim(request()->start_date);
-            $end =  trim(request()->end_date);
+            $end = trim(request()->end_date);
             $oportunity->whereBetween('oportunities.contact_date', [$start, $end]);
         }
 
@@ -123,31 +123,32 @@ class OportunityController extends Controller
                 'actions',
                 function ($row) {
                     $html = '<div class="btn-group">
-                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (auth()->user()->can('oportunities.view')) {
-                        $html .= '<li><a href="/follow-oportunities/' . $row->id . '" class="edit_pos_button"><i class="glyphicon glyphicon-eye-open edit-glyphicon"></i> ' . __("Ver") . '</a></li>';
+                        $html .= '<li><a href="/follow-oportunities/'.$row->id.'" class="edit_pos_button"><i class="glyphicon glyphicon-eye-open edit-glyphicon"></i> '.__('Ver').'</a></li>';
                     }
 
                     if (auth()->user()->can('oportunities.update')) {
-                        $html .= '<li><a href="#" data-href="' . action('OportunityController@edit', [$row->id]) . '" class="edit_oportunity_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('OportunityController@edit', [$row->id]).'" class="edit_oportunity_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('follow_oportunities.create')) {
-                        $html .= '<li><a data-href="' . action('FollowOportunitiesController@create', [$row->id]) . '" data-container=".oportunities_modal" class="btn-modal" style="cursor:pointer;"><i class="glyphicon probar glyphicon-comment"></i> ' . __("crm.tracing") . '</a></li>';
+                        $html .= '<li><a data-href="'.action('FollowOportunitiesController@create', [$row->id]).'" data-container=".oportunities_modal" class="btn-modal" style="cursor:pointer;"><i class="glyphicon probar glyphicon-comment"></i> '.__('crm.tracing').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.create')) {
-                        $html .= '<li><a href="#" data-href="' . action('OportunityController@createCustomer', [$row->id]) . '" class="convert_customer_button"><i class="fa fa-star"></i> ' . __("crm.convert_to_customer") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action('OportunityController@createCustomer', [$row->id]).'" class="convert_customer_button"><i class="fa fa-star"></i> '.__('crm.convert_to_customer').'</a></li>';
                     }
 
                     if (auth()->user()->can('oportunities.delete')) {
-                        $html .= '<li><a href="#" onClick="deleteOportunity(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="#" onClick="deleteOportunity('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';
+
                     return $html;
                 }
             )
@@ -163,7 +164,7 @@ class OportunityController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('oportunities.create')) {
+        if (! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -176,7 +177,7 @@ class OportunityController extends Controller
         $known_by = CRMContactMode::forDropdown($business_id);
 
         //Llenar select de Contact Mode
-        $contactmode = CRMContactMode::where('name', 'not like', "%cliente%")->pluck('name', 'id');
+        $contactmode = CRMContactMode::where('name', 'not like', '%cliente%')->pluck('name', 'id');
 
         //Llenar select de Category
         $categories = Category::forDropdown($business_id);
@@ -190,12 +191,11 @@ class OportunityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('oportunities.create')) {
+        if (! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -206,7 +206,7 @@ class OportunityController extends Controller
             $oportunity = $request->only(['contact_type', 'contact_date', 'contact_reason_id', 'name', 'company', 'charge', 'email', 'contacts', 'known_by', 'refered_id', 'contact_mode_id', 'social_user', 'country_id', 'state_id', 'city_id']);
             $oportunity['business_id'] = $request->session()->get('user.business_id');
             $oportunity['created_by'] = $request->session()->get('user.id');
-            $oportunity['status'] = "oportunity";
+            $oportunity['status'] = 'oportunity';
 
             if ($chk_not_found) {
                 $oportunity['product_not_found'] = 1;
@@ -220,11 +220,11 @@ class OportunityController extends Controller
             $outpout = [
                 'success' => true,
                 'data' => $oportunity,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $outpout = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $outpout = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $outpout;
@@ -238,7 +238,7 @@ class OportunityController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('oportunities.view')) {
+        if (! auth()->user()->can('oportunities.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -266,7 +266,7 @@ class OportunityController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('oportunities.update')) {
+        if (! auth()->user()->can('oportunities.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -319,13 +319,12 @@ class OportunityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('oportunities.update')) {
+        if (! auth()->user()->can('oportunities.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -357,11 +356,11 @@ class OportunityController extends Controller
             $output = [
                 'success' => true,
                 'data' => $oportunity,
-                'msg' => __("crm.updated_success")
+                'msg' => __('crm.updated_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -375,7 +374,7 @@ class OportunityController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('oportunities.delete')) {
+        if (! auth()->user()->can('oportunities.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -386,18 +385,18 @@ class OportunityController extends Controller
             if ($follow_oportunities > 0) {
                 $output = [
                     'success' => false,
-                    'msg' => __("crm.oportunity_has_follows")
+                    'msg' => __('crm.oportunity_has_follows'),
                 ];
             } else {
                 $oportunity->delete();
                 $output = [
                     'success' => true,
-                    'msg' => __("crm.deleted_success")
+                    'msg' => __('crm.deleted_success'),
                 ];
             }
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -410,7 +409,7 @@ class OportunityController extends Controller
      */
     public function createCustomer($id)
     {
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -455,6 +454,7 @@ class OportunityController extends Controller
 
         /**Prices list */
         $prices_group = SellingPriceGroup::all();
+
         return view('oportunity.create_customer', compact(
             'business_types',
             'customer_portfolios',
@@ -474,13 +474,12 @@ class OportunityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function storeCustomer(Request $request)
     {
         // dd($request);
-        if (!auth()->user()->can('customer.create')) {
+        if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -554,7 +553,6 @@ class OportunityController extends Controller
                 $customer_details['is_taxpayer'] = 0;
             }
 
-
             if ($allowed_credit) {
                 $customer_details['allowed_credit'] = 1;
                 $customer_details['opening_balance'] = $request->input('opening_balance');
@@ -571,45 +569,43 @@ class OportunityController extends Controller
             // dd($customer);
             $customer_id = $customer->id;
 
-            if (!empty($request->input("contactname"))) {
+            if (! empty($request->input('contactname'))) {
                 //se recorre cada uno de los campos de contactos y se agregan a un array
 
-                foreach ($request->input("contactname") as $contactname) {
+                foreach ($request->input('contactname') as $contactname) {
                     $contactnames[] = $contactname;
                 }
 
-                foreach ($request->input("contactphone") as $contactmobil) {
+                foreach ($request->input('contactphone') as $contactmobil) {
                     $contactmobile[] = $contactmobil;
                 }
 
-                foreach ($request->input("contactlandline") as $contactlandline) {
+                foreach ($request->input('contactlandline') as $contactlandline) {
                     $contactlandlines[] = $contactlandline;
                 }
 
-                foreach ($request->input("contactemail") as $contactemail) {
+                foreach ($request->input('contactemail') as $contactemail) {
                     $contactmails[] = $contactemail;
                 }
-                foreach ($request->input("contactcargo") as $contactcargo) {
+                foreach ($request->input('contactcargo') as $contactcargo) {
                     $contactcargos[] = $contactcargo;
                 }
 
-                if (!empty($contactnames)) {
+                if (! empty($contactnames)) {
 
                     for ($i = 0; $i < count($contactnames); $i++) {
                         //se crea un nuevo contacto acorde a la cantidad de datos mandados en el array $contactnames
                         CustomerContact::create([
-                            'name'      => $contactnames[$i],
-                            'phone'     => $contactmobile[$i],
-                            'landline'  => $contactlandlines[$i],
-                            'email'     => $contactmails[$i],
-                            'cargo'     => $contactcargos[$i],
-                            'customer_id' => $customer_id
+                            'name' => $contactnames[$i],
+                            'phone' => $contactmobile[$i],
+                            'landline' => $contactlandlines[$i],
+                            'email' => $contactmails[$i],
+                            'cargo' => $contactcargos[$i],
+                            'customer_id' => $customer_id,
                         ]);
                     }
                 }
             } //fin de contactos miltples
-
-
 
             $oportunity = Oportunity::findOrFail($request->input('oportunity_id'));
             $oportunity->customer_id = $customer->id;
@@ -618,7 +614,7 @@ class OportunityController extends Controller
 
             $follow_oportunities = FollowOportunities::where('oportunity_id', $oportunity->id)->get();
 
-            if (!empty($follow_oportunities)) {
+            if (! empty($follow_oportunities)) {
                 foreach ($follow_oportunities as $fo) {
                     $follow_customer = new FollowCustomer;
                     $follow_customer->customer_id = $customer->id;
@@ -636,7 +632,7 @@ class OportunityController extends Controller
 
                     $details = FollowOportunitiesHasProduct::where('follow_oportunitie_id', $fo->id)->get();
 
-                    if (!empty($details)) {
+                    if (! empty($details)) {
                         foreach ($details as $d) {
                             $detail = new FollowCustomersHasProduct;
                             $detail->follow_customer_id = $follow_customer->id;
@@ -651,13 +647,13 @@ class OportunityController extends Controller
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("customer.added_success")
+                'msg' => __('customer.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;

@@ -6,6 +6,7 @@
  * and the language files in subdirectory "../geshi/")
  *
  * @author  Nigel McNie
+ *
  * @version $Id: example.php 2510 2012-06-27 15:57:55Z reedy_boy $
  */
 header('Content-Type: text/html; charset=utf-8');
@@ -20,18 +21,18 @@ if (is_readable('../geshi.php')) {
 } elseif (is_readable('geshi.php')) {
     $path = './';
 } else {
-    die('Could not find geshi.php - make sure it is in your include path!');
+    exit('Could not find geshi.php - make sure it is in your include path!');
 }
-require $path . 'geshi.php';
+require $path.'geshi.php';
 
 $fill_source = false;
 if (isset($_POST['submit'])) {
     if (get_magic_quotes_gpc()) {
         $_POST['source'] = stripslashes($_POST['source']);
     }
-    if (!strlen(trim($_POST['source']))) {
+    if (! strlen(trim($_POST['source']))) {
         $_POST['language'] = preg_replace('#[^a-zA-Z0-9\-_]#', '', $_POST['language']);
-        $_POST['source'] = implode('', @file($path . 'geshi/' . $_POST['language'] . '.php'));
+        $_POST['source'] = implode('', @file($path.'geshi/'.$_POST['language'].'.php'));
         $_POST['language'] = 'php';
     } else {
         $fill_source = true;
@@ -108,7 +109,7 @@ if (isset($_POST['submit'])) {
         // Output the stylesheet. Note it doesn't output the <style> tag
         echo $geshi->get_stylesheet(true);
     }
-    ?>
+?>
     html {
         background-color: #f0f0f0;
     }
@@ -178,17 +179,17 @@ if (isset($_POST['submit'])) {
 <p>
 <select name="language" id="language">
 <?php
-if (!($dir = @opendir(dirname(__FILE__) . '/geshi'))) {
-    if (!($dir = @opendir(dirname(__FILE__) . '/../geshi'))) {
+if (! ($dir = @opendir(dirname(__FILE__).'/geshi'))) {
+    if (! ($dir = @opendir(dirname(__FILE__).'/../geshi'))) {
         echo '<option>No languages available!</option>';
     }
 }
-$languages = array();
+$languages = [];
 while ($file = readdir($dir)) {
-    if ( $file[0] == '.' || strpos($file, '.', 1) === false) {
+    if ($file[0] == '.' || strpos($file, '.', 1) === false) {
         continue;
     }
-    $lang = substr($file, 0,  strpos($file, '.'));
+    $lang = substr($file, 0, strpos($file, '.'));
     $languages[] = $lang;
 }
 closedir($dir);
@@ -199,7 +200,7 @@ foreach ($languages as $lang) {
     } else {
         $selected = '';
     }
-    echo '<option value="' . $lang . '" '. $selected .'>' . $lang . "</option>\n";
+    echo '<option value="'.$lang.'" '.$selected.'>'.$lang."</option>\n";
 }
 
 ?>

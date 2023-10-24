@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Optics;
 
 use App\Optics\GraduationCardHasDiagnostic;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class GraduationCardHasDiagnosticController extends Controller
 {
@@ -31,7 +31,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -64,7 +63,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\GraduationCardHasDiagnostic  $graduationCardHasDiagnostic
      * @return \Illuminate\Http\Response
      */

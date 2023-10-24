@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Zone;
 use App\State;
-use Illuminate\Http\Request;
+use App\Zone;
 use DataTables;
+use Illuminate\Http\Request;
 
 class ZoneController extends Controller
 {
@@ -32,7 +32,6 @@ class ZoneController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,8 +41,7 @@ class ZoneController extends Controller
                 'name' => 'required|unique:zones',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $zone_details = $request->only(['name']);
@@ -52,16 +50,17 @@ class ZoneController extends Controller
                 $zone = Zone::create($zone_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.zone_added')
+                    'msg' => __('geography.zone_added'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -75,6 +74,7 @@ class ZoneController extends Controller
     public function show($id)
     {
         $zone = Zone::findOrFail($id);
+
         return response()->json($zone);
     }
 
@@ -87,13 +87,13 @@ class ZoneController extends Controller
     public function edit($id)
     {
         $zone = Zone::findOrFail($id);
+
         return response()->json($zone);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Zone  $zone
      * @return \Illuminate\Http\Response
      */
@@ -106,8 +106,7 @@ class ZoneController extends Controller
                 'name' => 'required|unique:zones,name,'.$zone->id,
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $zone->name = $request->input('name');
@@ -115,16 +114,17 @@ class ZoneController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("geography.zone_updated")
+                    'msg' => __('geography.zone_updated'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -138,32 +138,31 @@ class ZoneController extends Controller
     public function destroy($id)
     {
         if (request()->ajax()) {
-            try{
+            try {
 
                 $zone = Zone::findOrFail($id);
                 $states = State::where('zone_id', $zone->id)->count();
 
-                if($states > 0){
+                if ($states > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('geography.zone_has_states')
+                        'msg' => __('geography.zone_has_states'),
                     ];
-                }
-                else{
+                } else {
                     $zone->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('geography.zone_deleted')
+                        'msg' => __('geography.zone_deleted'),
                     ];
                 }
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -172,6 +171,7 @@ class ZoneController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $zones = Zone::where('business_id', $business_id);
+
         return DataTables::of($zones)->toJson();
     }
 
@@ -179,6 +179,7 @@ class ZoneController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $zones = Zone::where('business_id', $business_id)->get();
+
         return response()->json($zones);
     }
 }

@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-use DataTables;
-
+use App\BusinessLocation;
+use App\Category;
 use App\Contact;
 use App\Country;
-use App\Category;
-use App\Oportunity;
 use App\CRMContactMode;
-use App\BusinessLocation;
-
 use App\CRMContactReason;
 use App\FollowOportunities;
-use Illuminate\Http\Request;
-use App\Utils\TransactionUtil;
 use App\FollowOportunitiesHasProduct;
+use App\Oportunity;
+use App\Utils\TransactionUtil;
+use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class FollowOportunitiesController extends Controller
 {
@@ -25,6 +22,7 @@ class FollowOportunitiesController extends Controller
     {
         $this->transactionUtil = $transactionUtil;
     }
+
     public function index()
     {
         // return view()
@@ -32,7 +30,7 @@ class FollowOportunitiesController extends Controller
 
     public function show($id)
     {
-        if (!auth()->user()->can('follow_oportunities.view')) {
+        if (! auth()->user()->can('follow_oportunities.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -55,7 +53,7 @@ class FollowOportunitiesController extends Controller
 
     public function create($id)
     {
-        if (!auth()->user()->can('follow_oportunities.create')) {
+        if (! auth()->user()->can('follow_oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -68,7 +66,7 @@ class FollowOportunitiesController extends Controller
         $known_by = CRMContactMode::forDropdown($business_id);
 
         //Llenar select de Contact Mode
-        $contactmode = CRMContactMode::where('name', 'not like', "%cliente%")->pluck('name', 'id');
+        $contactmode = CRMContactMode::where('name', 'not like', '%cliente%')->pluck('name', 'id');
 
         //Llenar select de Category
         $categories = Category::forDropdown($business_id);
@@ -90,6 +88,7 @@ class FollowOportunitiesController extends Controller
 
         // dd($id);
         $oportunity = Oportunity::findOrFail($id);
+
         return view('oportunity.follow_oportunities.create')
             ->with(compact('contactreason', 'known_by', 'oportunity', 'categories', 'clients', 'contactmode', 'countries', 'products', 'locations', 'id'));
     }
@@ -97,12 +96,11 @@ class FollowOportunitiesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('follow_oportunities.create')) {
+        if (! auth()->user()->can('follow_oportunities.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -132,30 +130,30 @@ class FollowOportunitiesController extends Controller
             DB::beginTransaction();
 
             $follow_oportunity = FollowOportunities::create($follow_oportunity_details);
-            if (!empty($request->input("variation_id"))) {
+            if (! empty($request->input('variation_id'))) {
 
-                foreach ($request->input("variation_id") as $variation_id) {
+                foreach ($request->input('variation_id') as $variation_id) {
                     $variation_ids[] = $variation_id;
                 }
 
-                foreach ($request->input("quantity") as $quantity) {
+                foreach ($request->input('quantity') as $quantity) {
                     $quantitys[] = $quantity;
                 }
 
-                foreach ($request->input("required_quantity") as $required_quantity) {
+                foreach ($request->input('required_quantity') as $required_quantity) {
                     $required_quantitys[] = $required_quantity;
                 }
 
-                if (!empty($variation_ids)) {
+                if (! empty($variation_ids)) {
 
                     for ($i = 0; $i < count($variation_ids); $i++) {
                         //se crea un nuevo contacto acorde a la cantidad de datos mandados en el array $contactnames
 
                         FollowOportunitiesHasProduct::create([
-                            'follow_oportunitie_id'=> $follow_oportunity->id,
-                            'variation_id'     => $variation_ids[$i],
-                            'quantity'  => $quantitys[$i],
-                            'required_quantity'     => $required_quantitys[$i]
+                            'follow_oportunitie_id' => $follow_oportunity->id,
+                            'variation_id' => $variation_ids[$i],
+                            'quantity' => $quantitys[$i],
+                            'required_quantity' => $required_quantitys[$i],
                         ]);
                     }
                 }
@@ -164,12 +162,12 @@ class FollowOportunitiesController extends Controller
             DB::commit();
             $outpout = [
                 'success' => true,
-                'msg' => __("crm.added_success")
+                'msg' => __('crm.added_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $outpout = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $outpout = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $outpout;
@@ -183,7 +181,7 @@ class FollowOportunitiesController extends Controller
      */
     public function showOportunities($id)
     {
-        if (!auth()->user()->can('follow_oportunities.view')) {
+        if (! auth()->user()->can('follow_oportunities.view')) {
             abort(403, 'Unauthorized action.');
         }
         $followOportunitie = DB::table('follow_oportunities as follow')
@@ -198,10 +196,9 @@ class FollowOportunitiesController extends Controller
         return view('oportunity.follow_oportunities.index', compact('followOportunitie'));
     }
 
-
     public function edit($id)
     {
-        if (!auth()->user()->can('follow_oportunities.update')) {
+        if (! auth()->user()->can('follow_oportunities.update')) {
             abort(403, 'Unauthorized action.');
         }
         $followOportunitie = FollowOportunities::findOrFail($id);
@@ -214,7 +211,7 @@ class FollowOportunitiesController extends Controller
         $known_by = CRMContactMode::forDropdown($business_id);
 
         //Llenar select de Contact Mode
-        $contactmode = CRMContactMode::where('name', 'not like', "%cliente%")->pluck('name', 'id');
+        $contactmode = CRMContactMode::where('name', 'not like', '%cliente%')->pluck('name', 'id');
 
         //Llenar select de Category
         $categories = Category::forDropdown($business_id);
@@ -232,7 +229,7 @@ class FollowOportunitiesController extends Controller
             ->select([
                 'variations.id', 'follow_oportunities_has_products.id as idf', 'variations.name as name',
                 'products.sku', 'follow_oportunities_has_products.quantity as quantity',
-                'follow_oportunities_has_products.required_quantity'
+                'follow_oportunities_has_products.required_quantity',
             ])
             ->get();
         // dd($followOportunitie->product_not_stock);
@@ -267,14 +264,13 @@ class FollowOportunitiesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\FollowOportunities  $followOportunities
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         // dd($request);
-        if (!auth()->user()->can('follow_oportunities.update')) {
+        if (! auth()->user()->can('follow_oportunities.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -310,41 +306,41 @@ class FollowOportunitiesController extends Controller
             $oldContact = FollowOportunitiesHasProduct::where('follow_oportunitie_id', $followOportunities->id)->pluck('id');
             $newContact = [];
 
-            if (!empty($request->input("variation_id"))) {
+            if (! empty($request->input('variation_id'))) {
                 foreach ($request->input('oporid') as $oporid) {
                     $oporids[] = $oporid;
                 }
 
-                foreach ($request->input("variation_id") as $variation_id) {
+                foreach ($request->input('variation_id') as $variation_id) {
                     $variation_ids[] = $variation_id;
                 }
 
-                foreach ($request->input("quantity") as $quantity) {
+                foreach ($request->input('quantity') as $quantity) {
                     $quantitys[] = $quantity;
                 }
 
-                foreach ($request->input("required_quantity") as $required_quantity) {
+                foreach ($request->input('required_quantity') as $required_quantity) {
                     $required_quantitys[] = $required_quantity;
                 }
 
-                if (!empty($variation_ids)) {
+                if (! empty($variation_ids)) {
 
                     for ($i = 0; $i < count($variation_ids); $i++) {
                         //se crea un nuevo contacto acorde a la cantidad de datos mandados en el array $contactnames
-                        if ($oporids[$i] == "0") {
+                        if ($oporids[$i] == '0') {
                             FollowOportunitiesHasProduct::create([
-                                'follow_oportunitie_id'=> $followOportunities->id,
-                                'variation_id'     => $variation_ids[$i],
-                                'quantity'  => $quantitys[$i],
-                                'required_quantity'     => $required_quantitys[$i]
+                                'follow_oportunitie_id' => $followOportunities->id,
+                                'variation_id' => $variation_ids[$i],
+                                'quantity' => $quantitys[$i],
+                                'required_quantity' => $required_quantitys[$i],
                             ]);
                         } else {
-                                FollowOportunitiesHasProduct::find($oporids[$i])
+                            FollowOportunitiesHasProduct::find($oporids[$i])
                                 ->update([
-                                    'follow_oportunitie_id'=> $followOportunities->id,
-                                    'variation_id'     => $variation_ids[$i],
-                                    'quantity'  => $quantitys[$i],
-                                    'required_quantity'     => $required_quantitys[$i]
+                                    'follow_oportunitie_id' => $followOportunities->id,
+                                    'variation_id' => $variation_ids[$i],
+                                    'quantity' => $quantitys[$i],
+                                    'required_quantity' => $required_quantitys[$i],
                                 ]);
                             $newContact[] = $oporids[$i];
                         }
@@ -368,12 +364,12 @@ class FollowOportunitiesController extends Controller
             DB::commit();
             $outpout = [
                 'success' => true,
-                'msg' => __("crm.updated_success")
+                'msg' => __('crm.updated_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $outpout = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $outpout = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $outpout;
@@ -387,7 +383,7 @@ class FollowOportunitiesController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('follow_oportunities.delete')) {
+        if (! auth()->user()->can('follow_oportunities.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -398,11 +394,11 @@ class FollowOportunitiesController extends Controller
             $follow->delete();
             $output = [
                 'success' => true,
-                'msg' => __("crm.deleted_success")
+                'msg' => __('crm.deleted_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
 
         return $output;
@@ -419,22 +415,23 @@ class FollowOportunitiesController extends Controller
             ->where('follow.oportunity_id', $id)
             ->orderBy('follow.date', 'desc')
             ->get();
+
         return DataTables::of($follow_oportunities)
             ->addColumn(
                 'actions',
                 function ($row) {
                     $html = '<div class="btn-group">
                         <button type="button" class="btn btn-xs btn-primary dropdown-toggle" 
-                            data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span>
+                            data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
-                    $html .= '<li><a href="#" data-href="' . action('FollowOportunitiesController@edit', [$row->id]) . '" class="edit_oportunities_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
-                    $html .= '<li><a href="#" onclick="deleteOport(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
-
+                    $html .= '<li><a href="#" data-href="'.action('FollowOportunitiesController@edit', [$row->id]).'" class="edit_oportunities_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                    $html .= '<li><a href="#" onclick="deleteOport('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
 
                     $html .= '</ul></div>';
+
                     return $html;
                 }
             )
@@ -450,6 +447,7 @@ class FollowOportunitiesController extends Controller
             ->select('follow.*', 'variation.name as name_variation', 'variation.sub_sku', 'product.sku', 'product.name as name_product')
             ->where('follow.follow_oportunitie_id', $id)
             ->get();
+
         return response()->json($items);
     }
 }

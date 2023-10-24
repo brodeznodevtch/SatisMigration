@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
 use App\City;
-use Illuminate\Http\Request;
+use App\State;
 use DataTables;
+use Illuminate\Http\Request;
 
 class StateController extends Controller
 {
@@ -32,7 +32,6 @@ class StateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -44,8 +43,7 @@ class StateController extends Controller
                 'zone_id' => 'required',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $state_details = $request->only(['name', 'zip_code', 'country_id', 'zone_id']);
@@ -54,16 +52,17 @@ class StateController extends Controller
                 $state = State::create($state_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.state_added')
+                    'msg' => __('geography.state_added'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -77,6 +76,7 @@ class StateController extends Controller
     public function show($id)
     {
         $state = State::findOrFail($id);
+
         return response()->json($state);
     }
 
@@ -89,13 +89,13 @@ class StateController extends Controller
     public function edit($id)
     {
         $state = State::findOrFail($id);
+
         return response()->json($state);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\State  $state
      * @return \Illuminate\Http\Response
      */
@@ -110,8 +110,7 @@ class StateController extends Controller
                 'zone_id' => 'required',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $state->name = $request->input('name');
@@ -122,16 +121,17 @@ class StateController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("geography.state_updated")
+                    'msg' => __('geography.state_updated'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -145,7 +145,7 @@ class StateController extends Controller
     public function destroy($id)
     {
         if (request()->ajax()) {
-            try{
+            try {
 
                 $state = State::findOrFail($id);
                 $cities = City::where('state_id', $state->id)->count();
@@ -153,38 +153,37 @@ class StateController extends Controller
                 if ($cities > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('geography.state_has_cities')
+                        'msg' => __('geography.state_has_cities'),
                     ];
                 }
 
                 $employees = DB::table('employees')
-                ->where('state_id', $id)               
-                ->count();
+                    ->where('state_id', $id)
+                    ->count();
 
                 if ($employees > 0) {
 
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
 
                 }
 
-
                 $state->forceDelete();
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.state_deleted')
+                    'msg' => __('geography.state_deleted'),
                 ];
-                
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -193,6 +192,7 @@ class StateController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $states = State::where('business_id', $business_id)->with('country', 'zone');
+
         return DataTables::of($states)->toJson();
     }
 
@@ -200,6 +200,7 @@ class StateController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $states = State::where('business_id', $business_id)->get();
+
         return response()->json($states);
     }
 
@@ -207,8 +208,9 @@ class StateController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $states = State::where('business_id', $business_id)
-        ->where('country_id', $id)
-        ->get();
+            ->where('country_id', $id)
+            ->get();
+
         return response()->json($states);
     }
 }

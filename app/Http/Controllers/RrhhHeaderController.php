@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\RrhhHeader;
 use Illuminate\Http\Request;
 
-class RrhhHeaderController extends Controller {
-
+class RrhhHeaderController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.view') ) {
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -34,7 +35,6 @@ class RrhhHeaderController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,7 +45,6 @@ class RrhhHeaderController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhHeader  $rrhhHeader
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhHeader $rrhhHeader)
@@ -56,7 +55,6 @@ class RrhhHeaderController extends Controller {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RrhhHeader  $rrhhHeader
      * @return \Illuminate\Http\Response
      */
     public function edit(RrhhHeader $rrhhHeader)
@@ -67,8 +65,6 @@ class RrhhHeaderController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RrhhHeader  $rrhhHeader
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, RrhhHeader $rrhhHeader)
@@ -79,7 +75,6 @@ class RrhhHeaderController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RrhhHeader  $rrhhHeader
      * @return \Illuminate\Http\Response
      */
     public function destroy(RrhhHeader $rrhhHeader)

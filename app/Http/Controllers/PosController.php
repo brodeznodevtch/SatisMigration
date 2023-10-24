@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Pos;
-use App\Bank;
 use App\BankAccount;
-use Datatables;
-use App\Employees;
 use App\BusinessLocation;
+use App\Employees;
+use App\Pos;
+use Datatables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class PosController extends Controller
 {
     public function index()
     {
-        if (!auth()->user()->can('pos.view')) {
+        if (! auth()->user()->can('pos.view')) {
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax()) {
             $business_id = auth()->user()->business_id;
 
-            $pos = Pos::join('bank_accounts as ba', 'pos.bank_account_id', 'ba.id',)
+            $pos = Pos::join('bank_accounts as ba', 'pos.bank_account_id', 'ba.id')
                 ->join('business', 'business.id', '=', 'pos.business_id')
                 ->leftJoin('employees', 'employees.id', '=', 'pos.employee_id')
                 ->join('business_locations as bl', 'bl.id', '=', 'pos.location_id')
@@ -35,7 +33,7 @@ class PosController extends Controller
                     'employees.first_name as firstname',
                     'ba.name as bank_name',
                     'bl.name as business_name',
-                    'pos.status'
+                    'pos.status',
                 ]);
 
             return DataTables::of($pos)
@@ -43,24 +41,25 @@ class PosController extends Controller
                     'actions',
                     function ($row) {
                         $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('pos.update')) {
-                            $html .= '<li><a href="#" data-href="' . action('PosController@edit', [$row->id]) . '" class="edit_pos_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action('PosController@edit', [$row->id]).'" class="edit_pos_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                         }
                         if ($row->status == 'active') {
-                            $html .= '<li><a href="#" onclick="anulPos(' . $row->id . ')"><i class="fa fa-lock" aria-hidden="true"></i> ' . __("payment.pos_anull") . '</a></li>';
+                            $html .= '<li><a href="#" onclick="anulPos('.$row->id.')"><i class="fa fa-lock" aria-hidden="true"></i> '.__('payment.pos_anull').'</a></li>';
                         } else {
-                            $html .= '<li><a href="#" onclick="activePos(' . $row->id . ')"><i class="fa fa-check-square-o" aria-hidden="true"></i> ' . __("payment.pos_active") . '</a></li>';
+                            $html .= '<li><a href="#" onclick="activePos('.$row->id.')"><i class="fa fa-check-square-o" aria-hidden="true"></i> '.__('payment.pos_active').'</a></li>';
                         }
 
                         if (auth()->user()->can('pos.delete')) {
-                            $html .= '<li><a href="#" onclick="deletePos(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                            $html .= '<li><a href="#" onclick="deletePos('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                         }
 
                         $html .= '</ul></div>';
+
                         return $html;
                     }
                 )
@@ -83,18 +82,20 @@ class PosController extends Controller
         $business_locations = BusinessLocation::where('business_id', $business_id)->pluck('name', 'id');
         $status = ['active' => 'activo', 'inactive' => 'inactivo'];
         $employees = Employees::where('business_id', $business_id)->pluck('first_name', 'id');
+
         return view('pos.create', compact('bank_accounts', 'business_locations', 'status', 'employees'));
     }
 
     public function show($id)
     {
         $pos = Pos::findOrFail($id);
+
         return view('pos.show', $pos);
     }
 
     public function store(Request $request)
     {
-        if (!auth()->user()->can('pos.create')) {
+        if (! auth()->user()->can('pos.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -107,7 +108,7 @@ class PosController extends Controller
                 'location_id' => 'required',
                 'status' => 'required',
                 'authorization_key' => 'required|between:4,4',
-                'confirm_authorization_key' => 'required|between:4,4|in:' . $auth_key,
+                'confirm_authorization_key' => 'required|between:4,4|in:'.$auth_key,
             ],
             [
                 'name.required' => trans('paymet.pos_name_required'),
@@ -139,12 +140,13 @@ class PosController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __("card_pos.success"),
+                'msg' => __('card_pos.success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
@@ -156,12 +158,13 @@ class PosController extends Controller
         $business_locations = BusinessLocation::where('business_id', $business_id)->pluck('name', 'id');
         $status = ['active' => 'activo', 'inactive' => 'inactivo'];
         $employees = Employees::where('business_id', $business_id)->pluck('first_name', 'id');
+
         return view('pos.edit', compact('pos', 'bank_accounts', 'business_locations', 'status', 'employees'));
     }
 
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('pos.update')) {
+        if (! auth()->user()->can('pos.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -183,7 +186,7 @@ class PosController extends Controller
             $auth_key = $request->input('authorization_key');
 
             $rules['authorization_key'] = 'between:4,4';
-            $rules['confirm_authorization_key'] = 'between:4,4|in:' . $auth_key;
+            $rules['confirm_authorization_key'] = 'between:4,4|in:'.$auth_key;
 
             $rules_msg['authorization_key.between'] = trans('card_pos.characters_authorization_key');
             $rules_msg['confirm_authorization_key.between'] = trans('card_pos.characters_required_confirm_authorization_key');
@@ -213,18 +216,19 @@ class PosController extends Controller
 
             $output = [
                 'success' => true,
-                'msg' => __("card_pos.update"),
+                'msg' => __('card_pos.update'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
     public function destroy($id)
     {
-        if (!auth()->user()->can('pos.delete')) {
+        if (! auth()->user()->can('pos.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -234,18 +238,19 @@ class PosController extends Controller
             $pos->delete();
             $output = [
                 'success' => true,
-                'msg' => __("payment.pos_delete"),
+                'msg' => __('payment.pos_delete'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
     public function cancel($id)
     {
-        if (!auth()->user()->can('pos.cancel')) {
+        if (! auth()->user()->can('pos.cancel')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -256,18 +261,19 @@ class PosController extends Controller
             $pos->update();
             $output = [
                 'success' => true,
-                'msg' => __("card_pos.cancel"),
+                'msg' => __('card_pos.cancel'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
     public function activate($id)
     {
-        if (!auth()->user()->can('pos.activate')) {
+        if (! auth()->user()->can('pos.activate')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -278,12 +284,13 @@ class PosController extends Controller
             $pos->update();
             $output = [
                 'success' => true,
-                'msg' => __("card_pos.activate"),
+                'msg' => __('card_pos.activate'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 }

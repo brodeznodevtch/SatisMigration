@@ -1,10 +1,10 @@
 <?php
 
-use App\Pos;
 use App\BankAccount;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Pos;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyBankForBankAccountColumnOnPosTable extends Migration
 {
@@ -24,7 +24,7 @@ class ModifyBankForBankAccountColumnOnPosTable extends Migration
 
             $pos_ids[] = [
                 'pos_id' => $p->id,
-                'bank_account_id' => $bank_account->id
+                'bank_account_id' => $bank_account->id,
             ];
         }
 

@@ -10,8 +10,9 @@ class CalculationType extends Model
     use SoftDeletes;
 
     protected $fillable = ['name', 'status', 'business_id', 'deleted_at'];
-    
-    public function business(){
+
+    public function business()
+    {
         return $this->belongsTo('App\Business');
     }
 }

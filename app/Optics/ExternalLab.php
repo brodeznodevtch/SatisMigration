@@ -17,6 +17,6 @@ class ExternalLab extends Model
         'name',
         'address',
         'description',
-        'business_id'
+        'business_id',
     ];
 }

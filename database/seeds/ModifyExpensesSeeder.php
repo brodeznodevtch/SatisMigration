@@ -2,9 +2,7 @@
 
 use App\ExpenseLine;
 use App\Transaction;
-use Illuminate\Contracts\Logging\Log;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class ModifyExpensesSeeder extends Seeder
 {
@@ -16,17 +14,17 @@ class ModifyExpensesSeeder extends Seeder
     public function run()
     {
         $current_expenses = Transaction::select('id', 'expense_category_id', 'total_before_tax as line_total')
-        ->where('type', 'expense')
-        ->whereNotIn('id', function ($query) {
-            $query->select('transaction_id')
-                ->from('expense_lines');
-        })->where('expense_category_id', '<>', null)->get();
+            ->where('type', 'expense')
+            ->whereNotIn('id', function ($query) {
+                $query->select('transaction_id')
+                    ->from('expense_lines');
+            })->where('expense_category_id', '<>', null)->get();
 
         foreach ($current_expenses as $ce) {
             ExpenseLine::create([
                 'transaction_id' => $ce->id,
                 'expense_category_id' => $ce->expense_category_id,
-                'line_total_exc_tax' => $ce->line_total
+                'line_total_exc_tax' => $ce->line_total,
             ]);
         }
     }

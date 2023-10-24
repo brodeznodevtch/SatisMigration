@@ -14,20 +14,20 @@ class LostSale extends Model
         'lost_date',
         'comments',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     public static function boot()
     {
         parent::boot();
         static::creating(function ($lost_sale) {
-            if (!\App::runningInConsole()) {
-                $lost_sale->created_by  = auth()->user()->id;
+            if (! \App::runningInConsole()) {
+                $lost_sale->created_by = auth()->user()->id;
             }
         });
         static::updating(function ($lost_sale) {
-            if (!\App::runningInConsole()) {
-                $lost_sale->updated_by  = auth()->user()->id;
+            if (! \App::runningInConsole()) {
+                $lost_sale->updated_by = auth()->user()->id;
             }
         });
     }

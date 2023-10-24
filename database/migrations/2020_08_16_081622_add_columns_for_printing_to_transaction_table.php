@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnsForPrintingToTransactionTable extends Migration
 {
@@ -34,7 +34,7 @@ class AddColumnsForPrintingToTransactionTable extends Migration
                     'operating_conditions',
                     'authorized_by',
                     'order_number',
-                    'declaration_number'
+                    'declaration_number',
                 ]
             );
         });

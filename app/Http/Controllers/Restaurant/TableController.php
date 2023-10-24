@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Restaurant;
 
+use App\BusinessLocation;
+use App\Restaurant\ResTable;
+use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Datatables;
-
-use App\Restaurant\ResTable;
-use App\BusinessLocation;
 
 class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
      * @return Response
      */
     public function index()
@@ -26,18 +26,18 @@ class TableController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $tables = ResTable::where('res_tables.business_id', $business_id)
-                        ->join('business_locations AS BL', 'res_tables.location_id', '=', 'BL.id')
-                        ->select(['res_tables.name as name', 'BL.name as location',
-                            'res_tables.description', 'res_tables.id']);
+                ->join('business_locations AS BL', 'res_tables.location_id', '=', 'BL.id')
+                ->select(['res_tables.name as name', 'BL.name as location',
+                    'res_tables.description', 'res_tables.id']);
 
             return Datatables::of($tables)
                 ->addColumn(
                     'action',
-                    '@role("Admin#' . $business_id . '")
+                    '@role("Admin#'.$business_id.'")
                     <button data-href="{{action(\'Restaurant\TableController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_table_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                         &nbsp;
                     @endrole
-                    @role("Admin#' . $business_id . '")
+                    @role("Admin#'.$business_id.'")
                         <button data-href="{{action(\'Restaurant\TableController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_table_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                     @endrole'
                 )
@@ -51,6 +51,7 @@ class TableController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
      * @return Response
      */
     public function create()
@@ -64,7 +65,7 @@ class TableController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param  Request $request
+     *
      * @return Response
      */
     public function store(Request $request)
@@ -81,15 +82,15 @@ class TableController extends Controller
 
             $table = ResTable::create($input);
             $output = ['success' => true,
-                            'data' => $table,
-                            'msg' => __("lang_v1.added_success")
-                        ];
+                'data' => $table,
+                'msg' => __('lang_v1.added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -97,6 +98,7 @@ class TableController extends Controller
 
     /**
      * Show the specified resource.
+     *
      * @return Response
      */
     public function show()
@@ -106,6 +108,7 @@ class TableController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
      * @return Response
      */
     public function edit($id)
@@ -121,7 +124,7 @@ class TableController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param  Request $request
+     *
      * @return Response
      */
     public function update(Request $request, $id)
@@ -141,14 +144,14 @@ class TableController extends Controller
                 $table->save();
 
                 $output = ['success' => true,
-                            'msg' => __("lang_v1.updated_success")
-                            ];
+                    'msg' => __('lang_v1.updated_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -157,6 +160,7 @@ class TableController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
      * @return Response
      */
     public function destroy($id)
@@ -173,14 +177,14 @@ class TableController extends Controller
                 $table->delete();
 
                 $output = ['success' => true,
-                            'msg' => __("lang_v1.deleted_success")
-                            ];
+                    'msg' => __('lang_v1.deleted_success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

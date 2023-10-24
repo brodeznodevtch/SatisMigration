@@ -12,7 +12,7 @@ class Product extends Model
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     /**
      * Get the products image.
      *
@@ -20,11 +20,12 @@ class Product extends Model
      */
     public function getImageUrlAttribute()
     {
-        if (!empty($this->image)) {
-            $image_url = asset('/uploads/img/' . $this->image);
+        if (! empty($this->image)) {
+            $image_url = asset('/uploads/img/'.$this->image);
         } else {
             $image_url = asset('/img/default.png');
         }
+
         return $image_url;
     }
 
@@ -32,7 +33,7 @@ class Product extends Model
     {
         return $this->hasMany(\App\ProductVariation::class);
     }
-    
+
     /**
      * Get the brand associated with the product.
      */
@@ -40,14 +41,15 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Brands::class);
     }
-    
-     /**
+
+    /**
      * Get the unit associated with the product.
      */
     public function unit()
     {
         return $this->belongsTo(\App\Unit::class);
     }
+
     /**
      * Get category associated with the product.
      */
@@ -55,6 +57,7 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Category::class);
     }
+
     /**
      * Get sub-category associated with the product.
      */
@@ -62,7 +65,7 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Category::class, 'sub_category_id', 'id');
     }
-    
+
     /**
      * Get the brand associated with the product.
      */
@@ -102,6 +105,7 @@ class Product extends Model
     {
         return $this->hasMany(\App\PurchaseLine::class);
     }
+
     public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
     {
 
@@ -111,14 +115,14 @@ class Product extends Model
 
         //Prepend none
         if ($prepend_none) {
-            $all_emp = $all_emp->prepend(__("lang_v1.none"), '');
+            $all_emp = $all_emp->prepend(__('lang_v1.none'), '');
         }
 
         //Prepend none
         if ($prepend_all) {
-            $all_emp = $all_emp->prepend(__("report.all"), '');
+            $all_emp = $all_emp->prepend(__('report.all'), '');
         }
-        
+
         return $all_emp;
     }
 

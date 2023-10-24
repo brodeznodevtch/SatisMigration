@@ -3,7 +3,7 @@
 if (! function_exists('humanFilesize')) {
     function humanFilesize($size, $precision = 2)
     {
-        $units = ['B','kB','MB','GB','TB','PB','EB','ZB','YB'];
+        $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $step = 1024;
         $i = 0;
 
@@ -11,7 +11,7 @@ if (! function_exists('humanFilesize')) {
             $size = $size / $step;
             $i++;
         }
-        
+
         return round($size, $precision).$units[$i];
     }
 }

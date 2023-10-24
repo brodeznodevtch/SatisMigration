@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddUserIdToEmployeesTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddUserIdToEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function(Blueprint $table){
+        Schema::table('employees', function (Blueprint $table) {
             $table->integer('user_id')->unsigned()->nullable()->after('agentcode');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

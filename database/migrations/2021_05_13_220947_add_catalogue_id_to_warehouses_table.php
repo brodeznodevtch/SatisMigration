@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCatalogueIdToWarehousesTable extends Migration
 {
@@ -17,7 +17,7 @@ class AddCatalogueIdToWarehousesTable extends Migration
             $table->unsignedBigInteger('catalogue_id')
                 ->nullable()
                 ->after('business_location_id');
-            
+
             $table->foreign('catalogue_id')
                 ->on('catalogues')
                 ->references('id');

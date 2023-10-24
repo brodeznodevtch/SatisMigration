@@ -12,7 +12,7 @@ class RrhhStudy extends Model
         'year_graduation',
         'study_status',
         'status',
-        'type_study_id', 
-        'employee_id', 
+        'type_study_id',
+        'employee_id',
     ];
 }

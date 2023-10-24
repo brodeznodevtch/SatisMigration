@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCashierIdToCashRegistersTable extends Migration
 {
@@ -14,13 +14,13 @@ class AddCashierIdToCashRegistersTable extends Migration
     public function up()
     {
         Schema::table('cash_registers', function (Blueprint $table) {
-            $table->unsignedInteger("cashier_id")
+            $table->unsignedInteger('cashier_id')
                 ->nullable()
                 ->default(null)
-                ->after("user_id");
-            $table->foreign("cashier_id")
-                ->references("id")
-                ->on("cashiers");
+                ->after('user_id');
+            $table->foreign('cashier_id')
+                ->references('id')
+                ->on('cashiers');
         });
     }
 

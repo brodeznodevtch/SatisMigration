@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyColumnsToRrhhIncomeDiscountsTable extends Migration
 {
@@ -13,7 +13,7 @@ class ModifyColumnsToRrhhIncomeDiscountsTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE rrhh_income_discounts MODIFY COLUMN quotas_applied DECIMAL(10, 2) NOT NULL DEFAULT 0");
+        DB::statement('ALTER TABLE rrhh_income_discounts MODIFY COLUMN quotas_applied DECIMAL(10, 2) NOT NULL DEFAULT 0');
         Schema::table('rrhh_income_discounts', function (Blueprint $table) {
             $table->boolean('is_paid')->nullable()->default(0)->after('balance_to_date');
         });

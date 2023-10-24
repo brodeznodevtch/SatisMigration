@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Employees;
 use App\RrhhTypeContract;
-use DB;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class RrhhTypeContractController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
     }
 
-    public function getTypes(){
+    public function getTypes()
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.view') ) {
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $data = RrhhTypeContract::where('business_id', $business_id)->where('deleted_at', null);
-        
+
         return DataTables::of($data)->editColumn('status', function ($data) {
-            if($data->status == 1){
+            if ($data->status == 1) {
                 return __('rrhh.active');
-            }else{
+            } else {
                 return __('rrhh.inactive');
             }
         })->toJson();
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -40,25 +40,27 @@ class RrhhTypeContractController extends Controller
      */
     public function create()
     {
-        if(!auth()->user()->can('rrhh_catalogues.create')){
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
+            abort(403, 'Unauthorized action.');
         }
+
         return view('rrhh.catalogues.types_contracts.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         //dd($request);
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'name'          => 'required',
-            'editor'      => 'required',
-            'margin_top'    => 'required|numeric|between:0.01,3.00',
+            'name' => 'required',
+            'editor' => 'required',
+            'margin_top' => 'required|numeric|between:0.01,3.00',
             'margin_bottom' => 'required|numeric|between:0.01,3.00',
-            'margin_left'   => 'required|numeric|between:0.01,3.00',
-            'margin_right'  => 'required|numeric|between:0.01,3.00',
+            'margin_left' => 'required|numeric|between:0.01,3.00',
+            'margin_right' => 'required|numeric|between:0.01,3.00',
         ]);
 
         try {
@@ -78,15 +80,15 @@ class RrhhTypeContractController extends Controller
             DB::commit();
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -101,13 +103,13 @@ class RrhhTypeContractController extends Controller
      */
     public function show($id)
     {
-        if(!auth()->user()->can('rrhh_catalogues.view')){
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
+            abort(403, 'Unauthorized action.');
         }
 
         // $business_id = request()->session()->get('user.business_id');
         // $type = RrhhTypeContract::where('id', $id)->where('business_id', $business_id)->first();
-        
+
         // return view('rrhh.catalogues.types_contracts.show', compact('type'));
         $business_id = request()->session()->get('user.business_id');
         $type = RrhhTypeContract::where('id', $id)->where('business_id', $business_id)->first();
@@ -116,9 +118,9 @@ class RrhhTypeContractController extends Controller
         );
 
         $pdf->setPaper('letter', 'portrait');
-        return $pdf->stream(__('rrhh.contract') . '.pdf');
-    }
 
+        return $pdf->stream(__('rrhh.contract').'.pdf');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -127,41 +129,42 @@ class RrhhTypeContractController extends Controller
      */
     public function edit($id)
     {
-        if(!auth()->user()->can('rrhh_catalogues.update')){
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $type = RrhhTypeContract::where('id', $id)->where('business_id', $business_id)->first();
+
         return view('rrhh.catalogues.types_contracts.edit', compact('type'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\RrhhTypeContract  $rrhhTypeContract
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+    public function update(Request $request, $id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
         //dd($request);
 
         $request->validate([
-            'name'          => 'required',
-            'editor'      => 'required',
-            'margin_top'    => 'required|numeric|between:0.01,50.00',
+            'name' => 'required',
+            'editor' => 'required',
+            'margin_top' => 'required|numeric|between:0.01,50.00',
             'margin_bottom' => 'required|numeric|between:0.01,50.00',
-            'margin_left'   => 'required|numeric|between:0.01,50.00',
-            'margin_right'  => 'required|numeric|between:0.01,50.00',
+            'margin_left' => 'required|numeric|between:0.01,50.00',
+            'margin_right' => 'required|numeric|between:0.01,50.00',
         ]);
 
         try {
             DB::beginTransaction();
             $input_details = $request->only([
-                'name', 
+                'name',
                 'margin_top',
                 'margin_bottom',
                 'margin_left',
@@ -176,21 +179,20 @@ class RrhhTypeContractController extends Controller
             DB::commit();
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
         return redirect('rrhh-catalogues')->with('status', $output);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -198,8 +200,9 @@ class RrhhTypeContractController extends Controller
      * @param  \App\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        if (!auth()->user()->can('rrhh_catalogues.delete')) {
+    public function destroy($id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -207,30 +210,30 @@ class RrhhTypeContractController extends Controller
 
             try {
                 $count = DB::table('employees')
-                ->where('bank_id', $id)               
-                ->count();
+                    ->where('bank_id', $id)
+                    ->count();
 
                 if ($count > 0) {
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
                 } else {
                     $item = RrhhTypeContract::findOrFail($id);
                     $item->delete();
                     $output = [
                         'success' => true,
-                        'msg' => __('rrhh.deleted_successfully')
+                        'msg' => __('rrhh.deleted_successfully'),
                     ];
-                }               
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }

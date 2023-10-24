@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyTaxRelationshipOnPurchaseLinesTable extends Migration
 {
@@ -14,12 +14,12 @@ class ModifyTaxRelationshipOnPurchaseLinesTable extends Migration
     public function up()
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
-            $table->dropForeign("purchase_lines_tax_id_foreign");
+            $table->dropForeign('purchase_lines_tax_id_foreign');
 
-            $table->foreign("tax_id")
-                ->references("id")
-                ->on("tax_groups")
-                ->onDelete("cascade");
+            $table->foreign('tax_id')
+                ->references('id')
+                ->on('tax_groups')
+                ->onDelete('cascade');
         });
     }
 

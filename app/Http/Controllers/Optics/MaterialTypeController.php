@@ -16,16 +16,16 @@ class MaterialTypeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('material_type.view') && !auth()->user()->can('material_type.create')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('material_type.view') && ! auth()->user()->can('material_type.create')) {
+            abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
 
             $material_types = MaterialType::where('business_id', $business_id)
-                    ->select(['name', 'description', 'id']);
-            
+                ->select(['name', 'description', 'id']);
+
             return Datatables::of($material_types)
                 ->addColumn(
                     'action',
@@ -52,12 +52,12 @@ class MaterialTypeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('material_type.create')) {
+        if (! auth()->user()->can('material_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $quick_add = false;
-        if (!empty(request()->input('quick_add'))) {
+        if (! empty(request()->input('quick_add'))) {
             $quick_add = true;
         }
 
@@ -68,12 +68,11 @@ class MaterialTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('material_type.create')) {
+        if (! auth()->user()->can('material_type.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -86,16 +85,16 @@ class MaterialTypeController extends Controller
             $input['created_by'] = $request->session()->get('user.id');
 
             $material_type = MaterialType::create($input);
-    
+
             $output = ['success' => true,
                 'data' => $material_type,
-                'msg' => __("material_type.added_success")
+                'msg' => __('material_type.added_success'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -121,7 +120,7 @@ class MaterialTypeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('material_type.update')) {
+        if (! auth()->user()->can('material_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -137,32 +136,31 @@ class MaterialTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('material_type.update')) {
+        if (! auth()->user()->can('material_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             try {
                 $input = $request->only(['name', 'description']);
-                
+
                 $material_type = MaterialType::findOrFail($id);
                 $material_type->fill($input);
                 $material_type->save();
 
                 $output = ['success' => true,
-                    'msg' => __("material_type.updated_success")
+                    'msg' => __('material_type.updated_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -178,7 +176,7 @@ class MaterialTypeController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('material_type.delete')) {
+        if (! auth()->user()->can('material_type.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -188,13 +186,13 @@ class MaterialTypeController extends Controller
                 $material_type->delete();
 
                 $output = ['success' => true,
-                    'msg' => __("material_type.deleted_success")
+                    'msg' => __('material_type.deleted_success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 

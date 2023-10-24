@@ -14,7 +14,7 @@ class StatusLabOrder extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-    	'code',
+        'code',
         'name',
         'descripction',
         'status',
@@ -25,6 +25,6 @@ class StatusLabOrder extends Model
         'transfer_sheet',
         'second_time',
         'material_download',
-        'save_and_print'
+        'save_and_print',
     ];
 }

@@ -10,7 +10,7 @@ use App\TransactionPayment;
 use App\Utils\Util;
 use Carbon\Carbon;
 use DB;
-use Illuminate\Http\Request;
+
 // use MAIL;
 // use PDF;
 
@@ -19,7 +19,6 @@ class MailController extends Controller
     /**
      * Constructor
      *
-     * @param  \App\Utils\Util  $util
      * @return void
      */
     public function __construct(Util $util)
@@ -29,7 +28,7 @@ class MailController extends Controller
 
     /**
      * Send mail with customer account statement.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function sendAccountStatement()
@@ -45,25 +44,25 @@ class MailController extends Controller
             $data['email'] = $customer->email;
             $data['title'] = __('report.account_statement', [
                 'customer_tax' => $customer->tax_number,
-                'customer' => $customer->name
+                'customer' => $customer->name,
             ]);
             $data['body'] = __('customer.account_statement_email', [
                 // 'start_date' => $this->util->format_date($start_date),
                 // 'end_date' => $this->util->format_date($end_date)
                 // 'customer' => $customer->name,
-                'end_date' => $this->util->format_date(Carbon::today())
+                'end_date' => $this->util->format_date(Carbon::today()),
             ]);
             $data['customer'] = $customer->business_name ?? $customer->name;
 
             $business_id = request()->session()->get('user.business_id');
-            
+
             // Params
             $params = [
                 'business_id' => $business_id,
                 'customer_id' => $customer_id,
                 'payment_status' => $payment_status,
                 'start_date' => $start_date,
-                'end_date' => $end_date
+                'end_date' => $end_date,
             ];
 
             // Lines
@@ -83,25 +82,25 @@ class MailController extends Controller
             $pdf = \PDF::loadView('reports.account_statement_pdf',
                 compact('lines', 'size', 'date', 'business', 'customer'));
 
-            \Mail::send('balances_customer.email', $data, function($message) use ($data, $pdf, $customer) {
+            \Mail::send('balances_customer.email', $data, function ($message) use ($data, $pdf, $customer) {
                 $message->to($data['email'], $data['email'])
                     ->subject($data['title'])
-                    ->attachData($pdf->output(), __('report.account_statement_head') . '-' . $customer->name . '-' . $this->util->format_date(Carbon::today()) . '.pdf');
+                    ->attachData($pdf->output(), __('report.account_statement_head').'-'.$customer->name.'-'.$this->util->format_date(Carbon::today()).'.pdf');
             });
 
             $output = [
                 'success' => 1,
-                'msg' => __('lang_v1.mail_sent_successfully')
+                'msg' => __('lang_v1.mail_sent_successfully'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -110,7 +109,7 @@ class MailController extends Controller
 
     /**
      * Get lines for customer account statement.
-     * 
+     *
      * @param  array  $params
      * @return array
      */
@@ -127,10 +126,10 @@ class MailController extends Controller
             ->where('transactions.customer_id', $customer_id)
             ->where('transactions.business_id', $params['business_id'])
             ->select(
-                DB::raw("CONCAT(document_types.short_name, transactions.correlative) as correlative"),
+                DB::raw('CONCAT(document_types.short_name, transactions.correlative) as correlative'),
                 'transactions.transaction_date',
                 'transactions.final_total',
-                DB::raw("IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name"),
+                DB::raw('IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name'),
                 'transactions.pay_term_number',
                 'transactions.payment_balance'
             );
@@ -144,11 +143,11 @@ class MailController extends Controller
             ->where('transactions.customer_id', $customer_id)
             ->where('transactions.business_id', $params['business_id'])
             ->select(
-                DB::raw("CONCAT(document_types.short_name, transactions.correlative) as correlative"),
+                DB::raw('CONCAT(document_types.short_name, transactions.correlative) as correlative'),
                 'transactions.transaction_date',
                 'transactions.final_total',
                 'parent_transactions.transaction_date',
-                DB::raw("IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name")
+                DB::raw('IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name')
             );
 
         // Payments
@@ -163,7 +162,7 @@ class MailController extends Controller
                 'transaction_payments.amount',
                 'transactions.transaction_date',
                 'transactions.pay_term_number',
-                DB::raw("IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name")
+                DB::raw('IF(customers.is_default = 1, transactions.customer_name, customers.name) as customer_name')
             );
 
         // Date filter
@@ -214,7 +213,7 @@ class MailController extends Controller
                 'expiration' => $expiration_date->format('Y-m-d H:i:s'),
                 'payment' => $sale->payment_balance,
                 'balance' => $sale->final_total - $sale->payment_balance,
-                'delay' => $delay_date
+                'delay' => $delay_date,
             ];
 
             $result->push($item);
@@ -239,7 +238,7 @@ class MailController extends Controller
                 'expiration' => $expiration_date->format('Y-m-d H:i:s'),
                 'payment' => 0,
                 'balance' => $sale_return->final_total * -1,
-                'delay' => $delay_date
+                'delay' => $delay_date,
             ];
 
             $result->push($item);
@@ -264,7 +263,7 @@ class MailController extends Controller
                 'expiration' => $expiration_date->format('Y-m-d H:i:s'),
                 'payment' => 0,
                 'balance' => $payment->amount * -1,
-                'delay' => $delay_date
+                'delay' => $delay_date,
             ];
 
             $result->push($item);

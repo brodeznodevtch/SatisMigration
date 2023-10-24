@@ -2,53 +2,56 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class BookTaxpayerExport implements FromView, WithEvents, WithTitle
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     private $lines;
+
     private $business;
+
     private $initial_month;
+
     private $final_month;
+
     private $initial_year;
+
     private $final_year;
 
     public function __construct($lines, $business, $initial_month, $final_month, $initial_year, $final_year)
     {
-    	$this->lines = $lines;
-    	$this->business = $business;
-    	$this->initial_month = $initial_month;
-    	$this->final_month = $final_month;
+        $this->lines = $lines;
+        $this->business = $business;
+        $this->initial_month = $initial_month;
+        $this->final_month = $final_month;
         $this->initial_year = $initial_year;
         $this->final_year = $final_year;
     }
 
     public function title(): string
     {
-    	return __('accounting.book_sales_taxpayer');
+        return __('accounting.book_sales_taxpayer');
     }
 
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-    			$event->sheet->setFontFamily('A1:R1500', 'Calibri');
-    			$event->sheet->setFontSize('A1:R1500', 10);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                $event->sheet->setFontFamily('A1:R1500', 'Calibri');
+                $event->sheet->setFontSize('A1:R1500', 10);
 
-    			$event->sheet->mergeCells('A1:R1');
-    			$event->sheet->mergeCells('A2:R2');
+                $event->sheet->mergeCells('A1:R1');
+                $event->sheet->mergeCells('A2:R2');
                 $event->sheet->horizontalAlign('A1:R2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    			$event->sheet->horizontalAlign('A6:R8', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->horizontalAlign('A6:R8', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $event->sheet->columnWidth('A', 3.14);
                 $event->sheet->columnWidth('B', 10.29);
@@ -79,11 +82,11 @@ class BookTaxpayerExport implements FromView, WithEvents, WithTitle
 
     public function view(): View
     {
-    	return view('reports.book_taxpayer_excel', [
-    		'lines' => $this->lines,
-    		'business' => $this->business,
-    		'initial_month' => $this->initial_month,
-    		'final_month' => $this->final_month,
+        return view('reports.book_taxpayer_excel', [
+            'lines' => $this->lines,
+            'business' => $this->business,
+            'initial_month' => $this->initial_month,
+            'final_month' => $this->final_month,
             'initial_year' => $this->initial_year,
             'final_year' => $this->final_year,
         ]);

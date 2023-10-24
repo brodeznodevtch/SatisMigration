@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\BankCheckbook;
 use App\BankTransaction;
-use Illuminate\Http\Request;
-use DB;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class BankCheckbookController extends Controller
 {
@@ -15,7 +15,8 @@ class BankCheckbookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
 
         return view('banks.index');
     }
@@ -25,7 +26,8 @@ class BankCheckbookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
 
         return view('banks.index');
     }
@@ -33,10 +35,10 @@ class BankCheckbookController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validateData = $request->validate(
             [
@@ -45,7 +47,7 @@ class BankCheckbookController extends Controller
                 'initial_correlative' => 'required|integer',
                 'final_correlative' => 'required|integer',
                 'actual_correlative' => 'required|integer',
-                'bank_account_id' => 'required'
+                'bank_account_id' => 'required',
             ],
             [
                 'name.required' => __('accounting.name_required'),
@@ -76,20 +78,20 @@ class BankCheckbookController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('accounting.added_successfully')
+                    'msg' => __('accounting.added_successfully'),
                 ];
 
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
 
-                \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
-                
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
-            
+
             }
-            
+
             return $output;
         }
     }
@@ -100,10 +102,11 @@ class BankCheckbookController extends Controller
      * @param  \App\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
 
         $bankCheckbook = BankCheckbook::findOrFail($id);
-        
+
         return response()->json($bankCheckbook);
     }
 
@@ -113,14 +116,15 @@ class BankCheckbookController extends Controller
      * @param  \App\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
 
         $bankCheckbook = DB::table('bank_checkbooks as checkbook')
-        ->join('bank_accounts as account', 'account.id', '=', 'checkbook.bank_account_id')
-        ->join('banks as bank', 'bank.id', '=', 'account.bank_id')
-        ->select('checkbook.*', 'bank.id as bank')
-        ->where('checkbook.id', $id)
-        ->first();
+            ->join('bank_accounts as account', 'account.id', '=', 'checkbook.bank_account_id')
+            ->join('banks as bank', 'bank.id', '=', 'account.bank_id')
+            ->select('checkbook.*', 'bank.id as bank')
+            ->where('checkbook.id', $id)
+            ->first();
 
         return response()->json($bankCheckbook);
     }
@@ -128,14 +132,14 @@ class BankCheckbookController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
 
         $bankCheckbook = BankCheckbook::findOrFail($id);
-        
+
         $validateData = $request->validate(
             [
                 'name' => 'required',
@@ -144,7 +148,7 @@ class BankCheckbookController extends Controller
                 'initial_correlative' => 'required|integer',
                 'final_correlative' => 'required|integer',
                 'actual_correlative' => 'required|integer',
-                'bank_account_id' => 'required'
+                'bank_account_id' => 'required',
             ],
             [
                 'name.required' => __('accounting.name_required'),
@@ -170,20 +174,20 @@ class BankCheckbookController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('accounting.updated_successfully')
+                    'msg' => __('accounting.updated_successfully'),
                 ];
 
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
 
-                \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
-            
+
             }
-            
+
             return $output;
         }
     }
@@ -194,7 +198,8 @@ class BankCheckbookController extends Controller
      * @param  \App\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
         $bankCheckbook = BankCheckbook::findOrFail($id);
 
@@ -204,30 +209,30 @@ class BankCheckbookController extends Controller
 
                 $bankTransactions = BankTransaction::where('bank_checkbook_id', $bankCheckbook->id)->count();
 
-                if($bankTransactions > 0) {
+                if ($bankTransactions > 0) {
 
                     $output = [
                         'success' => false,
-                        'msg' =>  __('accounting.checkbook_has_transactions')
+                        'msg' => __('accounting.checkbook_has_transactions'),
                     ];
-                
+
                 } else {
 
                     $bankCheckbook->forceDelete();
 
                     $output = [
                         'success' => true,
-                        'msg' => __('accounting.deleted_successfully')
+                        'msg' => __('accounting.deleted_successfully'),
                     ];
                 }
-            
+
             } catch (\Exception $e) {
 
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
 
             }
@@ -236,89 +241,93 @@ class BankCheckbookController extends Controller
         }
     }
 
-    public function getBankCheckbooksData() {
+    public function getBankCheckbooksData()
+    {
 
         $business_id = request()->session()->get('user.business_id');
 
         $checkbooks = DB::table('bank_checkbooks as checkbook')
-        ->join('bank_accounts as account', 'account.id', '=', 'checkbook.bank_account_id')
-        ->where('checkbook.business_id', $business_id)
-        ->select('checkbook.*', 'account.name as account_name');
-        
+            ->join('bank_accounts as account', 'account.id', '=', 'checkbook.bank_account_id')
+            ->where('checkbook.business_id', $business_id)
+            ->select('checkbook.*', 'account.name as account_name');
+
         return DataTables::of($checkbooks)->toJson();
     }
 
-    public function getBankCheckbooks($id) {
+    public function getBankCheckbooks($id)
+    {
 
         $business_id = request()->session()->get('user.business_id');
 
         $checkbooks = DB::table('bank_checkbooks as checkbook')
-        ->select('id', 'name')
-        ->where('checkbook.business_id', $business_id)
-        ->where('bank_account_id', $id)
-        ->where('status', 1)
-        ->get();
+            ->select('id', 'name')
+            ->where('checkbook.business_id', $business_id)
+            ->where('bank_account_id', $id)
+            ->where('status', 1)
+            ->get();
 
         return response()->json($checkbooks);
     }
 
-    public function validateNumber($id, $number) {
+    public function validateNumber($id, $number)
+    {
 
         $count = BankTransaction::where('bank_checkbook_id', $id)
-        ->where('bank_transactions.business_id', $business_id)
-        ->where('check_number', $number)
-        ->count();
+            ->where('bank_transactions.business_id', $business_id)
+            ->where('check_number', $number)
+            ->count();
 
         if ($count > 0) {
 
             $result = false;
-        
+
         } else {
-            
+
             $result = true;
-        
+
         }
-        
+
         $output = [
-            'success' => $result
+            'success' => $result,
         ];
-        
+
         return $output;
     }
 
-    public function validateRange($id, $number) {
+    public function validateRange($id, $number)
+    {
 
         $checkbook = BankCheckbook::where('id', $id)
-        ->first();
+            ->first();
 
         if ($checkbook != null) {
 
             $checkbook_initial = $checkbook->initial_correlative;
             $checkbook_final = $checkbook->final_correlative;
-        
+
         } else {
 
             $checkbook_initial = 0;
             $checkbook_final = 0;
-        
+
         }
-        
-        if(($number < $checkbook_initial) || ($number > $checkbook_final)) {
+
+        if (($number < $checkbook_initial) || ($number > $checkbook_final)) {
 
             $output = [
                 'success' => false,
-                'msg' => __("accounting.check_number_invalid")
+                'msg' => __('accounting.check_number_invalid'),
             ];
-        
+
         } else {
 
             $output = [
                 'success' => true,
-                'msg' => 'OK'
+                'msg' => 'OK',
             ];
-        
+
         }
-        
+
         return $output;
     }
 }

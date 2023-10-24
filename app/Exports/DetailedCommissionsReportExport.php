@@ -4,19 +4,21 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class DetailedCommissionsReportExport implements FromView, WithEvents, WithTitle
 {
     private $commissions;
+
     private $size;
+
     private $business;
 
     /**
      * Constructor.
-     * 
+     *
      * @param  array  $commissions
      * @param  int  $size
      * @param  \App\Business  $business
@@ -24,37 +26,33 @@ class DetailedCommissionsReportExport implements FromView, WithEvents, WithTitle
      */
     public function __construct($commissions, $size, $business)
     {
-    	$this->commissions = $commissions;
+        $this->commissions = $commissions;
         $this->size = $size;
         $this->business = $business;
     }
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return __('report.detailed_commissions_report');
+        return __('report.detailed_commissions_report');
     }
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
-    			$event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    			$event->sheet->setFontFamily('A1:W9500', 'Calibri');
-    			$event->sheet->setFontSize('A1:W9500', 10);
+                $event->sheet->setFontFamily('A1:W9500', 'Calibri');
+                $event->sheet->setFontSize('A1:W9500', 10);
 
-    			$event->sheet->mergeCells('A1:W1');
-    			$event->sheet->mergeCells('A2:W2');
+                $event->sheet->mergeCells('A1:W1');
+                $event->sheet->mergeCells('A2:W2');
 
                 $event->sheet->horizontalAlign('A1:W2', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet->horizontalAlign('A4:W4', \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -92,15 +90,13 @@ class DetailedCommissionsReportExport implements FromView, WithEvents, WithTitle
 
     /**
      * Returns view where the report is built.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
-    	return view('reports.detailed_commissions_report_excel', [
-    		'commissions' => $this->commissions,
-    		'size' => $this->size,
-    		'business' => $this->business,
+        return view('reports.detailed_commissions_report_excel', [
+            'commissions' => $this->commissions,
+            'size' => $this->size,
+            'business' => $this->business,
         ]);
     }
 }

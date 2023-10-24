@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\DocumentType;
 use App\MovementType;
 use App\PurchaseLine;
-use App\DocumentType;
-use Illuminate\Http\Request;
-
 use App\Transaction;
+use App\Utils\ProductUtil;
+use App\Utils\TaxUtil;
+use App\Utils\TransactionUtil;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-
-use App\Utils\TaxUtil;
-use App\Utils\ProductUtil;
-use App\Utils\TransactionUtil;
 
 class PurchaseReturnController extends Controller
 {
     /**
      * All Utils instance.
-     *
      */
     protected $taxUtil;
+
     protected $productUtil;
+
     protected $transactionUtil;
 
     /**
      * Constructor
      *
-     * @param TransactionUtil $transactionUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil, TaxUtil $taxUtil)
@@ -45,7 +43,7 @@ class PurchaseReturnController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('purchase.view') && !auth()->user()->can('purchase.create')) {
+        if (! auth()->user()->can('purchase.view') && ! auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -79,20 +77,21 @@ class PurchaseReturnController extends Controller
                 $purchases_returns->whereIn('transactions.location_id', $permitted_locations);
             }
 
-            if (!empty(request()->supplier_id)) {
+            if (! empty(request()->supplier_id)) {
                 $supplier_id = request()->supplier_id;
                 $purchases_returns->where('contacts.id', $supplier_id);
             }
-            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+            if (! empty(request()->start_date) && ! empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end =  request()->end_date;
+                $end = request()->end_date;
                 $purchases_returns->whereDate('transactions.transaction_date', '>=', $start)
                     ->whereDate('transactions.transaction_date', '<=', $end);
             }
+
             return Datatables::of($purchases_returns)
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="' . action('PurchaseReturnController@add', $row->return_parent_id) . '" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-edit"></i>' .
-                        __("messages.edit") .
+                    $html = '<a href="'.action('PurchaseReturnController@add', $row->return_parent_id).'" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-edit"></i>'.
+                        __('messages.edit').
                         '</a>';
 
                     return $html;
@@ -111,29 +110,33 @@ class PurchaseReturnController extends Controller
                         </span></a>'
                 )
                 ->editColumn('parent_purchase', function ($row) {
-                    $route = !is_null($row->import_type) 
-                        ? route('international-purchases.show', $row->return_parent_id) 
-                        :  action('PurchaseController@show', [$row->return_parent_id]);
-                    return '<a href="#" data-href="' .$route . '" class="btn-modal" data-container=".view_modal">' . $row->parent_purchase . '</a>';
+                    $route = ! is_null($row->import_type)
+                        ? route('international-purchases.show', $row->return_parent_id)
+                        : action('PurchaseController@show', [$row->return_parent_id]);
+
+                    return '<a href="#" data-href="'.$route.'" class="btn-modal" data-container=".view_modal">'.$row->parent_purchase.'</a>';
                 })
                 ->addColumn('payment_due', function ($row) {
                     $due = $row->final_total - $row->amount_paid;
-                    return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="' . $due . '">' . $due . '</sapn>';
+
+                    return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="'.$due.'">'.$due.'</sapn>';
                 })
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         $route = '';
-                        if (auth()->user()->can("purchase.view")) {
-                            $route = !is_null($row->import_type) ? 
-                                route('international-purchases.show', $row->return_parent_id) : 
+                        if (auth()->user()->can('purchase.view')) {
+                            $route = ! is_null($row->import_type) ?
+                                route('international-purchases.show', $row->return_parent_id) :
                                 action('PurchaseReturnController@show', [$row->return_parent_id]);
                         }
+
                         return $route;
-                    }
+                    },
                 ])
                 ->rawColumns(['final_total', 'action', 'payment_status', 'parent_purchase', 'payment_due'])
                 ->make(true);
         }
+
         return view('purchase_return.index');
     }
 
@@ -144,7 +147,7 @@ class PurchaseReturnController extends Controller
      */
     public function add($id)
     {
-        if (!auth()->user()->can('purchase.update')) {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -153,13 +156,13 @@ class PurchaseReturnController extends Controller
             ->where('type', 'purchase')
             ->with(['purchase_lines', 'contact', 'tax', 'return_parent'])
             ->find($id);
-        
+
         $tax_id = null;
         $tax_percent = 13;
         foreach ($purchase->purchase_lines as $pl) {
             $tax_percent = $this->taxUtil->getTaxPercent($pl->tax_id);
             $tax_percent = $tax_percent * 100;
-            
+
             $tax_id = $pl->tax_id;
             break;
         }
@@ -182,12 +185,11 @@ class PurchaseReturnController extends Controller
     /**
      * Saves Purchase returns in the database.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('purchase.update')) {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -206,7 +208,7 @@ class PurchaseReturnController extends Controller
 
             foreach ($purchase->purchase_lines as $purchase_line) {
                 $old_return_qty = $purchase_line->quantity_returned;
-                $purchase_line->quantity_returned = !empty($return_quantities[$purchase_line->id]) ? $this->productUtil->num_uf($return_quantities[$purchase_line->id]) : 0;
+                $purchase_line->quantity_returned = ! empty($return_quantities[$purchase_line->id]) ? $this->productUtil->num_uf($return_quantities[$purchase_line->id]) : 0;
                 $purchase_line->save();
                 $return_total += $purchase_line->purchase_price_inc_tax * $purchase_line->quantity_returned;
 
@@ -231,7 +233,7 @@ class PurchaseReturnController extends Controller
                 'total_before_tax' => $return_total,
                 'final_total' => $return_total_inc_tax,
                 'tax_amount' => $request->input('tax_amount'),
-                'tax_id' => $request->input('tax_id')
+                'tax_id' => $request->input('tax_id'),
             ];
 
             $return_transaction = Transaction::where('business_id', $business_id)
@@ -239,7 +241,7 @@ class PurchaseReturnController extends Controller
                 ->where('return_parent_id', $purchase->id)
                 ->first();
 
-            if (!empty($return_transaction)) {
+            if (! empty($return_transaction)) {
                 $return_transaction->update($return_transaction_data);
             } else {
                 $return_transaction_data['business_id'] = $business_id;
@@ -256,7 +258,7 @@ class PurchaseReturnController extends Controller
                 $return_transaction = Transaction::create($return_transaction_data);
             }
 
-            # Data to create or update kardex lines
+            // Data to create or update kardex lines
             $lines = PurchaseLine::where('transaction_id', $purchase->id)->get();
 
             $movement_type = MovementType::where('name', 'purchase_return')
@@ -264,16 +266,16 @@ class PurchaseReturnController extends Controller
                 ->where('business_id', $business_id)
                 ->first();
 
-            # Check if movement type is set else create it
+            // Check if movement type is set else create it
             if (empty($movement_type)) {
                 $movement_type = MovementType::create([
                     'name' => 'purchase_return',
                     'type' => 'output',
-                    'business_id' => $business_id
+                    'business_id' => $business_id,
                 ]);
             }
 
-            # Store kardex lines
+            // Store kardex lines
             $this->transactionUtil->createOrUpdateOutputLines($movement_type, $return_transaction, $return_transaction->ref_no, $lines);
 
             //update payment status
@@ -281,17 +283,17 @@ class PurchaseReturnController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('lang_v1.purchase_return_added_success')
+                'msg' => __('lang_v1.purchase_return_added_success'),
             ];
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -306,7 +308,7 @@ class PurchaseReturnController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('purchase.view')) {
+        if (! auth()->user()->can('purchase.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -318,7 +320,7 @@ class PurchaseReturnController extends Controller
             ->find($id);
 
         $purchase_taxes = [];
-        if (!empty($purchase->return_parent->tax)) {
+        if (! empty($purchase->return_parent->tax)) {
             if ($purchase->return_parent->tax->is_tax_group) {
                 $purchase_taxes = $this->transactionUtil->sumGroupTaxDetails($this->transactionUtil->groupTaxDetails($purchase->return_parent->tax, $purchase->return_parent->tax_amount));
             } else {
@@ -332,14 +334,15 @@ class PurchaseReturnController extends Controller
 
     /**
      * get purchase return by discount
-     * 
-     * @param int $id
+     *
+     * @param  int  $id
      * @return Response
-     * 
+     *
      * @author Arquímides Martínez
      */
-    public function getPurchaseReturnDiscount($id) {
-        if (!auth()->user()->can('purchase.update')) {
+    public function getPurchaseReturnDiscount($id)
+    {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -357,21 +360,21 @@ class PurchaseReturnController extends Controller
 
         $taxes = $this->taxUtil->getTaxGroups($business_id, 'products', true);
 
-        return view ('purchase_return.add_discount',
+        return view('purchase_return.add_discount',
             compact('purchase', 'documents', 'taxes'));
     }
 
     /**
      * post purchase return by discount
-     * 
-     * @param Request $request
-     * @param int $int
+     *
+     * @param  int  $int
      * @return json
-     * 
+     *
      * @author Arquímides Martínez
      */
-    public function postPurchaseReturnDiscount(Request $request, $id){
-        if (!auth()->user()->can('purchase.update')) {
+    public function postPurchaseReturnDiscount(Request $request, $id)
+    {
+        if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -382,7 +385,7 @@ class PurchaseReturnController extends Controller
             $user_id = $request->user()->id;
 
             $return = Transaction::updateOrCreate(
-                [ 'return_parent_id' => $id ],
+                ['return_parent_id' => $id],
                 [
                     'business_id' => $parent->business_id,
                     'transaction_date' => $this->transactionUtil->uf_date($request->input('transaction_date')),
@@ -398,11 +401,11 @@ class PurchaseReturnController extends Controller
                     'final_total' => $request->input('final_total'),
                     'document_types_id' => $request->input('document_type'),
                     'serie' => $request->input('serie'),
-                    'created_by' => $user_id
+                    'created_by' => $user_id,
                 ]
             );
 
-            if ($return->final_total <= $parent->final_total){
+            if ($return->final_total <= $parent->final_total) {
                 //update payment status
                 $this->updatePaymentStatus($parent->id, $return->final_total);
 
@@ -412,31 +415,33 @@ class PurchaseReturnController extends Controller
 
             } else {
                 $output = ['success' => false, 'msg' => __('purchase.purchase_return_amounts_not_match')];
-                DB::rollback();;
+                DB::rollback();
             }
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return $output;
     }
 
     /**
      * Update payment status for return discount transaction
-     * 
-     * @param int $parent_id
-     * @param double $final_total
+     *
+     * @param  int  $parent_id
+     * @param  float  $final_total
      * @return void
-     * 
+     *
      * @author Arquímides Martínez
      */
-    private function updatePaymentStatus($parent_id, $final_total){
+    private function updatePaymentStatus($parent_id, $final_total)
+    {
         $parent_transaction = Transaction::find($parent_id);
 
         $total_paid = $this->transactionUtil->getTotalPaid($parent_id);

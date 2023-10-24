@@ -12,7 +12,7 @@ class System extends Model
      * @var string
      */
     protected $table = 'system';
-    
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -20,7 +20,7 @@ class System extends Model
      */
     public $timestamps = false;
 
-     /**
+    /**
      * The attributes that aren't mass assignable.
      *
      * @var array
@@ -36,7 +36,7 @@ class System extends Model
     public static function getProperty($key)
     {
         $row = System::where('key', $key)
-                ->first();
+            ->first();
 
         if (isset($row->value)) {
             return $row->value;
@@ -72,19 +72,17 @@ class System extends Model
     public static function getCurrency()
     {
         $c_id = System::where('key', 'app_currency_id')
-                ->first()
+            ->first()
                 ->value;
 
         $currency = Currency::find($c_id);
-        
+
         return $currency;
     }
 
     /**
      * Set the property
      *
-     * @param $key
-     * @param $value
      *
      * @return void
      */

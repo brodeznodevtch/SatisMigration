@@ -15,7 +15,7 @@ class Variation extends Model
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     public function product_variation()
     {
         return $this->belongsTo(\App\ProductVariation::class);

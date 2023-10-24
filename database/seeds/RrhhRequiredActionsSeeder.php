@@ -1,13 +1,12 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\RrhhRequiredAction;
+use Illuminate\Database\Seeder;
 
 class RrhhRequiredActionsSeeder extends Seeder
 {
     /**
-     * Run the database seeds. 
+     * Run the database seeds.
      *
      * @return void
      */

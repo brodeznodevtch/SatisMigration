@@ -31,12 +31,12 @@ class InflowOutflow extends Model
         'created_by',
         'updated_by',
         'expense_category_id',
-        'description'
+        'description',
     ];
 
     /**
      * Get contact.
-     * 
+     *
      * @return \App\Contact
      */
     public function contact()
@@ -46,7 +46,7 @@ class InflowOutflow extends Model
 
     /**
      * Get employee.
-     * 
+     *
      * @return \App\Employees
      */
     public function employee()

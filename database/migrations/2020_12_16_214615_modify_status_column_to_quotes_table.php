@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyStatusColumnToQuotesTable extends Migration
 {
@@ -13,7 +13,7 @@ class ModifyStatusColumnToQuotesTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `quotes` DROP COLUMN `order_status`");
+        DB::statement('ALTER TABLE `quotes` DROP COLUMN `order_status`');
         DB::statement("ALTER TABLE `quotes` ADD `status`
            ENUM('opened', 'in_preparation', 'prepared', 'on_route', 'expired',
           'closed', 'returned') NULL DEFAULT NULL AFTER `type`");
@@ -22,24 +22,24 @@ class ModifyStatusColumnToQuotesTable extends Migration
             NOT NULL DEFAULT 'location' AFTER `delivery_time`");
 
         Schema::table('quotes', function (Blueprint $table) {
-            $table->unsignedInteger("selling_price_group_id")
+            $table->unsignedInteger('selling_price_group_id')
                 ->nullable()
                 ->default(null)
-                ->after("tax_detail");
+                ->after('tax_detail');
 
-            $table->foreign("selling_price_group_id")
-                ->references("id")
-                ->on("selling_price_groups");
+            $table->foreign('selling_price_group_id')
+                ->references('id')
+                ->on('selling_price_groups');
 
-            $table->date("delivery_date")
+            $table->date('delivery_date')
                 ->nullable()
                 ->default(null)
-                ->after("delivery_time");
+                ->after('delivery_time');
 
-            $table->string("other_delivery_type")
+            $table->string('other_delivery_type')
                 ->nullable()
-                ->default("")
-                ->after("delivery_type");
+                ->default('')
+                ->after('delivery_type');
         });
     }
 

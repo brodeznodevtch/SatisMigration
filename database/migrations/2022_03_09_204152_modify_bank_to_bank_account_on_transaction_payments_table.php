@@ -1,11 +1,10 @@
 <?php
 
 use App\BankAccount;
-use App\BankTransaction;
 use App\TransactionPayment;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyBankToBankAccountOnTransactionPaymentsTable extends Migration
 {
@@ -23,20 +22,20 @@ class ModifyBankToBankAccountOnTransactionPaymentsTable extends Migration
                 ->select('transfer_receiving_bank')
                 ->groupBy('transfer_receiving_bank')
                 ->get();
-        
+
         $bank_ids = [];
-        foreach($banks as $b) {
+        foreach ($banks as $b) {
             $bank_account = BankAccount::where('bank_id', $b->transfer_receiving_bank)->first();
 
             $ids = TransactionPayment::where('method', 'bank_transfer')
                 ->where('transfer_receiving_bank', $b->transfer_receiving_bank)
                 ->select('id')->get()->toArray();
 
-            if(!empty($bank_account)) {
+            if (! empty($bank_account)) {
                 $bank_ids[] = [
                     'bank_id' => $b->transfer_receiving_bank,
                     'bank_account_id' => $bank_account->id,
-                    'ids' => $ids
+                    'ids' => $ids,
                 ];
             }
         }
@@ -54,7 +53,7 @@ class ModifyBankToBankAccountOnTransactionPaymentsTable extends Migration
         });
 
         /** set bank accounts */
-        foreach($bank_ids as $b){
+        foreach ($bank_ids as $b) {
             TransactionPayment::whereIn('id', $b['ids'])
                 ->update(['transfer_receiving_bank' => $b['bank_account_id']]);
         }

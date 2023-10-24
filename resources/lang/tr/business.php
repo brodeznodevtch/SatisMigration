@@ -68,7 +68,7 @@ return [
         9 => 'Eylül',
         10 => 'Ekim',
         11 => 'Kasım',
-        12 => 'Aralık'
+        12 => 'Aralık',
     ],
     'fy_start_month' => 'Mali yıl başlangıç ​​ayı',
     'accounting_method' => 'Stok Muhasebe Yöntemi',
@@ -85,7 +85,7 @@ return [
     'location' => 'Lokasyon',
     'already_registered' => 'Zaten kayıtlı mısınız?',
     'sign_in' => 'Oturum Aç',
-    'not_yet_registered' => '',//'Kayıtlı değil misiniz?',
+    'not_yet_registered' => '', //'Kayıtlı değil misiniz?',
     'register_now' => 'Şimdi üye Ol',
     'system' => 'Sistem',
     'show_help_text' => 'Yardım metnini göster',

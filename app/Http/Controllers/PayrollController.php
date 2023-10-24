@@ -5,49 +5,46 @@ namespace App\Http\Controllers;
 use App\Bank;
 use App\BonusCalculation;
 use App\Business;
-use App\BusinessLocation;
-use App\CalculationType;
 use App\Employees;
 use App\Exports\PaymentFileReportExport;
 use App\Exports\PayrollBonusReportExport;
-use App\Exports\PayrollSalaryReportExport;
 use App\Exports\PayrollHonoraryReportExport;
+use App\Exports\PayrollSalaryReportExport;
 use App\Exports\PayrollVacationReportExport;
 use App\LawDiscount;
-use App\Notifications\PaymentFilesNotification;
+use App\Notifications\PaymentSplisNotification;
 use App\PaymentPeriod;
 use App\Payroll;
 use App\PayrollDetail;
 use App\PayrollStatus;
+use App\PayrollType;
 use App\RrhhAbsenceInability;
 use App\RrhhIncomeDiscount;
 use App\RrhhSalaryHistory;
-use App\RrhhTypeWage;
-use App\PayrollType;
-use App\User;
-use App\Utils\ModuleUtil;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
-use Excel;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use App\Notifications\PaymentSplisNotification;
 use App\RrhhSetting;
-use App\RrhhTypeIncomeDiscount;
+use App\RrhhTypeWage;
+use App\User;
 use App\Utils\EmployeeUtil;
+use App\Utils\ModuleUtil;
 use App\Utils\PayrollUtil;
+use Carbon\Carbon;
+use DataTables;
+use DB;
+use Excel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PayrollController extends Controller
 {
     protected $moduleUtil;
+
     protected $employeeUtil;
+
     protected $payrollUtil;
 
     /**
      * Constructor
      *
-     * @param ModuleUtil $moduleUtil
      * @return void
      */
     public function __construct(ModuleUtil $moduleUtil, EmployeeUtil $employeeUtil, PayrollUtil $payrollUtil)
@@ -64,17 +61,16 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('payroll.view')) {
-            abort(403, "Unauthorized action.");
+        if (! auth()->user()->can('payroll.view')) {
+            abort(403, 'Unauthorized action.');
         }
 
         return view('payroll.index');
     }
 
-
     public function getPayrolls()
     {
-        if (!auth()->user()->can('plantilla.view')) {
+        if (! auth()->user()->can('plantilla.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -84,28 +80,30 @@ class PayrollController extends Controller
         return DataTables::of($data)
             ->editColumn('period', function ($data) {
                 if ($data->start_date != null) {
-                    return $this->moduleUtil->format_date($data->start_date) . ' - ' . $this->moduleUtil->format_date($data->end_date);
+                    return $this->moduleUtil->format_date($data->start_date).' - '.$this->moduleUtil->format_date($data->end_date);
                 } else {
-                    return 'Fecha de ingreso - ' . $this->moduleUtil->format_date($data->end_date);
+                    return 'Fecha de ingreso - '.$this->moduleUtil->format_date($data->end_date);
                 }
             })
             ->editColumn('month', function ($data) {
-                $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
                 return $meses[$data->month - 1];
             })->editColumn('status', function ($data) {
                 $html = '';
                 if ($data->payrollStatus->name == 'Aprobada') {
-                    $html = '<span class="badge" style="background: #449D44">' . $data->payrollStatus->name . '</span>';
+                    $html = '<span class="badge" style="background: #449D44">'.$data->payrollStatus->name.'</span>';
                 }
                 if ($data->payrollStatus->name == 'Calculada') {
-                    $html = '<span class="badge" style="background: #00A6DC">' . $data->payrollStatus->name . '</span>';
+                    $html = '<span class="badge" style="background: #00A6DC">'.$data->payrollStatus->name.'</span>';
                 }
                 if ($data->payrollStatus->name == 'Pagada') {
-                    $html = '<span class="badge" style="background: #367FA9">' . $data->payrollStatus->name . '</span>';
+                    $html = '<span class="badge" style="background: #367FA9">'.$data->payrollStatus->name.'</span>';
                 }
                 if ($data->payrollStatus->name == 'Iniciada') {
-                    $html = '<span class="badge">' . $data->payrollStatus->name . '</span>';
+                    $html = '<span class="badge">'.$data->payrollStatus->name.'</span>';
                 }
+
                 return $html;
             })
             ->addColumn('type', function ($data) {
@@ -115,6 +113,7 @@ class PayrollController extends Controller
                 if ($data->isr_id != null) {
                     $business_id = request()->session()->get('user.business_id');
                     $paymentPeriod = PaymentPeriod::where('business_id', $business_id)->where('id', $data->isr_id)->first();
+
                     return $paymentPeriod->name;
                 }
             })
@@ -122,7 +121,7 @@ class PayrollController extends Controller
                 if ($data->payment_period_id != null) {
                     return $data->paymentPeriod->name;
                 } else {
-                    return "N/A";
+                    return 'N/A';
                 }
             })
             ->addColumn('statusPayroll', function ($data) {
@@ -139,7 +138,7 @@ class PayrollController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('payroll.create')) {
+        if (! auth()->user()->can('payroll.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -161,19 +160,17 @@ class PayrollController extends Controller
             ->where('name', '<>', 'Personalizado') //Personalizado
             ->get();
 
-
         return view('payroll.create', compact('paymentPeriods', 'payrollTypes', 'isrTables'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('plantilla.create')) {
+        if (! auth()->user()->can('plantilla.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -182,20 +179,20 @@ class PayrollController extends Controller
             if ($paymentPeriod->name == 'Personalizado') {
                 $request->validate([
                     'payroll_type_id' => 'required',
-                    'year'            => 'required',
-                    'month'           => 'required',
-                    'isr_id'          => 'required',
-                    'days'            => 'required',
-                    'start_date'      => 'required',
-                    'end_date'        => 'required',
+                    'year' => 'required',
+                    'month' => 'required',
+                    'isr_id' => 'required',
+                    'days' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
                 ]);
             } else {
                 $request->validate([
                     'payroll_type_id' => 'required',
-                    'year'            => 'required',
-                    'month'           => 'required',
-                    'start_date'      => 'required',
-                    'end_date'        => 'required',
+                    'year' => 'required',
+                    'month' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
                 ]);
             }
         } else {
@@ -203,27 +200,27 @@ class PayrollController extends Controller
                 $payrollType = PayrollType::where('id', $request->input('payroll_type_id'))->where('business_id', $business_id)->first();
                 if ($payrollType->name == 'Planilla de aguinaldos') {
                     $request->validate([
-                        'year'     => 'required',
-                        'isr_id'   => 'required',
+                        'year' => 'required',
+                        'isr_id' => 'required',
                         'end_date' => 'required',
                     ]);
                 } else {
                     $request->validate([
                         'payment_period_id' => 'required',
-                        'year'              => 'required',
-                        'month'             => 'required',
-                        'start_date'        => 'required',
-                        'end_date'          => 'required',
+                        'year' => 'required',
+                        'month' => 'required',
+                        'start_date' => 'required',
+                        'end_date' => 'required',
                     ]);
                 }
             } else {
                 $request->validate([
-                    'payroll_type_id'   => 'required',
+                    'payroll_type_id' => 'required',
                     'payment_period_id' => 'required',
-                    'year'              => 'required',
-                    'month'             => 'required',
-                    'start_date'        => 'required',
-                    'end_date'          => 'required',
+                    'year' => 'required',
+                    'month' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
                 ]);
             }
         }
@@ -235,17 +232,17 @@ class PayrollController extends Controller
             }
             $input_details['end_date'] = $this->moduleUtil->uf_date($request->input('end_date'));
 
-            $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+            $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             $payrollType = PayrollType::where('id', $request->input('payroll_type_id'))->where('business_id', $business_id)->first();
             if ($payrollType->name != 'Planilla de aguinaldos') {
                 if ($paymentPeriod->name != 'Personalizado') {
-                    $input_details['name'] = $payrollType->name . ' ' . $paymentPeriod->name . ' - ' . $meses[$request->month - 1] . ' ' . $request->year;
+                    $input_details['name'] = $payrollType->name.' '.$paymentPeriod->name.' - '.$meses[$request->month - 1].' '.$request->year;
                 } else {
-                    $input_details['name'] = $payrollType->name . ' - ' . $meses[$request->month - 1] . ' ' . $request->year;
+                    $input_details['name'] = $payrollType->name.' - '.$meses[$request->month - 1].' '.$request->year;
                 }
             } else {
-                $input_details['name'] = $payrollType->name . ' - ' . $request->year;
-                $input_details['start_date'] = $request->year . '-01-01';
+                $input_details['name'] = $payrollType->name.' - '.$request->year;
+                $input_details['start_date'] = $request->year.'-01-01';
                 $input_details['month'] = 12;
             }
 
@@ -277,14 +274,14 @@ class PayrollController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
@@ -292,7 +289,7 @@ class PayrollController extends Controller
     }
 
     /**
-     * Get payment period 
+     * Get payment period
      */
     public function getPaymentPeriod($id)
     {
@@ -305,7 +302,7 @@ class PayrollController extends Controller
     }
 
     /**
-     * Get payroll type 
+     * Get payroll type
      */
     public function getPayrollType($id)
     {
@@ -325,7 +322,7 @@ class PayrollController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('plantilla.view')) {
+        if (! auth()->user()->can('plantilla.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -339,10 +336,9 @@ class PayrollController extends Controller
         return view('payroll.generate_payroll', compact('payroll'));
     }
 
-
     public function getPayrollDetail(Request $request, $id)
     {
-        if (!auth()->user()->can('plantilla.view')) {
+        if (! auth()->user()->can('plantilla.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -354,7 +350,7 @@ class PayrollController extends Controller
                 ->editColumn('code', function ($data) {
                     return $data->employee->agent_code;
                 })->editColumn('employee', function ($data) {
-                    return $data->employee->first_name . ' ' . $data->employee->last_name;
+                    return $data->employee->first_name.' '.$data->employee->last_name;
                 })->editColumn('montly_salary', function ($data) {
                     return $this->moduleUtil->num_f($data->montly_salary, $add_symbol = true, $precision = 2);
                 })->editColumn('regular_salary', function ($data) {
@@ -366,7 +362,7 @@ class PayrollController extends Controller
                 })->editColumn('other_income', function ($data) {
                     return $this->moduleUtil->num_f($data->other_income, $add_symbol = true, $precision = 2);
                 })->editColumn('total_income', function ($data) {
-                    return '<b>' . $this->moduleUtil->num_f($data->total_income, $add_symbol = true, $precision = 2) . '</b>';
+                    return '<b>'.$this->moduleUtil->num_f($data->total_income, $add_symbol = true, $precision = 2).'</b>';
                 })->editColumn('isss', function ($data) {
                     return $this->moduleUtil->num_f($data->isss, $add_symbol = true, $precision = 2);
                 })->editColumn('afp', function ($data) {
@@ -376,9 +372,9 @@ class PayrollController extends Controller
                 })->editColumn('other_deductions', function ($data) {
                     return $this->moduleUtil->num_f($data->other_deductions, $add_symbol = true, $precision = 2);
                 })->editColumn('total_deductions', function ($data) {
-                    return '<b>' . $this->moduleUtil->num_f($data->total_deductions, $add_symbol = true, $precision = 2) . '</b>';
+                    return '<b>'.$this->moduleUtil->num_f($data->total_deductions, $add_symbol = true, $precision = 2).'</b>';
                 })->editColumn('total_to_pay', function ($data) {
-                    return '<b>' . $this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2) . '</b>';
+                    return '<b>'.$this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2).'</b>';
                 })
                 ->rawColumns(['code', 'employee', 'montly_salary', 'days', 'regular_salary', 'commissions', 'extra_hours', 'other_income', 'total_income', 'isss', 'afp', 'rent', 'other_deductions', 'total_deductions', 'total_to_pay'])
                 ->make(true);
@@ -389,7 +385,7 @@ class PayrollController extends Controller
                 ->editColumn('code', function ($data) {
                     return $data->employee->agent_code;
                 })->editColumn('employee', function ($data) {
-                    return $data->employee->first_name . ' ' . $data->employee->last_name;
+                    return $data->employee->first_name.' '.$data->employee->last_name;
                 })->editColumn('dni', function ($data) {
                     return $data->employee->dni;
                 })->editColumn('regular_salary', function ($data) {
@@ -397,7 +393,7 @@ class PayrollController extends Controller
                 })->editColumn('rent', function ($data) {
                     return $this->moduleUtil->num_f($data->rent, $add_symbol = true, $precision = 2);
                 })->editColumn('total_to_pay', function ($data) {
-                    return '<b>' . $this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2) . '</b>';
+                    return '<b>'.$this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2).'</b>';
                 })
                 ->rawColumns(['code', 'employee', 'dni', 'montly_salary', 'rent', 'total_to_pay'])
                 ->make(true);
@@ -408,7 +404,7 @@ class PayrollController extends Controller
                 ->editColumn('code', function ($data) {
                     return $data->employee->agent_code;
                 })->editColumn('employee', function ($data) {
-                    return $data->employee->first_name . ' ' . $data->employee->last_name;
+                    return $data->employee->first_name.' '.$data->employee->last_name;
                 })->editColumn('date_admission', function ($data) {
                     return $this->moduleUtil->format_date($data->start_date);
                 })->editColumn('end_date', function ($data) {
@@ -417,7 +413,7 @@ class PayrollController extends Controller
                     return $this->moduleUtil->num_f($data->montly_salary, $add_symbol = true, $precision = 2);
                 })->editColumn('days', function ($data) {
                     if ($data->proportional == 1) {
-                        return $data->days . '</br>Proporcional';
+                        return $data->days.'</br>Proporcional';
                     } else {
                         return $data->days;
                     }
@@ -426,7 +422,7 @@ class PayrollController extends Controller
                 })->editColumn('rent', function ($data) {
                     return $this->moduleUtil->num_f($data->rent, $add_symbol = true, $precision = 2);
                 })->editColumn('total_to_pay', function ($data) {
-                    return '<b>' . $this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2) . '</b>';
+                    return '<b>'.$this->moduleUtil->num_f($data->total_to_pay, $add_symbol = true, $precision = 2).'</b>';
                 })
                 ->rawColumns(['code', 'employee', 'date_admmission', 'end_date', 'montly_salary', 'days', 'bonus', 'rent', 'total_to_pay'])
                 ->make(true);
@@ -437,14 +433,14 @@ class PayrollController extends Controller
                 ->editColumn('code', function ($data) {
                     return $data->employee->agent_code;
                 })->editColumn('employee', function ($data) {
-                    return $data->employee->first_name . ' ' . $data->employee->last_name;
+                    return $data->employee->first_name.' '.$data->employee->last_name;
                 })->editColumn('start_date', function ($data) {
                     return $this->moduleUtil->format_date($data->start_date);
                 })->editColumn('end_date', function ($data) {
                     return $this->moduleUtil->format_date($data->end_date);
                 })->editColumn('proportional', function ($data) {
                     if ($data->proportional == 1) {
-                        return 'Proporcional</br>(' . $data->days . ' días)';
+                        return 'Proporcional</br>('.$data->days.' días)';
                     } else {
                         return 'Completa';
                     }
@@ -464,7 +460,7 @@ class PayrollController extends Controller
 
     public function recalculate($id)
     {
-        if (!auth()->user()->can('plantilla.recalculate')) {
+        if (! auth()->user()->can('plantilla.recalculate')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -482,31 +478,30 @@ class PayrollController extends Controller
 
                 $output = [
                     'success' => 1,
-                    'msg' => __('payroll.recalculation_done_successfully')
+                    'msg' => __('payroll.recalculation_done_successfully'),
                 ];
             } else {
                 $output = [
                     'success' => 0,
-                    'msg' => __('payroll.failed_to_recalculate')
+                    'msg' => __('payroll.failed_to_recalculate'),
                 ];
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
 
         return $output;
     }
 
-
     /** Approve payroll */
     public function approve(Request $request, $id)
     {
-        if (!auth()->user()->can('payroll.approve')) {
+        if (! auth()->user()->can('payroll.approve')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -531,38 +526,38 @@ class PayrollController extends Controller
                             'success' => 1,
                             'msg' => __('payroll.send_approve_payroll'),
                             'download' => true,
-                            'file' => $file
+                            'file' => $file,
                         ];
                     } else {
                         $output = [
                             'success' => 1,
-                            'msg' => __('payroll.approve_payroll')
+                            'msg' => __('payroll.approve_payroll'),
                         ];
                     }
                 } else {
                     $output = [
                         'success' => 0,
-                        'msg' => __('rrhh.wrong_password_authorize')
+                        'msg' => __('rrhh.wrong_password_authorize'),
                     ];
                 }
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => 0,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }
 
-
     /** Send Payment Slips payroll */
     public function paymentSlips(Request $request, $id)
     {
-        if (!auth()->user()->can('payroll.paymentSlips')) {
+        if (! auth()->user()->can('payroll.paymentSlips')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -575,26 +570,26 @@ class PayrollController extends Controller
 
                 $output = [
                     'success' => 1,
-                    'msg' => __('payroll.send_payment_slips')
+                    'msg' => __('payroll.send_payment_slips'),
                 ];
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => 0,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }
 
-
     /** Pay payroll */
     public function pay(Request $request, $id)
     {
-        if (!auth()->user()->can('payroll.pay')) {
+        if (! auth()->user()->can('payroll.pay')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -619,16 +614,16 @@ class PayrollController extends Controller
 
                         foreach ($incomeDiscounts as $incomeDiscount) {
                             $quotasApplied = $payroll->paymentPeriod->days / $incomeDiscount->paymentPeriod->days;
-                            if(($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota){
-                                if($quotasApplied < $incomeDiscount->quotas_applied){
+                            if (($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota) {
+                                if ($quotasApplied < $incomeDiscount->quotas_applied) {
                                     $quotasApplied = $incomeDiscount->quotas_applied - $quotasApplied;
-                                }else{
+                                } else {
                                     $quotasApplied = $quotasApplied - $incomeDiscount->quotas_applied;
                                 }
                                 $incomeDiscount->quotas_applied += $quotasApplied;
                                 $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $quotasApplied);
                                 $incomeDiscount->is_paid = 1;
-                            }else{
+                            } else {
                                 $quotas = $quotasApplied + $incomeDiscount->quotas_applied;
                                 $incomeDiscount->quotas_applied = $quotas;
                                 $incomeDiscount->balance_to_date = $incomeDiscount->balance_to_date - ($incomeDiscount->quota_value * $quotasApplied);
@@ -643,36 +638,36 @@ class PayrollController extends Controller
 
                         $output = [
                             'success' => 1,
-                            'msg' => __('payroll.send_pay_payroll')
+                            'msg' => __('payroll.send_pay_payroll'),
                         ];
                     } else {
                         $output = [
                             'success' => 1,
-                            'msg' => __('payroll.pay_payroll')
+                            'msg' => __('payroll.pay_payroll'),
                         ];
                     }
                 } else {
                     $output = [
                         'success' => 0,
-                        'msg' => __('rrhh.wrong_password_authorize')
+                        'msg' => __('rrhh.wrong_password_authorize'),
                     ];
                 }
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => 0,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }
 
-
     /** Pay payroll */
-    function sendEmailPaymentSlips($payroll)
+    public function sendEmailPaymentSlips($payroll)
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::findOrFail($business_id);
@@ -681,7 +676,6 @@ class PayrollController extends Controller
             $employee->notify(new PaymentSplisNotification($payroll, $business_id, $payrollDetail, $employee->first_name, $employee->last_name, $this->employeeUtil));
         }
     }
-
 
     //Generate payments slips for print
     public function generatePaymentSlips($id)
@@ -707,6 +701,7 @@ class PayrollController extends Controller
         $pdf = \PDF::loadView('payroll.print_payroll', compact('payroll', 'business', 'start_date', 'startDate', 'endDate', 'end_date'));
 
         $pdf->setPaper('letter', 'portrait');
+
         return $pdf->stream('payrollDetail.pdf');
     }
 
@@ -726,25 +721,25 @@ class PayrollController extends Controller
         $zip = new \ZipArchive();
 
         //Crear archivo zip y abrirlo
-        \Storage::disk('local')->put($zip_file,  $zip);
-        $zip->open(public_path('uploads/' . $zip_file), \ZipArchive::CREATE);
+        \Storage::disk('local')->put($zip_file, $zip);
+        $zip->open(public_path('uploads/'.$zip_file), \ZipArchive::CREATE);
 
         // Recorrer el array con un foreach
         foreach ($banks as $bank) {
-            $file = $bank->name . '.csv';
+            $file = $bank->name.'.csv';
 
             // Guardar el archivo excel en el disco local
             Excel::store(new PaymentFileReportExport($payroll, $payrollDetails, $bank), $file, 'local', \Maatwebsite\Excel\Excel::CSV);
 
             // Añadir el archivo excel al archivo zip
-            $zip->addFile(public_path('uploads/' . $file), $file);
+            $zip->addFile(public_path('uploads/'.$file), $file);
         }
 
         // Cerrar el archivo zip
         $zip->close();
 
         // Devolver el archivo zip para descargarlo
-        $response = response()->download(public_path('uploads/' . $zip_file));
+        $response = response()->download(public_path('uploads/'.$zip_file));
 
         // Retornar la respuesta con el archivo zip
         return $response;
@@ -753,7 +748,6 @@ class PayrollController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -824,7 +818,6 @@ class PayrollController extends Controller
                                 ->where('rrhh_income_discounts.is_paid', 0)
                                 ->get();
 
-
                             //Calcular los días de incapacidad
                             foreach ($incapacidades as $incapacidad) {
                                 $startDateIncapacidad = Carbon::parse($incapacidad->start_date);
@@ -878,13 +871,13 @@ class PayrollController extends Controller
                             //Calcular ISSS, AFP Renta
                             $details['isss'] = $this->payrollUtil->calculateIsss($details['total_income'], $business_id, $payroll->isr_id);
                             $details['afp'] = $this->payrollUtil->calculateAfp($details['total_income'], $business_id, $payroll->isr_id);
-                            $details['rent'] = $this->payrollUtil->calculateRent($details['total_income'], $business_id, $payroll->isr_id, $details['isss'], $details['afp']);       
+                            $details['rent'] = $this->payrollUtil->calculateRent($details['total_income'], $business_id, $payroll->isr_id, $details['isss'], $details['afp']);
 
                             $details['other_deductions'] = $discountOD - $incomeOD;
                             $details['total_deductions'] = $details['isss'] + $details['afp'] + $details['rent'] + $details['other_deductions'];
                             $details['total_to_pay'] = $details['total_income'] - $details['total_deductions'];
-                            $details['employee_id']  = $employee->id;
-                            $details['payroll_id']  = $payroll->id;
+                            $details['employee_id'] = $employee->id;
+                            $details['payroll_id'] = $payroll->id;
 
                             //Create register
                             PayrollDetail::create($details);
@@ -903,8 +896,8 @@ class PayrollController extends Controller
                             $details['regular_salary'] = $details['montly_salary'] / 30 * $details['days'];
                             $details['rent'] = $details['regular_salary'] * 0.1;
                             $details['total_to_pay'] = $details['regular_salary'] - $details['rent'];
-                            $details['employee_id']  = $employee->id;
-                            $details['payroll_id']  = $payroll->id;
+                            $details['employee_id'] = $employee->id;
+                            $details['payroll_id'] = $payroll->id;
 
                             //Create register
                             PayrollDetail::create($details);
@@ -969,8 +962,8 @@ class PayrollController extends Controller
                             }
 
                             $details['total_to_pay'] = $details['bonus'] - $details['rent'];
-                            $details['employee_id']  = $employee->id;
-                            $details['payroll_id']  = $payroll->id;
+                            $details['employee_id'] = $employee->id;
+                            $details['payroll_id'] = $payroll->id;
 
                             //Create register
                             PayrollDetail::create($details);
@@ -998,8 +991,8 @@ class PayrollController extends Controller
                                         $details['proportional'] = 0; //Vacación completa
                                         $details['days'] = $this->employeeUtil->getDays($secondsDays);
                                         $details['total_to_pay'] = $details['regular_salary'] + $details['vacation_bonus'];
-                                        $details['employee_id']  = $employee->id;
-                                        $details['payroll_id']  = $payroll->id;
+                                        $details['employee_id'] = $employee->id;
+                                        $details['payroll_id'] = $payroll->id;
                                         $details['end_date'] = $endDate->addYear();
 
                                         //Create register
@@ -1025,8 +1018,8 @@ class PayrollController extends Controller
                                         $details['proportional'] = 1; //Vacación proporcional
                                         $details['vacation_bonus'] = ($details['days'] / 365) * $details['vacation_bonus'];
                                         $details['total_to_pay'] = $details['regular_salary'] + $details['vacation_bonus'];
-                                        $details['employee_id']  = $employee->id;
-                                        $details['payroll_id']  = $payroll->id;
+                                        $details['employee_id'] = $employee->id;
+                                        $details['payroll_id'] = $payroll->id;
 
                                         //Create register
                                         PayrollDetail::create($details);
@@ -1034,8 +1027,8 @@ class PayrollController extends Controller
                                     if ($details['days'] == 365) {
                                         $details['proportional'] = 0; //Vacación completa
                                         $details['total_to_pay'] = $details['regular_salary'] + $details['vacation_bonus'];
-                                        $details['employee_id']  = $employee->id;
-                                        $details['payroll_id']  = $payroll->id;
+                                        $details['employee_id'] = $employee->id;
+                                        $details['payroll_id'] = $payroll->id;
 
                                         //Create register
                                         PayrollDetail::create($details);
@@ -1057,7 +1050,6 @@ class PayrollController extends Controller
         }
     }
 
-
     public function exportPayroll($id)
     {
         $business_id = request()->session()->get('user.business_id');
@@ -1068,29 +1060,28 @@ class PayrollController extends Controller
         if ($payroll->payrollType->name == 'Planilla de sueldos') {
             return Excel::download(
                 new PayrollSalaryReportExport($payroll, $payrollDetails, $business, $this->moduleUtil),
-                'Planilla de sueldos - ' . $payroll->name . '.xlsx'
+                'Planilla de sueldos - '.$payroll->name.'.xlsx'
             );
         }
         if ($payroll->payrollType->name == 'Planilla de honorarios') {
             return Excel::download(
                 new PayrollHonoraryReportExport($payroll, $payrollDetails, $business, $this->moduleUtil),
-                'Planilla de honorarios - ' . $payroll->name . '.xlsx'
+                'Planilla de honorarios - '.$payroll->name.'.xlsx'
             );
         }
         if ($payroll->payrollType->name == 'Planilla de aguinaldos') {
             return Excel::download(
                 new PayrollBonusReportExport($payroll, $payrollDetails, $business, $this->moduleUtil),
-                'Planilla de aguinaldos - ' . $payroll->name . '.xlsx'
+                'Planilla de aguinaldos - '.$payroll->name.'.xlsx'
             );
         }
         if ($payroll->payrollType->name == 'Planilla de vacaciones') {
             return Excel::download(
                 new PayrollVacationReportExport($payroll, $payrollDetails, $business, $this->moduleUtil),
-                'Planilla de vacaciones - ' . $payroll->name . '.xlsx'
+                'Planilla de vacaciones - '.$payroll->name.'.xlsx'
             );
         }
     }
-
 
     //Get income or discount from an employee
     public function incomeDiscount($incomeDiscount, $payroll_column, $payroll)
@@ -1098,18 +1089,18 @@ class PayrollController extends Controller
         $incomeOrDiscount = 0;
         if ($incomeDiscount->payroll_column == $payroll_column) {
             $quotasApplied = $payroll->paymentPeriod->days / $incomeDiscount->paymentPeriod->days;
-            if(($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota){
-                if($quotasApplied < $incomeDiscount->quotas_applied){
+            if (($quotasApplied + $incomeDiscount->quotas_applied) >= $incomeDiscount->quota) {
+                if ($quotasApplied < $incomeDiscount->quotas_applied) {
                     $quotasApplied = $incomeDiscount->quotas_applied - $quotasApplied;
-                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied; 
-                }else{
+                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
+                } else {
                     $quotasApplied = $quotasApplied - $incomeDiscount->quotas_applied;
-                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied; 
+                    $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
                 }
-                
-            }else{
+
+            } else {
                 $incomeOrDiscount = $incomeDiscount->quota_value * $quotasApplied;
-            }               
+            }
         }
 
         return $incomeOrDiscount;

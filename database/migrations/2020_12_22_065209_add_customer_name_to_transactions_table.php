@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCustomerNameToTransactionsTable extends Migration
 {
@@ -14,18 +14,18 @@ class AddCustomerNameToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedInteger("customer_id")
+            $table->unsignedInteger('customer_id')
                 ->nullable()
                 ->default(null)
-                ->after("contact_id");
-            $table->string("customer_name")
+                ->after('contact_id');
+            $table->string('customer_name')
                 ->nullable()
                 ->default(null)
-                ->after("customer_id");
+                ->after('customer_id');
 
-            $table->foreign("customer_id")
-                ->on("customers")
-                ->references("id");
+            $table->foreign('customer_id')
+                ->on('customers')
+                ->references('id');
         });
     }
 
@@ -37,9 +37,9 @@ class AddCustomerNameToTransactionsTable extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropForeign("customer_id");
-            $table->dropColumn("customer_id");
-            $table->dropColumn("customer_name");
+            $table->dropForeign('customer_id');
+            $table->dropColumn('customer_id');
+            $table->dropColumn('customer_name');
         });
     }
 }

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_flow_reason' => 'Registrar motivo',
     'added_success' => 'Motivo registrado exitosamente',

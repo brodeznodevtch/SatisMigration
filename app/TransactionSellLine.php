@@ -12,7 +12,7 @@ class TransactionSellLine extends Model
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     public function transaction()
     {
         return $this->belongsTo(\App\Transaction::class);
@@ -41,7 +41,7 @@ class TransactionSellLine extends Model
      */
     public function getQuantityAttribute($value)
     {
-        return (float)$value;
+        return (float) $value;
     }
 
     public function lot_details()
@@ -52,13 +52,14 @@ class TransactionSellLine extends Model
     public function get_discount_amount()
     {
         $discount_amount = 0;
-        if (!empty($this->line_discount_type) && !empty($this->line_discount_amount)) {
+        if (! empty($this->line_discount_type) && ! empty($this->line_discount_amount)) {
             if ($this->line_discount_type == 'fixed') {
                 $discount_amount = $this->line_discount_amount;
             } elseif ($this->line_discount_type == 'percentage') {
                 $discount_amount = ($this->unit_price * $this->line_discount_amount) / 100;
             }
         }
+
         return $discount_amount;
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnTypeToQuotesTable extends Migration
 {
@@ -14,9 +14,9 @@ class AddColumnTypeToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->enum("type", ["quote", "order"])
-                ->default("quote")
-                ->after("document_type_id");
+            $table->enum('type', ['quote', 'order'])
+                ->default('quote')
+                ->after('document_type_id');
         });
     }
 

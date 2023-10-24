@@ -11,11 +11,12 @@ class SyncBrandSeeder extends Seeder
 
     /**
      * Constructor
-     * 
+     *
      * @param App\Utils\ProductUtil
      * @return void
      */
-    public function __construct(ProductUtil $productUtil) {
+    public function __construct(ProductUtil $productUtil)
+    {
         $this->productUtil = $productUtil;
     }
 
@@ -35,7 +36,7 @@ class SyncBrandSeeder extends Seeder
         }
 
         $business = Business::where('id', '!=', $business_id)->get();
-        
+
         foreach ($business as $b) {
             /** Get brands from other business */
             $brands = Brands::where('business_id', $business_id)->get();

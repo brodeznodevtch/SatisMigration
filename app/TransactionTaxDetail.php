@@ -12,7 +12,7 @@ class TransactionTaxDetail extends Model
      * @var string
      */
     protected $table = 'transaction_tax_details';
-    
+
     /**
      * The attributes that aren't mass assignable.
      *

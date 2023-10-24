@@ -12,7 +12,7 @@ class TaxRateTaxGroup extends Model
      * @var string
      */
     protected $table = 'tax_rate_tax_group';
-    
+
     /**
      * The attributes that aren't mass assignable.
      *

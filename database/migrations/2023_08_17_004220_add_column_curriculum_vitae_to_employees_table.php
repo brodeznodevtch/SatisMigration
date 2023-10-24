@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnCurriculumVitaeToEmployeesTable extends Migration
 {
@@ -26,7 +26,7 @@ class AddColumnCurriculumVitaeToEmployeesTable extends Migration
     public function down()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->dropColumn('curriculum_vitae'); 
+            $table->dropColumn('curriculum_vitae');
         });
     }
 }

@@ -25,7 +25,7 @@ class Apportionment extends Model
         'vat_amount',
         'is_finished',
         'business_id',
-        'apportionment_date'
+        'apportionment_date',
     ];
 
     public function import_expenses()

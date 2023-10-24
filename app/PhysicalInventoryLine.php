@@ -27,12 +27,12 @@ class PhysicalInventoryLine extends Model
         'difference',
         'price',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     /**
      * Get product.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product()
@@ -42,7 +42,7 @@ class PhysicalInventoryLine extends Model
 
     /**
      * Get variation.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function variation()

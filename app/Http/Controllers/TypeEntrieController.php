@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\TypeEntrie;
 use App\AccountingEntrie;
-use Illuminate\Http\Request;
+use App\TypeEntrie;
 use Datatables;
 use DB;
+use Illuminate\Http\Request;
 
 class TypeEntrieController extends Controller
 {
@@ -33,7 +33,6 @@ class TypeEntrieController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,11 +50,11 @@ class TypeEntrieController extends Controller
                 'short_name.required' => __('accounting.short_name_required'),
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $type = TypeEntrie::create($request->all());
+
             return response()->json([
-                "msj" => 'Created'
+                'msj' => 'Created',
             ]);
         }
     }
@@ -63,7 +62,6 @@ class TypeEntrieController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
     public function show(TypeEntrie $typeEntrie)
@@ -80,13 +78,13 @@ class TypeEntrieController extends Controller
     public function edit($id)
     {
         $typeEntrie = TypeEntrie::findOrFail($id);
+
         return response()->json($typeEntrie);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
@@ -106,10 +104,11 @@ class TypeEntrieController extends Controller
                 'short_name.required' => __('accounting.short_name_required'),
             ]
         );
-        if($request->ajax()){
+        if ($request->ajax()) {
             $typeEntrie->update($request->all());
+
             return response()->json([
-                "msj" => 'Updated'
+                'msj' => 'Updated',
             ]);
         }
     }
@@ -123,30 +122,29 @@ class TypeEntrieController extends Controller
     public function destroy($id)
     {
         if (request()->ajax()) {
-            try{
+            try {
                 $typeEntrie = TypeEntrie::findOrFail($id);
                 $entries = AccountingEntrie::where('type_entrie_id', $typeEntrie->id)->count();
 
-                if($entries > 0){
+                if ($entries > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('accounting.type_has_entries')
+                        'msg' => __('accounting.type_has_entries'),
                     ];
-                }
-                else{
+                } else {
                     $typeEntrie->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('accounting.type_deleted')
+                        'msg' => __('accounting.type_deleted'),
                     ];
                 }
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -154,13 +152,14 @@ class TypeEntrieController extends Controller
     public function getTypes()
     {
         $types = TypeEntrie::select('id', 'name')->get();
+
         return response()->json($types);
     }
 
     public function getTypesData()
     {
         $types = DB::table('type_entries as type')
-        ->select('type.*');
+            ->select('type.*');
 
         return DataTables::of($types)->toJson();
     }

@@ -1,8 +1,6 @@
 <?php
 
 use App\Business;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class ModifyDashboardSettingsColumnFromBusinessTable extends Migration
@@ -29,7 +27,7 @@ class ModifyDashboardSettingsColumnFromBusinessTable extends Migration
                 'purchases_month' => 0,
                 'purchases_year' => 0,
                 'stock_month' => 0,
-                'stock_year' => 0
+                'stock_year' => 0,
             ];
 
             $item->dashboard_settings = json_encode($default);

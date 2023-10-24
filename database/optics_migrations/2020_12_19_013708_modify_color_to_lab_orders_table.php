@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyColorToLabOrdersTable extends Migration
 {
@@ -18,7 +18,7 @@ class ModifyColorToLabOrdersTable extends Migration
         });
 
         Schema::table('lab_orders', function (Blueprint $table) {
-            DB::statement("ALTER TABLE lab_orders MODIFY COLUMN color VARCHAR(191) NULL");
+            DB::statement('ALTER TABLE lab_orders MODIFY COLUMN color VARCHAR(191) NULL');
         });
     }
 

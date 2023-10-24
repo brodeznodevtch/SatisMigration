@@ -9,8 +9,8 @@ class StatusLabOrderStep extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-    	'status_id',
-        'step_id'
+        'status_id',
+        'step_id',
     ];
 
     public function step()

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class InvoiceLayoutFieldsForSellReturn extends Migration
 {
@@ -14,7 +14,7 @@ class InvoiceLayoutFieldsForSellReturn extends Migration
     public function up()
     {
         Schema::table('invoice_layouts', function (Blueprint $table) {
-            $table->string('cn_heading')->after('design')->nullable()->comment("cn = credit note");
+            $table->string('cn_heading')->after('design')->nullable()->comment('cn = credit note');
             $table->string('cn_no_label')->after('cn_heading')->nullable();
             $table->string('cn_amount_label')->after('cn_no_label')->nullable();
         });

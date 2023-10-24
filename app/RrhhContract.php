@@ -10,9 +10,9 @@ class RrhhContract extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'contract_start_date', 
+        'contract_start_date',
         'contract_end_date',
-        'employee_id', 
+        'employee_id',
         'rrhh_type_contract_id',
         'contract_status',
         'employee_name',
@@ -41,14 +41,14 @@ class RrhhContract extends Model
         'current_date',
         'file',
         'template',
-        'deleted_at'
+        'deleted_at',
     ];
 
     public function employee()
     {
         return $this->belongsTo('App\Employees');
     }
-   
+
     public function rrhhTypeContract()
     {
         return $this->belongsTo('App\RrhhTypeContract');

@@ -9,7 +9,7 @@ class Warehouse extends Model
 {
     use SoftDeletes;
 
-    protected $table ='warehouses';
+    protected $table = 'warehouses';
 
     /**
      * The attributes that should be mutated to dates.
@@ -31,14 +31,14 @@ class Warehouse extends Model
      * @var array
      */
     protected $fillable = [
-    	'code',
+        'code',
         'name',
         'business_location_id',
         'location',
         'description',
         'status',
         'business_id',
-        'catalogue_id'
+        'catalogue_id',
     ];
 
     /**
@@ -69,9 +69,9 @@ class Warehouse extends Model
 
         // Prepend all
         if ($prepend_all) {
-            $wh = $wh->prepend(__("report.all"), '');
+            $wh = $wh->prepend(__('report.all'), '');
         }
-        
+
         return $wh;
     }
 
@@ -93,13 +93,13 @@ class Warehouse extends Model
             $business_id = request()->session()->get('user.business_id');
             $permitted_warehouses = [];
             $all_warehouses = Warehouse::where('business_id', $business_id)->get();
-            
+
             foreach ($all_warehouses as $warehouse) {
-                if (auth()->user()->can('warehouse.' . $warehouse->id)) {
+                if (auth()->user()->can('warehouse.'.$warehouse->id)) {
                     $permitted_warehouses[] = $warehouse->id;
                 }
             }
-    
+
             return $permitted_warehouses;
         }
     }

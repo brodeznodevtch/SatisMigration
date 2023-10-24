@@ -119,11 +119,11 @@ return [
                 // 'https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.7/css/highcharts.css',
             ],
             'scripts' => [
-                env('APP_URL') . '/plugins/chart/highchart/highcharts.js' ,
-                env('APP_URL') . '/plugins/chart/highchart/offline-exporting.js' ,
-                env('APP_URL') . '/plugins/chart/highchart/map.js',
-                env('APP_URL') . '/plugins/chart/highchart/data.js',
-                env('APP_URL') . '/plugins/chart/highchart/world.js',
+                env('APP_URL').'/plugins/chart/highchart/highcharts.js',
+                env('APP_URL').'/plugins/chart/highchart/offline-exporting.js',
+                env('APP_URL').'/plugins/chart/highchart/map.js',
+                env('APP_URL').'/plugins/chart/highchart/data.js',
+                env('APP_URL').'/plugins/chart/highchart/world.js',
             ],
         ],
 

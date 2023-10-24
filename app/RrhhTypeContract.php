@@ -10,14 +10,14 @@ class RrhhTypeContract extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 
-        'template', 
+        'name',
+        'template',
         'margin_top',
         'margin_bottom',
         'margin_left',
-        'margin_right', 
-        'status', 
-        'business_id', 
-        'deleted_at'
+        'margin_right',
+        'status',
+        'business_id',
+        'deleted_at',
     ];
 }

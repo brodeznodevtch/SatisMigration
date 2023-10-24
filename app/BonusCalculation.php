@@ -10,16 +10,17 @@ class BonusCalculation extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'from', 
-        'until', 
-        'days', 
-        'proportional', 
+        'from',
+        'until',
+        'days',
+        'proportional',
         'status',
-        'business_id', 
-        'deleted_at'
+        'business_id',
+        'deleted_at',
     ];
-    
-    public function business(){
+
+    public function business()
+    {
         return $this->belongsTo('App\Business');
-    }      
+    }
 }

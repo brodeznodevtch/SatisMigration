@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use Illuminate\Http\Request;
 use DataTables;
 use DB;
+use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
@@ -32,7 +32,6 @@ class CityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,8 +42,7 @@ class CityController extends Controller
                 'state_id' => 'required',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $city_details = $request->only(['name', 'state_id']);
@@ -53,16 +51,17 @@ class CityController extends Controller
                 $city = City::create($city_details);
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.city_added')
+                    'msg' => __('geography.city_added'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -76,6 +75,7 @@ class CityController extends Controller
     public function show($id)
     {
         $city = City::findOrFail($id);
+
         return response()->json($city);
     }
 
@@ -88,13 +88,13 @@ class CityController extends Controller
     public function edit($id)
     {
         $city = City::findOrFail($id);
+
         return response()->json($city);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\City  $city
      * @return \Illuminate\Http\Response
      */
@@ -108,8 +108,7 @@ class CityController extends Controller
                 'state_id' => 'required',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $city->name = $request->input('name');
@@ -118,16 +117,17 @@ class CityController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __("geography.city_updated")
+                    'msg' => __('geography.city_updated'),
                 ];
 
-            } catch(\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -141,18 +141,18 @@ class CityController extends Controller
     public function destroy($id)
     {
         if (request()->ajax()) {
-            try{
+            try {
                 $city = City::findOrFail($id);
 
                 $employees = DB::table('employees')
-                ->where('city_id', $id)               
-                ->count();
+                    ->where('city_id', $id)
+                    ->count();
 
                 if ($employees > 0) {
 
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
 
                 }
@@ -160,17 +160,17 @@ class CityController extends Controller
                 $city->forceDelete();
                 $output = [
                     'success' => true,
-                    'msg' => __('geography.city_deleted')
+                    'msg' => __('geography.city_deleted'),
                 ];
-                
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -179,34 +179,34 @@ class CityController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $cities = City::where('business_id', $business_id)->with('state');
+
         return DataTables::of($cities)->toJson();
     }
 
     public function changeStatus($id)
     {
-        try{
+        try {
             $city = City::findOrFail($id);
             if ($city->status == 1) {
                 $city->status = 0;
-            }
-            else {
+            } else {
                 $city->status = 1;
             }
             $city->save();
-            
+
             $output = [
                 'success' => true,
-                'msg' => __('geography.status_changed')
+                'msg' => __('geography.status_changed'),
             ];
 
-        }
-        catch (\Exception $e){
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => false,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
+
         return $output;
     }
 
@@ -214,14 +214,14 @@ class CityController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $cities = City::where('business_id', $business_id)
-        ->where('state_id', $id)
-        ->get();
+            ->where('state_id', $id)
+            ->get();
+
         return response()->json($cities);
-        
+
     }
 
-
-    public function getCitiesByStateSelect2($id=null)
+    public function getCitiesByStateSelect2($id = null)
     {
         if (request()->ajax()) {
             $term = request()->q;
@@ -230,22 +230,22 @@ class CityController extends Controller
             }
 
             $business_id = request()->session()->get('user.business_id');
-            if($id != null){
+            if ($id != null) {
                 $cities = City::where('business_id', $business_id)
-                ->where('state_id', $id)
-                ->where('name', 'LIKE', '%'.$term.'%')
-                ->select('id','name as text')
-                ->get();
-    
+                    ->where('state_id', $id)
+                    ->where('name', 'LIKE', '%'.$term.'%')
+                    ->select('id', 'name as text')
+                    ->get();
+
                 return json_encode($cities);
-            }else{
+            } else {
                 $cities = City::where('business_id', $business_id)
-                ->where('name', 'LIKE', '%'.$term.'%')
-                ->select('id','name as text')
-                ->get();
-    
+                    ->where('name', 'LIKE', '%'.$term.'%')
+                    ->select('id', 'name as text')
+                    ->get();
+
                 return json_encode($cities);
-            } 
-        }        
+            }
+        }
     }
 }

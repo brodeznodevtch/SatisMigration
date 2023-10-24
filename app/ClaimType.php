@@ -10,6 +10,6 @@ class ClaimType extends Model
 
     public function claim()
     {
-    	return $this->hasMany('App\Claim');
+        return $this->hasMany('App\Claim');
     }
 }

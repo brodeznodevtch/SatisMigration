@@ -6,10 +6,10 @@ use App\Contact;
 use App\DocumentType;
 use App\Employees;
 use App\ExpenseCategory;
-use App\Transaction;
-use App\TransactionPayment;
 use App\Optics\FlowReason;
 use App\Optics\InflowOutflow;
+use App\Transaction;
+use App\TransactionPayment;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
@@ -23,9 +23,6 @@ class InflowOutflowController extends Controller
     /**
      * Constructor.
      *
-     * @param  TransactionUtil  $transactionUtil
-     * @param  ProductUtil  $productUtil
-     * @param  CashRegisterUtil  $cashRegisterUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil, CashRegisterUtil $cashRegisterUtil)
@@ -34,7 +31,7 @@ class InflowOutflowController extends Controller
         $this->productUtil = $productUtil;
         $this->cashRegisterUtil = $cashRegisterUtil;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -49,7 +46,7 @@ class InflowOutflowController extends Controller
         $business_id = $business_id = request()->session()->get('user.business_id');
 
         if (request()->ajax()) {
-            
+
             $inflow_outflow = InflowOutflow::leftJoin('employees', 'employees.id', 'inflow_outflows.employee_id')
                 ->leftJoin('flow_reasons', 'flow_reasons.id', 'inflow_outflows.flow_reason_id')
                 ->leftJoin('cashiers', 'cashiers.id', 'inflow_outflows.cashier_id')
@@ -60,11 +57,11 @@ class InflowOutflowController extends Controller
                     'cashiers.name as cashier',
                     'inflow_outflows.amount',
                     DB::raw("CONCAT(COALESCE(employees.first_name, ''), ' ', COALESCE(employees.last_name, '')) as employee"),
-                    'inflow_outflows.id'
+                    'inflow_outflows.id',
                 ]);
 
             return Datatables::of($inflow_outflow)
-                ->filterColumn('employee', function($query, $keyword) {
+                ->filterColumn('employee', function ($query, $keyword) {
                     $query->whereRaw('CONCAT(employees.first_name, " ", employees.last_name) LIKE ?', ["%{$keyword}%"]);
                 })
                 ->addColumn(
@@ -131,7 +128,6 @@ class InflowOutflowController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -143,7 +139,7 @@ class InflowOutflowController extends Controller
         try {
             DB::beginTransaction();
 
-            # Store inflow/outflow
+            // Store inflow/outflow
             $inflow_outflow_data = $request->only([
                 'amount',
                 'type',
@@ -155,7 +151,7 @@ class InflowOutflowController extends Controller
                 'employee_id',
                 'expense_category_id',
                 'description',
-                'location_id'
+                'location_id',
             ]);
 
             $business_id = $request->session()->get('user.business_id');
@@ -166,8 +162,8 @@ class InflowOutflowController extends Controller
             $inflow_outflow_data['business_id'] = $business_id;
             $inflow_outflow_data['created_by'] = $user_id;
             $inflow_outflow_data['updated_by'] = $user_id;
-            
-            # Inflow
+
+            // Inflow
             if ($inflow_outflow_data['type'] == 'input') {
                 $inflow_outflow = InflowOutflow::create($inflow_outflow_data);
 
@@ -175,39 +171,39 @@ class InflowOutflowController extends Controller
 
                 $success = true;
 
-            # Outflow
+                // Outflow
             } else {
-                # Total cash inflow
+                // Total cash inflow
                 $date_format = session('business.date_format');
                 $close_date = \Carbon::now();
                 $close_date = $close_date->format($date_format);
                 $cashier_id = request()->input('cashier_id');
 
                 $trans_date = substr($close_date, 0, 10);
-                $start = $close_date . ' 00:01';
-                $end = $close_date . ' 23:59';
+                $start = $close_date.' 00:01';
+                $end = $close_date.' 23:59';
 
                 $opening_date = $this->productUtil->uf_date($start, true);
                 $closing_date = $this->productUtil->uf_date($end, true);
 
                 $c_date = $this->productUtil->uf_date($trans_date, false);
 
-                # Sales
-                $register_details =  $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $c_date);
+                // Sales
+                $register_details = $this->cashRegisterUtil->getRegisterDetails($cashier_id, $opening_date, $closing_date, $c_date);
 
-                # Payments and entries
+                // Payments and entries
                 $payment_details = $this->cashRegisterUtil->getRegisterDetailsWithPayments($cashier_id, $opening_date, $closing_date);
 
-                # Cash in hand
+                // Cash in hand
                 $initial = $this->cashRegisterUtil->getInitialAmount($cashier_id, $opening_date, $closing_date);
 
-                # Inflows and outflows
+                // Inflows and outflows
                 $inflow_outflow_reg = $this->cashRegisterUtil->getInflowOutflow($cashier_id, $opening_date, $closing_date);
 
-                # Reservations
+                // Reservations
                 $reservations = $this->cashRegisterUtil->getReservationPayments($cashier_id, $opening_date, $closing_date, $c_date);
 
-                # Reservation payments
+                // Reservation payments
                 $reservation_pays = $this->cashRegisterUtil->getReservationPays($cashier_id, $opening_date, $closing_date, $c_date);
 
                 $total_cash_inflow =
@@ -227,7 +223,7 @@ class InflowOutflowController extends Controller
 
                     $msg = __('inflow_outflow.output_added_success');
 
-                    # Store expense
+                    // Store expense
                     $expense_for = Employees::where('id', $inflow_outflow_data['employee_id'])->first()->user_id;
 
                     $expense_data = [
@@ -242,33 +238,33 @@ class InflowOutflowController extends Controller
                         'created_by' => $user_id,
                         'type' => 'expense',
                         'status' => 'final',
-                        'payment_status' => 'paid'
+                        'payment_status' => 'paid',
                     ];
 
-                    # Update reference count
+                    // Update reference count
                     $ref_count = $this->transactionUtil->setAndGetReferenceCount('expense');
-                    
-                    # Generate reference number
+
+                    // Generate reference number
                     if (empty($expense_data['ref_no'])) {
                         $expense_data['ref_no'] = $this->transactionUtil->generateReferenceNumber('expense', $ref_count);
                     }
 
                     $transaction = Transaction::create($expense_data);
 
-                    # Store payment
+                    // Store payment
                     $payment_data = [
                         'transaction_id' => $transaction->id,
                         'business_id' => $business_id,
                         'amount' => $amount,
                         'method' => 'cash',
                         'paid_on' => \Carbon::now()->toDateTimeString(),
-                        'created_by' => $user_id
+                        'created_by' => $user_id,
                     ];
 
-                    # Update reference count
+                    // Update reference count
                     $ref_count = $this->transactionUtil->setAndGetReferenceCount('expense_payment');
 
-                    # Generate reference number
+                    // Generate reference number
                     $payment_data['payment_ref_no'] = $this->transactionUtil->generateReferenceNumber('expense_payment', $ref_count);
 
                     TransactionPayment::create($payment_data);
@@ -287,17 +283,17 @@ class InflowOutflowController extends Controller
 
             $output = [
                 'success' => $success,
-                'msg' => $msg
+                'msg' => $msg,
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => false,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
 
@@ -344,13 +340,12 @@ class InflowOutflowController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('inflow_outflow.update')) {
+        if (! auth()->user()->can('inflow_outflow.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -362,7 +357,7 @@ class InflowOutflowController extends Controller
                     'document_type_id',
                     'document_no',
                     'flow_reason_id',
-                    'employee_id'
+                    'employee_id',
                 ]);
 
                 $input['amount'] = $this->transactionUtil->num_uf($input['amount']);
@@ -377,15 +372,15 @@ class InflowOutflowController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => $msg
+                    'msg' => $msg,
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -401,7 +396,7 @@ class InflowOutflowController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('inflow_outflow.delete')) {
+        if (! auth()->user()->can('inflow_outflow.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -417,15 +412,15 @@ class InflowOutflowController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => $msg
+                    'msg' => $msg,
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -449,12 +444,12 @@ class InflowOutflowController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $query = Contact::where('business_id', $business_id);
-            
+
             $suppliers = $query->where(function ($query) use ($term) {
-                $query->where('name', 'like', '%' . $term .'%')
-                    ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
-                    ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
-                })
+                $query->where('name', 'like', '%'.$term.'%')
+                    ->orWhere('supplier_business_name', 'like', '%'.$term.'%')
+                    ->orWhere('contacts.contact_id', 'like', '%'.$term.'%');
+            })
                 ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contacts.contact_id')
                 ->onlySuppliers()
                 ->get();
@@ -463,7 +458,7 @@ class InflowOutflowController extends Controller
         }
     }
 
-     /**
+    /**
      * Retrieves employees list.
      *
      * @return \Illuminate\Http\Response
@@ -479,11 +474,11 @@ class InflowOutflowController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $query = Employees::where('business_id', $business_id);
-            
+
             $employees = $query->where(function ($query) use ($term) {
-                $query->where('first_name', 'like', '%' . $term .'%')
-                    ->orWhere('last_name', 'like', '%' . $term .'%');
-                })
+                $query->where('first_name', 'like', '%'.$term.'%')
+                    ->orWhere('last_name', 'like', '%'.$term.'%');
+            })
                 ->select(
                     'id',
                     DB::raw("CONCAT(COALESCE(first_name, '' ), ' ', COALESCE(last_name, '')) as text")

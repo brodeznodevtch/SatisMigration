@@ -12,39 +12,45 @@ class Payroll extends Model
     protected $fillable = [
         'payroll_type_id',
         'name',
-        'year', 
-        'month', 
+        'year',
+        'month',
         'days',
-        'start_date', 
-        'end_date', 
+        'start_date',
+        'end_date',
         'payroll_status_id',
         'isr_id',
-        'payment_period_id',  
-        'business_id', 
-        'deleted_at'
+        'payment_period_id',
+        'business_id',
+        'deleted_at',
     ];
-    
-    public function payrollType(){
+
+    public function payrollType()
+    {
         return $this->belongsTo('App\PayrollType');
     }
 
-    public function payrollStatus(){
+    public function payrollStatus()
+    {
         return $this->belongsTo('App\PayrollStatus');
     }
 
-    public function paymentPeriod(){
+    public function paymentPeriod()
+    {
         return $this->belongsTo('App\PaymentPeriod');
     }
 
-    public function calculationType(){
+    public function calculationType()
+    {
         return $this->belongsTo('App\Calculation');
     }
 
-    public function payrollDetails(){
+    public function payrollDetails()
+    {
         return $this->hasMany('App\PayrollDetail');
     }
 
-    public function business(){
+    public function business()
+    {
         return $this->belongsTo('App\Business');
     }
 }

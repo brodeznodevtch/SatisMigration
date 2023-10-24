@@ -31,6 +31,6 @@ class ImportExpense extends Model
     protected $fillable = [
         'name',
         'type',
-        'business_id'
+        'business_id',
     ];
 }

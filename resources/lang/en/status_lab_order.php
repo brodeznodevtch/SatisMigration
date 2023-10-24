@@ -1,11 +1,12 @@
 <?php
+
 return [
     'add_status_lab_order' => 'Add status lab order',
     'added_success' => 'Status lab order added successfully',
     'all_status_lab_orders' => 'All status lab orders',
     'status_lab_orders' => 'Status lab orders',
     'confirm_button_delete' => 'Yes, delete it!',
-    "deleted_success" => "Status lab order deleted successfully",
+    'deleted_success' => 'Status lab order deleted successfully',
     'edit_status_lab_order' => 'Update status lab order data',
     'manage_status_lab_orders' => 'Manage status lab orders',
     'text_confirm_delete' => 'You won\'t be able to reverse this!',

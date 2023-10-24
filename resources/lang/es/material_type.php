@@ -1,4 +1,5 @@
 <?php
+
 return [
     'add_material_type' => 'Registrar Tipo de Material',
     'added_success' => 'Tipo de material registrado exitosamente',

@@ -21,6 +21,6 @@ class TransactionHasImportExpense extends Model
     protected $fillable = [
         'transaction_id',
         'import_expense_id',
-        'amount'
+        'amount',
     ];
 }

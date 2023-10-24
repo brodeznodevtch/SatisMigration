@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\AccountingPeriod;
 use App\AccountingEntrie;
-use Illuminate\Http\Request;
+use App\AccountingPeriod;
 use DataTables;
 use DB;
+use Illuminate\Http\Request;
 
-class AccountingPeriodController extends Controller {
-
+class AccountingPeriodController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
 
         //
     }
@@ -25,7 +26,8 @@ class AccountingPeriodController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
 
         //
     }
@@ -33,10 +35,10 @@ class AccountingPeriodController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validateData = $request->validate(
             [
@@ -50,15 +52,16 @@ class AccountingPeriodController extends Controller {
                 'month.required' => __('accounting.month_required'),
             ]
         );
-        
-        if($request->ajax()) {
+
+        if ($request->ajax()) {
 
             $data = $request->all();
             $data['business_id'] = request()->session()->get('user.business_id');
 
             $period = AccountingPeriod::create($data);
+
             return response()->json([
-                "msj" => 'Created'
+                'msj' => 'Created',
             ]);
 
         }
@@ -67,10 +70,10 @@ class AccountingPeriodController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  \App\AccountingPeriod  $accountingPeriod
      * @return \Illuminate\Http\Response
      */
-    public function show(AccountingPeriod $accountingPeriod) {
+    public function show(AccountingPeriod $accountingPeriod)
+    {
 
         return response()->json($accountingPeriod);
     }
@@ -78,10 +81,10 @@ class AccountingPeriodController extends Controller {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\AccountingPeriod  $accountingPeriod
      * @return \Illuminate\Http\Response
      */
-    public function edit(AccountingPeriod $accountingPeriod) {
+    public function edit(AccountingPeriod $accountingPeriod)
+    {
 
         return response()->json($accountingPeriod);
     }
@@ -89,11 +92,10 @@ class AccountingPeriodController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\AccountingPeriod  $accountingPeriod
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccountingPeriod $accountingPeriod) {
+    public function update(Request $request, AccountingPeriod $accountingPeriod)
+    {
 
         $validateData = $request->validate(
             [
@@ -107,12 +109,13 @@ class AccountingPeriodController extends Controller {
                 'month.required' => __('accounting.month_required'),
             ]
         );
-        
-        if($request->ajax()) {
+
+        if ($request->ajax()) {
 
             $accountingPeriod->update($request->all());
+
             return response()->json([
-                "msj" => 'Updated'
+                'msj' => 'Updated',
             ]);
         }
     }
@@ -120,43 +123,44 @@ class AccountingPeriodController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\AccountingPeriod  $accountingPeriod
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AccountingPeriod $accountingPeriod) {
+    public function destroy(AccountingPeriod $accountingPeriod)
+    {
 
         if (request()->ajax()) {
-            try{
+            try {
 
                 $entries = AccountingEntrie::where('accounting_period_id', $accountingPeriod->id)->count();
 
-                if($entries > 0) {
-                    
+                if ($entries > 0) {
+
                     $output = [
                         'success' => false,
-                        'msg' =>  __('accounting.period_has_entries')
+                        'msg' => __('accounting.period_has_entries'),
                     ];
-                
+
                 } else {
-                    
+
                     $accountingPeriod->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('accounting.period_deleted')
+                        'msg' => __('accounting.period_deleted'),
                     ];
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
 
-    public function getPeriodsData() {
+    public function getPeriodsData()
+    {
 
         $business_id = request()->session()->get('user.business_id');
         $year = request()->get('year', null);
@@ -166,7 +170,7 @@ class AccountingPeriodController extends Controller {
             ->select('accounting_periods.*', 'fiscal_years.year')
             ->where('accounting_periods.business_id', $business_id);
 
-        if (!empty($year)) {
+        if (! empty($year)) {
             $periods->where('fiscal_years.id', $year);
         }
 
@@ -175,12 +179,13 @@ class AccountingPeriodController extends Controller {
         return DataTables::of($periods)->toJson();
     }
 
-    public function getPeriodStatus($id) {
+    public function getPeriodStatus($id)
+    {
 
         $period = AccountingPeriod::select('status')
-        ->where('id', $id)
-        ->first();
-        
+            ->where('id', $id)
+            ->first();
+
         return $period->status;
     }
 }

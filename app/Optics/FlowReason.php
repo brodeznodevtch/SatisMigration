@@ -33,16 +33,15 @@ class FlowReason extends Model
         'reason',
         'description',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     /**
      * Return list of reasons for a business.
      *
      * @param  int  $business_id
-     * @param  boolean  $prepend_none
+     * @param  bool  $prepend_none
      * @param  array  $prepend_all
-     *
      * @return array
      */
     public static function forDropdown($business_id, $prepend_none = false, $prepend_all = false)
@@ -52,16 +51,16 @@ class FlowReason extends Model
         $all_reasons = $query->select('id', 'reason');
         $all_reasons = $all_reasons->pluck('reason', 'id');
 
-        # Prepend none
+        // Prepend none
         if ($prepend_none) {
-            $all_reasons = $all_reasons->prepend(__("lang_v1.none"), '');
+            $all_reasons = $all_reasons->prepend(__('lang_v1.none'), '');
         }
 
-        # Prepend all
+        // Prepend all
         if ($prepend_all) {
-            $all_reasons = $all_reasons->prepend(__("report.all"), '');
+            $all_reasons = $all_reasons->prepend(__('report.all'), '');
         }
-        
+
         return $all_reasons;
     }
 }

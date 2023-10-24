@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Unit;
-use App\User;
-use App\State;
+use App\Business;
+use App\BusinessLocation;
+use App\Catalogue;
+use App\Currency;
+use App\FiscalYear;
 use App\Module;
+use App\Shortcut;
+use App\State;
 use App\System;
 use App\TaxRate;
-use App\Business;
-use App\Currency;
-use App\Shortcut;
-use DateTimeZone;
-use App\Catalogue;
-use Carbon\Carbon;
-use App\Utils\TaxUtil;
-
-use App\BusinessLocation;
-use App\FiscalYear;
-use App\Utils\ModuleUtil;
+use App\Unit;
+use App\User;
 use App\Utils\BusinessUtil;
-use Illuminate\Http\Request;
-
+use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;
-use Illuminate\Support\Facades\DB;
-
-use Spatie\Permission\Models\Role;
-
+use App\Utils\TaxUtil;
+use Carbon\Carbon;
+use DateTimeZone;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 
@@ -45,12 +40,15 @@ class BusinessController extends Controller
 
     /**
      * All Utils instance.
-     *
      */
     protected $businessUtil;
+
     protected $restaurantUtil;
+
     protected $moduleUtil;
+
     protected $taxUtil;
+
     protected $mailDrivers;
 
     /**
@@ -71,22 +69,22 @@ class BusinessController extends Controller
         $this->avlble_modules = [
             'tables' => [
                 'name' => __('restaurant.tables'),
-                'tooltip' => __('restaurant.tooltip_tables')
+                'tooltip' => __('restaurant.tooltip_tables'),
             ],
             'modifiers' => [
                 'name' => __('restaurant.modifiers'),
-                'tooltip' => __('restaurant.tooltip_modifiers')
+                'tooltip' => __('restaurant.tooltip_modifiers'),
             ],
             'service_staff' => [
                 'name' => __('restaurant.service_staff'),
-                'tooltip' => __('restaurant.tooltip_service_staff')
+                'tooltip' => __('restaurant.tooltip_service_staff'),
             ],
             'kitchen' => [
-                'name' => __('restaurant.kitchen_for_restaurant')
+                'name' => __('restaurant.kitchen_for_restaurant'),
             ],
             'account' => [
-                'name' => __('lang_v1.account')
-            ]
+                'name' => __('lang_v1.account'),
+            ],
         ];
 
         $this->theme_colors = [
@@ -109,36 +107,37 @@ class BusinessController extends Controller
             'mailgun' => 'Mailgun',
             'mandrill' => 'Mandrill',
             'ses' => 'SES',
-            'sparkpost' => 'Sparkpost'
+            'sparkpost' => 'Sparkpost',
         ];
 
         $this->check_format_kits = [
             1 => __('accounting.format_1'),
-            2 => __('accounting.format_2')
+            2 => __('accounting.format_2'),
         ];
     }
 
     public function getChangeBusiness()
     {
         $businessIds = User::select('business_id')
-                ->where('username', Auth::user()->username)
-                ->where('email', Auth::user()->email)
-                ->where('business_id', '!=', Auth::user()->business_id)
-                ->get();
-        $business = Business::whereIn('id', $businessIds->toArray())->pluck('name','id');
+            ->where('username', Auth::user()->username)
+            ->where('email', Auth::user()->email)
+            ->where('business_id', '!=', Auth::user()->business_id)
+            ->get();
+        $business = Business::whereIn('id', $businessIds->toArray())->pluck('name', 'id');
+
         return view('business.partials.change_business_modal')->with(compact('business'));
     }
 
     public function changeBusiness(Request $request)
     {
         $credentials = $request->only(['username', 'password']);
-        $business_id =  $request->input('business_id');
+        $business_id = $request->input('business_id');
         $password = User::where('id', Auth::user()->id)->value('password');
 
         $request->validate(
             [
                 'business_id' => 'required',
-                'password' => 'required'
+                'password' => 'required',
             ],
             [
                 'business_id.required' => __('messages.business_required'),
@@ -157,7 +156,7 @@ class BusinessController extends Controller
                 [
                     'username' => $credentials['username'],
                     'password' => $credentials['password'],
-                    'business_id' => $business_id
+                    'business_id' => $business_id,
                 ]
             );
             if ($verified) {
@@ -172,6 +171,7 @@ class BusinessController extends Controller
             return response()->json(['success' => false, 'msg' => __('messages.wrong_password')]);
         }
     }
+
     /**
      * Shows registration form
      *
@@ -179,24 +179,24 @@ class BusinessController extends Controller
      */
     public function getRegister()
     {
-        if (!env('ALLOW_REGISTRATION', true)) {
+        if (! env('ALLOW_REGISTRATION', true)) {
             return redirect('/');
         }
 
         $currencies = $this->businessUtil->allCurrencies();
-        
+
         $timezone_list = $this->businessUtil->allTimeZones();
 
         $months = [];
-        for ($i=1; $i<=12; $i++) {
-            $months[$i] = __('business.months.' . $i);
+        for ($i = 1; $i <= 12; $i++) {
+            $months[$i] = __('business.months.'.$i);
         }
 
         $accounting_methods = $this->businessUtil->allAccountingMethods();
         $package_id = request()->package;
 
         $system_settings = System::getProperties(['superadmin_enable_register_tc', 'superadmin_register_tc'], true);
-        
+
         return view('business.register', compact(
             'currencies',
             'timezone_list',
@@ -213,10 +213,10 @@ class BusinessController extends Controller
      */
     public function postRegister(Request $request)
     {
-        if (!env('ALLOW_REGISTRATION', true)) {
+        if (! env('ALLOW_REGISTRATION', true)) {
             return redirect('/');
         }
-        
+
         try {
             $validator = $request->validate(
                 [
@@ -246,8 +246,7 @@ class BusinessController extends Controller
                     'landmark.required' => __('validation.required', ['attribute' => __('business.landmark')]),
                     'time_zone.required' => __('validation.required', ['attribute' => __('business.time_zone')]),
                     'email.email' => __('validation.email', ['attribute' => __('business.email')]),
-                    'first_name.required' => __('validation.required', ['attribute' =>
-                        __('business.first_name')]),
+                    'first_name.required' => __('validation.required', ['attribute' => __('business.first_name')]),
                     'username.required' => __('validation.required', ['attribute' => __('business.username')]),
                     'username.min' => __('validation.min', ['attribute' => __('business.username')]),
                     'password.required' => __('validation.required', ['attribute' => __('business.username')]),
@@ -271,23 +270,23 @@ class BusinessController extends Controller
                 $user
             );
 
-            $business_details = $request->only(['name', 'start_date', 'currency_id', 'time_zone','nit','nrc','line_of_business','legal_representative','business_full_name']);
+            $business_details = $request->only(['name', 'start_date', 'currency_id', 'time_zone', 'nit', 'nrc', 'line_of_business', 'legal_representative', 'business_full_name']);
             $business_details['fy_start_month'] = 1;
 
             $business_location = $request->only(['name', 'country', 'state', 'city', 'zip_code', 'landmark', 'website', 'mobile', 'alternate_number']);
-            
+
             //Create the business
             $business_details['owner_id'] = $user->id;
-            if (!empty($business_details['start_date'])) {
+            if (! empty($business_details['start_date'])) {
                 $business_details['start_date'] = Carbon::createFromFormat('m/d/Y', $business_details['start_date'])->toDateString();
             }
-            
+
             //upload logo
             $logo_name = $this->businessUtil->uploadFile($request, 'business_logo', 'business_logos');
-            if (!empty($logo_name)) {
+            if (! empty($logo_name)) {
                 $business_details['logo'] = $logo_name;
             }
-            
+
             $business = $this->businessUtil->createNewBusiness($business_details);
 
             //Update user with business id
@@ -300,13 +299,13 @@ class BusinessController extends Controller
             //create new permission with the new location
             if (Module::where('name', 'Sucursales')->first()) {
 
-                $module = Module::where('name', 'Sucursales')->first();                
-                $permission = Permission::where('name', 'location.' . $business->id)->select('name')->first();
+                $module = Module::where('name', 'Sucursales')->first();
+                $permission = Permission::where('name', 'location.'.$business->id)->select('name')->first();
 
                 if (empty($permission)) {
                     $permission = Permission::create([
-                        'name' => 'location.' . $new_location->id,
-                        'description' => 'Bodega ' . $business->name,
+                        'name' => 'location.'.$new_location->id,
+                        'description' => 'Bodega '.$business->name,
                         'guard_name' => 'web',
                         'module_id' => $module->id,
                     ]);
@@ -319,37 +318,38 @@ class BusinessController extends Controller
                         $permission
                     );
                 }
-            }           
+            }
 
             DB::commit();
 
             //Process payment information if superadmin is installed & package information is present
             $is_installed_superadmin = $this->moduleUtil->isSuperadminInstalled();
             $package_id = $request->get('package_id', null);
-            if ($is_installed_superadmin && !empty($package_id) && (config('app.env') != 'demo')) {
+            if ($is_installed_superadmin && ! empty($package_id) && (config('app.env') != 'demo')) {
                 $package = \Modules\Superadmin\Entities\Package::find($package_id);
-                if (!empty($package)) {
+                if (! empty($package)) {
                     Auth::login($user);
+
                     return redirect()->route('register-pay', ['package_id' => $package_id]);
                 }
             }
 
             $output = ['success' => 1,
-            'msg' => __('business.business_created_succesfully')
-        ];
+                'msg' => __('business.business_created_succesfully'),
+            ];
 
-        return redirect('login')->with('status', $output);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            return redirect('login')->with('status', $output);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-        $output = ['success' => 0,
-        'msg' => "File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage()
-    ];
+            $output = ['success' => 0,
+                'msg' => 'File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage(),
+            ];
 
-    return back()->with('status', $output)->withInput();
-}
-}
+            return back()->with('status', $output)->withInput();
+        }
+    }
 
     /**
      * Handles the validation username
@@ -360,20 +360,20 @@ class BusinessController extends Controller
     {
         $username = $request->input('username');
 
-        if (!empty($request->input('username_ext'))) {
+        if (! empty($request->input('username_ext'))) {
             $username .= $request->input('username_ext');
         }
 
         $count = User::where('username', $username)->count();
         if ($count == 0) {
-            echo "true";
+            echo 'true';
             exit;
         } else {
-            echo "false";
+            echo 'false';
             exit;
         }
     }
-    
+
     /**
      * Shows business settings form
      *
@@ -381,7 +381,7 @@ class BusinessController extends Controller
      */
     public function getBusinessSettings()
     {
-        if (!auth()->user()->can('business_settings.access')) {
+        if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -392,34 +392,34 @@ class BusinessController extends Controller
         }
 
         $catalogue = Catalogue::select('id', DB::raw("CONCAT(code, ' ', name) as full_name"))
-        ->where('status', 1)
+            ->where('status', 1)
         //->whereNOTIn('id', [DB::raw("select parent from catalogues")])
-        ->pluck('full_name', 'id');
+            ->pluck('full_name', 'id');
 
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
 
         //agregando datos de lacation
         $business_location = BusinessLocation::where('business_id', $business_id)->first();
-        
+
         $currencies = $this->businessUtil->allCurrencies();
         $tax_details = TaxRate::forBusinessDropdown($business_id);
         $tax_rates = $tax_details['tax_rates'];
 
         $months = [];
-        for ($i=1; $i<=12; $i++) {
-            $months[$i] = __('business.months.' . $i);
+        for ($i = 1; $i <= 12; $i++) {
+            $months[$i] = __('business.months.'.$i);
         }
 
         $accounting_methods = [
             'fifo' => __('business.fifo'),
-            'lifo' => __('business.lifo')
+            'lifo' => __('business.lifo'),
         ];
         $commission_agent_dropdown = [
             '' => __('lang_v1.disable'),
             'logged_in_user' => __('lang_v1.logged_in_user'),
             'user' => __('lang_v1.select_from_users_list'),
-            'cmsn_agnt' => __('lang_v1.select_from_commisssion_agents_list')
+            'cmsn_agnt' => __('lang_v1.select_from_commisssion_agents_list'),
         ];
 
         $units_dropdown = Unit::forDropdown($business_id, true);
@@ -428,11 +428,11 @@ class BusinessController extends Controller
             'd-m-Y' => 'dd-mm-yyyy',
             'm-d-Y' => 'mm-dd-yyyy',
             'd/m/Y' => 'dd/mm/yyyy',
-            'm/d/Y' => 'mm/dd/yyyy'
+            'm/d/Y' => 'mm/dd/yyyy',
         ];
 
         $shortcuts = json_decode($business->keyboard_shortcuts, true);
-        
+
         if (empty($business->pos_settings)) {
             $pos_settings = $this->businessUtil->defaultPosSettings();
         } else {
@@ -510,7 +510,7 @@ class BusinessController extends Controller
                 }
             }
         }
-            
+
         //$this->avlble_modules = $systemModules;
 
         $modules = $this->avlble_modules;
@@ -555,7 +555,7 @@ class BusinessController extends Controller
 
     public function getAccountingSettings()
     {
-        if (!auth()->user()->can('business_settings.access')) {
+        if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
         $shortcuts = Shortcut::get();
@@ -565,45 +565,87 @@ class BusinessController extends Controller
 
         $business_accounts = [];
         $account_ids = [];
-        if(!is_null($business->accounting_inventory_id)){ array_push($account_ids, $business->accounting_inventory_id); }
-        if(!is_null($business->accounting_debtor_result_id)){ array_push($account_ids, $business->accounting_debtor_result_id); }
-        if(!is_null($business->accounting_creditor_result_id)){ array_push($account_ids, $business->accounting_creditor_result_id); }
-        if(!is_null($business->accounting_cost_id)){ array_push($account_ids, $business->accounting_cost_id); }
-        if(!is_null($business->accounting_profit_and_loss_id)){ array_push($account_ids, $business->accounting_profit_and_loss_id); }
-        if(!is_null($business->accounting_deficit_id)){ array_push($account_ids, $business->accounting_deficit_id); }
-        if(!is_null($business->accounting_utility_id)){ array_push($account_ids, $business->accounting_utility_id); }
-        if(!is_null($business->accounting_expense_id)){ array_push($account_ids, $business->accounting_expense_id); }
-        if(!is_null($business->accounting_supplier_id)){ array_push($account_ids, $business->accounting_supplier_id); }
-        if(!is_null($business->accounting_customer_id)){ array_push($account_ids, $business->accounting_customer_id); }
-        if(!is_null($business->accounting_bank_id)){ array_push($account_ids, $business->accounting_bank_id); }
-        if(!is_null($business->accounting_extra_expenses_id)){ array_push($account_ids, $business->accounting_extra_expenses_id); }
-        if(!is_null($business->accounting_extra_incomes_id)){ array_push($account_ids, $business->accounting_extra_incomes_id); }
-        if(!is_null($business->accounting_ordinary_expenses_id)){ array_push($account_ids, $business->accounting_ordinary_expenses_id); }
-        if(!is_null($business->accounting_sells_cost_id)){ array_push($account_ids, $business->accounting_sells_cost_id); }
-        if(!is_null($business->accounting_return_sells_id)){ array_push($account_ids, $business->accounting_return_sells_id); }
-        if(!is_null($business->accounting_ordinary_incomes_id)){ array_push($account_ids, $business->accounting_ordinary_incomes_id); }
-        
-        if(!is_null($business->accounting_vat_local_purchase_id)){ array_push($account_ids, $business->accounting_vat_local_purchase_id); }
-        if(!is_null($business->accounting_vat_import_id)){ array_push($account_ids, $business->accounting_vat_import_id); }
-        if(!is_null($business->accounting_perception_id)){ array_push($account_ids, $business->accounting_perception_id); }
-        if(!is_null($business->accounting_withheld_id)){ array_push($account_ids, $business->accounting_withheld_id); }
+        if (! is_null($business->accounting_inventory_id)) {
+            array_push($account_ids, $business->accounting_inventory_id);
+        }
+        if (! is_null($business->accounting_debtor_result_id)) {
+            array_push($account_ids, $business->accounting_debtor_result_id);
+        }
+        if (! is_null($business->accounting_creditor_result_id)) {
+            array_push($account_ids, $business->accounting_creditor_result_id);
+        }
+        if (! is_null($business->accounting_cost_id)) {
+            array_push($account_ids, $business->accounting_cost_id);
+        }
+        if (! is_null($business->accounting_profit_and_loss_id)) {
+            array_push($account_ids, $business->accounting_profit_and_loss_id);
+        }
+        if (! is_null($business->accounting_deficit_id)) {
+            array_push($account_ids, $business->accounting_deficit_id);
+        }
+        if (! is_null($business->accounting_utility_id)) {
+            array_push($account_ids, $business->accounting_utility_id);
+        }
+        if (! is_null($business->accounting_expense_id)) {
+            array_push($account_ids, $business->accounting_expense_id);
+        }
+        if (! is_null($business->accounting_supplier_id)) {
+            array_push($account_ids, $business->accounting_supplier_id);
+        }
+        if (! is_null($business->accounting_customer_id)) {
+            array_push($account_ids, $business->accounting_customer_id);
+        }
+        if (! is_null($business->accounting_bank_id)) {
+            array_push($account_ids, $business->accounting_bank_id);
+        }
+        if (! is_null($business->accounting_extra_expenses_id)) {
+            array_push($account_ids, $business->accounting_extra_expenses_id);
+        }
+        if (! is_null($business->accounting_extra_incomes_id)) {
+            array_push($account_ids, $business->accounting_extra_incomes_id);
+        }
+        if (! is_null($business->accounting_ordinary_expenses_id)) {
+            array_push($account_ids, $business->accounting_ordinary_expenses_id);
+        }
+        if (! is_null($business->accounting_sells_cost_id)) {
+            array_push($account_ids, $business->accounting_sells_cost_id);
+        }
+        if (! is_null($business->accounting_return_sells_id)) {
+            array_push($account_ids, $business->accounting_return_sells_id);
+        }
+        if (! is_null($business->accounting_ordinary_incomes_id)) {
+            array_push($account_ids, $business->accounting_ordinary_incomes_id);
+        }
 
-        if(!empty($account_ids)){
+        if (! is_null($business->accounting_vat_local_purchase_id)) {
+            array_push($account_ids, $business->accounting_vat_local_purchase_id);
+        }
+        if (! is_null($business->accounting_vat_import_id)) {
+            array_push($account_ids, $business->accounting_vat_import_id);
+        }
+        if (! is_null($business->accounting_perception_id)) {
+            array_push($account_ids, $business->accounting_perception_id);
+        }
+        if (! is_null($business->accounting_withheld_id)) {
+            array_push($account_ids, $business->accounting_withheld_id);
+        }
+
+        if (! empty($account_ids)) {
             $business_accounts = Catalogue::where('status', 1)
-            ->whereIn('id', $account_ids)
-            ->select(
-                DB::raw("CONCAT(code, ' ', name) as account_name"),
-                'id'
-            )->get()
-            ->pluck('account_name', 'id');
+                ->whereIn('id', $account_ids)
+                ->select(
+                    DB::raw("CONCAT(code, ' ', name) as account_name"),
+                    'id'
+                )->get()
+                ->pluck('account_name', 'id');
         }
 
         $cost_main_account = Catalogue::select('code')->where('id', $business->accounting_cost_id)->first();
 
-        //To get the index of the enum fields        
+        //To get the index of the enum fields
         $debt_to_pay_type_selected = $business->debt_to_pay_type;
         $receivable_type_selected = $business->receivable_type;
-        
+
         $check_format_kits = $this->check_format_kits;
         $fiscal_years = FiscalYear::where('business_id', $business_id)
             ->orderBy('year', 'desc')
@@ -620,21 +662,21 @@ class BusinessController extends Controller
             'fiscal_years'
         ));
 
-        //To get the index of the enum fields        
+        //To get the index of the enum fields
         $debt_to_pay_type_selected = $business->debt_to_pay_type;
-        $receivable_type_selected = $business->receivable_type;       
+        $receivable_type_selected = $business->receivable_type;
+
         return view('business.settings_accounting', compact('business', 'business_accounts', 'cost_main_account', 'shortcuts', 'debt_to_pay_type_selected', 'receivable_type_selected'));
     }
 
     /**
      * Updates business settings
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function postBusinessSettings(Request $request)
     {
-        if (!auth()->user()->can('business_settings.access')) {
+        if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -691,20 +733,20 @@ class BusinessController extends Controller
                 'quote_prefix',
                 'state_id',
                 'physical_inventory_record_date',
-                'account_statement_legend'
+                'account_statement_legend',
             ]);
 
-            if (!empty($business_details['start_date'])) {
+            if (! empty($business_details['start_date'])) {
                 $business_details['start_date'] = Carbon::createFromFormat('m/d/Y', $business_details['start_date'])->toDateString();
             }
 
-            if(!empty($request->input('show_open_daily_z_cut_amount') && $request->input('show_open_daily_z_cut_amount') == 1)){
+            if (! empty($request->input('show_open_daily_z_cut_amount') && $request->input('show_open_daily_z_cut_amount') == 1)) {
                 $business_details['show_open_daily_z_cut_amount'] = 1;
             } else {
                 $business_details['show_open_daily_z_cut_amount'] = 0;
             }
 
-            if (!empty($request->input('enable_tooltip')) &&  $request->input('enable_tooltip') == 1) {
+            if (! empty($request->input('enable_tooltip')) && $request->input('enable_tooltip') == 1) {
                 $business_details['enable_tooltip'] = 1;
             } else {
                 $business_details['enable_tooltip'] = 0;
@@ -714,15 +756,15 @@ class BusinessController extends Controller
 
             $business_details['enable_sell_delete'] = $request->input('enable_sell_delete') ? 1 : 0;
 
-            $business_details['enable_product_expiry'] = !empty($request->input('enable_product_expiry')) &&  $request->input('enable_product_expiry') == 1 ? 1 : 0;
+            $business_details['enable_product_expiry'] = ! empty($request->input('enable_product_expiry')) && $request->input('enable_product_expiry') == 1 ? 1 : 0;
             if ($business_details['on_product_expiry'] == 'keep_selling') {
                 $business_details['stop_selling_before'] = null;
             }
 
-            $business_details['stock_expiry_alert_days'] = !empty($request->input('stock_expiry_alert_days')) ? $request->input('stock_expiry_alert_days') : 30;
+            $business_details['stock_expiry_alert_days'] = ! empty($request->input('stock_expiry_alert_days')) ? $request->input('stock_expiry_alert_days') : 30;
 
             //Check for Purchase currency
-            if (!empty($request->input('purchase_in_diff_currency')) &&  $request->input('purchase_in_diff_currency') == 1) {
+            if (! empty($request->input('purchase_in_diff_currency')) && $request->input('purchase_in_diff_currency') == 1) {
                 $business_details['purchase_in_diff_currency'] = 1;
                 $business_details['purchase_currency_id'] = $request->input('purchase_currency_id');
                 $business_details['p_exchange_rate'] = $request->input('p_exchange_rate');
@@ -734,7 +776,7 @@ class BusinessController extends Controller
 
             //upload logo
             $logo_name = $this->businessUtil->uploadFile($request, 'business_logo', 'business_logos');
-            if (!empty($logo_name)) {
+            if (! empty($logo_name)) {
                 $business_details['logo'] = $logo_name;
             }
 
@@ -753,18 +795,18 @@ class BusinessController extends Controller
                 'enable_row',
                 'enable_position',
                 'enable_editing_avg_cost_from_purchase',
-                'enable_remission_note'
+                'enable_remission_note',
             ];
 
             foreach ($checkboxes as $value) {
-                $business_details[$value] = !empty($request->input($value)) &&  $request->input($value) == 1 ? 1 : 0;
+                $business_details[$value] = ! empty($request->input($value)) && $request->input($value) == 1 ? 1 : 0;
             }
-            
+
             $business_id = request()->session()->get('user.business_id');
             $business = Business::where('id', $business_id)->first();
 
             //Update business settings
-            if (!empty($business_details['logo'])) {
+            if (! empty($business_details['logo'])) {
                 $business->logo = $business_details['logo'];
             } else {
                 unset($business_details['logo']);
@@ -778,7 +820,7 @@ class BusinessController extends Controller
             $pos_settings = $request->input('pos_settings');
             $default_pos_settings = $this->businessUtil->defaultPosSettings();
             foreach ($default_pos_settings as $key => $value) {
-                if (!isset($pos_settings[$key])) {
+                if (! isset($pos_settings[$key])) {
                     $pos_settings[$key] = $value;
                 }
             }
@@ -852,7 +894,7 @@ class BusinessController extends Controller
 
             $business_details['sale_settings'] = json_encode($sale_settings);
 
-            // Expense settings 
+            // Expense settings
             $expense_settings = $request->input('expense_settings');
 
             $default_expense_settings = $this->businessUtil->defaultExpenseSettings();
@@ -871,7 +913,7 @@ class BusinessController extends Controller
 
             //Enabled modules
             $enabled_modules = $request->input('enabled_modules');
-            $business_details['enabled_modules'] = !empty($enabled_modules) ? $enabled_modules : null;
+            $business_details['enabled_modules'] = ! empty($enabled_modules) ? $enabled_modules : null;
 
             $business->fill($business_details);
             $business->save();
@@ -888,7 +930,7 @@ class BusinessController extends Controller
                 'thousand_separator' => $currency->thousand_separator,
                 'decimal_separator' => $currency->decimal_separator,
             ]);
-            
+
             //update current financial year to session
             $financial_year = $this->businessUtil->getCurrentFinancialYear($business->id);
             $request->session()->put('financial_year', $financial_year);
@@ -897,170 +939,169 @@ class BusinessController extends Controller
                 'mobile',
                 'alternate_number',
                 'email',
-                'landmark'
+                'landmark',
             ]);
-    
+
             $business_location = BusinessLocation::first();
-    
+
             if (! empty($business_location)) {
                 $business_location->mobile = $location_details['mobile'];
                 $business_location->alternate_number = $location_details['alternate_number'];
                 $business_location->email = $location_details['email'];
                 $business_location->landmark = $location_details['landmark'];
-    
+
                 $business_location->save();
             }
 
             DB::commit();
-            
+
             $output = [
                 'success' => 1,
-                'msg' => __('business.settings_updated_success')
+                'msg' => __('business.settings_updated_success'),
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+            \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => __('messages.something_went_wrong'),
             ];
         }
-        
+
         return redirect('business/settings')->with('status', $output);
     }
 
-public function postAccountingSettings(Request $request)
-{
-    if (!auth()->user()->can('business_settings.access')) {
-        abort(403, 'Unauthorized action.');
-    }
-
-    try {
-        $business_details =
-            $request->only([
-                'accounting_supplier_id',
-                'accounting_expense_id',
-                'accounting_customer_id',
-                'accounting_bank_id',
-                'entries_numeration_mode',
-                'accounting_utility_id',
-                'accounting_deficit_id',
-                'accounting_cost_id',
-                'accounting_debtor_result_id',
-                'accounting_creditor_result_id',
-                'accounting_profit_and_loss_id',
-                'balance_debit_levels_number',
-                'balance_credit_levels_number',
-                'accounting_ordinary_incomes_id',
-                'accounting_return_sells_id',
-                'accounting_sells_cost_id',
-                'accounting_ordinary_expenses_id',
-                'accounting_extra_incomes_id',
-                'accounting_extra_expenses_id',
-                'level_childrens_ordynary_incomes',
-                'level_childrens_ordynary_expenses',
-                'level_childrens_extra_incomes',
-                'level_childrens_extra_expenses',
-                'accounting_inventory_id',
-                'accounting_vat_local_purchase_id',
-                'accounting_vat_import_id',
-                'accounting_perception_id',
-                'debt_to_pay_type',
-                'receivable_type',
-                'check_format_kit',
-                'ledger_digits',
-                'sale_accounting_entry_mode',
-                'purchase_accounting_entry_mode',
-                'expense_accounting_entry_mode',
-                'accounting_withheld_id'
-            ]);
-
-        $checkboxes = [
-            'enable_sub_accounts_in_bank_transactions',
-            'enable_validation_entries',
-            'edition_in_approved_entries',
-            'deletion_in_approved_entries',
-            'edition_in_number_entries',
-            'allow_uneven_totals_entries',
-            'allow_nullate_checks_in_approved_entries',
-            'allow_entries_approval_disorder',
-            'enable_description_line_entries_report',
-            'match_check_n_expense'
-        ];
-        
-        foreach ($checkboxes as $value) {
-            $business_details[$value] = !empty($request->input($value)) &&  $request->input($value) == 1 ? 1 : 0;
+    public function postAccountingSettings(Request $request)
+    {
+        if (! auth()->user()->can('business_settings.access')) {
+            abort(403, 'Unauthorized action.');
         }
 
-        $business_id = request()->session()->get('user.business_id');
-        $business = Business::where('id', $business_id)->first();
+        try {
+            $business_details =
+                $request->only([
+                    'accounting_supplier_id',
+                    'accounting_expense_id',
+                    'accounting_customer_id',
+                    'accounting_bank_id',
+                    'entries_numeration_mode',
+                    'accounting_utility_id',
+                    'accounting_deficit_id',
+                    'accounting_cost_id',
+                    'accounting_debtor_result_id',
+                    'accounting_creditor_result_id',
+                    'accounting_profit_and_loss_id',
+                    'balance_debit_levels_number',
+                    'balance_credit_levels_number',
+                    'accounting_ordinary_incomes_id',
+                    'accounting_return_sells_id',
+                    'accounting_sells_cost_id',
+                    'accounting_ordinary_expenses_id',
+                    'accounting_extra_incomes_id',
+                    'accounting_extra_expenses_id',
+                    'level_childrens_ordynary_incomes',
+                    'level_childrens_ordynary_expenses',
+                    'level_childrens_extra_incomes',
+                    'level_childrens_extra_expenses',
+                    'accounting_inventory_id',
+                    'accounting_vat_local_purchase_id',
+                    'accounting_vat_import_id',
+                    'accounting_perception_id',
+                    'debt_to_pay_type',
+                    'receivable_type',
+                    'check_format_kit',
+                    'ledger_digits',
+                    'sale_accounting_entry_mode',
+                    'purchase_accounting_entry_mode',
+                    'expense_accounting_entry_mode',
+                    'accounting_withheld_id',
+                ]);
 
-        DB::beginTransaction();
+            $checkboxes = [
+                'enable_sub_accounts_in_bank_transactions',
+                'enable_validation_entries',
+                'edition_in_approved_entries',
+                'deletion_in_approved_entries',
+                'edition_in_number_entries',
+                'allow_uneven_totals_entries',
+                'allow_nullate_checks_in_approved_entries',
+                'allow_entries_approval_disorder',
+                'enable_description_line_entries_report',
+                'match_check_n_expense',
+            ];
 
-        $business->fill($business_details);
-        $business->save();
+            foreach ($checkboxes as $value) {
+                $business_details[$value] = ! empty($request->input($value)) && $request->input($value) == 1 ? 1 : 0;
+            }
 
-        $shortcut_id = $request->input('shortcut_id');
-        $shortcut_description = $request->input('description');
-        
+            $business_id = request()->session()->get('user.business_id');
+            $business = Business::where('id', $business_id)->first();
 
-        if (!empty($shortcut_id))
-        {
-            $cont = 0;                
-            while($cont < count($shortcut_id))
-            {
-                $shortcut = Shortcut::findOrFail($shortcut_id[$cont]);
-                $shortcut->description = $shortcut_description[$cont];
-                $shortcut->save();
-                $cont = $cont + 1;
-            } 
+            DB::beginTransaction();
+
+            $business->fill($business_details);
+            $business->save();
+
+            $shortcut_id = $request->input('shortcut_id');
+            $shortcut_description = $request->input('description');
+
+            if (! empty($shortcut_id)) {
+                $cont = 0;
+                while ($cont < count($shortcut_id)) {
+                    $shortcut = Shortcut::findOrFail($shortcut_id[$cont]);
+                    $shortcut->description = $shortcut_description[$cont];
+                    $shortcut->save();
+                    $cont = $cont + 1;
+                }
+            }
+
+            DB::commit();
+            $output = [
+                'success' => true,
+                'msg' => __('business.settings_updated_success'),
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
-        DB::commit();
-        $output = [
-            'success' => true,
-            'msg' => __('business.settings_updated_success')
-        ];
+        return $output;
     }
-    catch (\Exception $e) {
-        DB::rollBack();
-        \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
-        $output = [
-            'success' => false,
-            'msg' => __('messages.something_went_wrong')
-        ];
-    }
-    return $output;
-}
-public function updateAnullSaleExpiry(Request $request)
-{
-    if (!auth()->user()->can('business_settings.access')) {
-        abort(403, 'Unauthorized action.');
-    }
-    try {
-        $business_details = $request->only(['annull_sale_expiry']);
-        $business_details['annull_sale_expiry'] = $request->annull_sale_expiry && !empty($request->annull_sale_expiry) ? 1 : 0;
-        $business_id = request()->session()->get('user.business_id');
-        $business = Business::where('id', $business_id)->first();
+    public function updateAnullSaleExpiry(Request $request)
+    {
+        if (! auth()->user()->can('business_settings.access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        try {
+            $business_details = $request->only(['annull_sale_expiry']);
+            $business_details['annull_sale_expiry'] = $request->annull_sale_expiry && ! empty($request->annull_sale_expiry) ? 1 : 0;
+            $business_id = request()->session()->get('user.business_id');
+            $business = Business::where('id', $business_id)->first();
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        $business->fill($business_details);
-        $business->save();
-        DB::commit();
-        $output = [
-            'success' => true,
-            'msg' => __("business.annull_sale_expiry_update"),
-            'msg_dos' => 'Restricción de anulación agregada'
-        ];
-    } catch (\Exception $e) {
-        \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-        $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            $business->fill($business_details);
+            $business->save();
+            DB::commit();
+            $output = [
+                'success' => true,
+                'msg' => __('business.annull_sale_expiry_update'),
+                'msg_dos' => 'Restricción de anulación agregada',
+            ];
+        } catch (\Exception $e) {
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
+        }
+
+        return $output;
     }
-    return $output;
-}
 }

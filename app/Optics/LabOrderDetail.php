@@ -18,7 +18,7 @@ class LabOrderDetail extends Model
         'variation_id',
         'quantity',
         'warehouse_id',
-        'location_id'
+        'location_id',
     ];
 
     public function variation()

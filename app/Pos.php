@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pos extends Model
 {
     protected $table = 'pos';
+
     protected $fillable = [
         'name',
         'description',
@@ -17,10 +18,8 @@ class Pos extends Model
         'authorization_key',
     ];
 
-    /**
-     * 
-     */
-    public static function forDropdown($business_id, $prepend_none = false, $prepend_all = false) {
+    public static function forDropdown($business_id, $prepend_none = false, $prepend_all = false)
+    {
         $query = Pos::where('business_id', $business_id)
             ->where('status', 'active');
 
@@ -33,12 +32,12 @@ class Pos extends Model
 
         //Prepend none
         if ($prepend_none) {
-            $pos = $pos->prepend(__("lang_v1.none"), '');
+            $pos = $pos->prepend(__('lang_v1.none'), '');
         }
 
         //Prepend none
         if ($prepend_all) {
-            $pos = $pos->prepend(__("report.all"), '');
+            $pos = $pos->prepend(__('report.all'), '');
         }
 
         return $pos;

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAccountingBankIdToBusiness extends Migration
 {
@@ -15,12 +15,11 @@ class AddAccountingBankIdToBusiness extends Migration
     {
         Schema::table('business', function (Blueprint $table) {
 
+            $table->unsignedBigInteger('accounting_bank_id')->after('accounting_customer_id')->nullable();
 
-           $table->unsignedBigInteger('accounting_bank_id')->after('accounting_customer_id')->nullable();          
+            $table->foreign('accounting_bank_id')->references('id')->on('catalogues');
 
-           $table->foreign('accounting_bank_id')->references('id')->on('catalogues');
-           
-       });
+        });
     }
 
     /**

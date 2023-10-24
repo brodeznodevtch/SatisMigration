@@ -32,6 +32,6 @@ class MovementType extends Model
         'name',
         'description',
         'type',
-        'business_id'
+        'business_id',
     ];
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ModifyAmountDecimalsOnTransactionPaymentsTable extends Migration
 {
@@ -14,7 +14,7 @@ class ModifyAmountDecimalsOnTransactionPaymentsTable extends Migration
     public function up()
     {
         Schema::table('transaction_payments', function (Blueprint $table) {
-            DB::statement("ALTER TABLE `satis-erp-luxor`.transaction_payments MODIFY COLUMN amount decimal(20,4) DEFAULT 0.00 NOT NULL;");
+            DB::statement('ALTER TABLE `satis-erp-luxor`.transaction_payments MODIFY COLUMN amount decimal(20,4) DEFAULT 0.00 NOT NULL;');
         });
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -14,10 +14,12 @@ use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, WithCustomValueBinder, WithCustomCsvSettings
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     private $data;
+
     private $title;
+
     private $columns;
 
     /**
@@ -29,25 +31,22 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
      */
     public function __construct($data, $title)
     {
-    	$this->data = $data;
+        $this->data = $data;
         $this->title = $title;
         $this->columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     }
 
     /**
      * Returns document title.
-     * 
-     * @return string
      */
     public function title(): string
     {
-    	return $this->title;
+        return $this->title;
     }
 
     /**
      * Bind value to a cell.
      *
-     * @param  Cell  $cell
      * @param  mixed  $value
      * @return bool
      */
@@ -55,6 +54,7 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
     {
         if (in_array($cell->getColumn(), $this->columns)) {
             $cell->setValueExplicit($value, DataType::TYPE_STRING);
+
             return true;
         }
 
@@ -64,13 +64,11 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
 
     /**
      * Configure events and document format.
-     * 
-     * @return array
      */
     public function registerEvents(): array
     {
-    	return [            
-    		AfterSheet::class => function(AfterSheet $event) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
                 $row = 1;
 
                 $columns = $this->columns;
@@ -78,7 +76,7 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
                 foreach ($this->data as $item) {
                     foreach ($columns as $column) {
                         if (isset($item[$column])) {
-                            $event->sheet->setCellValue($column . $row, $item[$column]);
+                            $event->sheet->setCellValue($column.$row, $item[$column]);
 
                         } else {
                             break;
@@ -87,17 +85,14 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
 
                     $row++;
                 }
-            }
+            },
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getCsvSettings(): array
     {
         return [
-            'delimiter' => ';'
+            'delimiter' => ';',
         ];
     }
 }

@@ -14,10 +14,6 @@ return [
 
     'name' => env('APP_NAME', 'SATIS ERP'),
 
-    /**
-     * 
-     */
-
     'owner' => env('APP_OWNER', 'DEVTECH S.A. de C.V.'),
 
     /*
@@ -271,5 +267,5 @@ return [
     // App Version
     'app_version' => env('APP_VERSION', 11.22),
 
-    'assistance_employee_url' => 'http://127.0.0.1:8000/api/image-assistance/'
+    'assistance_employee_url' => 'http://127.0.0.1:8000/api/image-assistance/',
 ];

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddClientIdForeingKeyToCrmOportunitiesTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddClientIdForeingKeyToCrmOportunitiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('crm_oportunities', function(Blueprint $table){
+        Schema::table('crm_oportunities', function (Blueprint $table) {
             $table->integer('client_id')->unsigned()->nullable()->after('business_id');
             $table->foreign('client_id')->references('id')->on('contacts')->onDelete('cascade')->onUpdate('cascade');
         });

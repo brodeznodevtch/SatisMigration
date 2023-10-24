@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\FiscalYear;
 use App\AccountingPeriod;
-use Illuminate\Http\Request;
+use App\FiscalYear;
 use DataTables;
+use Illuminate\Http\Request;
 
 class FiscalYearController extends Controller
 {
@@ -32,10 +32,10 @@ class FiscalYearController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validateData = $request->validate(
             [
@@ -46,14 +46,15 @@ class FiscalYearController extends Controller
             ]
         );
 
-        if($request->ajax()) {
+        if ($request->ajax()) {
 
             $data = $request->all();
             $data['business_id'] = request()->session()->get('user.business_id');
 
             $year = FiscalYear::create($data);
+
             return response()->json([
-                "msj" => 'Created'
+                'msj' => 'Created',
             ]);
 
         }
@@ -62,7 +63,6 @@ class FiscalYearController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\FiscalYear  $fiscalYear
      * @return \Illuminate\Http\Response
      */
     public function show(FiscalYear $fiscalYear)
@@ -73,7 +73,6 @@ class FiscalYearController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\FiscalYear  $fiscalYear
      * @return \Illuminate\Http\Response
      */
     public function edit(FiscalYear $fiscalYear)
@@ -84,8 +83,6 @@ class FiscalYearController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\FiscalYear  $fiscalYear
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, FiscalYear $fiscalYear)
@@ -98,11 +95,11 @@ class FiscalYearController extends Controller
                 'year.required' => __('accounting.year_required'),
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $fiscalYear->update($request->all());
+
             return response()->json([
-                "msj" => 'Updated'
+                'msj' => 'Updated',
             ]);
         }
     }
@@ -110,58 +107,58 @@ class FiscalYearController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\FiscalYear  $fiscalYear
      * @return \Illuminate\Http\Response
      */
     public function destroy(FiscalYear $fiscalYear)
     {
         if (request()->ajax()) {
-            try{
+            try {
 
                 $periods = AccountingPeriod::where('fiscal_year_id', $fiscalYear->id)->count();
 
-                if($periods > 0){
+                if ($periods > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('accounting.year_has_periods')
+                        'msg' => __('accounting.year_has_periods'),
                     ];
-                }
-                else{
+                } else {
                     $fiscalYear->forceDelete();
                     $output = [
                         'success' => true,
-                        'msg' => __('accounting.year_deleted')
+                        'msg' => __('accounting.year_deleted'),
                     ];
                 }
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
 
-    public function getFiscalYearsData() {
+    public function getFiscalYearsData()
+    {
 
         $business_id = request()->session()->get('user.business_id');
 
         $years = FiscalYear::select('id', 'year')
-        ->where('business_id', $business_id)
-        ->get();
+            ->where('business_id', $business_id)
+            ->get();
 
         return DataTables::of($years)->toJson();
     }
 
-    public function getYears() {
+    public function getYears()
+    {
 
         $business_id = request()->session()->get('user.business_id');
 
         $years = FiscalYear::select('id', 'year')
-        ->where('business_id', $business_id)
-        ->get();
+            ->where('business_id', $business_id)
+            ->get();
 
         return response()->json($years);
     }

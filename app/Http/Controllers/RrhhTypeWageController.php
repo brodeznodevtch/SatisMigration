@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\RrhhTypeWage;
-use DB;
 use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class RrhhTypeWageController extends Controller
 {
@@ -18,44 +18,48 @@ class RrhhTypeWageController extends Controller
     {
         //
     }
-    public function getTypeWagesData() {
 
-        if ( !auth()->user()->can('rrhh_catalogues.view') ) {
+    public function getTypeWagesData()
+    {
+
+        if (! auth()->user()->can('rrhh_catalogues.view')) {
             abort(403, 'Unauthorized action.');
         }
 
-        $business_id =  request()->session()->get('user.business_id');
+        $business_id = request()->session()->get('user.business_id');
         $data = DB::table('rrhh_type_wages')
-        ->select('rrhh_type_wages.*')
-        ->where('business_id', $business_id)
-        ->where('deleted_at', null);
+            ->select('rrhh_type_wages.*')
+            ->where('business_id', $business_id)
+            ->where('deleted_at', null);
 
         return DataTables::of($data)
-        ->addColumn(
-            'isss',
-            function ($row) {
-                if ($row->isss == 1) {
+            ->addColumn(
+                'isss',
+                function ($row) {
+                    if ($row->isss == 1) {
 
-                    $html = 'Si aplica';
-                } else {
+                        $html = 'Si aplica';
+                    } else {
 
-                    $html = 'No aplica';
+                        $html = 'No aplica';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )->addColumn(
-            'afp',
-            function ($row) {
-                if ($row->afp == 1) {
+            )->addColumn(
+                'afp',
+                function ($row) {
+                    if ($row->afp == 1) {
 
-                    $html = 'Si aplica';
-                } else {
+                        $html = 'Si aplica';
+                    } else {
 
-                    $html = 'No aplica';
+                        $html = 'No aplica';
+                    }
+
+                    return $html;
                 }
-                return $html;
-            }
-        )->toJson();
+            )->toJson();
     }
 
     /**
@@ -63,11 +67,12 @@ class RrhhTypeWageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
-        }        
+        }
 
         return view('rrhh.catalogues.types_wages.create');
     }
@@ -75,53 +80,53 @@ class RrhhTypeWageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) { 
-        //dd($request);       
-        if ( !auth()->user()->can('rrhh_catalogues.create') ) {
+    public function store(Request $request)
+    {
+        //dd($request);
+        if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'name' => 'required',           
+            'name' => 'required',
         ]);
 
         try {
             $input_details = $request->only(['name']);
-            $input_details['business_id'] =  request()->session()->get('user.business_id');
-            if($request->has('isss')){
+            $input_details['business_id'] = request()->session()->get('user.business_id');
+            if ($request->has('isss')) {
                 $input_details['isss'] = true;
             }
-            if($request->has('afp')){
+            if ($request->has('afp')) {
                 $input_details['afp'] = true;
             }
-            if($request->input('wage_law')){
+            if ($request->input('wage_law')) {
                 $input_details['type'] = 'Ley de salario';
             }
-            if($request->input('honorary')){
+            if ($request->input('honorary')) {
                 $input_details['type'] = 'Honorario';
             }
-            $typeWage =  RrhhTypeWage::create($input_details);
+            $typeWage = RrhhTypeWage::create($input_details);
             $output = [
                 'success' => true,
-                'msg' => __('rrhh.added_successfully')
+                'msg' => __('rrhh.added_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => false,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
+
         return $output;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
     public function show(RrhhTypeWage $rrhhTypeWage)
@@ -135,9 +140,10 @@ class RrhhTypeWageController extends Controller
      * @param  \App\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -149,13 +155,13 @@ class RrhhTypeWageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
 
-        if ( !auth()->user()->can('rrhh_catalogues.update') ) {
+        if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -165,20 +171,20 @@ class RrhhTypeWageController extends Controller
 
         try {
             $input_details = $request->only(['name']);
-            if($request->has('isss')){
+            if ($request->has('isss')) {
                 $input_details['isss'] = true;
-            }else{
+            } else {
                 $input_details['isss'] = false;
             }
-            if($request->has('afp')){
+            if ($request->has('afp')) {
                 $input_details['afp'] = true;
-            }else{
+            } else {
                 $input_details['afp'] = false;
             }
-            if($request->input('wage_law')){
+            if ($request->input('wage_law')) {
                 $input_details['type'] = 'Ley de salario';
             }
-            if($request->input('honorary')){
+            if ($request->input('honorary')) {
                 $input_details['type'] = 'Honorario';
             }
 
@@ -186,15 +192,16 @@ class RrhhTypeWageController extends Controller
             $item->update($input_details);
             $output = [
                 'success' => true,
-                'msg' => __('rrhh.updated_successfully')
+                'msg' => __('rrhh.updated_successfully'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
             $output = [
                 'success' => 0,
-                'msg' => __('rrhh.error')
+                'msg' => __('rrhh.error'),
             ];
         }
+
         return $output;
     }
 
@@ -204,8 +211,9 @@ class RrhhTypeWageController extends Controller
      * @param  \App\RrhhTypeWage  $rrhhTypeWage
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        if (!auth()->user()->can('rrhh_catalogues.delete')) {
+    public function destroy($id)
+    {
+        if (! auth()->user()->can('rrhh_catalogues.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -213,30 +221,30 @@ class RrhhTypeWageController extends Controller
 
             try {
                 $count = DB::table('employees')
-                ->where('type_id', $id)               
-                ->count();
+                    ->where('type_id', $id)
+                    ->count();
 
                 if ($count > 0) {
                     $output = [
                         'success' => false,
-                        'msg' => __('rrhh.item_has_childs')
+                        'msg' => __('rrhh.item_has_childs'),
                     ];
                 } else {
                     $item = RrhhTypeWage::findOrFail($id);
                     $item->delete();
                     $output = [
                         'success' => true,
-                        'msg' => __('rrhh.deleted_successfully')
+                        'msg' => __('rrhh.deleted_successfully'),
                     ];
-                }               
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __('rrhh.error')
+                    'msg' => __('rrhh.error'),
                 ];
             }
+
             return $output;
         }
     }

@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use App\AccountBusinessLocation;
+use App\BusinessLocation;
 use App\Catalogue;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
-use App\BusinessLocation;
-use App\AccountBusinessLocation;
-    
-use Yajra\DataTables\Facades\DataTables;
+use App\Utils\ModuleUtil;
+use App\Utils\Util;
+use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
-
-use App\Utils\Util;
-use App\Utils\ModuleUtil;
+use Yajra\DataTables\Facades\DataTables;
 
 class BusinessLocationController extends Controller
 {
@@ -23,7 +21,6 @@ class BusinessLocationController extends Controller
     /**
      * Constructor
      *
-     * @param Util $commonUtil
      * @return void
      */
     public function __construct(Util $commonUtil, ModuleUtil $moduleUtil)
@@ -39,7 +36,7 @@ class BusinessLocationController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('location.view')) {
+        if (! auth()->user()->can('location.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -77,38 +74,38 @@ class BusinessLocationController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('location.create')) {
+        if (! auth()->user()->can('location.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
 
         //Check if subscribed or not, then check for location quota
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
+        if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
-        } elseif (!$this->moduleUtil->isQuotaAvailable('locations', $business_id)) {
+        } elseif (! $this->moduleUtil->isQuotaAvailable('locations', $business_id)) {
             return $this->moduleUtil->quotaExpiredResponse('locations', $business_id);
         }
 
         $invoice_layouts = InvoiceLayout::where('business_id', $business_id)
-                            ->get()
-                            ->pluck('name', 'id');
+            ->get()
+            ->pluck('name', 'id');
 
         $invoice_schemes = InvoiceScheme::where('business_id', $business_id)
-                            ->get()
-                            ->pluck('name', 'id');
+            ->get()
+            ->pluck('name', 'id');
+
         return view('business_location.create')
-                    ->with(compact('invoice_layouts', 'invoice_schemes'));
+            ->with(compact('invoice_layouts', 'invoice_schemes'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('location.create')) {
+        if (! auth()->user()->can('location.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -116,9 +113,9 @@ class BusinessLocationController extends Controller
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not, then check for location quota
-            if (!$this->moduleUtil->isSubscribed($business_id)) {
+            if (! $this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse();
-            } elseif (!$this->moduleUtil->isQuotaAvailable('locations', $business_id)) {
+            } elseif (! $this->moduleUtil->isQuotaAvailable('locations', $business_id)) {
                 return $this->moduleUtil->quotaExpiredResponse('locations', $business_id);
             }
 
@@ -137,17 +134,17 @@ class BusinessLocationController extends Controller
             $location = BusinessLocation::create($input);
 
             //Create a new permission related to the created location
-            Permission::create(['name' => 'location.' . $location->id ]);
+            Permission::create(['name' => 'location.'.$location->id]);
 
             $output = ['success' => true,
-                            'msg' => __("business.business_location_added_success")
-                        ];
+                'msg' => __('business.business_location_added_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -172,34 +169,33 @@ class BusinessLocationController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('location.update')) {
+        if (! auth()->user()->can('location.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $location = BusinessLocation::where('business_id', $business_id)
-                                    ->find($id);
+            ->find($id);
         $invoice_layouts = InvoiceLayout::where('business_id', $business_id)
-                            ->get()
-                            ->pluck('name', 'id');
+            ->get()
+            ->pluck('name', 'id');
         $invoice_schemes = InvoiceScheme::where('business_id', $business_id)
-                            ->get()
-                            ->pluck('name', 'id');
+            ->get()
+            ->pluck('name', 'id');
 
         return view('business_location.edit')
-                ->with(compact('location', 'invoice_layouts', 'invoice_schemes'));
+            ->with(compact('location', 'invoice_layouts', 'invoice_schemes'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\StoreFront  $storeFront
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('location.update')) {
+        if (! auth()->user()->can('location.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -208,22 +204,22 @@ class BusinessLocationController extends Controller
                 'country', 'zip_code', 'invoice_scheme_id', 'invoice_layout_id', 'mobile',
                 'alternate_number', 'email', 'website', 'custom_field1', 'custom_field2',
                 'custom_field3', 'custom_field4']);
-            
+
             $business_id = $request->session()->get('user.business_id');
 
             BusinessLocation::where('business_id', $business_id)
-                            ->where('id', $id)
-                            ->update($input);
+                ->where('id', $id)
+                ->update($input);
 
             $output = ['success' => true,
-                            'msg' => __('business.business_location_updated_success')
-                        ];
+                'msg' => __('business.business_location_updated_success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -242,9 +238,11 @@ class BusinessLocationController extends Controller
 
     /**
      * get add/update accounting accounts by location
-     * @param int $location_id
+     *
+     * @param  int  $location_id
      */
-    public function getAccountingAccountByLocation($location_id){
+    public function getAccountingAccountByLocation($location_id)
+    {
         $location =
             BusinessLocation::where('id', $location_id)
                 ->select('id', 'name')
@@ -255,7 +253,7 @@ class BusinessLocationController extends Controller
                 ->first();
 
         $account_location_names = [];
-        if($account_location){
+        if ($account_location) {
             $al = $account_location;
 
             $account_location_names =
@@ -276,20 +274,22 @@ class BusinessLocationController extends Controller
                         $al->exports_id,
                     ]
                 )->select(DB::raw('CONCAT(code, " ", name) as account_name'), 'id')
-                ->get()
-                ->pluck('account_name', 'id');
+                    ->get()
+                    ->pluck('account_name', 'id');
         }
-        
+
         return view('business_location.partials.account_location',
             compact('location', 'account_location', 'account_location_names'));
     }
 
-        /**
+    /**
      * post add/Update accounting accounts by location
-     * @param int $location_id
+     *
+     * @param  int  $location_id
      */
-    public function postAccountingAccountByLocation(Request $request){
-        try{
+    public function postAccountingAccountByLocation(Request $request)
+    {
+        try {
             AccountBusinessLocation::updateOrCreate(
                 ['location_id' => $request->location_id],
                 [
@@ -305,28 +305,27 @@ class BusinessLocationController extends Controller
                     'admin_expense_id' => $request->admin_expense_id,
                     'financial_expense_id' => $request->financial_expense_id,
                     'local_sale_id' => $request->local_sale_id,
-                    'exports_id' => $request->exports_id
+                    'exports_id' => $request->exports_id,
                 ]
             );
 
             $output = ['success' => true,
-                'msg' => __("business.account_location_saved_successfully")];
+                'msg' => __('business.account_location_saved_successfully')];
 
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
-        return $output;   
+        return $output;
     }
 
-     /**
+    /**
      * Checks if the given location id already exist for the current business.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function checkLocationId(Request $request)
@@ -334,13 +333,13 @@ class BusinessLocationController extends Controller
         $location_id = $request->input('location_id');
 
         $valid = 'true';
-        if (!empty($location_id)) {
+        if (! empty($location_id)) {
             $business_id = $request->session()->get('user.business_id');
             $hidden_id = $request->input('hidden_id');
 
             $query = BusinessLocation::where('business_id', $business_id)
-                            ->where('location_id', $location_id);
-            if (!empty($hidden_id)) {
+                ->where('location_id', $location_id);
+            if (! empty($hidden_id)) {
                 $query->where('id', '!=', $hidden_id);
             }
             $count = $query->count();

@@ -13,6 +13,6 @@ class Image extends Model
         'description',
         'path',
         'is_active',
-        'business_id'
+        'business_id',
     ];
 }

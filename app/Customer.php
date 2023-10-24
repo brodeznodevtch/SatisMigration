@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-    	'name',
+        'name',
         'business_name',
         'email',
         'telphone',
@@ -42,7 +42,7 @@ class Customer extends Model
         'accounting_account_id',
         'from',
         'to',
-        'cost'
+        'cost',
     ];
 
     public function country()

@@ -8,8 +8,6 @@ class SupportDocuments extends Model
 {
     protected $fillable = ['name', 'description', 'business_id'];
 
-
-
     public static function forDropdown($business_id, $prepend_none = true, $preprend_all = false)
     {
         $all_docs = SupportDocuments::where('business_id', $business_id);

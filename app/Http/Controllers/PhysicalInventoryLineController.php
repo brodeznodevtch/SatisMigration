@@ -32,7 +32,6 @@ class PhysicalInventoryLineController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -57,26 +56,26 @@ class PhysicalInventoryLineController extends Controller
                         'variation_id' => $variation_id,
                         'quantity' => 0,
                         'created_by' => $user_id,
-                        'updated_by' => $user_id
+                        'updated_by' => $user_id,
                     ]);
 
                     $output = [
-                        'success' => true
+                        'success' => true,
                     ];
 
                 } else {
                     $output = [
                         'success' => false,
-                        'msg' => __('physical_inventory.product_already_added')
+                        'msg' => __('physical_inventory.product_already_added'),
                     ];
                 }
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile() . ' Line: ' . $e->getLine() . ' Message: ' . $e->getMessage());
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
 
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -87,7 +86,6 @@ class PhysicalInventoryLineController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\PhysicalInventoryLine  $physicalInventoryLine
      * @return \Illuminate\Http\Response
      */
     public function show(PhysicalInventoryLine $physicalInventoryLine)
@@ -98,7 +96,6 @@ class PhysicalInventoryLineController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\PhysicalInventoryLine  $physicalInventoryLine
      * @return \Illuminate\Http\Response
      */
     public function edit(PhysicalInventoryLine $physicalInventoryLine)
@@ -109,8 +106,6 @@ class PhysicalInventoryLineController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\PhysicalInventoryLine  $physicalInventoryLine
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, PhysicalInventoryLine $physicalInventoryLine)
@@ -141,15 +136,15 @@ class PhysicalInventoryLineController extends Controller
 
                 $output = [
                     'success' => true,
-                    'msg' => __('physical_inventory.product_removed_successfully')
+                    'msg' => __('physical_inventory.product_removed_successfully'),
                 ];
 
             } catch (\Exception $e) {
-                \Log::emergency('File: ' . $e->getFile(). ' Line: ' . $e->getLine(). ' Message: ' . $e->getMessage());
-            
+                \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
+
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
 
@@ -159,7 +154,7 @@ class PhysicalInventoryLineController extends Controller
 
     /**
      * Update physical inventory line.
-     * 
+     *
      * @return array
      */
     public function updateLine()

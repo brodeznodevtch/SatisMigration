@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class ModifyAmountColumnToTransactionPaymentsTable extends Migration
@@ -13,7 +11,7 @@ class ModifyAmountColumnToTransactionPaymentsTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE transaction_payments MODIFY COLUMN amount DECIMAL(20, 6) NOT NULL DEFAULT 0");
+        DB::statement('ALTER TABLE transaction_payments MODIFY COLUMN amount DECIMAL(20, 6) NOT NULL DEFAULT 0');
     }
 
     /**
@@ -23,6 +21,6 @@ class ModifyAmountColumnToTransactionPaymentsTable extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE transaction_payments MODIFY COLUMN amount DECIMAL(20, 4) NOT NULL DEFAULT 0");
+        DB::statement('ALTER TABLE transaction_payments MODIFY COLUMN amount DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }
 }

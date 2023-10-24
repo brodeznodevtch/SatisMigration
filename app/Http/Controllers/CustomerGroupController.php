@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\CustomerGroup;
 use Illuminate\Http\Request;
-
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerGroupController extends Controller
@@ -16,7 +15,7 @@ class CustomerGroupController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('customer_group.view')) {
+        if (! auth()->user()->can('customer_group.view')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -24,12 +23,12 @@ class CustomerGroupController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $customer_group = CustomerGroup::where('business_id', $business_id)
-                                ->select(['name', 'amount', 'id']);
+                ->select(['name', 'amount', 'id']);
 
             return Datatables::of($customer_group)
-                    ->addColumn(
-                        'action',
-                        '@can("customer_group.update")
+                ->addColumn(
+                    'action',
+                    '@can("customer_group.update")
                             <button data-href="{{action(\'CustomerGroupController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_customer_group_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                         &nbsp;
                         @endcan
@@ -37,10 +36,10 @@ class CustomerGroupController extends Controller
                         @can("customer_group.delete")
                             <button data-href="{{action(\'CustomerGroupController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_customer_group_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                         @endcan'
-                    )
-                    ->removeColumn('id')
-                    ->rawColumns([2])
-                    ->make(false);
+                )
+                ->removeColumn('id')
+                ->rawColumns([2])
+                ->make(false);
         }
 
         return view('customer_group.index');
@@ -53,7 +52,7 @@ class CustomerGroupController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('customer_group.create')) {
+        if (! auth()->user()->can('customer_group.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -63,12 +62,11 @@ class CustomerGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('customer_group.create')) {
+        if (! auth()->user()->can('customer_group.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -79,15 +77,15 @@ class CustomerGroupController extends Controller
 
             $customer_group = CustomerGroup::create($input);
             $output = ['success' => true,
-                            'data' => $customer_group,
-                            'msg' => __("lang_v1.success")
-                        ];
+                'data' => $customer_group,
+                'msg' => __('lang_v1.success'),
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                'msg' => __('messages.something_went_wrong'),
+            ];
         }
 
         return $output;
@@ -101,7 +99,7 @@ class CustomerGroupController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('customer_group.update')) {
+        if (! auth()->user()->can('customer_group.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -117,13 +115,12 @@ class CustomerGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('customer_group.update')) {
+        if (! auth()->user()->can('customer_group.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -138,14 +135,14 @@ class CustomerGroupController extends Controller
                 $customer_group->save();
 
                 $output = ['success' => true,
-                            'msg' => __("lang_v1.success")
-                            ];
+                    'msg' => __('lang_v1.success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;
@@ -155,12 +152,12 @@ class CustomerGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('customer_group.delete')) {
+        if (! auth()->user()->can('customer_group.delete')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -172,14 +169,14 @@ class CustomerGroupController extends Controller
                 $cg->delete();
 
                 $output = ['success' => true,
-                            'msg' => __("lang_v1.success")
-                            ];
+                    'msg' => __('lang_v1.success'),
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                    'msg' => __('messages.something_went_wrong'),
+                ];
             }
 
             return $output;

@@ -11,11 +11,12 @@ class SyncCategorySeeder extends Seeder
 
     /**
      * Constructor
-     * 
+     *
      * @param App\Utils\ProductUtil
      * @return void
      */
-    public function __construct(ProductUtil $productUtil) {
+    public function __construct(ProductUtil $productUtil)
+    {
         $this->productUtil = $productUtil;
     }
 
@@ -28,14 +29,14 @@ class SyncCategorySeeder extends Seeder
     {
         /** Business id to sync with */
         $business_id = null;
-        
+
         /** If business_id not setted, exit */
         if (is_null($business_id)) {
             return true;
         }
 
         $business = Business::where('id', '!=', $business_id)->get();
-        
+
         foreach ($business as $b) {
             /** Get categories from other business */
             $categories = Category::where('business_id', $business_id)

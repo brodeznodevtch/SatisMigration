@@ -16,7 +16,7 @@ class ReasonController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('pos.view')) {
+        if (! auth()->user()->can('pos.view')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = auth()->user()->business_id;
@@ -29,19 +29,20 @@ class ReasonController extends Controller
                     'actions',
                     function ($row) {
                         $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                    <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'.__('messages.actions').'<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('pos.update')) {
-                            $html .= '<li><a href="#" data-href="' . action('ReasonController@edit', [$row->id]) . '" class="edit_reason_button"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action('ReasonController@edit', [$row->id]).'" class="edit_reason_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                         }
 
                         if (auth()->user()->can('pos.delete')) {
-                            $html .= '<li><a href="#" onclick="deleteReason(' . $row->id . ')"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</a></li>';
+                            $html .= '<li><a href="#" onclick="deleteReason('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
                         }
 
                         $html .= '</ul></div>';
+
                         return $html;
                     }
                 )
@@ -60,7 +61,7 @@ class ReasonController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('pos.create')) {
+        if (! auth()->user()->can('pos.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -70,12 +71,11 @@ class ReasonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('quotes.create')) {
+        if (! auth()->user()->can('quotes.create')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
@@ -100,12 +100,13 @@ class ReasonController extends Controller
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("información guardada correctamente"),
+                'msg' => __('información guardada correctamente'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
@@ -128,24 +129,24 @@ class ReasonController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('quotes.edit')) {
+        if (! auth()->user()->can('quotes.edit')) {
             abort(403, 'Unauthorized action.');
         }
 
         $reason = Reason::find($id);
+
         return view('reason_lost_sale.edit', compact('reason'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('quotes.update')) {
+        if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(
@@ -169,12 +170,13 @@ class ReasonController extends Controller
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("información actualizada correctamente"),
+                'msg' => __('información actualizada correctamente'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 
@@ -186,7 +188,7 @@ class ReasonController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('quotes.update')) {
+        if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -198,12 +200,13 @@ class ReasonController extends Controller
             DB::commit();
             $output = [
                 'success' => true,
-                'msg' => __("Eliminado correctamente"),
+                'msg' => __('Eliminado correctamente'),
             ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $output = ['success' => false, 'msg' => __("messages.something_went_wrong")];
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
         }
+
         return $output;
     }
 }

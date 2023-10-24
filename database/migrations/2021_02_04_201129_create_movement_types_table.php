@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMovementTypesTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateMovementTypesTable extends Migration
 
             $table->unsignedInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->softDeletes();
 
             $table->timestamps();

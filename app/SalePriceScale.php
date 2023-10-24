@@ -22,11 +22,11 @@ class SalePriceScale extends Model
      * @var array
      */
     protected $fillable = [
-    	'product_id',
+        'product_id',
         'variation_id',
         'business_id',
         'from',
         'to',
-        'price'
+        'price',
     ];
 }

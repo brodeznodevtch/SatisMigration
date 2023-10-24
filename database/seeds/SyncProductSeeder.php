@@ -1,7 +1,7 @@
 <?php
 
-use App\Product;
 use App\Business;
+use App\Product;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
@@ -11,11 +11,12 @@ class SyncProductSeeder extends Seeder
 
     /**
      * Constructor
-     * 
+     *
      * @param App\Utils\ProductUtil
      * @return void
      */
-    public function __construct(ProductUtil $productUtil) {
+    public function __construct(ProductUtil $productUtil)
+    {
         $this->productUtil = $productUtil;
     }
 

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\ClaimType;
-use App\Claim;
 use App\Business;
-use App\User;
+use App\Claim;
+use App\ClaimType;
 use App\ClaimTypeHasUser;
-use Illuminate\Http\Request;
-use DB;
-use DataTables;
+use App\User;
 use Carbon\Carbon;
+use DataTables;
+use DB;
+use Illuminate\Http\Request;
 
 class ClaimTypeController extends Controller
 {
@@ -21,9 +21,10 @@ class ClaimTypeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('claim_type.view')) {
+        if (! auth()->user()->can('claim_type.view')) {
             abort(403, 'Unauthorized action.');
         }
+
         return view('claims.index');
     }
 
@@ -34,32 +35,31 @@ class ClaimTypeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('claim_type.create')) {
+        if (! auth()->user()->can('claim_type.create')) {
             abort(403, 'Unauthorized action.');
         }
+
         return view('claims.index');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('claim_type.create')) {
+        if (! auth()->user()->can('claim_type.create')) {
             abort(403, 'Unauthorized action.');
         }
         $validateData = $request->validate(
             [
                 'txt-name-type' => 'required|unique:claim_types,name',
                 'txt-resolution-time-type' => 'required|integer',
-                
+
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $required_customer = $request->input('required_customer');
@@ -102,33 +102,32 @@ class ClaimTypeController extends Controller
 
                 $user_ids = $request->input('user_id');
 
-                if (!empty($user_ids))
-                {
-                    $cont = 0;                
-                    while($cont < count($user_ids))
-                    {
+                if (! empty($user_ids)) {
+                    $cont = 0;
+                    while ($cont < count($user_ids)) {
                         $detail = new ClaimTypeHasUser;
                         $detail->claim_type_id = $type->id;
                         $detail->user_id = $user_ids[$cont];
                         $detail->save();
                         $cont = $cont + 1;
-                    } 
+                    }
                 }
 
                 DB::commit();
                 $output = [
                     'success' => true,
-                    'msg' => __('crm.added_success')
+                    'msg' => __('crm.added_success'),
                 ];
 
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -141,10 +140,11 @@ class ClaimTypeController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('claim_type.view')) {
+        if (! auth()->user()->can('claim_type.view')) {
             abort(403, 'Unauthorized action.');
         }
         $type = ClaimType::findOrFail($id);
+
         return response()->json($type);
     }
 
@@ -156,28 +156,27 @@ class ClaimTypeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('claim_type.update')) {
+        if (! auth()->user()->can('claim_type.update')) {
             abort(403, 'Unauthorized action.');
         }
         $type = ClaimType::findOrFail($id);
+
         return response()->json($type);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\ClaimType  $claimType
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('claim_type.update')) {
+        if (! auth()->user()->can('claim_type.update')) {
             abort(403, 'Unauthorized action.');
         }
 
         $type = ClaimType::findOrFail($id);
-        
 
         $validateData = $request->validate(
             [
@@ -185,15 +184,14 @@ class ClaimTypeController extends Controller
                 'txt-eresolution-time-type' => 'required',
             ]
         );
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             try {
 
                 $required_customer = $request->input('erequired_customer');
                 $required_product = $request->input('erequired_product');
                 $required_invoice = $request->input('erequired_invoice');
                 $all_access_users = $request->input('eall_access_users');
-                
+
                 $type_details['name'] = $request->input('txt-ename-type');
                 $type_details['description'] = $request->input('txt-edescription-type');
                 $type_details['resolution_time'] = $request->input('txt-eresolution-time-type');
@@ -227,33 +225,32 @@ class ClaimTypeController extends Controller
 
                 $user_ids = $request->input('euser_id');
                 ClaimTypeHasUser::where('claim_type_id', $type->id)->delete();
-                if (!empty($user_ids))
-                {
-                    $cont = 0;                
-                    while($cont < count($user_ids))
-                    {
+                if (! empty($user_ids)) {
+                    $cont = 0;
+                    while ($cont < count($user_ids)) {
                         $detail = new ClaimTypeHasUser;
                         $detail->claim_type_id = $type->id;
                         $detail->user_id = $user_ids[$cont];
                         $detail->save();
                         $cont = $cont + 1;
-                    } 
+                    }
                 }
                 DB::commit();
 
                 $output = [
                     'success' => true,
-                    'msg' => __("crm.updated_success")
+                    'msg' => __('crm.updated_success'),
                 ];
 
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
@@ -266,163 +263,167 @@ class ClaimTypeController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('claim_type.delete')) {
+        if (! auth()->user()->can('claim_type.delete')) {
             abort(403, 'Unauthorized action.');
         }
         if (request()->ajax()) {
-            try{
+            try {
 
                 $type = ClaimType::findOrFail($id);
                 $claims = Claim::where('claim_type', $type->id)->count();
 
-                if($claims > 0){
+                if ($claims > 0) {
                     $output = [
                         'success' => false,
-                        'msg' =>  __('crm.type_has_claims')
+                        'msg' => __('crm.type_has_claims'),
                     ];
-                }
-                else{
+                } else {
                     $type->delete();
                     $output = [
                         'success' => true,
-                        'msg' => __('crm.deleted_success')
+                        'msg' => __('crm.deleted_success'),
                     ];
                 }
-            }
-            catch (\Exception $e){
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            } catch (\Exception $e) {
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
                 $output = [
                     'success' => false,
-                    'msg' => __("messages.something_went_wrong")
+                    'msg' => __('messages.something_went_wrong'),
                 ];
             }
+
             return $output;
         }
     }
 
     public function getClaimTypesData()
     {
-        if (!auth()->user()->can('claim_type.view')) {
+        if (! auth()->user()->can('claim_type.view')) {
             abort(403, 'Unauthorized action.');
         }
         $claimTypes = ClaimType::all();
+
         return DataTables::of($claimTypes)
-        ->addColumn(
-            'actions', function($row){
-                $html = '';
+            ->addColumn(
+                'actions', function ($row) {
+                    $html = '';
 
-                if (auth()->user()->can('claim.update')) {
-                    $html .= '<a class="btn btn-xs btn-primary" onClick="editType('.$row->id.')"><i class="glyphicon glyphicon-edit"></i></a> ';
-                }
+                    if (auth()->user()->can('claim.update')) {
+                        $html .= '<a class="btn btn-xs btn-primary" onClick="editType('.$row->id.')"><i class="glyphicon glyphicon-edit"></i></a> ';
+                    }
 
-                if (auth()->user()->can('claim.delete')) {
-                    $html .= '<a class="btn btn-xs btn-danger" onClick="deleteType('.$row->id.')"><i class="glyphicon glyphicon-trash"></i></a>';
-                }
+                    if (auth()->user()->can('claim.delete')) {
+                        $html .= '<a class="btn btn-xs btn-danger" onClick="deleteType('.$row->id.')"><i class="glyphicon glyphicon-trash"></i></a>';
+                    }
 
-                $html .= '';
-                return $html;
-            })
-        ->addColumn(
-            'resolution', function($row){
-                $html = "".$row->resolution_time." ".__('crm.days')."";
-                return $html;
-            })
-        ->addColumn(
-            'customer', function($row){
-                if($row->required_customer == 1) {
-                    return __('crm.yes');
-                } else {
-                    return __('crm.no');
-                }
-            })
-        ->addColumn(
-            'product', function($row){
-                if($row->required_product == 1) {
-                    return __('crm.yes');
-                } else {
-                    return __('crm.no');
-                }
-            })
-        ->addColumn(
-            'invoice', function($row){
-                if($row->required_invoice == 1) {
-                    return __('crm.yes');
-                } else {
-                    return __('crm.no');
-                }
-            })
-        ->rawColumns(['actions'])
-        ->toJson();
+                    $html .= '';
+
+                    return $html;
+                })
+            ->addColumn(
+                'resolution', function ($row) {
+                    $html = ''.$row->resolution_time.' '.__('crm.days').'';
+
+                    return $html;
+                })
+            ->addColumn(
+                'customer', function ($row) {
+                    if ($row->required_customer == 1) {
+                        return __('crm.yes');
+                    } else {
+                        return __('crm.no');
+                    }
+                })
+            ->addColumn(
+                'product', function ($row) {
+                    if ($row->required_product == 1) {
+                        return __('crm.yes');
+                    } else {
+                        return __('crm.no');
+                    }
+                })
+            ->addColumn(
+                'invoice', function ($row) {
+                    if ($row->required_invoice == 1) {
+                        return __('crm.yes');
+                    } else {
+                        return __('crm.no');
+                    }
+                })
+            ->rawColumns(['actions'])
+            ->toJson();
     }
 
     public function getClaimTypes()
     {
-        if (!auth()->user()->can('claim_type.view')) {
+        if (! auth()->user()->can('claim_type.view')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $claimTypes = ClaimType::all();
+
         return response()->json($claimTypes);
     }
 
     public function getClaimTypeCorrelative()
     {
-        if (!auth()->user()->can('claim_type.create')) {
+        if (! auth()->user()->can('claim_type.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
 
         $last_correlative = DB::table('claim_types')
-        ->select(DB::raw('MAX(id) as max'))
-        ->first();
+            ->select(DB::raw('MAX(id) as max'))
+            ->first();
 
         if ($last_correlative->max != null) {
             $correlative = $last_correlative->max + 1;
-        }
-        else {
+        } else {
             $correlative = 1;
         }
         if ($correlative < 10) {
-            $correlative = "".$business->claim_type_prefix."0".$correlative."";
-        }
-        else {
-            $correlative = "".$business->claim_type_prefix."".$correlative."";
+            $correlative = ''.$business->claim_type_prefix.'0'.$correlative.'';
+        } else {
+            $correlative = ''.$business->claim_type_prefix.''.$correlative.'';
         }
         $output = [
-            'correlative' => $correlative
+            'correlative' => $correlative,
         ];
+
         return $output;
     }
 
     public function getUserById($id)
     {
-        if (!auth()->user()->can('claim_type.create')) {
+        if (! auth()->user()->can('claim_type.create')) {
             abort(403, 'Unauthorized action.');
         }
         $user = User::select('id', DB::raw('CONCAT(first_name, " ", last_name) as full_name'))
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
+
         return response()->json($user);
     }
 
     public function getUsersByClaimType($id)
     {
-        if (!auth()->user()->can('claim_type.view')) {
+        if (! auth()->user()->can('claim_type.view')) {
             abort(403, 'Unauthorized action.');
         }
         $users = DB::table('claim_type_has_users as claim')
-        ->join('users as user', 'user.id', '=', 'claim.user_id')
-        ->select('claim.user_id', DB::raw('CONCAT(user.first_name, " ", user.last_name) as full_name'))
-        ->where('claim.claim_type_id', $id)
-        ->orderBy('claim.id', 'asc')
-        ->get();
+            ->join('users as user', 'user.id', '=', 'claim.user_id')
+            ->select('claim.user_id', DB::raw('CONCAT(user.first_name, " ", user.last_name) as full_name'))
+            ->where('claim.claim_type_id', $id)
+            ->orderBy('claim.id', 'asc')
+            ->get();
+
         return response()->json($users);
     }
 
     public function getSuggestedClosingDate($date, $days)
     {
-        if (!auth()->user()->can('claim_type.create')) {
+        if (! auth()->user()->can('claim_type.create')) {
             abort(403, 'Unauthorized action.');
         }
         $date_claim = Carbon::createFromFormat('Y-m-d', $date);
@@ -431,7 +432,7 @@ class ClaimTypeController extends Controller
         $output = [
             'suggested_date' => $date_claim->toDateString(),
             'date_claim' => $date,
-            'days' => $days
+            'days' => $days,
         ];
 
         return $output;

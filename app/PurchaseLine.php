@@ -12,7 +12,7 @@ class PurchaseLine extends Model
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     public function transaction()
     {
         return $this->belongsTo(\App\Transaction::class);
@@ -28,7 +28,8 @@ class PurchaseLine extends Model
         return $this->belongsTo(\App\Variation::class, 'variation_id');
     }
 
-    public function tax_groups(){
+    public function tax_groups()
+    {
         return $this->belongsTo(\App\TaxGroup::class, 'tax_id');
     }
 
@@ -40,6 +41,6 @@ class PurchaseLine extends Model
      */
     public function getQuantityAttribute($value)
     {
-        return (float)$value;
+        return (float) $value;
     }
 }
