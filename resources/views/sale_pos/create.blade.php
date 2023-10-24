@@ -239,10 +239,10 @@
 						<input type="hidden" name="min_amount" id="min_amount" value="{{ $walk_in_customer['min_amount'] }}">
 						<input type="hidden" name="max_amount" id="max_amount" value="{{ $walk_in_customer['max_amount'] }}">
 
-						{{-- Request DUIs for FCF equal to or greater than max operation --}}
+						{{-- Request DUIs for FCF equal to ?? greater than max operation --}}
 						<input type="hidden" id="fcf_document" value="{{ $fcf_document->id }}" data-max-operation="{{ $fcf_document->max_operation }}">
 
-						{{-- Request DUIs for CCF equal to or greater than max operation --}}
+						{{-- Request DUIs for CCF equal to ?? greater than max operation --}}
 						<input type="hidden" id="ccf_document" value="{{ $ccf_document->id }}" data-max-operation="{{ $ccf_document->max_operation }}">
 
 						{{-- Selected payment method --}}

@@ -125,7 +125,7 @@
               {!! Form::label("cashier_id", __('cashier.cashier') . ':*') !!}
 
               @if (is_null($default_cashier))
-              {{-- Some or all cashiers --}}
+              {{-- Some ?? all cashiers --}}
               {!! Form::select("cashier_id", $cashiers, $payment_line->cashier_id,
                 ['class' => 'form-control select2', 'required', 'style' => 'width:100%;']); !!}
 

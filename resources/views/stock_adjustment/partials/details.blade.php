@@ -27,7 +27,7 @@
 							( {{ $details->sub_sku }} )
 						</td>
 						@if(!empty($lot_n_exp_enabled))
-                			<td>{{ $details->lot_number or '--' }}
+                			<td>{{ $details->lot_number ?? '--' }}
 			                  @if( session()->get('business.enable_product_expiry') == 1 && !empty($details->exp_date))
 			                    ({{@format_date($details->exp_date)}})
 			                  @endif

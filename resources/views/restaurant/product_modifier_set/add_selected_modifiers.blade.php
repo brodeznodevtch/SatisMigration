@@ -20,7 +20,7 @@
 		@if (!$loop->first)
 			{{', '}}
 		@endif
-		{{$modifier->variations->name or ''}}({{@num_format($modifier->unit_price_inc_tax)}})
+		{{$modifier->variations->name ?? ''}}({{@num_format($modifier->unit_price_inc_tax)}})
 		<input type="hidden" name="products[{{$index}}][modifier][]" 
 			value="{{$modifier->variation_id}}">
 		<input type="hidden" class="modifiers_price" 

@@ -174,7 +174,7 @@
                 </div>
                 @endif
 
-                {{-- Show or hide stock and difference columns --}}
+                {{-- Show ?? hide stock and difference columns --}}
                 <input type="hidden" id="view_stock" @if (auth()->user()->can('physical_inventory.view_stock')) value="1" @else value="2" @endif>
             </div>
         </div>

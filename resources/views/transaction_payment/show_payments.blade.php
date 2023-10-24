@@ -288,7 +288,7 @@
                         <td>{{ $payment_types[$payment->method] }}</td>
                         <td>{{ $payment->note }}</td>
                         @if ($accounts_enabled)
-                            <td>{{ $payment->payment_account->name or '' }}</td>
+                            <td>{{ $payment->payment_account->name ?? '' }}</td>
                         @endif
                         <td>
                             <div class="btn-group">
