@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 class Employees extends Model
 {
     use HasFactory;
-
     use Notifiable;
     use SoftDeletes;
 

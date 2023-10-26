@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ImportExpense extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     /**

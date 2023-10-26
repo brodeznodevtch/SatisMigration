@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SalePriceScale extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     /**

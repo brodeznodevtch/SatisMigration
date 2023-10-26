@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PhysicalInventory extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     /**

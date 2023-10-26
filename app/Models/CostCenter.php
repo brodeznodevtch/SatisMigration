@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CostCenter extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     protected $fillable = ['name', 'description', 'created_by', 'updated_by', 'location_id', 'business_id'];

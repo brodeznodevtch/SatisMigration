@@ -15,6 +15,7 @@ use App\Models\VariationLocationDetails;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FixDuplicatedProducts extends Seeder
 {
@@ -58,7 +59,7 @@ class FixDuplicatedProducts extends Seeder
 
                 $count = count($variations);
 
-                \Log::info('/********** Product '.$p.' => id: '.$dp->id.' sku: '.$dp->sku.' */');
+                Log::info('/********** Product '.$p.' => id: '.$dp->id.' sku: '.$dp->sku.' */');
 
                 if ($count == 2) {
                     $first = $variations->first();
@@ -103,7 +104,7 @@ class FixDuplicatedProducts extends Seeder
     private function update_records($first_id, $last_id, $business_id)
     {
         try {
-            \Log::info('Replacing '.$last_id.' for '.$first_id);
+            Log::info('Replacing '.$last_id.' for '.$first_id);
             DB::beginTransaction();
 
             /** Update kardex */
@@ -112,11 +113,11 @@ class FixDuplicatedProducts extends Seeder
                 $k->variation_id = $first_id;
                 $k->save();
 
-                \Log::info('Kardex updated '.$k->id);
+                Log::info('Kardex updated '.$k->id);
             }
 
             if (! count($kardex)) {
-                \Log::info('No kardex records');
+                Log::info('No kardex records');
             }
 
             /** Update purchase lines */
@@ -125,11 +126,11 @@ class FixDuplicatedProducts extends Seeder
                 $pl->variation_id = $first_id;
                 $pl->save();
 
-                \Log::info('Purchase lines updated => transaction_id: '.$pl->transaction_id.' id: '.$pl->id);
+                Log::info('Purchase lines updated => transaction_id: '.$pl->transaction_id.' id: '.$pl->id);
             }
 
             if (! count($purchase_lines)) {
-                \Log::info('No purchase lines records');
+                Log::info('No purchase lines records');
             }
 
             /** Update transaction sell lines */
@@ -138,11 +139,11 @@ class FixDuplicatedProducts extends Seeder
                 $tsl->variation_id = $first_id;
                 $tsl->save();
 
-                \Log::info('Transaction sell lines updated => transaction_id: '.$tsl->transaction_id.' id: '.$tsl->id);
+                Log::info('Transaction sell lines updated => transaction_id: '.$tsl->transaction_id.' id: '.$tsl->id);
             }
 
             if (! count($transaction_sell_lines)) {
-                \Log::info('No transaction sell lines records');
+                Log::info('No transaction sell lines records');
             }
 
             /** Update kit has products */
@@ -151,11 +152,11 @@ class FixDuplicatedProducts extends Seeder
                 $khp->children_id = $first_id;
                 $khp->save();
 
-                \Log::info('Kit has product updated '.$khp->id);
+                Log::info('Kit has product updated '.$khp->id);
             }
 
             if (! count($kit_has_products)) {
-                \Log::info('No kit has product records');
+                Log::info('No kit has product records');
             }
 
             /** Update variation location details */
@@ -175,7 +176,7 @@ class FixDuplicatedProducts extends Seeder
                     }
 
                     $last_vld->forceDelete();
-                    \Log::info('Vld deleted => id: '.$last_vld->id.' product: '.$last_vld->product_id.' variation_id: '.$last_vld->variation_id.' location_id: '.$last_vld->location_id.' warehouse_id '.$last_vld->warehouse_id);
+                    Log::info('Vld deleted => id: '.$last_vld->id.' product: '.$last_vld->product_id.' variation_id: '.$last_vld->variation_id.' location_id: '.$last_vld->location_id.' warehouse_id '.$last_vld->warehouse_id);
 
                     /** Generate product kardex */
                     if (count($purchase_lines) > 0) {
@@ -190,15 +191,15 @@ class FixDuplicatedProducts extends Seeder
             if (! empty($variation)) {
                 $variation->forceDelete();
 
-                \Log::info('Variation deleted '.$variation->id);
+                Log::info('Variation deleted '.$variation->id);
             }
 
             DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency('File: '.$e->getFile());
-            \Log::emergency('Line: '.$e->getLine().' Message:'.$e->getMessage());
+            Log::emergency('File: '.$e->getFile());
+            Log::emergency('Line: '.$e->getLine().' Message:'.$e->getMessage());
         }
     }
 }

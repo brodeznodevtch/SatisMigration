@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Database\Seeders\DummyBusinessSeeder;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Console\Command;
