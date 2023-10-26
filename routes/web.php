@@ -202,7 +202,7 @@ Route::get('/products/get_only_products', [ProductController::class, 'getProduct
 
 //Routes for authenticated users only
 Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function () {
-/*    Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');*/
+    Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
     //rutas para busineestypes y paymentTerm
     Route::resource('business_types', BusinessTypeController::class);
@@ -978,14 +978,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('manage-credit-requests/getCreditsData', [ManageCreditRequestController::class, 'getCreditsData']);
     Route::post('manage-credit-requests/edit', [ManageCreditRequestController::class, 'editCredit']);
 
-<<<<<<< Updated upstream
-
-/*    Route::get('manage-credit-requests/view/{id}', 'ManageCreditRequestController/update/product@viewCredit');*/
-    Route::resource('manage-credit-requests', 'ManageCreditRequestController');
-=======
 /*    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestControllerupdate/product::class, 'viewCredit']);*/
     Route::resource('manage-credit-requests', ManageCreditRequestController::class);
->>>>>>> Stashed changes
 
     // Customers
     Route::get('/customers-import', [CustomerController::class, 'getImportCustomers'])->name('customers.import');
