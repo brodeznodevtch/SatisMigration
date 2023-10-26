@@ -31,7 +31,8 @@
         "spatie/laravel-permission": "^3.0",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^6.10",
-        "yajra/laravel-datatables-oracle": "^9.6"
+        "yajra/laravel-datatables-oracle": "^9.6",
+        "laravel/ui": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
