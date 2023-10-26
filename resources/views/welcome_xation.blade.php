@@ -94,9 +94,9 @@
 
             @if (Route::has('login'))
                 @if (Auth::check())
-                    <a href="{{ action('HomeController@index') }}">@lang('home.home')</a>
+                    <a href="{{ action([\App\Http\Controllers\HomeController::class, 'index']) }}">@lang('home.home')</a>
                 @else
-                    <a href="{{ action('Auth\LoginController@login') }}"
+                    <a href="{{ action([\App\Http\Controllers\Auth\LoginController::class, 'login']) }}"
                         style="color: #024c88">@lang('home.login')</a>
                     @if (env('ALLOW_REGISTRATION', true))
                         <a href="{{ route('business.getRegister') }}">@lang('home.register')</a>
@@ -106,7 +106,7 @@
 
             @if (Route::has('pricing') && config('app.env') != 'demo')
                 <a
-                    href="{{ action('\Modules\Superadmin\Http\Controllers\PricingController@index') }}">@lang('superadmin::lang.pricing')</a>
+                    href="{{ action([\Modules\Superadmin\Http\Controllers\PricingController::class, 'index']) }}">@lang('superadmin::lang.pricing')</a>
             @endif
         </div>
 

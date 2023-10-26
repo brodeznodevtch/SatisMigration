@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('CRMContactModeController@update', [$contact_mode->id]), 'method' => 'PUT', 'id' => 'contactmode_edit_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\CRMContactModeController::class, 'update'], [$contact_mode->id]), 'method' => 'PUT', 'id' => 'contactmode_edit_form']) !!}
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

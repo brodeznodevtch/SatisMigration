@@ -11,7 +11,7 @@
             <h3 class="box-title">@lang('crm.manage_contact_mode')</h3>
             @can('crm-contactmode.create')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('CRMContactModeController@create')}}" data-container=".contactmode_modal">
+                    <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action([\App\Http\Controllers\CRMContactModeController::class, 'create'])}}" data-container=".contactmode_modal">
                         <i class="fa fa-plus"></i> @lang('messages.add')
                     </button>
                 </div>

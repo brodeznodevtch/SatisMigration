@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
   
-      {!! Form::open(['url' => action('TransactionPaymentController@storeToQuote'), 'method' => 'post',
+      {!! Form::open(['url' => action([\App\Http\Controllers\TransactionPaymentController::class, 'storeToQuote']), 'method' => 'post',
         'id' => 'transaction_payment_add_form', 'files' => true ]) !!}
       
       {{-- quote_id --}}

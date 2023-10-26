@@ -21,7 +21,7 @@
         	<h3 class="box-title">@lang( 'lang_v1.all_selling_price_group' )</h3>
         	<div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                	data-href="{{action('SellingPriceGroupController@create')}}" 
+                	data-href="{{action([\App\Http\Controllers\SellingPriceGroupController::class, 'create'])}}" 
                 	data-container=".view_modal">
                 	<i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>

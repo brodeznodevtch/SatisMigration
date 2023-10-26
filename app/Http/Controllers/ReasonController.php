@@ -34,7 +34,7 @@ class ReasonController extends Controller
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('pos.update')) {
-                            $html .= '<li><a href="#" data-href="'.action('ReasonController@edit', [$row->id]).'" class="edit_reason_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\ReasonController::class, 'edit'], [$row->id]).'" class="edit_reason_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                         }
 
                         if (auth()->user()->can('pos.delete')) {

@@ -62,10 +62,10 @@
                     <div class="box-header">
                         <h3 class="box-title">@lang('expense.all_expenses')</h3>
                         <div class="box-tools">
-                            {{-- <a class="btn btn-block btn-primary" href="{{action('ExpenseController@create')}}">
+                            {{-- <a class="btn btn-block btn-primary" href="{{action([\App\Http\Controllers\ExpenseController::class, 'create'])}}">
                         <i class="fa fa-plus"></i> @lang('messages.add')</a> --}}
                             <button type="button" class="btn btn-block btn-primary btn-modal" id="hola"
-                                data-href="{{ action('ExpenseController@create') }}" data-container=".expenses_modal">
+                                data-href="{{ action([\App\Http\Controllers\ExpenseController::class, 'create']) }}" data-container=".expenses_modal">
                                 <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                         </div>
                     </div>

@@ -17,7 +17,7 @@
         	<h3 class="box-title">@lang( 'order.all_your_orders')</h3>
             @if(auth()->user()->can('order.create'))
             <div class="box-tools">
-                <a class="btn btn-block btn-primary" href="{{action('OrderController@create')}}">
+                <a class="btn btn-block btn-primary" href="{{action([\App\Http\Controllers\OrderController::class, 'create'])}}">
                 <i class="fa fa-plus"></i> @lang('messages.add')</a>
             </div>
             @endif

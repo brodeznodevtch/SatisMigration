@@ -33,7 +33,7 @@ class PaymentTermController extends Controller
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('customer.update')) {
-                        $html .= '<li><a href="#" data-href="'.action('PaymentTermController@edit', [$row->id]).'" class="edit_payment_terms_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\PaymentTermController::class, 'edit'], [$row->id]).'" class="edit_payment_terms_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.delete')) {

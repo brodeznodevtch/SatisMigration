@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog">
     <div class="modal-content">
-        {!! Form::open(['url' => action('CreditDocumentsController@saveCustodian', [$cdocs->id]), 'method' => 'POST', 'id' => 'cdocs_custodian_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\CreditDocumentsController::class, 'saveCustodian'], [$cdocs->id]), 'method' => 'POST', 'id' => 'cdocs_custodian_form']) !!}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

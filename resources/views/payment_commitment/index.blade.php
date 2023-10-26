@@ -17,7 +17,7 @@
         	<h3 class="box-title">@lang('contact.all_your_payment_commitments')</h3>
             @can('payment_commitment.create')
             	<div class="box-tools">
-                    <a class="btn btn-block btn-primary add-payment-commitment" href="{{action('PaymentCommitmentController@create')}}">
+                    <a class="btn btn-block btn-primary add-payment-commitment" href="{{action([\App\Http\Controllers\PaymentCommitmentController::class, 'create'])}}">
                         <i class="fa fa-plus"></i> @lang('messages.add')</a>
                 </div>
             @endcan

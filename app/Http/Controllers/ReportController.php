@@ -339,7 +339,7 @@ class ReportController extends Controller
                         $name .= ', '.$row->supplier_business_name;
                     }
 
-                    return '<a href="'.action('ContactController@show', [$row->id]).'" target="_blank">'.
+                    return '<a href="'.action([\App\Http\Controllers\ContactController::class, 'show'], [$row->id]).'" target="_blank">'.
                             $name.
                         '</a>';
                 })
@@ -522,9 +522,9 @@ class ReportController extends Controller
 
                     if ($allowed_selling_price_group) {
                         if (config('app.business') == 'optics') {
-                            $html .= ' <button type="button" class="btn btn-primary btn-xs btn-modal no-print" data-container=".view_modal" data-href="'.action('Optics\ProductController@viewGroupPrice', [$row->product_id]).'">'.__('lang_v1.view_group_prices').'</button>';
+                            $html .= ' <button type="button" class="btn btn-primary btn-xs btn-modal no-print" data-container=".view_modal" data-href="'.action([\App\Http\Controllers\Optics\ProductController::class, 'viewGroupPrice'], [$row->product_id]).'">'.__('lang_v1.view_group_prices').'</button>';
                         } else {
-                            $html .= ' <button type="button" class="btn btn-primary btn-xs btn-modal no-print" data-container=".view_modal" data-href="'.action('ProductController@viewGroupPrice', [$row->product_id]).'">'.__('lang_v1.view_group_prices').'</button>';
+                            $html .= ' <button type="button" class="btn btn-primary btn-xs btn-modal no-print" data-container=".view_modal" data-href="'.action([\App\Http\Controllers\ProductController::class, 'viewGroupPrice'], [$row->product_id]).'">'.__('lang_v1.view_group_prices').'</button>';
                         }
                     }
 
@@ -662,7 +662,7 @@ class ReportController extends Controller
                     return $product_name;
                 })
                 ->editColumn('invoice_no', function ($row) {
-                    return '<a data-href="'.action('SellController@show', [$row->transaction_id])
+                    return '<a data-href="'.action([\App\Http\Controllers\SellController::class, 'show'], [$row->transaction_id])
                             .'" href="#" data-container=".view_modal" class="btn-modal">'.$row->invoice_no.'</a>';
                 })
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
@@ -1045,7 +1045,7 @@ class ReportController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     if ($row->status == 'close') {
-                        return '<button type="button" data-href=" '.action('CashRegisterController@show', [$row->id]).'" class="btn btn-xs btn-info btn-modal" 
+                        return '<button type="button" data-href=" '.action([\App\Http\Controllers\CashRegisterController::class, 'show'], [$row->id]).'" class="btn btn-xs btn-info btn-modal" 
                                 data-container=".view_register"><i class="fa fa-external-link" aria-hidden="true"></i>'.__('messages.view').'</button>';
                     } else {
                         return '';
@@ -1116,7 +1116,7 @@ class ReportController extends Controller
                         </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a class="view_daily_z_cut"
-                                    href="'.action('CashierClosureController@showDailyZCut', [$row->id]).'">
+                                    href="'.action([\App\Http\Controllers\CashierClosureController::class, 'showDailyZCut'], [$row->id]).'">
                                         <i class="fa fa-eye" aria-hidden="true"></i>'.__('messages.view').'</a>
                                 </li>
                                 <li><a class="recalc_cc" title="'.__('cashier.recalc_cc')
@@ -1128,7 +1128,7 @@ class ReportController extends Controller
                         $actions .= '
                             <li><a class="create_acc_entry"
                                 title="'.__('accounting.generate_accounting_entry').'"
-                                href="'.action('CashierClosureController@createSaleAccountingEntry', [$row->id]).'">
+                                href="'.action([\App\Http\Controllers\CashierClosureController::class, 'createSaleAccountingEntry'], [$row->id]).'">
                                 <i class="fa fa-check-circle"></i> '.__('accounting.accounting').'</a>
                             </li>';
                     }
@@ -1382,7 +1382,7 @@ class ReportController extends Controller
                     }
                 })
                 ->editColumn('ref_no', function ($row) {
-                    return '<button type="button" data-href="'.action('PurchaseController@show', [$row->transaction_id])
+                    return '<button type="button" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->transaction_id])
                             .'" class="btn btn-link btn-modal" data-container=".view_modal"  >'.$row->ref_no.'</button>';
                 })
                 ->editColumn('stock_left', function ($row) {
@@ -1396,7 +1396,7 @@ class ReportController extends Controller
                         $carbon_exp = \Carbon::createFromFormat('Y-m-d', $row->exp_date);
                         $carbon_now = \Carbon::now();
                         if ($carbon_now->diffInDays($carbon_exp, false) < 0) {
-                            $html .= ' <button type="button" class="btn btn-warning btn-xs remove_from_stock_btn" data-href="'.action('StockAdjustmentController@removeExpiredStock', [$row->purchase_line_id]).'"> <i class="fa fa-trash"></i> '.__('lang_v1.remove_from_stock').
+                            $html .= ' <button type="button" class="btn btn-warning btn-xs remove_from_stock_btn" data-href="'.action([\App\Http\Controllers\StockAdjustmentController::class, 'removeExpiredStock'], [$row->purchase_line_id]).'"> <i class="fa fa-trash"></i> '.__('lang_v1.remove_from_stock').
                             '</button>';
                         }
                     }
@@ -1681,7 +1681,7 @@ class ReportController extends Controller
                     return $product_name;
                 })
                 ->editColumn('ref_no', function ($row) {
-                    return '<a data-href="'.action('PurchaseController@show', [$row->transaction_id])
+                    return '<a data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->transaction_id])
                             .'" href="#" data-container=".view_modal" class="btn-modal">'.$row->ref_no.'</a>';
                 })
                 ->editColumn('purchase_qty', function ($row) {
@@ -1926,7 +1926,7 @@ class ReportController extends Controller
             return Datatables::of($query)
                 ->editColumn('ref_no', function ($row) {
                     if (! empty($row->ref_no)) {
-                        return '<a data-href="'.action('PurchaseController@show', [$row->transaction_id])
+                        return '<a data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->transaction_id])
                             .'" href="#" data-container=".view_modal" class="btn-modal">'.$row->ref_no.'</a>';
                     } else {
                         return '';
@@ -1954,7 +1954,7 @@ class ReportController extends Controller
                 ->editColumn('amount', function ($row) {
                     return '<span class="display_currency paid-amount" data-currency_symbol = true data-orig-value="'.$row->amount.'">'.$row->amount.'</span>';
                 })
-                ->addColumn('action', '<button type="button" class="btn btn-primary btn-xs view_payment" data-href="{{ action("TransactionPaymentController@viewPayment", [$DT_RowId]) }}">@lang("messages.view")
+                ->addColumn('action', '<button type="button" class="btn btn-primary btn-xs view_payment" data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'viewPayment'], [$DT_RowId]) }}">@lang("messages.view")
                     </button> @if(!empty($document))<a href="{{asset("/uploads/documents/" . $document)}}" class="btn btn-success btn-xs" download=""><i class="fa fa-download"></i> @lang("purchase.download_document")</a>@endif')
                 ->rawColumns(['ref_no', 'amount', 'method', 'action'])
                 ->make(true);
@@ -2041,7 +2041,7 @@ class ReportController extends Controller
             return Datatables::of($query)
                 ->editColumn('invoice_no', function ($row) {
                     if (! empty($row->transaction_id)) {
-                        return '<a data-href="'.action('SellController@show', [$row->transaction_id])
+                        return '<a data-href="'.action([\App\Http\Controllers\SellController::class, 'show'], [$row->transaction_id])
                             .'" href="#" data-container=".view_modal" class="btn-modal">'.$row->invoice_no.'</a>';
                     } else {
                         return '';
@@ -2069,7 +2069,7 @@ class ReportController extends Controller
                 ->editColumn('amount', function ($row) {
                     return '<span class="display_currency paid-amount" data-orig-value="'.$row->amount.'" data-currency_symbol = true>'.$row->amount.'</span>';
                 })
-                ->addColumn('action', '<button type="button" class="btn btn-primary btn-xs view_payment" data-href="{{ action("TransactionPaymentController@viewPayment", [$DT_RowId]) }}">@lang("messages.view")
+                ->addColumn('action', '<button type="button" class="btn btn-primary btn-xs view_payment" data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'viewPayment'], [$DT_RowId]) }}">@lang("messages.view")
                     </button> @if(!empty($document))<a href="{{asset("/uploads/documents/" . $document)}}" class="btn btn-success btn-xs" download=""><i class="fa fa-download"></i> @lang("purchase.download_document")</a>@endif')
                 ->rawColumns(['invoice_no', 'amount', 'method', 'action'])
                 ->make(true);
@@ -3192,7 +3192,7 @@ class ReportController extends Controller
 
                         if ($row->amount_return > 0) {
                             $total .= '<br><strong>'.__('sale.return').':</strong><br>';
-                            $total .= '<a href="'.action('SellReturnController@show', [$row->id]).'" class="btn-modal">';
+                            $total .= '<a href="'.action([\App\Http\Controllers\SellReturnController::class, 'show'], [$row->id]).'" class="btn-modal">';
                             $total .= '<span class="display_currency" data-currency_symbol="true">'.$row->amount_return.'</span></a>';
                         }
 

@@ -29,7 +29,7 @@
         <div class="col-sm-12">
         	<div class="box">
                 <div class="box-body">
-                    {!! Form::open(['url' => action('ImportOpeningStockController@store'), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'opening_stock_form' ]) !!}
+                    {!! Form::open(['url' => action([\App\Http\Controllers\ImportOpeningStockController::class, 'store']), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'opening_stock_form' ]) !!}
                         <div class="row">
                             <div class="col-sm-6">
                             <div class="col-sm-8">

@@ -15,7 +15,7 @@
     <section class="content">
         <div class="boxform_u box-solid_u">
             <div class="box-body">
-                {!! Form::model($type, ['url' => action('RrhhTypeContractController@update', $type->id), 'method' => 'patch',
+                {!! Form::model($type, ['url' => action([\App\Http\Controllers\RrhhTypeContractController::class, 'update'], $type->id), 'method' => 'patch',
                 'id' => 'form_edit', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">

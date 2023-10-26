@@ -11,7 +11,7 @@
     <section class="content">
         <div class="boxform_u box-solid_u">
             {!! Form::open([
-                'url' => action('EmployeesController@store'),
+                'url' => action([\App\Http\Controllers\EmployeesController::class, 'store']),
                 'method' => 'post',
                 'id' => 'form_add',
                 'files' => true,

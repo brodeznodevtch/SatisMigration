@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('WarehouseController@update', [$warehouse->id]), 'method' => 'PUT', 'id' =>
+        {!! Form::open(['url' => action([\App\Http\Controllers\WarehouseController::class, 'update'], [$warehouse->id]), 'method' => 'PUT', 'id' =>
         'warehouses_edit_form']) !!}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

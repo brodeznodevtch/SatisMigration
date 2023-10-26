@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
   <div class="modal-content" style="border-radius: 10px;">
-    {!! Form::open(['url' => action('CustomerController@storeCustomerAndPatient'), 'method' => 'post', 'id' =>
+    {!! Form::open(['url' => action([\App\Http\Controllers\CustomerController::class, 'storeCustomerAndPatient']), 'method' => 'post', 'id' =>
     'form-add-customer-patient']) !!}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">

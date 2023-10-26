@@ -60,16 +60,16 @@ class PaymentCommitmentController extends Controller
                 ->addColumn('action', function ($row) {
                     $action = '';
                     if (auth()->user()->can('payment_commitment.edit')) {
-                        $action .= "<a class='btn btn-primary btn-xs edit_payment_commitment' href=".action('PaymentCommitmentController@edit', [$row->id])." title='Editar'><i class='glyphicon glyphicon-edit'></i></a>";
+                        $action .= "<a class='btn btn-primary btn-xs edit_payment_commitment' href=".action([\App\Http\Controllers\PaymentCommitmentController::class, 'edit'], [$row->id])." title='Editar'><i class='glyphicon glyphicon-edit'></i></a>";
                     }
                     if (auth()->user()->can('payment_commitment.print') && ! $row->is_annulled) {
-                        $action .= "&nbsp;<a class='btn btn-success btn-xs print_payment_commitment' href=".action('PaymentCommitmentController@print', [$row->id])." target='_blank' title='Imprimir'><i class='glyphicon glyphicon-print'></i></a>";
+                        $action .= "&nbsp;<a class='btn btn-success btn-xs print_payment_commitment' href=".action([\App\Http\Controllers\PaymentCommitmentController::class, 'print'], [$row->id])." target='_blank' title='Imprimir'><i class='glyphicon glyphicon-print'></i></a>";
                     }
                     if (auth()->user()->can('payment_commitment.annul') && ! $row->is_annulled) {
-                        $action .= "&nbsp;<a class='btn btn-warning btn-xs annul_payment_commitment' href=".action('PaymentCommitmentController@annul', [$row->id])." title='Anular'><i class='fa fa-times-circle-o' aria-hidden='true'></i></a>";
+                        $action .= "&nbsp;<a class='btn btn-warning btn-xs annul_payment_commitment' href=".action([\App\Http\Controllers\PaymentCommitmentController::class, 'annul'], [$row->id])." title='Anular'><i class='fa fa-times-circle-o' aria-hidden='true'></i></a>";
                     }
                     if (auth()->user()->can('payment_commitment.delete')) {
-                        $action .= "&nbsp;<a class='btn btn-danger btn-xs delete_payment_commitment' href=".action('PaymentCommitmentController@destroy', [$row->id])." title='Eliminar'><i class='glyphicon glyphicon-trash'></i></a>";
+                        $action .= "&nbsp;<a class='btn btn-danger btn-xs delete_payment_commitment' href=".action([\App\Http\Controllers\PaymentCommitmentController::class, 'destroy'], [$row->id])." title='Eliminar'><i class='glyphicon glyphicon-trash'></i></a>";
                     }
 
                     return $action;

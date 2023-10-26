@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="box-body">
-      {!! Form::open(['url' => action('RoleController@update', [$role->id]), 'method' => 'PUT', 'id' => 'role_form' ]) !!}      
+      {!! Form::open(['url' => action([\App\Http\Controllers\RoleController::class, 'update'], [$role->id]), 'method' => 'PUT', 'id' => 'role_form' ]) !!}      
       <div class="row col-md-12">
         <div class="row">
           <div class="col-md-4">

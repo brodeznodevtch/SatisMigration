@@ -22,7 +22,7 @@
                 @can('payment_term.create')
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                            data-href="{{ action('PaymentTermController@create') }}" data-container=".employees_modal">
+                            data-href="{{ action([\App\Http\Controllers\PaymentTermController::class, 'create']) }}" data-container=".employees_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>
                 @endcan

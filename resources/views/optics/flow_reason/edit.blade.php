@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('Optics\FlowReasonController@update',
+        {!! Form::open(['url' => action([\App\Http\Controllers\Optics\FlowReasonController::class, 'update'],
             [$flow_reason->id]), 'method' => 'PUT', 'id' => 'flow_reasons_edit_form']) !!}
 
         <div class="modal-header">

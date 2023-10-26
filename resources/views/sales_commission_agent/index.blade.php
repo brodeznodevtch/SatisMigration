@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <button type="button" class="btn btn-primary btn-modal pull-right" 
-                            data-href="{{action('SalesCommissionAgentController@create')}}" 
+                            data-href="{{action([\App\Http\Controllers\SalesCommissionAgentController::class, 'create'])}}" 
                             data-container=".commission_agent_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>

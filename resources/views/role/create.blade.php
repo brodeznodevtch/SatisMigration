@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="box-body">
-    {!! Form::open(['url' => action('RoleController@store'), 'method' => 'post', 'id' => 'role_add_form' ]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\RoleController::class, 'store']), 'method' => 'post', 'id' => 'role_add_form' ]) !!}
     <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
     <div class="row col-md-12">
       <div class="row">

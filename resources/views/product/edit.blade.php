@@ -9,7 +9,7 @@
 
 <!-- Main content -->
 <section class="content">
-  {!! Form::open(['url' => action('ProductController@update' , [$product->id] ), 'method' => 'PUT', 'id' => 'product_edit_form',
+  {!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'update'] , [$product->id] ), 'method' => 'PUT', 'id' => 'product_edit_form',
   'class' => 'product_form', 'files' => true ]) !!}
   <input type="hidden" id="product_id" value="{{ $product->id }}">
   <input type="hidden" id="product_clasification" value="{{ $product->clasification }}">
@@ -82,7 +82,7 @@
                 __('messages.please_select'), 'class' => 'form-control select2']); !!}
                 <span class="input-group-btn">
                   <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default
-                    bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}"
+                    bg-white btn-flat btn-modal" data-href="{{action([\App\Http\Controllers\BrandController::class, 'create'], ['quick_add' => true])}}"
                     title="@lang('brand.add_brand')" data-container=".view_modal"><i
                       class="fa fa-plus-circle text-primary fa-lg"></i></button>
                 </span>
@@ -104,7 +104,7 @@
                 <span class="input-group-btn">
                   <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif
                     class="btn btn-default bg-white btn-flat btn-modal quick_add_unit"
-                    data-href="{{action('UnitController@create', ['quick_add' => true])}}"
+                    data-href="{{action([\App\Http\Controllers\UnitController::class, 'create'], ['quick_add' => true])}}"
                     title="@lang('unit.add_unit')"
                     data-container=".view_modal">
                     <i class="fa fa-plus-circle text-primary fa-lg"></i>

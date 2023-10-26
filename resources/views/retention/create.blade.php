@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-lg" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
         {!! Form::open([
-            'url' => action('RetentionController@store'),
+            'url' => action([\App\Http\Controllers\RetentionController::class, 'store']),
             'method' => 'post',
             'id' => 'retention_add_form'
         ]) !!}

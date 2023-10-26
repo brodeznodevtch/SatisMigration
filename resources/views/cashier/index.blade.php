@@ -23,7 +23,7 @@
             @can('cashier.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal"
-                    data-href="{{ action('CashierController@create') }}" data-container=".cashiers_modal">
+                    data-href="{{ action([\App\Http\Controllers\CashierController::class, 'create']) }}" data-container=".cashiers_modal">
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>
             @endcan

@@ -1,4 +1,4 @@
-{!! Form::open(['url' => action('ProductController@addSupplier', [$product->id]), 'method' => 'post', 'id' => 'form_add_supplier']) !!}
+{!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'addSupplier'], [$product->id]), 'method' => 'post', 'id' => 'form_add_supplier']) !!}
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">

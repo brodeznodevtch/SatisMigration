@@ -33,7 +33,7 @@
             <div class="col-sm-3">
             </div>
             <div class="col-sm-6">
-                {!! Form::open(['url' => action('UserController@updatePasswordFirst'), 'method' => 'post', 'id' => 'edit_password_form',
+                {!! Form::open(['url' => action([\App\Http\Controllers\UserController::class, 'updatePasswordFirst']), 'method' => 'post', 'id' => 'edit_password_form',
                 'class' => 'form-horizontal' ]) !!}
                 <div class="boxform_u box-solid_u">
                     <!--business info box start-->

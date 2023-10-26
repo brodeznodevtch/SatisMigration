@@ -2,7 +2,7 @@
   <div class="modal-content">
 
     {!! Form::open([
-      'url' => action('BrandController@update', [$brand->id]),
+      'url' => action([\App\Http\Controllers\BrandController::class, 'update'], [$brand->id]),
       'method' => 'PUT',
       'id' => 'brand_edit_form',
       'files' => true

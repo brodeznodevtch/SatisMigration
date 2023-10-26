@@ -125,13 +125,13 @@ class StockAdjustmentController extends Controller
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="print-invoice" data-href="{{ action("StockAdjustmentController@printInvoice", [$id]) }}">
+                                <a href="#" class="print-invoice" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, 'printInvoice'], [$id]) }}">
                                     <i class="fa fa-print" aria-hidden="true"></i>
                                     @lang("messages.print")
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="delete_stock_adjustment '.$hide.'" data-href="{{ action("StockAdjustmentController@destroy", [$id]) }}">
+                                <a href="#" class="delete_stock_adjustment '.$hide.'" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, 'destroy'], [$id]) }}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     @lang("messages.delete")
                                 </a>
@@ -179,7 +179,7 @@ class StockAdjustmentController extends Controller
 
         //Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('StockAdjustmentController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\StockAdjustmentController::class, 'index']));
         }
 
         //$business_locations = BusinessLocation::forDropdown($business_id);
@@ -218,7 +218,7 @@ class StockAdjustmentController extends Controller
 
             //Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('StockAdjustmentController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\StockAdjustmentController::class, 'index']));
             }
 
             $user_id = $request->session()->get('user.id');

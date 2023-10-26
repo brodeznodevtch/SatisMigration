@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      {!! Form::open(['url' => action('ExpenseController@getAddExpenses'), 'method' => 'post', 'id' => "add_expenses_modal" ]) !!}
+      {!! Form::open(['url' => action([\App\Http\Controllers\ExpenseController::class, 'getAddExpenses']), 'method' => 'post', 'id' => "add_expenses_modal" ]) !!}
       
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -21,7 +21,7 @@
                 @can('correlatives.create')
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                            data-href="{{ action('DocumentCorrelativeController@create') }}"
+                            data-href="{{ action([\App\Http\Controllers\DocumentCorrelativeController::class, 'create']) }}"
                             data-container=".correlatives_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>

@@ -11,7 +11,7 @@
             <h3 class="box-title">@lang('crm.manage_contact_reason')</h3>
             @can('crm-contactreason.create')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('CRMContactReasonController@create')}}" data-container=".contactreason_modal">
+                    <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action([\App\Http\Controllers\CRMContactReasonController::class, 'create'])}}" data-container=".contactreason_modal">
                         <i class="fa fa-plus"></i> @lang('messages.add')
                     </button>
                 </div>

@@ -24,7 +24,7 @@
                 @can('pos.create')
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                            data-href="{{ action('PosController@create') }}" data-container=".pos_modal">
+                            data-href="{{ action([\App\Http\Controllers\PosController::class, 'create']) }}" data-container=".pos_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>
                 @endcan

@@ -19,7 +19,7 @@
 
                 </div>
             </div>
-            {!! Form::open(['url' => action('ImplementationController@store'), 'method' => 'post', 'files' => true, 'id' => 'form_implementation']) !!}
+            {!! Form::open(['url' => action([\App\Http\Controllers\ImplementationController::class, 'store']), 'method' => 'post', 'files' => true, 'id' => 'form_implementation']) !!}
             <div class="box-body">
                 <div class="row">
                     @if (!empty($modules))

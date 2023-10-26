@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountingEntrie extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['date', 'number', 'correlative', 'short_name', 'description', 'accounting_period_id', 'type_entrie_id', 'business_location_id', 'status', 'business_id'];
 
     public function detail()

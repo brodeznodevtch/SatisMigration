@@ -19,7 +19,7 @@
             @can('import_expense.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{ action('ImportExpenseController@create') }}" 
+                    data-href="{{ action([\App\Http\Controllers\ImportExpenseController::class, 'create']) }}" 
                     data-container=".import_expenses_modal">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </button>

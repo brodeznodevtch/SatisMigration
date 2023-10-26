@@ -19,7 +19,7 @@
             @can('tax_rate.create')
             	<div class="box-tools">
                     <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    	data-href="{{action('TaxRateController@create')}}" 
+                    	data-href="{{action([\App\Http\Controllers\TaxRateController::class, 'create'])}}" 
                     	data-container=".tax_rate_modal">
                     	<i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                 </div>
@@ -50,7 +50,7 @@
             @can('tax_rate.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{action('TaxGroupController@create')}}" 
+                    data-href="{{action([\App\Http\Controllers\TaxGroupController::class, 'create'])}}" 
                     data-container=".tax_group_modal">
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>

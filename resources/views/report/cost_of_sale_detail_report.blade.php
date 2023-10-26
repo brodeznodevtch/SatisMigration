@@ -26,7 +26,7 @@
 
               <div id="collapseFilter" class="panel-collapse active collapse in" aria-expanded="true">
                 <div class="box-body">
-                    {!! Form::open(['url' => action('ReportController@postCostOfSaleDetailReport'),
+                    {!! Form::open(['url' => action([\App\Http\Controllers\ReportController::class, 'postCostOfSaleDetailReport']),
                         'method' => 'post', 'id' => 'cost_of_sale_detail_report_filter_form', 'target' => '_blank']) !!}
 
                         <div class="row">

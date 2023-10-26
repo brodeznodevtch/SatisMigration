@@ -26,7 +26,7 @@
         @can('graduation_card.create')
           <div class="box-tools">
             <button type="button" class="btn btn-block btn-primary btn-modal"
-              data-href="{{ action('Optics\GraduationCardController@create') }}" data-container=".graduation_cards_modal">
+              data-href="{{ action([\App\Http\Controllers\Optics\GraduationCardController::class, 'create']) }}" data-container=".graduation_cards_modal">
               <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
           </div>
         @endcan

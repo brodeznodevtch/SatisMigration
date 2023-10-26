@@ -23,7 +23,7 @@
         
         <div class="box-body">
             {{-- Form --}}
-            {!! Form::open(['url' => action('KardexController@generateReport'),
+            {!! Form::open(['url' => action([\App\Http\Controllers\KardexController::class, 'generateReport']),
                 'method' => 'post', 'id' => 'generate_report_form', 'target' => '_blank']) !!}
 
             <div class="row">

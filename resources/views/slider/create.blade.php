@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 {!! Form::open([
-                    'url' => action('SliderController@store'),
+                    'url' => action([\App\Http\Controllers\SliderController::class, 'store']),
                     'method' => 'post',
                     'id' => 'image_add_form',
                     'files' => true,

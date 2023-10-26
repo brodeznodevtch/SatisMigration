@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
 
-    {!! Form::open(['url' => action('Optics\ExpenseCategoryController@update', [$expense_category->id]), 'method' => 'PUT', 'id' => 'optics_expense_category_add_form' ]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\Optics\ExpenseCategoryController::class, 'update'], [$expense_category->id]), 'method' => 'PUT', 'id' => 'optics_expense_category_add_form' ]) !!}
 
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -237,7 +237,7 @@
                         (config('app.business') == 'optics' && auth()->user()->can('physical_inventory.send_to_review'))
                     )
                         @if ($physical_inventory->status == 'new' || $physical_inventory->status == 'process')
-                        <a href="{{ action('PhysicalInventoryController@changeStatus', ['id' => $physical_inventory->id, 'review']) }}" class="btn btn-primary">
+                        <a href="{{ action([\App\Http\Controllers\PhysicalInventoryController::class, 'changeStatus'], ['id' => $physical_inventory->id, 'review']) }}" class="btn btn-primary">
                             @lang('physical_inventory.send_to_review')
                         </a>
                         @endif
@@ -248,7 +248,7 @@
                         (config('app.business') == 'optics' && auth()->user()->can('physical_inventory.authorize'))
                     )
                         @if ($physical_inventory->status == 'review')
-                        <a href="{{ action('PhysicalInventoryController@changeStatus', ['id' => $physical_inventory->id, 'authorized']) }}" class="btn btn-primary">
+                        <a href="{{ action([\App\Http\Controllers\PhysicalInventoryController::class, 'changeStatus'], ['id' => $physical_inventory->id, 'authorized']) }}" class="btn btn-primary">
                             @lang('physical_inventory.authorize')
                         </a>
                         @endif
@@ -259,7 +259,7 @@
                         (config('app.business') == 'optics' && auth()->user()->can('physical_inventory.authorized'))
                     )
                         @if ($physical_inventory->status == 'authorized')
-                        <a href="{{ action('PhysicalInventoryController@finalize', ['id' => $physical_inventory->id]) }}" class="btn btn-primary">
+                        <a href="{{ action([\App\Http\Controllers\PhysicalInventoryController::class, 'finalize'], ['id' => $physical_inventory->id]) }}" class="btn btn-primary">
                             @lang('physical_inventory.finalize')
                         </a>
                         @endif

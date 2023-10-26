@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('BusinessTypeController@update', [$business_type->id]), 'method' => 'PUT', 'id'
+        {!! Form::open(['url' => action([\App\Http\Controllers\BusinessTypeController::class, 'update'], [$business_type->id]), 'method' => 'PUT', 'id'
         => 'business_type_edit_form']) !!}
 
         <div class="modal-header">

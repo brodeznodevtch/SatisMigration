@@ -498,7 +498,7 @@ class ContactController extends Controller
                     'msg' => __('contact.added_success'),
                 ];
 
-                return redirect()->action('ContactController@index', ['type' => 'supplier'])->with('status', $output);
+                return redirect()->action([\App\Http\Controllers\ContactController::class, 'index'], ['type' => 'supplier'])->with('status', $output);
             } else {
                 throw new \Exception('Error Processing Request', 1);
             }
@@ -1397,7 +1397,7 @@ class ContactController extends Controller
             return redirect()->route('contacts.import')->with('notification', $output);
         }
 
-        return redirect()->action('ContactController@index', ['type' => 'supplier'])->with('status', $output);
+        return redirect()->action([\App\Http\Controllers\ContactController::class, 'index'], ['type' => 'supplier'])->with('status', $output);
     }
 
     /**

@@ -103,21 +103,21 @@ class PhysicalInventoryController extends Controller
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('physical_inventory.view') && in_array($row->status, $this->can_view)) {
-                            $html .= '<li><a href="'.action('PhysicalInventoryController@show', [$row->id]).'" class="show_physical_inventory_button"><i class="fa fa-eye"></i> '.__('messages.view').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\PhysicalInventoryController::class, 'show'], [$row->id]).'" class="show_physical_inventory_button"><i class="fa fa-eye"></i> '.__('messages.view').'</a></li>';
                             $flag = true;
                         }
 
                         if (auth()->user()->can('physical_inventory.update') && in_array($row->status, $this->can_edit)) {
-                            $html .= '<li><a href="'.action('PhysicalInventoryController@edit', [$row->id]).'"><i class="fa fa-edit"></i> '.__('messages.edit').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\PhysicalInventoryController::class, 'edit'], [$row->id]).'"><i class="fa fa-edit"></i> '.__('messages.edit').'</a></li>';
                             $flag = true;
                         }
 
                         if (auth()->user()->can('physical_inventory.start') && $row->status == 'new' && now()->toDateString() >= $row->start_date) {
-                            $html .= '<li><a href="'.action('PhysicalInventoryController@edit', [$row->id]).'"><i class="fa fa-play-circle"></i> '.__('physical_inventory.start').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\PhysicalInventoryController::class, 'edit'], [$row->id]).'"><i class="fa fa-play-circle"></i> '.__('physical_inventory.start').'</a></li>';
                             $flag = true;
                         }
 
-                        // $html .= '<li><a href="#" data-href="' . action('PhysicalInventoryController@destroy', [$row->id]) . '" class="delete_physical_inventory_button"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        // $html .= '<li><a href="#" data-href="' . action([\App\Http\Controllers\PhysicalInventoryController::class, 'destroy'], [$row->id]) . '" class="delete_physical_inventory_button"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
 
                         return $flag ? $html : '';
                     }

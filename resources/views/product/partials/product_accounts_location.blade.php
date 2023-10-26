@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        {!! Form::open(['url' => action('ProductController@postProductAccountsLocation', [$product->id]), 'method' => 'post', 'id' => 'product_accounts_location_form' ]) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'postProductAccountsLocation'], [$product->id]), 'method' => 'post', 'id' => 'product_accounts_location_form' ]) !!}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">@lang( 'product.accounting_accounts_location' )</h4>

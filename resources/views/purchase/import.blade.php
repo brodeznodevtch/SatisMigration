@@ -17,7 +17,7 @@
                 <div class="box box-solid box-default">
 
                     <div class="box-body">
-                        {!! Form::open(['url' => action('PurchaseController@postImportPurchases'), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'send_form']) !!}
+                        {!! Form::open(['url' => action([\App\Http\Controllers\PurchaseController::class, 'postImportPurchases']), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'send_form']) !!}
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -127,7 +127,7 @@
                             </div>
 
                             <div class="box-body">
-                                {!! Form::open(['url' => action('PurchaseController@importPurchases'), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'import_form']) !!}
+                                {!! Form::open(['url' => action([\App\Http\Controllers\PurchaseController::class, 'importPurchases']), 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'import_form']) !!}
 
                                 <div class="col-sm-12">
                                     <p><strong>@lang('purchase.net_total_amount'):</strong>

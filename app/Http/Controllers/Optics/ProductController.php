@@ -107,7 +107,7 @@ class ProductController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('products', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('Optics\ProductController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action([\App\Http\Controllers\Optics\ProductController::class, 'index']));
         }
 
         $categories = Category::where('business_id', $business_id)
@@ -394,7 +394,7 @@ class ProductController extends Controller
             $datatable = $datatable->setRowAttr([
                 'data-href' => function ($row) use ($page_size) {
                     if (auth()->user()->can('product.view') && $page_size != -1) {
-                        return action('Optics\ProductController@view', [$row->id]);
+                        return action([\App\Http\Controllers\Optics\ProductController::class, 'view'], [$row->id]);
                     } else {
                         return '';
                     }
@@ -428,7 +428,7 @@ class ProductController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('products', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('Optics\ProductController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action([\App\Http\Controllers\Optics\ProductController::class, 'index']));
         }
 
         $categories = Category::where('business_id', $business_id)
@@ -545,7 +545,7 @@ class ProductController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('products', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('Optics\ProductController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action([\App\Http\Controllers\Optics\ProductController::class, 'index']));
         }
 
         $categories = Category::where('business_id', $business_id)
@@ -850,11 +850,11 @@ class ProductController extends Controller
         }
 
         if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
-            return redirect()->action('OpeningStockController@add', ['product_id' => $product->id, 'action' => $action]);
+            return redirect()->action([\App\Http\Controllers\OpeningStockController::class, 'add'], ['product_id' => $product->id, 'action' => $action]);
         } elseif ($request->input('submit_type') == 'submit_n_add_selling_prices') {
-            return redirect()->action('Optics\ProductController@addSellingPrices', [$product->id]);
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'addSellingPrices'], [$product->id]);
         } elseif ($request->input('submit_type') == 'save_n_add_another') {
-            return redirect()->action('Optics\ProductController@createProduct', ['type' => $product->clasification])->with('status', $output)
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'createProduct'], ['type' => $product->clasification])->with('status', $output)
                 ->with('type_', $product->clasification);
         } else {
             return redirect('products?type='.$product->clasification)->with('status', $output);
@@ -1276,22 +1276,19 @@ class ProductController extends Controller
         }
 
         if ($request->input('submit_type') == 'update_n_edit_opening_stock') {
-            return redirect()->action(
-                'OpeningStockController@add',
+            return redirect()->action([\App\Http\Controllers\OpeningStockController::class, 'add'],
                 ['product_id' => $product->id, 'action' => $action]
             );
         } elseif ($request->input('submit_type') == 'submit_n_add_selling_prices') {
-            return redirect()->action(
-                'Optics\ProductController@addSellingPrices',
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'addSellingPrices'],
                 [$product->id]
             );
         } elseif ($request->input('submit_type') == 'save_n_add_another') {
             /*
-            return redirect()->action(
-                'Optics\ProductController@create'
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'create']
             )->with('status', $output);
             */
-            return redirect()->action('Optics\ProductController@createProduct', ['type' => $product->clasification])->with('status', $output)
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'createProduct'], ['type' => $product->clasification])->with('status', $output)
                 ->with('type_', $product->clasification);
         }
 
@@ -2320,12 +2317,11 @@ class ProductController extends Controller
         }
 
         if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
-            return redirect()->action(
-                'OpeningStockController@add',
+            return redirect()->action([\App\Http\Controllers\OpeningStockController::class, 'add'],
                 ['product_id' => $product->id, 'action' => $action]
             );
         } elseif ($request->input('submit_type') == 'save_n_add_another') {
-            return redirect()->action('Optics\ProductController@createProduct', ['type' => $product->clasification])->with('status', $output)
+            return redirect()->action([\App\Http\Controllers\Optics\ProductController::class, 'createProduct'], ['type' => $product->clasification])->with('status', $output)
                 ->with('type_', $product->clasification);
         }
 
@@ -2775,7 +2771,7 @@ class ProductController extends Controller
                 ->addColumn(
                     'action',
                     function ($row) {
-                        return '<button data-href="'.action('Optics\ProductController@destroySalePriceScale', [$row->id]).'" class="btn btn-xs btn-danger delete_sale_price_button"><i class="fa fa-times"></i></button>';
+                        return '<button data-href="'.action([\App\Http\Controllers\Optics\ProductController::class, 'destroySalePriceScale'], [$row->id]).'" class="btn btn-xs btn-danger delete_sale_price_button"><i class="fa fa-times"></i></button>';
                     }
                 )
                 ->rawColumns(['action'])

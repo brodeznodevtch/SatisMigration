@@ -184,21 +184,21 @@ class SellPosController extends Controller
 
         // Check if subscribed or not, then check for users quota
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('HomeController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\HomeController::class, 'index']));
 
         } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action([\App\Http\Controllers\SellPosController::class, 'index']));
         }
 
         // Check if there is a open register, if no then redirect to create register screen.
         if (config('app.business') == 'optics') {
             if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-                return redirect()->action('CashRegisterController@create');
+                return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
             }
 
         } else {
             if ($this->cashierUtil->countOpenedCashier() == 0) {
-                return redirect()->action('CashRegisterController@create');
+                return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
             }
         }
 
@@ -528,12 +528,12 @@ class SellPosController extends Controller
         // Check if there is a open register, if no then redirect to create register screen.
         if (config('app.business') == 'optics') {
             if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-                return redirect()->action('CashRegisterController@create');
+                return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
             }
 
         } else {
             if (! $is_direct_sale && $this->cashierUtil->countOpenedCashier() == 0) {
-                return redirect()->action('CashRegisterController@create');
+                return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
             }
         }
 
@@ -564,7 +564,7 @@ class SellPosController extends Controller
                     return $this->moduleUtil->expiredResponse();
 
                 } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-                    return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
+                    return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action([\App\Http\Controllers\SellPosController::class, 'index']));
                 }
 
                 $user_id = $request->session()->get('user.id');
@@ -1035,12 +1035,12 @@ class SellPosController extends Controller
             if ($input['status'] == 'draft') {
                 if (isset($input['is_quotation']) && $input['is_quotation'] == 1) {
                     return redirect()
-                        ->action('SellController@getQuotations')
+                        ->action([\App\Http\Controllers\SellController::class, 'getQuotations'])
                         ->with('status', $output);
 
                 } else {
                     return redirect()
-                        ->action('SellController@getDrafts')
+                        ->action([\App\Http\Controllers\SellController::class, 'getDrafts'])
                         ->with('status', $output);
                 }
 
@@ -1154,7 +1154,7 @@ class SellPosController extends Controller
 
         // Check if there is a open register, if no then redirect to create register screen.
         if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-            return redirect()->action('CashRegisterController@create');
+            return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
         }
 
         // Check if return exist then not allowed
@@ -1529,12 +1529,12 @@ class SellPosController extends Controller
                 // Check if there is a open register, if no then redirect to Create Register screen.
                 if (config('app.business') == 'optics') {
                     if (! $is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
-                        return redirect()->action('CashRegisterController@create');
+                        return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
                     }
 
                 } else {
                     if (! $is_direct_sale && $this->cashierUtil->countOpenedCashier() == 0) {
-                        return redirect()->action('CashRegisterController@create');
+                        return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
                     }
                 }
 
@@ -1812,12 +1812,12 @@ class SellPosController extends Controller
             if ($input['status'] == 'draft') {
                 if (isset($input['is_quotation']) && $input['is_quotation'] == 1) {
                     return redirect()
-                        ->action('SellController@getQuotations')
+                        ->action([\App\Http\Controllers\SellController::class, 'getQuotations'])
                         ->with('status', $output);
 
                 } else {
                     return redirect()
-                        ->action('SellController@getDrafts')
+                        ->action([\App\Http\Controllers\SellController::class, 'getDrafts'])
                         ->with('status', $output);
                 }
 
@@ -3314,7 +3314,7 @@ class SellPosController extends Controller
             ->where('status', 'active')
             ->get();
 
-        $route = action('PosController@index');
+        $route = action([\App\Http\Controllers\PosController::class, 'index']);
 
         $msg = __('card_pos.pos_not_available_msg');
 

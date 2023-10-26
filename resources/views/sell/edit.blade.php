@@ -11,7 +11,7 @@
 <!-- Main content -->
 <section class="content">
 <input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
-	{!! Form::open(['url' => action('SellPosController@update', ['id' => $transaction->id ]), 'method' => 'put', 'id' => 'edit_sell_form' ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\SellPosController::class, 'update'], ['id' => $transaction->id ]), 'method' => 'put', 'id' => 'edit_sell_form' ]) !!}
 
 	{!! Form::hidden('location_id', $transaction->location_id, ['id' => 'location_id', 'data-receipt_printer_type' => !empty($location_printer_type) ? $location_printer_type : 'browser']); !!}
 	<div class="row">

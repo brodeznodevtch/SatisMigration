@@ -147,7 +147,7 @@ class CashierClosureController extends Controller
             DB::rollBack();
         }
 
-        return redirect()->action('HomeController@index')->with('status', $output);
+        return redirect()->action([\App\Http\Controllers\HomeController::class, 'index'])->with('status', $output);
     }
 
     /**

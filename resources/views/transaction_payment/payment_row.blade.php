@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     {!! Form::open([
-      'url' => action('TransactionPaymentController@store'),
+      'url' => action([\App\Http\Controllers\TransactionPaymentController::class, 'store']),
       'method' => 'post',
       'id' => 'transaction_payment_add_form',
       'files' => true

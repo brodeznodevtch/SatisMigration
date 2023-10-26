@@ -11,7 +11,7 @@
 <!-- Main content -->
 <section class="content">
     {!! Form::open([
-        'url' => action('OrderController@store'),
+        'url' => action([\App\Http\Controllers\OrderController::class, 'store']),
         'method' => 'post',
         'id' => 'add_order_form'
     ]) !!}

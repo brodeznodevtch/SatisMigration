@@ -18,7 +18,7 @@
             @can('fixed_asset_type.create')
             	<div class="box-tools">
                     <a class="btn btn-block btn-primary add-fixed-asset-type"
-                        href="{{action('FixedAssetTypeController@create')}}">
+                        href="{{action([\App\Http\Controllers\FixedAssetTypeController::class, 'create'])}}">
                         <i class="fa fa-plus"></i> @lang('messages.add')</a>
                 </div>
             @endcan

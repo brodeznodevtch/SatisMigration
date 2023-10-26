@@ -16,7 +16,7 @@
         <div class="boxform_u box-solid_u">
             <div class="box-body">
                 {!! Form::open([
-                    'url' => action('RrhhSalarialConstanceController@store'),
+                    'url' => action([\App\Http\Controllers\RrhhSalarialConstanceController::class, 'store']),
                     'method' => 'post',
                     'id' => 'form_add',
                     'files' => true,

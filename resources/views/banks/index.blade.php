@@ -681,7 +681,7 @@
                             <h3 class="box-title">@lang( 'accounting.bank_reconciliation' )</h3>
                         </div>
                         <div class="box-body">
-                            {!! Form::open(['url' => action('BankTransactionController@getBankReconciliation'), 'method' => 'post', 'enctype' => 'multipart/form-data', 'target' => '_blank']) !!}
+                            {!! Form::open(['url' => action([\App\Http\Controllers\BankTransactionController::class, 'getBankReconciliation']), 'method' => 'post', 'enctype' => 'multipart/form-data', 'target' => '_blank']) !!}
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-sm-6">

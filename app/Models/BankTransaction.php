@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BankTransaction extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['business_id', 'bank_account_id', 'accounting_entrie_id', 'type_bank_transaction_id', 'bank_checkbook_id', 'reference', 'date', 'amount', 'description', 'headline'];
 
     public function bankAccount()

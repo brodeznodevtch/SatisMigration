@@ -21,7 +21,7 @@
         <div class="box-header">
         	<h3 class="box-title">@lang('printer.all_your_printer')</h3>
         	<div class="box-tools">
-                <a class="btn btn-block btn-primary" href="{{action('PrinterController@create')}}">
+                <a class="btn btn-block btn-primary" href="{{action([\App\Http\Controllers\PrinterController::class, 'create'])}}">
 				<i class="fa fa-plus"></i> @lang('printer.add_printer')</a>
             </div>
         </div>

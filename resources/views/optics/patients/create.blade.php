@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('Optics\PatientController@store'), 'method' => 'post', 'id' => 'patient_add_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\Optics\PatientController::class, 'store']), 'method' => 'post', 'id' => 'patient_add_form']) !!}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

@@ -22,7 +22,7 @@
               </div>
               <div id="collapseFilter" class="panel-collapse active collapse in" aria-expanded="true">
                 <div class="box-body">
-                  {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' => 'product_purchase_report_form' ]) !!}
+                  {!! Form::open(['url' => action([\App\Http\Controllers\ReportController::class, 'getStockReport']), 'method' => 'get', 'id' => 'product_purchase_report_form' ]) !!}
                     <div class="col-md-3">
                         <div class="form-group">
                         {!! Form::label('search_product', __('lang_v1.search_product') . ':') !!}

@@ -31,7 +31,7 @@
 </div>
 @endif
 <input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
-	{!! Form::open(['url' => action('SellPosController@store'), 'method' => 'post', 'id' => 'add_sell_form' ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\SellPosController::class, 'store']), 'method' => 'post', 'id' => 'add_sell_form' ]) !!}
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
 			<div class="box box-solid">

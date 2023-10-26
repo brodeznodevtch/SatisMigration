@@ -177,7 +177,7 @@ class ModuleUtil extends Util
         $response_array = ['success' => 0,
             'msg' => __(
                 'superadmin::lang.subscription_expired_toastr',
-                ['app_name' => env('APP_NAME'), 'subscribe_url' => action('\Modules\Superadmin\Http\Controllers\SubscriptionController@index')]
+                ['app_name' => env('APP_NAME'), 'subscribe_url' => action([\Modules\Superadmin\Http\Controllers\SubscriptionController::class, 'index'])]
             ),
         ];
 

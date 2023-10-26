@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-    {!! Form::open(['url' => action('CashDetailController@store'), 'method' => 'post' ]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\CashDetailController::class, 'store']), 'method' => 'post' ]) !!}
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

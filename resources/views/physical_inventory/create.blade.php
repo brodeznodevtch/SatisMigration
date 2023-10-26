@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="dialog" id="modal-create">
     <div class="modal-content" style="border-radius: 10px;">
         {!! Form::open([
-            'url' => action('PhysicalInventoryController@store'),
+            'url' => action([\App\Http\Controllers\PhysicalInventoryController::class, 'store']),
             'method' => 'post',
             'id' => 'physical_inventory_add_form'
         ]) !!}

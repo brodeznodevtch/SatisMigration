@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog" id="modal-create">
   <div class="modal-content" style="border-radius: 10px;">
-    {!! Form::open(['url' => action('GraduationCardController@store'), 'method' => 'post', 'id' => 'graduation_card_add_form', 'autocomplete' => 'off']) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\GraduationCardController::class, 'store']), 'method' => 'post', 'id' => 'graduation_card_add_form', 'autocomplete' => 'off']) !!}
     
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">

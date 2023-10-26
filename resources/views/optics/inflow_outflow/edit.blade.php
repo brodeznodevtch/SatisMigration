@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('Optics\InflowOutflowController@update',
+        {!! Form::open(['url' => action([\App\Http\Controllers\Optics\InflowOutflowController::class, 'update'],
             [$inflow_outflow->id]), 'method' => 'PUT', 'id' => 'inflow_outflows_edit_form']) !!}
 
         <div class="modal-header">

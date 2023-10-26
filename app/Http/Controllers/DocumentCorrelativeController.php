@@ -145,11 +145,11 @@ class DocumentCorrelativeController extends Controller
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (auth()->user()->can('correlatives.update')) {
-                        $html .= '<li><a href="#" data-href="'.action('DocumentCorrelativeController@edit', [$row->id]).'" class="edit_correlatives_button"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\DocumentCorrelativeController::class, 'edit'], [$row->id]).'" class="edit_correlatives_button"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('correlatives.delete')) {
-                        $html .= '<li><a href="#" data-href="'.action('DocumentCorrelativeController@destroy', [$row->id]).'" class="delete_correlatives_button"><i class="fa fa-trash"></i>'.__('messages.delete').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\DocumentCorrelativeController::class, 'destroy'], [$row->id]).'" class="delete_correlatives_button"><i class="fa fa-trash"></i>'.__('messages.delete').'</a></li>';
                     }
 
                     $html .= '</ul></div>';

@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     {!! Form::open([
-      'url' => action('TransactionPaymentController@update', [$payment_line->id]),
+      'url' => action([\App\Http\Controllers\TransactionPaymentController::class, 'update'], [$payment_line->id]),
       'method' => 'put',
       'id' => 'transaction_payment_add_form',
       'files' => true

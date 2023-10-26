@@ -30,26 +30,26 @@
 			<input type="hidden" id="invoiced" value="{{ $order->invoiced }}">
             @if($order->status == 'opened')
 				<a href="#" class="btn btn-flat small-box-footer bg-info text-black change_order_status_btn"
-					data-href="{{ action('OrderController@changeOrderStatus', [$order->id]) }}">
+					data-href="{{ action([\App\Http\Controllers\OrderController::class, 'changeOrderStatus'], [$order->id]) }}">
 					<i class="fa fa-check-square-o"></i> @lang('order.mark_as_in_preparation')</a>
 			@elseif($order->status == 'in_preparation')
 				<a href="#" class="btn btn-flat small-box-footer bg-blue text-white change_order_status_btn"
-					data-href="{{ action('OrderController@changeOrderStatus', [$order->id]) }}">
+					data-href="{{ action([\App\Http\Controllers\OrderController::class, 'changeOrderStatus'], [$order->id]) }}">
 					<i class="fa fa-check-square-o"></i> @lang('order.mark_as_prepared')</a>
 			@elseif($order->status == 'prepared')
 				<a href="#" class="btn btn-flat small-box-footer bg-yellow text-black text-black change_order_status_btn"
-					data-href="{{ action('OrderController@changeOrderStatus', [$order->id]) }}">
+					data-href="{{ action([\App\Http\Controllers\OrderController::class, 'changeOrderStatus'], [$order->id]) }}">
 					<i class="fa fa-check-square-o"></i> @lang('order.mark_as_on_route')</a>
 			@elseif($order->status == 'on_route')
 				<a href="#" class="btn btn-flat small-box-footer bg-orange text-black change_order_status_btn"
-					data-href="{{ action('OrderController@changeOrderStatus', [$order->id]) }}">
+					data-href="{{ action([\App\Http\Controllers\OrderController::class, 'changeOrderStatus'], [$order->id]) }}">
 					<i class="fa fa-check-square-o"></i> @lang('order.mark_as_closed')</a>
 			@elseif($order->status == 'closed')
 				<div class="small-box-footer bg-green">&nbsp;</div>
             {{--@else
             	<div class="small-box-footer bg-green">&nbsp;</div>--}}
             @endif
-            	<a href="#" class="btn btn-flat small-box-footer bg-black show_order" data-href="{{ action('OrderController@show', [$order->id])}}">@lang('restaurant.order_details') <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="#" class="btn btn-flat small-box-footer bg-black show_order" data-href="{{ action([\App\Http\Controllers\OrderController::class, 'show'], [$order->id])}}">@lang('restaurant.order_details') <i class="fa fa-arrow-circle-right"></i></a>
          </div>
 	</div>
 	@if($loop->iteration % 4 == 0)

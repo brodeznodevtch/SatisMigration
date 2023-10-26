@@ -30,7 +30,7 @@
 <section class="content">
     <div class="boxform_u box-solid_u">
         <div class="box-body">
-            {!! Form::open(['url' => action('CustomerController@update' , [$customer->id] ), 'method' => 'POST', 'class' => 'product_form', 'id' => 'form_add_customer', 'files' => true ]) !!}
+            {!! Form::open(['url' => action([\App\Http\Controllers\CustomerController::class, 'update'] , [$customer->id] ), 'method' => 'POST', 'class' => 'product_form', 'id' => 'form_add_customer', 'files' => true ]) !!}
                 <div class="panel panel-default">
                     <div class="panel-heading">@lang('customer.general_information')
                         <div class="panel-tools pull-right">

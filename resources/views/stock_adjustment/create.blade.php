@@ -21,14 +21,14 @@
 	{{-- Number of decimal places to show --}}
 	<input type="hidden" id="inventory_precision" value="{{ $decimals_in_inventories }}">
 
-	{!! Form::open(['url' => action('StockAdjustmentController@store'), 'method' => 'post', 'id' => 'stock_adjustment_form' ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\StockAdjustmentController::class, 'store']), 'method' => 'post', 'id' => 'stock_adjustment_form' ]) !!}
 	<div class="box box-solid">
 		<div class="box-body">
 			<div class="row">
 				{{-- Reference count --}}
 				{!! Form::hidden('ref_count', $ref_count, ['id' => 'ref_count']) !!}
 				{{-- Redirect url --}}
-				{!! Form::hidden('redirect_url', action('StockAdjustmentController@index'), ['id' => 'redirect_url']) !!}
+				{!! Form::hidden('redirect_url', action([\App\Http\Controllers\StockAdjustmentController::class, 'index']), ['id' => 'redirect_url']) !!}
 				{{-- Adjustment type --}}
 				<div class="col-sm-3">
 					<div class="form-group">

@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('PosController@store'), 'method' => 'post', 'id' =>
+        {!! Form::open(['url' => action([\App\Http\Controllers\PosController::class, 'store']), 'method' => 'post', 'id' =>
         'pos_add_form']) !!}
 
         <div class="modal-header">

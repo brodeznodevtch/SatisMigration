@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog" id="modal-create">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('Optics\FlowReasonController@store'),
+        {!! Form::open(['url' => action([\App\Http\Controllers\Optics\FlowReasonController::class, 'store']),
             'method' => 'POST', 'id' => 'flow_reason_add_form']) !!}
 
         <div class="modal-header">

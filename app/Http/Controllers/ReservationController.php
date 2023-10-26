@@ -580,7 +580,7 @@ class ReservationController extends Controller
 
         // Check if there is a open register, if no then redirect to create register screen.
         if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-            return redirect()->action('CashRegisterController@create');
+            return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -859,7 +859,7 @@ class ReservationController extends Controller
 
                 // Check if there is a open register, if no then redirect to create register screen.
                 if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-                    return redirect()->action('CashRegisterController@create');
+                    return redirect()->action([\App\Http\Controllers\CashRegisterController::class, 'create']);
                 }
 
                 $business_id = $request->session()->get('user.business_id');

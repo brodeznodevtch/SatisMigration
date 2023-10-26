@@ -138,32 +138,32 @@ class StockTransferController extends Controller
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (in_array($row->transfer_state, ['processed'])) {
-                        $html .= '<li><a href="#" data-href="'.action('StockTransferController@receive', [$row->id]).'" class="receive_stock_transfer"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i>'.__('lang_v1.receive').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\StockTransferController::class, 'receive'], [$row->id]).'" class="receive_stock_transfer"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i>'.__('lang_v1.receive').'</a></li>';
                     }
 
                     if (in_array($row->transfer_state, ['received'])) {
-                        $html .= '<li><a href="#" data-href="'.action('StockTransferController@count', [$row->id]).'" class="count_stock_transfer"><i class="fa fa-cubes" aria-hidden="true"></i>'.__('lang_v1.count').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\StockTransferController::class, 'count'], [$row->id]).'" class="count_stock_transfer"><i class="fa fa-cubes" aria-hidden="true"></i>'.__('lang_v1.count').'</a></li>';
                     }
 
                     if (in_array($row->transfer_state, ['processed', 'received', 'accounted'])) {
                         $html .= '<li><a href="#" class="view_stock_transfer"><i class="fa fa-eye-slash" aria-hidden="true"></i>'.__('messages.view').'</a></li>';
 
                         if ($enable_remission_note) {
-                            $html .= '<li><a href="'.action('StockTransferController@getRemissionNote', [$row->id]).'" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\StockTransferController::class, 'getRemissionNote'], [$row->id]).'" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
 
                         } else {
-                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action('StockTransferController@printInvoice', [$row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\StockTransferController::class, 'printInvoice'], [$row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         }
                     }
 
                     if (in_array($row->transfer_state, ['created'])) {
-                        $html .= '<li><a href="'.action('StockTransferController@edit', [$row->id]).'"><i class="fa  fa-pencil-square-o" aria-hidden="true"></i>'.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\StockTransferController::class, 'edit'], [$row->id]).'"><i class="fa  fa-pencil-square-o" aria-hidden="true"></i>'.__('messages.edit').'</a></li>';
 
                         $date = \Carbon::parse($row->transaction_date)->addDays($edit_days);
                         $today = today();
 
                         if ($date->gte($today)) {
-                            $html .= '<li><a href="#" data-href="'.action('StockTransferController@destroy', [$row->id]).'" class="delete_stock_transfer"><i class="fa fa-trash" aria-hidden="true"></i>'.__('messages.delete').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\StockTransferController::class, 'destroy'], [$row->id]).'" class="delete_stock_transfer"><i class="fa fa-trash" aria-hidden="true"></i>'.__('messages.delete').'</a></li>';
                         }
                     }
 
@@ -227,7 +227,7 @@ class StockTransferController extends Controller
 
         // Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('StockTransferController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\StockTransferController::class, 'index']));
         }
 
         $warehouse_id = Warehouse::forDropdown($business_id);
@@ -261,7 +261,7 @@ class StockTransferController extends Controller
 
             // Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('StockTransferController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\StockTransferController::class, 'index']));
             }
 
             DB::beginTransaction();

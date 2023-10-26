@@ -17,7 +17,7 @@
                     <!-- <h3 class="box-title">@lang( 'expense.all_your_expense_categories' )</h3> --><br>
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                            data-href="{{ action('ExpenseCategoryController@create') }}"
+                            data-href="{{ action([\App\Http\Controllers\ExpenseCategoryController::class, 'create']) }}"
                             data-container=".expense_category_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>

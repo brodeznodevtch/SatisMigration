@@ -117,22 +117,22 @@ class ExpenseController extends Controller
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
-                        $action .= '<li><a style="cursor: pointer" data-href="'.action('ExpenseController@edit', [$row->id]).'" class="edit_expense_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $action .= '<li><a style="cursor: pointer" data-href="'.action([\App\Http\Controllers\ExpenseController::class, 'edit'], [$row->id]).'" class="edit_expense_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
 
                         if ($row->document) {
                             $action .= '<li><a href="'.url('uploads/documents/'.$row->document).'" download="">
                                 <i class="fa fa-download" aria-hidden="true"></i> '.__('purchase.download_document').'</a></li>';
                         }
 
-                        $action .= '<li><a style="cursor: pointer" data-href="'.action('ExpenseController@destroy', [$row->id]).'" class="delete_expense"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
-                        $action .= '<li><a href="#" class="print-expense" data-href="'.action('ExpenseController@printExpense', [$row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                        $action .= '<li><a style="cursor: pointer" data-href="'.action([\App\Http\Controllers\ExpenseController::class, 'destroy'], [$row->id]).'" class="delete_expense"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
+                        $action .= '<li><a href="#" class="print-expense" data-href="'.action([\App\Http\Controllers\ExpenseController::class, 'printExpense'], [$row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         $action .= '<li class="divider"></li>';
 
                         if ($row->payment_status != 'paid') {
-                            $action .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->id]).'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> '.__('purchase.add_payment').'</a></li>';
+                            $action .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$row->id]).'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> '.__('purchase.add_payment').'</a></li>';
                         }
 
-                        $action .= '<li><a href="'.action('TransactionPaymentController@show', [$row->id]).'" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> '.__('purchase.view_payments').'</a></li>';
+                        $action .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$row->id]).'" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> '.__('purchase.view_payments').'</a></li>';
 
                         $action .= '</ul></div>';
 
@@ -146,7 +146,7 @@ class ExpenseController extends Controller
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->editColumn(
                     'payment_status',
-                    '<a href="{{ action("TransactionPaymentController@show", [$id])}}" class="view_payment_modal payment-status" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
+                    '<a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id])}}" class="view_payment_modal payment-status" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
                     </span></a>'
                 )
                 ->rawColumns(['final_total', 'payment_status', 'action'])
@@ -318,7 +318,7 @@ class ExpenseController extends Controller
 
             // Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\ExpenseController::class, 'index']));
             }
 
             $transaction_data = $request->only([
@@ -502,7 +502,7 @@ class ExpenseController extends Controller
             $business_id = auth()->user()->business_id;
             // Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\ExpenseController::class, 'index']));
             }
 
             $transaction_data = $request->only([

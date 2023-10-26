@@ -27,7 +27,7 @@
     {{-- Number of decimal places to store and use in calculations --}}
     <input type="hidden" id="price_precision" value="{{ config('app.price_precision') }}">
 
-    {!! Form::open(['url' => action('ApportionmentController@store'), 'method' => 'post', 'id' => 'add_apportionment_form', 'files' => true]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\ApportionmentController::class, 'store']), 'method' => 'post', 'id' => 'add_apportionment_form', 'files' => true]) !!}
 
     {{-- Expense type --}}
     {!! Form::hidden('expense_type', 'retaceo', ['id' => 'expense_type']) !!}

@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('CustomerPortfolioController@store'), 'method' => 'post', 'id' =>
+        {!! Form::open(['url' => action([\App\Http\Controllers\CustomerPortfolioController::class, 'store']), 'method' => 'post', 'id' =>
         'portfolio_add_form']) !!}
 
         <div class="modal-header">

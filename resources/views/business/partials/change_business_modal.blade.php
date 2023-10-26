@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md" role="document">
 	<div class="modal-content">
-		{!! Form::open(['url' => action('BusinessController@changeBusiness'), 'method' => 'patch', 'id' => 'change_business_form']) !!}
+		{!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'changeBusiness']), 'method' => 'patch', 'id' => 'change_business_form']) !!}
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>

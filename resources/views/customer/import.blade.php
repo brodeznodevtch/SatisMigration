@@ -31,7 +31,7 @@
             <div class="col-sm-12">
                 <div class="box">
                     <div class="box-body">
-                        {!! Form::open(['url' => action('CustomerController@postImportCustomers'), 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+                        {!! Form::open(['url' => action([\App\Http\Controllers\CustomerController::class, 'postImportCustomers']), 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="col-sm-8">

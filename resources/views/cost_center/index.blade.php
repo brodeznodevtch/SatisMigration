@@ -22,7 +22,7 @@
                         <div class="box-header">
                             <h3 class="box-title">@lang( 'cost_center.all_your_cost_centers' )</h3>
                             <div class="box-tools">
-                                <button type="button" class="btn btn-primary" data-href="{{ action("CostCenterController@create") }}" id="btn_add_cost_center">
+                                <button type="button" class="btn btn-primary" data-href="{{ action([\App\Http\Controllers\CostCenterController::class, 'create']) }}" id="btn_add_cost_center">
                                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                             </div>
                         </div>

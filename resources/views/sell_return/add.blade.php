@@ -13,7 +13,7 @@
 	{!! Form::hidden('location_id', $sell->location->id, ['id' => 'location_id', 'data-receipt_printer_type' => $sell->location->receipt_printer_type ]); !!}
 	<input type="hidden" id="flag-correlative" value="0">
 
-	{!! Form::open(['url' => action('SellReturnController@store'), 'method' => 'post', 'id' => 'sell_return_form' ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\SellReturnController::class, 'store']), 'method' => 'post', 'id' => 'sell_return_form' ]) !!}
 	{!! Form::hidden('transaction_id', $sell->id); !!}
 	{!! Form::hidden('business_location_id', $sell->location->id) !!}
 	<input name="sell_return_id" type="hidden" id="parent_id" value="{{ !empty($sell->return_parent->id) ? $sell->return_parent->id : '' }}">

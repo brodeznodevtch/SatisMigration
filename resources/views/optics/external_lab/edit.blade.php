@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content" style="border-radius: 10px;">
-    {!! Form::open(['url' => action('Optics\ExternalLabController@update', [$external_lab->id]),
+    {!! Form::open(['url' => action([\App\Http\Controllers\Optics\ExternalLabController::class, 'update'], [$external_lab->id]),
       'method' => 'PUT', 'id' => 'external_labs_edit_form']) !!}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">

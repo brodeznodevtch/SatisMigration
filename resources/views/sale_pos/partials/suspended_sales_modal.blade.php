@@ -31,7 +31,7 @@
 					              	<br>@lang('restaurant.service_staff'): {{$sale->service_staff->user_full_name}}
 					              @endif
 					            </div>
-					            <a href="{{action('SellPosController@edit', ['id' => $sale->id])}}" class="small-box-footer">
+					            <a href="{{action([\App\Http\Controllers\SellPosController::class, 'edit'], ['id' => $sale->id])}}" class="small-box-footer">
 					              @lang('sale.edit_sale') <i class="fa fa-arrow-circle-right"></i>
 					            </a>
 					         </div>

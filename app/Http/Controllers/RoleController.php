@@ -76,7 +76,7 @@ class RoleController extends Controller
                 if (! $row->is_default || $row->name == 'Cashier#'.$row->business_id) {
                     $action = '';
                     if (auth()->user()->can('roles.update')) {
-                        $action .= '<a href="'.action('RoleController@edit', [$row->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a>';
+                        $action .= '<a href="'.action([\App\Http\Controllers\RoleController::class, 'edit'], [$row->id]).'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a>';
                     }
 
                     return $action;
