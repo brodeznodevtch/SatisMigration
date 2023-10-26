@@ -239,7 +239,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     //DocumentType
     Route::resource('documents', 'DocumentTypeController');
 
-    Route::resource('payment-account', 'PaymentAccountController');
+/*    Route::resource('payment-account', 'PaymentAccountController');*/
 
     Route::resource('tax-rates', 'TaxRateController');
     Route::post('/tax_groups/get_tax_groups', [TaxGroupController::class, 'getTaxGroups']);
@@ -953,7 +953,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('manage-credit-requests/getCreditsData', [ManageCreditRequestController::class, 'getCreditsData']);
     Route::post('manage-credit-requests/edit', [ManageCreditRequestController::class, 'editCredit']);
 
-    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestControllerupdate/product::class, 'viewCredit']);
+
+/*    Route::get('manage-credit-requests/view/{id}', 'ManageCreditRequestController/update/product@viewCredit');*/
     Route::resource('manage-credit-requests', 'ManageCreditRequestController');
 
     // Customers
