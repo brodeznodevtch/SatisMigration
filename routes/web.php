@@ -4,11 +4,12 @@ use App\Http\Controllers\AccountingEntrieController;
 use App\Http\Controllers\AccountingPeriodController;
 use App\Http\Controllers\ApportionmentController;
 use App\Http\Controllers\AssistanceEmployeeController;
-use App\Http\Controllers\Auth;
 use App\Http\Controllers\BackUpController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BankCheckbookController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\BinnacleController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BankTransactionController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BonusCalculationController;
@@ -17,6 +18,18 @@ use App\Http\Controllers\BusinessLocationController;
 use App\Http\Controllers\BusinessTypeController;
 use App\Http\Controllers\CRMContactModeController;
 use App\Http\Controllers\CRMContactReasonController;
+use App\Http\Controllers\InternationalPurchaseController;
+use App\Http\Controllers\Optics\DiagnosticController;
+use App\Http\Controllers\Optics\ExternalLabController;
+use App\Http\Controllers\Optics\FlowReasonController;
+use App\Http\Controllers\Optics\GraduationCardController;
+use App\Http\Controllers\Optics\InflowOutflowController;
+use App\Http\Controllers\Optics\LabOrderController;
+use App\Http\Controllers\Optics\MaterialTypeController;
+use App\Http\Controllers\Optics\PatientController;
+use App\Http\Controllers\Optics\StatusLabOrderController;
+use App\Http\Controllers\ReasonController;
+use App\Http\Controllers\CashDetailController;
 use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\CashierClosureController;
 use App\Http\Controllers\CatalogueController;
@@ -30,20 +43,26 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CreditDocumentsController;
 use App\Http\Controllers\CreditRequestController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\CustomerPortfolioController;
 use App\Http\Controllers\CustomerVehicleController;
 use App\Http\Controllers\DocumentCorrelativeController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\FiscalYearController;
+use App\Http\Controllers\FixedAssetController;
+use App\Http\Controllers\FixedAssetTypeController;
 use App\Http\Controllers\FollowCustomerController;
 use App\Http\Controllers\FollowOportunitiesController;
+use App\Http\Controllers\GroupTaxController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImplementationController;
 use App\Http\Controllers\ImportExpenseController;
 use App\Http\Controllers\ImportOpeningStockController;
 use App\Http\Controllers\ImportProductsController;
+use App\Http\Controllers\InvoiceLayoutController;
 use App\Http\Controllers\InstitutionLawController;
 use App\Http\Controllers\InvoiceSchemeController;
 use App\Http\Controllers\KardexController;
@@ -52,7 +71,6 @@ use App\Http\Controllers\LawDiscountController;
 use App\Http\Controllers\LocationSettingsController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ManageCreditRequestController;
-use App\Http\Controllers\ManageCreditRequestControllerupdate/product;
 use App\Http\Controllers\ManageEmployeesController;
 use App\Http\Controllers\ManagePositionsController;
 use App\Http\Controllers\ManageUserController;
@@ -73,11 +91,13 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
+use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReporterController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Restaurant;
+use App\Http\Controllers\RetentionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RrhhAbsenceInabilityController;
 use App\Http\Controllers\RrhhContractController;
@@ -94,9 +114,11 @@ use App\Http\Controllers\RrhhTypeContractController;
 use App\Http\Controllers\RrhhTypeIncomeDiscountController;
 use App\Http\Controllers\RrhhTypePersonnelActionController;
 use App\Http\Controllers\RrhhTypeWageController;
+use App\Http\Controllers\SalesCommissionAgentController;
 use App\Http\Controllers\SellController;
 use App\Http\Controllers\SellPosController;
 use App\Http\Controllers\SellReturnController;
+use App\Http\Controllers\SellingPriceGroupController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\StatusClaimController;
@@ -104,15 +126,18 @@ use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockTransferController;
 use App\Http\Controllers\SupportDocumentsController;
 use App\Http\Controllers\TaxGroupController;
+use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\TransactionPaymentController;
 use App\Http\Controllers\TypeBankTransactionController;
 use App\Http\Controllers\TypeEntrieController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UnitGroupController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VariationTemplateController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,12 +152,12 @@ use Illuminate\Support\Facades\Route;
 
 include_once 'install_r.php';
 
-Route::middleware(['IsInstalled'])->group(function () {
+Route::middleware('IsInstalled')->group(function () {
 
     Route::get('/', [HomeController::class, 'welcome']);
 
     Auth::routes();
-    Route::post('/new-login', [Auth\LoginController::class, 'postLogin'])->name('new_login');
+    Route::post('/new-login', [\App\Http\Controllers\Auth\LoginController::class, 'postLogin'])->name('new_login');
     Route::get('/business/register', [BusinessController::class, 'getRegister'])->name('business.getRegister');
     Route::post('/business/register', [BusinessController::class, 'postRegister'])->name('business.postRegister');
     Route::post('/business/register/check-username', [BusinessController::class, 'postCheckUsername'])->name('business.postCheckUsername');
@@ -144,7 +169,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 });
 
 Route::post('credits/show-report', [CreditRequestController::class, 'showReport']);
-Route::resource('credits', 'CreditRequestController');
+Route::resource('credits', CreditRequestController::class);
 
 Route::get('business_types/get-data', [BusinessTypeController::class, 'getBusinessTypeData']);
 Route::get('payment_terms/get-data', [PaymentTermController::class, 'getPaymentTermData']);
@@ -177,13 +202,13 @@ Route::get('/products/get_only_products', [ProductController::class, 'getProduct
 
 //Routes for authenticated users only
 Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function () {
-    Route::get('/logout', [Auth\LoginController::class, 'logout'])->name('logout');
+/*    Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');*/
 
     //rutas para busineestypes y paymentTerm
-    Route::resource('business_types', 'BusinessTypeController');
-    Route::resource('payment_terms', 'PaymentTermController');
+    Route::resource('business_types', BusinessTypeController::class);
+    Route::resource('payment_terms', PaymentTermController::class);
 
-    Route::resource('quote/reason', 'ReasonController');
+    Route::resource('quote/reason', ReasonController::class);
 
     //Sirve para modificar la anulacion de ventas
     Route::put('/business/update_annull_sale', [BusinessController::class, 'updateAnullSaleExpiry']);
@@ -234,23 +259,23 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/user/profile', [UserController::class, 'getProfile'])->name('user.getProfile');
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
 
-    Route::resource('brands', 'BrandController');
+    Route::resource('brands', BrandController::class);
 
     //DocumentType
-    Route::resource('documents', 'DocumentTypeController');
+    Route::resource('documents', DocumentTypeController::class);
 
 /*    Route::resource('payment-account', 'PaymentAccountController');*/
 
-    Route::resource('tax-rates', 'TaxRateController');
+    Route::resource('tax-rates', TaxRateController::class);
     Route::post('/tax_groups/get_tax_groups', [TaxGroupController::class, 'getTaxGroups']);
     Route::post('/tax_groups/get_tax_percent', [TaxGroupController::class, 'getTaxPercent']);
-    Route::resource('tax_groups', 'TaxGroupController');
+    Route::resource('tax_groups', TaxGroupController::class);
 
     Route::get('/unitgroups/getUnitGroupsData', [UnitGroupController::class, 'getUnitGroupsData']);
     Route::get('/unitgroups/groupHasLines/{id}', [UnitGroupController::class, 'groupHasLines']);
-    Route::resource('unitgroups', 'UnitGroupController');
+    Route::resource('unitgroups', UnitGroupController::class);
     Route::get('units/getUnits', [UnitController::class, 'getUnits']);
-    Route::resource('units', 'UnitController');
+    Route::resource('units', UnitController::class);
 
     Route::get('/contacts/import', [ContactController::class, 'getImportContacts'])->name('contacts.import');
     Route::post('/contacts/import', [ContactController::class, 'postImportContacts']);
@@ -259,20 +284,20 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/contacts/suppliers', [ContactController::class, 'getSuppliers']);
     Route::get('/contacts/showSupplier/{id}', [ContactController::class, 'showSupplier']);
     Route::get('/contacts/get_tests', [ContactController::class, 'getTests']);
-    Route::resource('contacts', 'ContactController');
+    Route::resource('contacts', ContactController::class);
 
     /** Payment Commitment */
     Route::get('/purchases/get-debt-purchases', [PurchaseController::class, 'getDebtPurchases']);
     Route::get('/payment-commitments/add-payment-commitment-row', [PaymentCommitmentController::class, 'addPaymentCommitmentRow']);
     Route::get('/payment-commitments/annul-payment-commitment/{id}', [PaymentCommitmentController::class, 'annul']);
     Route::get('/payment-commitments/print/{id}', [PaymentCommitmentController::class, 'print']);
-    Route::resource('payment-commitments', 'PaymentCommitmentController');
+    Route::resource('payment-commitments', PaymentCommitmentController::class);
 
     Route::get('categories/getCategoriesData', [CategoryController::class, 'getCategoriesData']);
     Route::post('categories/updateCatalogueId', [CategoryController::class, 'updateCatalogueId']);
-    Route::resource('categories', 'CategoryController');
+    Route::resource('categories', CategoryController::class);
 
-    Route::resource('variation-templates', 'VariationTemplateController');
+    Route::resource('variation-templates', VariationTemplateController::class);
 
     Route::get('/products/view-product-group-price/{id}', [ProductController::class, 'viewGroupPrice']);
     Route::get('/products/add-selling-prices/{id}', [ProductController::class, 'addSellingPrices']);
@@ -320,7 +345,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/products/get-recalculate-cost', [ProductController::class, 'getRecalculateCost']);
     Route::post('/products/get-recalculate-cost', [ProductController::class, 'postRecalculateCost']);
 
-    Route::resource('products', 'ProductController');
+    Route::resource('products', ProductController::class);
     Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
 
     Route::get('/purchases/get_products', [PurchaseController::class, 'getProducts']);
@@ -340,11 +365,11 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/purchases/is-closed', [PurchaseController::class, 'isClosed']);
     Route::get('/purchases/update-imports', [PurchaseController::class, 'updateImports']);
 
-    Route::resource('purchases', 'PurchaseController');
+    Route::resource('purchases', PurchaseController::class);
 
     // Fixed assets and fixed asset types
-    Route::resource('fixed-assets', 'FixedAssetController');
-    Route::resource('fixed-asset-types', 'FixedAssetTypeController');
+    Route::resource('fixed-assets', FixedAssetController::class);
+    Route::resource('fixed-asset-types', FixedAssetTypeController::class);
 
     Route::get('/sells/duplicate/{id}', [SellController::class, 'duplicateSell']);
     Route::get('/sells/drafts', [SellController::class, 'getDrafts']);
@@ -357,7 +382,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     /** Get parent correlative form final customer */
     Route::get('/sells/get-parent-correlative', [SellController::class, 'getParentCorrelative']);
     Route::get('/sells/get-trans-due-by-customer/{customer_id}', [SellController::class, 'getTransDueByCustomer']);
-    Route::resource('sells', 'SellController');
+    Route::resource('sells', SellController::class);
 
     Route::get('/sells/pos/get_product_row/{variation_id}/{location_id}', [SellPosController::class, 'getProductRow']);
     Route::post('/sells/pos/get_payment_row', [SellPosController::class, 'getPaymentRow']);
@@ -373,50 +398,50 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/sell-pos/update-unit-cost-to-sell-lines/{tsl_initial?}/{tsl_final?}', [SellPosController::class, 'updateUnitCostToSellLines']);
     Route::get('/sell-pos/update-sale-price-to-sell-lines/{tsl_initial?}/{tsl_final?}', [SellPosController::class, 'updateSalePriceToSellLines']);
     Route::get('/sell-pos/update-sale-price-to-purchase-lines/{pl_initial?}/{pl_final?}', [SellPosController::class, 'updateSalePriceToPurchaseLines']);
-    Route::resource('pos', 'SellPosController');
-    Route::resource('terminal', 'PosController');
+    Route::resource('pos', SellPosController::class);
+    Route::resource('terminal', PosController::class);
 
     Route::get('roles/verifyRoleName/{name}', [RoleController::class, 'verifyRoleName']);
     Route::get('roles/verifyDelete/{id}', [RoleController::class, 'verifyDelete']);
     Route::get('roles/getRolesData', [RoleController::class, 'getRolesData']);
     Route::get('roles/getPermissionsByRoles', [RoleController::class, 'getPermissionsByRoles']);
-    Route::resource('roles', 'RoleController');
+    Route::resource('roles', RoleController::class);
     Route::get('modules/getModulesData', [ModuleController::class, 'getModulesData']);
     Route::get('modules/getModules', [ModuleController::class, 'getModules']);
-    Route::resource('modules', 'ModuleController');
+    Route::resource('modules', ModuleController::class);
 
     Route::get('permissions/getPermissionsData', [PermissionController::class, 'getPermissionsData']);
-    Route::resource('permissions', 'PermissionController');
+    Route::resource('permissions', PermissionController::class);
     Route::get('users/getUsersData', [ManageUserController::class, 'getUsersData']);
     Route::post('users/changePassword', [ManageUserController::class, 'changePassword']);
-    Route::resource('users', 'ManageUserController');
+    Route::resource('users', ManageUserController::class);
 
     // //Rutas Employees
     Route::get('employees/getEmployeesData', [ManageEmployeesController::class, 'getEmployeesData']);
     Route::get('/employees/verify-if-exists-agent-code', [ManageEmployeesController::class, 'verifiedIfExistsAgentCode']);
-    Route::resource('employees', 'ManageEmployeesController');
+    Route::resource('employees', ManageEmployeesController::class);
 
     // Rutas Positions
     Route::get('positions/getPositionsData', [ManagePositionsController::class, 'getPositionsData']);
-    Route::resource('positions', 'ManagePositionsController');
+    Route::resource('positions', ManagePositionsController::class);
 
     // Rutas Contact Mode
     Route::get('crm-contactmode/getContactModeData', [CRMContactModeController::class, 'getContactModeData']);
-    Route::resource('crm-contactmode', 'CRMContactModeController');
+    Route::resource('crm-contactmode', CRMContactModeController::class);
 
     // Rutas Contact Reason
     Route::get('crm-contactreason/getContactReasonData', [CRMContactReasonController::class, 'getContactReasonData']);
-    Route::resource('crm-contactreason', 'CRMContactReasonController');
+    Route::resource('crm-contactreason', CRMContactReasonController::class);
 
     //Rutas Oportunities
     Route::get('oportunities/getOportunityData', [OportunityController::class, 'getOportunityData']);
-    Route::resource('oportunities', 'OportunityController');
+    Route::resource('oportunities', OportunityController::class);
     Route::get('follow-oportunities/getFollowsByOportunity/{id}', [FollowOportunitiesController::class, 'getFollowsByOportunity']);
     Route::get('follow-oportunities/getProductsByFollowOportunity/{id}', [FollowOportunitiesController::class, 'getProductsByFollowOportunity']);
     Route::get('oportunities/convert-to-customer/{id}', [OportunityController::class, 'createCustomer']);
     Route::post('oportunities/convert-to-customer', [OportunityController::class, 'storeCustomer']);
 
-    Route::resource('follow-oportunities', 'FollowOportunitiesController')->except('create');
+    Route::resource('follow-oportunities', FollowOportunitiesController::class)->except('create');
     Route::get('/follow-oportunities/create/{id}', [FollowOportunitiesController::class, 'create']);
     Route::get('/follow-oportunities/showOportunities', [FollowOportunitiesController::class, 'showOportunities']);
 
@@ -428,7 +453,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('quotes/getLinesByQuote/{id}', [QuoteController::class, 'getLinesByQuote']);
     Route::get('quotes/viewQuote/{id}', [QuoteController::class, 'viewQuote']);
     Route::get('quotes/excel/{id}', [QuoteController::class, 'viewExcel']);
-    Route::resource('quotes', 'QuoteController');
+    Route::resource('quotes', QuoteController::class);
 
     /** Orders */
     Route::post('orders/get_quote_lines', [OrderController::class, 'getQuoteLines']);
@@ -439,21 +464,21 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('orders/refresh-orders-list', [OrderController::class, 'refreshOrdersList']);
     Route::get('orders/get_in_charge_people', [OrderController::class, 'getInChargePeople']);
     Route::get('orders/get_orders', [OrderController::class, 'getOrders']);
-    Route::resource('orders', 'OrderController');
+    Route::resource('orders', OrderController::class);
 
     //Rutas Document Correlatives
     Route::get('correlatives/getCorrelativesData', [DocumentCorrelativeController::class, 'getCorrelativesData']);
-    Route::resource('correlatives', 'DocumentCorrelativeController');
+    Route::resource('correlatives', DocumentCorrelativeController::class);
 
-    Route::resource('group-taxes', 'GroupTaxController');
+    Route::resource('group-taxes', GroupTaxController::class);
 
     Route::get('/barcodes/set_default/{id}', [BarcodeController::class, 'setDefault']);
-    Route::resource('barcodes', 'BarcodeController');
+    Route::resource('barcodes', BarcodeController::class);
 
     //Invoice schemes..
     Route::get('/invoice-schemes/set_default/{id}', [InvoiceSchemeController::class, 'setDefault']);
     Route::post('/invoice-schemes/UpdateDiscoount', [InvoiceSchemeController::class, 'UpdateDiscoount']);
-    Route::resource('invoice-schemes', 'InvoiceSchemeController');
+    Route::resource('invoice-schemes', InvoiceSchemeController::class);
 
     //Print Labels
     Route::get('/labels/show', [LabelsController::class, 'show']);
@@ -503,13 +528,13 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('business-location/check-location-id', [BusinessLocationController::class, 'checkLocationId']);
     Route::get('business-location/accounting-accounts/{location_id}', [BusinessLocationController::class, 'getAccountingAccountByLocation']);
     Route::post('business-location/accounting-accounts', [BusinessLocationController::class, 'postAccountingAccountByLocation']);
-    Route::resource('business-location', 'BusinessLocationController');
+    Route::resource('business-location', BusinessLocationController::class);
 
     //Invoice layouts..
-    Route::resource('invoice-layouts', 'InvoiceLayoutController');
+    Route::resource('invoice-layouts', InvoiceLayoutController::class);
 
     //Expense Categories...
-    Route::resource('expense-categories', 'ExpenseCategoryController');
+    Route::resource('expense-categories', ExpenseCategoryController::class);
 
     //Expenses...
     Route::get('/expenses/get_add_expenses/{bank_transaction_id?}', [ExpenseController::class, 'getAddExpenses']);
@@ -517,7 +542,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/expenses/get_add_expense', [ExpenseController::class, 'getAddExpense']);
     Route::get('/expenses/get-purchases-expenses', [ExpenseController::class, 'getPurchasesExpenses']);
     Route::get('/expenses/get_expense_details/{expense_id}', [ExpenseController::class, 'getExpenseDetails']);
-    Route::resource('expenses', 'ExpenseController');
+    Route::resource('expenses', ExpenseController::class);
 
     //Transaction payments...
     Route::get('/payments/show-child-payments/{payment_id}', [TransactionPaymentController::class, 'showChildPayments']);
@@ -527,23 +552,23 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/payments/pay-contact-due', [TransactionPaymentController::class, 'postPayContactDue']);
     Route::get('payments/multi-payments', [TransactionPaymentController::class, 'multiPayments']);
     Route::post('payments/multi-payments', [TransactionPaymentController::class, 'storeMultiPayments']);
-    Route::resource('payments', 'TransactionPaymentController');
+    Route::resource('payments', TransactionPaymentController::class);
     Route::delete('/payments/{id}/{entity_type?}', [TransactionPaymentController::class, 'destroy']);
     Route::get('/payments/{id}/edit/{entity_type?}', [TransactionPaymentController::class, 'edit']);
 
     //Printers...
-    Route::resource('printers', 'PrinterController');
+    Route::resource('printers', PrinterController::class);
 
     Route::get('/stock-adjustments/remove-expired-stock/{purchase_line_id}', [StockAdjustmentController::class, 'removeExpiredStock']);
     Route::post('/stock-adjustments/get_product_row', [StockAdjustmentController::class, 'getProductRow']);
-    Route::resource('stock-adjustments', 'StockAdjustmentController');
+    Route::resource('stock-adjustments', StockAdjustmentController::class);
 
     Route::get('/cash-register/register-details', [CashRegisterController::class, 'getRegisterDetails']);
     Route::get('/cash-register/close-register', [CashRegisterController::class, 'getCloseRegister']);
     Route::post('/cash-register/close-register', [CashRegisterController::class, 'postCloseRegister']);
-    Route::resource('cash-register', 'CashRegisterController');
+    Route::resource('cash-register', CashRegisterController::class);
 
-    Route::resource('cash-detail', 'CashDetailController');
+    Route::resource('cash-detail', CashDetailController::class);
 
     // Cashier closure
     Route::get('/cashier-closure/generate-accounting-entry/{cashier_closure_id}', [CashierClosureController::class, 'createSaleAccountingEntry']);
@@ -554,7 +579,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/cashier-closure/show-daily-z-cut/{id}', [CashierClosureController::class, 'showDailyZCut']);
     Route::get('/reports/daily-z-cut-report', [ReportController::class, 'getDailyZCutReport']);
     Route::get('/reports/recalc-cashier-closure/{id}/{location_id}', [CashierClosureController::class, 'recalcCashierClosure']);
-    Route::resource('cashier-closure', 'CashierClosureController');
+    Route::resource('cashier-closure', CashierClosureController::class);
 
     //Import products
     Route::get('/import-products', [ImportProductsController::class, 'index']);
@@ -566,7 +591,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/edit-products/import', [ImportProductsController::class, 'update']);
 
     //Sales Commission Agent
-    Route::resource('sales-commission-agents', 'SalesCommissionAgentController');
+    Route::resource('sales-commission-agents', SalesCommissionAgentController::class);
 
     //Stock Transfer
     Route::get('stock-transfers/print/{id}', [StockTransferController::class, 'printInvoice']);
@@ -574,20 +599,20 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('stock-transfers/receive/{id}', [StockTransferController::class, 'receive']);
     Route::get('stock-transfers/send', [StockTransferController::class, 'send']);
     Route::post('stock-transfers/count/{id}', [StockTransferController::class, 'count']);
-    Route::resource('stock-transfers', 'StockTransferController');
+    Route::resource('stock-transfers', StockTransferController::class);
 
     Route::get('/opening-stock/add/{product_id}', [OpeningStockController::class, 'add']);
     Route::post('/opening-stock/save', [OpeningStockController::class, 'save']);
 
     //Customer Groups
-    Route::resource('customer-group', 'CustomerGroupController');
+    Route::resource('customer-group', CustomerGroupController::class);
 
     //Import opening stock
     Route::get('/import-opening-stock', [ImportOpeningStockController::class, 'index']);
     Route::post('/import-opening-stock/store', [ImportOpeningStockController::class, 'store']);
 
     //Sell return
-    Route::resource('sell-return', 'SellReturnController');
+    Route::resource('sell-return', SellReturnController::class);
     Route::get('sell-return/get-product-row', [SellReturnController::class, 'getProductRow']);
     Route::get('/sell-return/print/{id}', [SellReturnController::class, 'printInvoice']);
     Route::get('/sell-return/add/{id}', [SellReturnController::class, 'add']);
@@ -595,24 +620,24 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     //Backup
     Route::get('backup/download/{file_name}', [BackUpController::class, 'download']);
     Route::get('backup/delete/{file_name}', [BackUpController::class, 'delete']);
-    Route::resource('backup', 'BackUpController')->only('index', 'create', 'store');
+    Route::resource('backup', BackUpController::class)->only('index', 'create', 'store');
 
-    Route::resource('selling-price-group', 'SellingPriceGroupController');
+    Route::resource('selling-price-group', SellingPriceGroupController::class);
 
-    Route::resource('notification-templates', 'NotificationTemplateController')->only(['index', 'store']);
+    Route::resource('notification-templates', \App\Http\Controllers\NotificationTemplateController::class)->only(['index', 'store']);
     Route::get('notification/get-template/{transaction_id}/{template_for}', [NotificationController::class, 'getTemplate']);
     Route::post('notification/send', [NotificationController::class, 'send']);
 
     Route::get('/purchase-return/add/{id}', [PurchaseReturnController::class, 'add']);
     Route::get('/purchase-return/purchase_return_discount/{id}', [PurchaseReturnController::class, 'getPurchaseReturnDiscount']);
     Route::post('/purchase-return/purchase_return_discount/{id}', [PurchaseReturnController::class, 'postPurchaseReturnDiscount']);
-    Route::resource('/purchase-return', 'PurchaseReturnController');
+    Route::resource('/purchase-return', PurchaseReturnController::class);
 
     //Restaurant module
     Route::prefix('mod')->group(function () {
 
-        Route::resource('tables', 'Restaurant\TableController');
-        Route::resource('modifiers', 'Restaurant\ModifierSetsController');
+        Route::resource('tables', Restaurant\TableController::class);
+        Route::resource('modifiers', Restaurant\ModifierSetsController::class);
 
         //Map modifier to products
         Route::get('/product-modifiers/{id}/edit', [Restaurant\ProductModifierSetController::class, 'edit']);
@@ -631,7 +656,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     });
 
     Route::get('bookings/get-todays-bookings', [Restaurant\BookingController::class, 'getTodaysBookings']);
-    Route::resource('bookings', 'Restaurant\BookingController');
+    Route::resource('bookings', Restaurant\BookingController::class);
 
     //Accounting Routes
     Route::get('catalogue/verifyDeleteAccount/{id}', [CatalogueController::class, 'verifyDeleteAccount']);
@@ -644,7 +669,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('catalogue/getInfoAccount/{id}/{date}', [CatalogueController::class, 'getInfoAccount']);
     Route::get('catalogue/getCatalogueData/{id}', [CatalogueController::class, 'getCatalogueData']);
     Route::post('catalogue/importCatalogue', [CatalogueController::class, 'importCatalogue']);
-    Route::resource('catalogue', 'CatalogueController')->except(['create']);
+    Route::resource('catalogue', CatalogueController::class)->except(['create']);
 
     Route::get('entries/search/{code}', [AccountingEntrieController::class, 'search']);
     Route::get('entries/search-period', [AccountingEntrieController::class, 'searchPeriod']);
@@ -673,7 +698,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     Route::get('/entries/assign-short-name', [AccountingEntrieController::class, 'assignShortName']);
     Route::get('entries/setNumeration/{mode}/{period}', [AccountingEntrieController::class, 'setNumeration']);
-    Route::resource('entries', 'AccountingEntrieController')->except(['create']);
+    Route::resource('entries', AccountingEntrieController::class)->except(['create']);
 
     Route::get('auxiliars/getLedger/{id}', [ReporterController::class, 'getLedger']);
     Route::get('auxiliars/getAuxiliarDetail/{id}/{from}/{to}', [ReporterController::class, 'getAuxiliarDetail']);
@@ -705,12 +730,12 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('banks/getBanks', [BankController::class, 'getBanks']);
     Route::get('/banks/get-bank-accounts/{bank_id}', [BankController::class, 'getBankAccounts']);
     Route::get('banks/getCheckNumber/{id}', [BankController::class, 'getCheckNumber']);
-    Route::resource('banks', 'BankController');
+    Route::resource('banks', BankController::class);
 
     Route::get('bank-accounts/getBankAccountsData', [BankAccountController::class, 'getBankAccountsData']);
     Route::get('bank-accounts/getBankAccounts', [BankAccountController::class, 'getBankAccounts']);
     Route::get('bank-accounts/getBankAccountsById/{id}', [BankAccountController::class, 'getBankAccountsById']);
-    Route::resource('bank-accounts', 'BankAccountController');
+    Route::resource('bank-accounts', BankAccountController::class);
 
     Route::get('bank-transactions/getBankTransactionsData/{period}/{type}/{bank}', [BankTransactionController::class, 'getBankTransactionsData']);
     Route::get('bank-transactions/getConfiguration', [BankTransactionController::class, 'getConfiguration']);
@@ -722,30 +747,30 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('bank-transactions/printCheck/{id}/{print}', [BankTransactionController::class, 'printCheck']);
     Route::get('bank-transactions/printTransfer/{id}', [BankTransactionController::class, 'printTransferFormat']);
 
-    Route::resource('bank-transactions', 'BankTransactionController');
+    Route::resource('bank-transactions', BankTransactionController::class);
 
     Route::get('fiscal-years/getFiscalYearsData', [FiscalYearController::class, 'getFiscalYearsData']);
     Route::get('fiscal-years/getYears', [FiscalYearController::class, 'getYears']);
-    Route::resource('fiscal-years', 'FiscalYearController');
+    Route::resource('fiscal-years', FiscalYearController::class);
 
     Route::get('accounting-periods/getPeriodsData', [AccountingPeriodController::class, 'getPeriodsData']);
     Route::get('accounting-periods/getPeriodStatus/{id}', [AccountingPeriodController::class, 'getPeriodStatus']);
-    Route::resource('accounting-periods', 'AccountingPeriodController');
+    Route::resource('accounting-periods', AccountingPeriodController::class);
 
     Route::get('type-entries/getTypesData', [TypeEntrieController::class, 'getTypesData']);
     Route::get('type-entries/getTypes', [TypeEntrieController::class, 'getTypes']);
-    Route::resource('type-entries', 'TypeEntrieController');
+    Route::resource('type-entries', TypeEntrieController::class);
 
     Route::get('type-bank-transactions/getTypeBankTransactionsData', [TypeBankTransactionController::class, 'getTypeBankTransactionsData']);
     Route::get('type-bank-transactions/getTypeBankTransactions', [TypeBankTransactionController::class, 'getTypeBankTransactions']);
     Route::get('type-bank-transactions/get_if_enable_checkbook/{bank_transaction_id}', [TypeBankTransactionController::class, 'getIfEnableCheckbook']);
-    Route::resource('type-bank-transactions', 'TypeBankTransactionController');
+    Route::resource('type-bank-transactions', TypeBankTransactionController::class);
 
     Route::get('bank-checkbooks/getBankCheckbooksData', [BankCheckbookController::class, 'getBankCheckbooksData']);
     Route::get('bank-checkbooks/getBankCheckbooks/{id}', [BankCheckbookController::class, 'getBankCheckbooks']);
     Route::get('bank-checkbooks/validateNumber/{id}/{number}', [BankCheckbookController::class, 'validateNumber']);
     Route::get('bank-checkbooks/validateRange/{id}/{number}', [BankCheckbookController::class, 'validateRange']);
-    Route::resource('bank-checkbooks', 'BankCheckbookController');
+    Route::resource('bank-checkbooks', BankCheckbookController::class);
 
     //RRHH Routes
     //Routes settings
@@ -753,7 +778,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('rrhh-setting', [RrhhSettingController::class, 'store']);
 
     //Routes Employees
-    Route::resource('rrhh-employees', 'EmployeesController');
+    Route::resource('rrhh-employees', EmployeesController::class);
     Route::get('rrhh-employees-getEmployees', [EmployeesController::class, 'getEmployees']);
     Route::get('rrhh-employees-getPhoto/{id}', [EmployeesController::class, 'getPhoto']);
     Route::get('rrhh-employees-downloadCv/{id}', [EmployeesController::class, 'downloadCv']);
@@ -769,7 +794,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/rrhh-edit-employees/import', [RrhhImportEmployeesController::class, 'update']);
 
     //Routes assistances by employees
-    Route::resource('rrhh-assistances', 'AssistanceEmployeeController');
+    Route::resource('rrhh-assistances', AssistanceEmployeeController::class);
     Route::get('rrhh-assistances-getAssistances', [AssistanceEmployeeController::class, 'getAssistances']);
     Route::post('/rrhh-assistances-report', [AssistanceEmployeeController::class, 'postAssistancesReport']);
     Route::get('rrhh-assistances-show/{id}', [AssistanceEmployeeController::class, 'show']);
@@ -781,7 +806,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('rrhh-documents-files/{id}/{employee_id}', [RrhhDocumentsController::class, 'files']);
     Route::get('rrhh-documents-viewFile/{id}', [RrhhDocumentsController::class, 'viewFile']);
     Route::post('rrhh-documents-updateDocument', [RrhhDocumentsController::class, 'updateDocument']);
-    Route::resource('rrhh-documents', 'RrhhDocumentsController')->except(['create', 'show', 'update']);
+    Route::resource('rrhh-documents', RrhhDocumentsController::class)->except(['create', 'show', 'update']);
 
     //Routes contract by employees
     Route::get('rrhh-contracts-getByEmployee/{id}', [RrhhContractController::class, 'getByEmployee']);
@@ -792,24 +817,24 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('rrhh-contracts-show/{id}/{employee_id}', [RrhhContractController::class, 'show']);
     Route::get('rrhh-contracts-createDocument/{id}/{employee_id}', [RrhhContractController::class, 'createDocument']);
     Route::post('rrhh-contracts-storeDocument', [RrhhContractController::class, 'storeDocument']);
-    Route::resource('rrhh-contracts', 'RrhhContractController')->only(['store', 'show']);
+    Route::resource('rrhh-contracts', RrhhContractController::class)->only(['store', 'show']);
     Route::get('rrhh-contracts-masive', [RrhhContractController::class, 'createMassive']);
     Route::post('rrhh-contracts-masive-1', [RrhhContractController::class, 'storeMassive']);
 
     //Routes economic dependencies by employees
-    Route::resource('rrhh-economic-dependence', 'RrhhEconomicDependenceController')->except(['index', 'create', 'show', 'update']);
+    Route::resource('rrhh-economic-dependence', RrhhEconomicDependenceController::class)->except(['index', 'create', 'show', 'update']);
     Route::get('rrhh-economic-dependence-getByEmployee/{id}', [RrhhEconomicDependenceController::class, 'getByEmployee']);
     Route::get('rrhh-economic-dependence-create/{id}', [RrhhEconomicDependenceController::class, 'createEconomicDependence']);
     Route::post('rrhh-economic-dependence-update', [RrhhEconomicDependenceController::class, 'updateEconomicDependence']);
 
     //Routes studies by employees
-    Route::resource('rrhh-study', 'RrhhStudyController')->except(['index', 'create', 'show', 'update']);
+    Route::resource('rrhh-study', RrhhStudyController::class)->except(['index', 'create', 'show', 'update']);
     Route::get('rrhh-study-getByEmployee/{id}', [RrhhStudyController::class, 'getByEmployee']);
     Route::get('rrhh-study-create/{id}', [RrhhStudyController::class, 'createStudy']);
     Route::post('rrhh-study-update', [RrhhStudyController::class, 'updateStudy']);
 
     //Routes personnel action by employees
-    Route::resource('rrhh-personnel-action', 'RrhhPersonnelActionController')->except(['create', 'show', 'update']);
+    Route::resource('rrhh-personnel-action', RrhhPersonnelActionController::class)->except(['create', 'show', 'update']);
     Route::get('rrhh-personnel-action-getByEmployee/{id}', [RrhhPersonnelActionController::class, 'getByEmployee']);
     Route::get('rrhh-personnel-action-create/{id}', [RrhhPersonnelActionController::class, 'createPersonnelAction']);
     Route::get('rrhh-personnel-action-masive', [RrhhPersonnelActionController::class, 'createMasive']);
@@ -826,45 +851,45 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('rrhh-personnel-action-viewFile/{id}', [RrhhPersonnelActionController::class, 'viewFile']);
 
     //Routes absence inability by employees
-    Route::resource('rrhh-absence-inability', 'RrhhAbsenceInabilityController')->except(['index', 'create', 'show', 'update']);
+    Route::resource('rrhh-absence-inability', RrhhAbsenceInabilityController::class)->except(['index', 'create', 'show', 'update']);
     Route::get('rrhh-absence-inability-getByEmployee/{id}', [RrhhAbsenceInabilityController::class, 'getByEmployee']);
     Route::get('rrhh-absence-inability-create/{id}', [RrhhAbsenceInabilityController::class, 'createAbsenceInability']);
     Route::post('rrhh-absence-inability-update', [RrhhAbsenceInabilityController::class, 'updateAbsenceInability']);
 
     //Routes income and discount by employees
-    Route::resource('rrhh-income-discount', 'RrhhIncomeDiscountController')->except(['index', 'create', 'update']);
+    Route::resource('rrhh-income-discount', RrhhIncomeDiscountController::class)->except(['index', 'create', 'update']);
     Route::get('rrhh-income-discount-getByEmployee/{id}', [RrhhIncomeDiscountController::class, 'getByEmployee']);
     Route::get('rrhh-income-discount-create/{id}', [RrhhIncomeDiscountController::class, 'createIncomeDiscount']);
     Route::post('rrhh-income-discount-update', [RrhhIncomeDiscountController::class, 'updateIncomeDiscount']);
 
     //Routes catalogos RRHH
-    Route::resource('rrhh-catalogues', 'RrhhHeaderController');
-    Route::resource('rrhh-catalogues-data', 'RrhhDataController');
+    Route::resource('rrhh-catalogues', \App\Http\Controllers\RrhhHeaderController::class);
+    Route::resource('rrhh-catalogues-data', RrhhDataController::class);
     Route::get('rrhh/getCataloguesData/{id}', [RrhhDataController::class, 'getCatalogueData']);
     Route::get('rrhh/create-item/{id}', [RrhhDataController::class, 'createItem']);
     Route::get('rrhh/edit-item/{id}', [RrhhDataController::class, 'editItem']);
 
-    Route::resource('rrhh-type-wages', 'RrhhTypeWageController');
+    Route::resource('rrhh-type-wages', RrhhTypeWageController::class);
     Route::get('rrhh/getTypeWagesData', [RrhhTypeWageController::class, 'getTypeWagesData']);
 
-    Route::resource('rrhh-types-income-discounts', 'RrhhTypeIncomeDiscountController');
+    Route::resource('rrhh-types-income-discounts', RrhhTypeIncomeDiscountController::class);
     Route::get('rrhh/getTypeIncomeDiscountData', [RrhhTypeIncomeDiscountController::class, 'getTypeIncomeDiscountData']);
 
-    Route::resource('rrhh-type-personnel-action', 'RrhhTypePersonnelActionController');
+    Route::resource('rrhh-type-personnel-action', RrhhTypePersonnelActionController::class);
     Route::get('rrhh/getTypePersonnelActionData', [RrhhTypePersonnelActionController::class, 'getTypePersonnelActionData']);
     Route::post('rrhh-type-personnel-action/{id}', [RrhhTypePersonnelActionController::class, 'update']);
 
-    Route::resource('/rrhh-catalogues/type-contract', 'RrhhTypeContractController');
+    Route::resource('/rrhh-catalogues/type-contract', RrhhTypeContractController::class);
     Route::get('/rrhh/getTypes', [RrhhTypeContractController::class, 'getTypes']);
 
-    Route::resource('/rrhh-catalogues/salarial-constance', 'RrhhSalarialConstanceController');
+    Route::resource('/rrhh-catalogues/salarial-constance', RrhhSalarialConstanceController::class);
     Route::get('/rrhh/getSalarialConstances', [RrhhSalarialConstanceController::class, 'getSalarialConstances']);
     //Route::get('/salarial-constance', 'RrhhSalarialConstanceController@salarialConstances');
     Route::get('/salarial-constance/{id}/download', [RrhhSalarialConstanceController::class, 'download']);
 
     // Route Module Payroll
     //Routes Payroll
-    Route::resource('payroll', 'PayrollController');
+    Route::resource('payroll', PayrollController::class);
     Route::get('payroll-getPaymentPeriod/{id}', [PayrollController::class, 'getPaymentPeriod']);
     Route::get('payroll-getPayrollType/{id}', [PayrollController::class, 'getPayrollType']);
     Route::get('payroll-getPayrolls', [PayrollController::class, 'getPayrolls']);
@@ -883,15 +908,15 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/payroll-annual-summary/export', [PayrollReportController::class, 'generateAnnualSummary']);
 
     //Route catalogues
-    Route::resource('institution-law', 'InstitutionLawController');
+    Route::resource('institution-law', InstitutionLawController::class);
     Route::put('institution-law/{id}/edit', [InstitutionLawController::class, 'update']);
     Route::get('institution-law-getInstitutionLaws', [InstitutionLawController::class, 'getInstitutionLaws']);
 
-    Route::resource('law-discount', 'LawDiscountController');
+    Route::resource('law-discount', LawDiscountController::class);
     Route::put('law-discount/{id}/edit', [InstitutionLawController::class, 'update']);
     Route::get('law-discount-getLawDiscounts', [LawDiscountController::class, 'getLawDiscounts']);
 
-    Route::resource('bonus-calculation', 'BonusCalculationController');
+    Route::resource('bonus-calculation', BonusCalculationController::class);
     Route::put('bonus-calculation/{id}/edit', [InstitutionLawController::class, 'update']);
     Route::get('bonus-calculation-getBonusCalculations', [BonusCalculationController::class, 'getBonusCalculations']);
 
@@ -904,34 +929,34 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('cost_centers/post_main_accounts/{cost_center_id}', [CostCenterController::class, 'postMainAccounts']);
     Route::get('cost_centers/get_operation_accounts/{cost_center_id}', [CostCenterController::class, 'getOperationAccounts']);
     Route::post('cost_centers/post_operation_accounts/{cost_center_id}', [CostCenterController::class, 'postOperationAccounts']);
-    Route::resource('cost_centers', 'CostCenterController');
+    Route::resource('cost_centers', CostCenterController::class);
 
     Route::get('geography/getCountriesData', [CountryController::class, 'getCountriesData']);
     Route::get('geography/getCountries', [CountryController::class, 'getCountries']);
     Route::post('geography/update/{id}', [CountryController::class, 'updateCountry']);
-    Route::resource('geography', 'CountryController');
+    Route::resource('geography', CountryController::class);
 
     Route::get('zones/getZonesData', [ZoneController::class, 'getZonesData']);
     Route::get('zones/getZones', [ZoneController::class, 'getZones']);
-    Route::resource('zones', 'ZoneController');
+    Route::resource('zones', ZoneController::class);
 
     Route::get('states/getStatesData', [StateController::class, 'getStatesData']);
     Route::get('states/getStates', [StateController::class, 'getStates']);
     Route::get('states/getStatesByCountry/{id}', [StateController::class, 'getStatesByCountry']);
-    Route::resource('states', 'StateController');
+    Route::resource('states', StateController::class);
 
     Route::get('cities/getCitiesData', [CityController::class, 'getCitiesData']);
     Route::get('cities/changeStatus/{id}', [CityController::class, 'changeStatus']);
     Route::get('cities/getCitiesByState/{id}', [CityController::class, 'getCitiesByState']);
     Route::get('cities/getCitiesByStateSelect2/{id?}', [CityController::class, 'getCitiesByStateSelect2']);
-    Route::resource('cities', 'CityController');
+    Route::resource('cities', CityController::class);
 
-    Route::resource('crm', 'CRMController');
+    Route::resource('crm', \App\Http\Controllers\CRMController::class);
 
     Route::get('portfolios/getPortfoliosData', [CustomerPortfolioController::class, 'getPortfoliosData']);
-    Route::resource('portfolios', 'CustomerPortfolioController');
+    Route::resource('portfolios', CustomerPortfolioController::class);
 
-    Route::resource('cashiers', 'CashierController');
+    Route::resource('cashiers', \App\Http\Controllers\CashierController::class);
 
     Route::get('claims/getClaimTypesData', [ClaimTypeController::class, 'getClaimTypesData']);
     Route::get('claims/getClaimTypes', [ClaimTypeController::class, 'getClaimTypes']);
@@ -939,23 +964,28 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('claims/getClaimCorrelative', [ClaimController::class, 'getClaimCorrelative']);
     Route::get('claims/getNexState/{state_id}/{claim_id}', [ClaimController::class, 'getNexState']);
     Route::get('claims/getUsersByClaimType/{id}', [ClaimController::class, 'getUsersByClaimType']);
-    Route::resource('claims', 'ClaimController');
+    Route::resource('claims', ClaimController::class);
     Route::get('claim-types/getClaimTypeCorrelative', [ClaimTypeController::class, 'getClaimTypeCorrelative']);
     Route::get('claim-types/getUserById/{id}', [ClaimTypeController::class, 'getUserById']);
     Route::get('claim-types/getUsersByClaimType/{id}', [ClaimTypeController::class, 'getUsersByClaimType']);
     Route::get('claim-types/getSuggestedClosingDate/{date}/{days}', [ClaimTypeController::class, 'getSuggestedClosingDate']);
 
-    Route::resource('claim-types', 'ClaimTypeController');
+    Route::resource('claim-types', ClaimTypeController::class);
 
     Route::get('sdocs/getSDocsData', [SupportDocumentsController::class, 'getSDocsData']);
-    Route::resource('sdocs', 'SupportDocumentsController');
+    Route::resource('sdocs', SupportDocumentsController::class);
 
     Route::get('manage-credit-requests/getCreditsData', [ManageCreditRequestController::class, 'getCreditsData']);
     Route::post('manage-credit-requests/edit', [ManageCreditRequestController::class, 'editCredit']);
 
+<<<<<<< Updated upstream
 
 /*    Route::get('manage-credit-requests/view/{id}', 'ManageCreditRequestController/update/product@viewCredit');*/
     Route::resource('manage-credit-requests', 'ManageCreditRequestController');
+=======
+/*    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestControllerupdate/product::class, 'viewCredit']);*/
+    Route::resource('manage-credit-requests', ManageCreditRequestController::class);
+>>>>>>> Stashed changes
 
     // Customers
     Route::get('/customers-import', [CustomerController::class, 'getImportCustomers'])->name('customers.import');
@@ -966,22 +996,22 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('customers/get_contacts/{id}', [CustomerController::class, 'getContacts']);
     Route::post('/customers/store_contacts/{id}', [CustomerController::class, 'addContact']);
     Route::post('/customers/export', [CustomerController::class, 'export']);
-    Route::resource('customers', 'CustomerController');
+    Route::resource('customers', CustomerController::class);
     Route::get('customers/edit/{id}', [CustomerController::class, 'edit']);
     Route::post('customers/update/{id}', [CustomerController::class, 'update']);
 
     Route::get('follow-customers/getFollowsByCustomer/{id}', [FollowCustomerController::class, 'getFollowsByCustomer']);
     Route::get('follow-customers/getProductsByFollowCustomer/{id}', [FollowCustomerController::class, 'getProductsByFollowCustomer']);
-    Route::resource('follow-customers', 'FollowCustomerController');
+    Route::resource('follow-customers', FollowCustomerController::class);
 
     //Status Claims Routes
     Route::get('status-claims/getStatusClaimsData', [StatusClaimController::class, 'getStatusClaimsData']);
     Route::get('status-claims/getStatusClaimCorrelative', [StatusClaimController::class, 'getStatusClaimCorrelative']);
     Route::get('status-claims/getStatusClaims', [StatusClaimController::class, 'getStatusClaims']);
-    Route::resource('status-claims', 'StatusClaimController');
+    Route::resource('status-claims', StatusClaimController::class);
 
     // Sale Price Scales Routes
-    Route::resource('sale_price_scale', 'SalePriceScaleController');
+    Route::resource('sale_price_scale', \App\Http\Controllers\SalePriceScaleController::class);
     Route::get('/get_sale_price_scale/{id}', [ProductController::class, 'getSalePriceScale']);
     Route::post('/store_sale_price_scale', [ProductController::class, 'storeSalePriceScale']);
     Route::delete('/destroy_sale_price_scale/{id}', [ProductController::class, 'destroySalePriceScale']);
@@ -991,7 +1021,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/warehouses/get_warehouses/{id}', [WarehouseController::class, 'getWarehouseByLocation']);
     Route::get('/warehouses/get-location/{warehouse_id}', [WarehouseController::class, 'getLocation']);
     Route::get('/warehouses/create-permissions', [WarehouseController::class, 'createPermissions']);
-    Route::resource('warehouses', 'WarehouseController');
+    Route::resource('warehouses', WarehouseController::class);
 
     //Credit Documents
     Route::get('credit-documents/getCDocsData', [CreditDocumentsController::class, 'getCDocsData']);
@@ -1000,17 +1030,17 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('credit-documents/custodian/{id}', [CreditDocumentsController::class, 'custodian']);
     Route::post('credit-documents/saveReception/{id}', [CreditDocumentsController::class, 'saveReception']);
     Route::post('credit-documents/saveCustodian/{id}', [CreditDocumentsController::class, 'saveCustodian']);
-    Route::resource('credit-documents', 'CreditDocumentsController');
+    Route::resource('credit-documents', CreditDocumentsController::class);
 
     Route::post('print_pos', [ReporterController::class, 'printPOS']);
     Route::get('print_test', [ReportController::class, 'printTest']);
 
     // Movement Types Routes
-    Route::resource('movement-types', 'MovementTypeController');
+    Route::resource('movement-types', \App\Http\Controllers\MovementTypeController::class);
 
     // Payment terms
     Route::get('/payment-terms/get-payment-terms', [PaymentTermController::class, 'getPaymentTerms']);
-    Route::resource('/payment-terms', 'PaymentTermController');
+    Route::resource('/payment-terms', PaymentTermController::class);
 
     // Sales book to final consumer
     Route::get('book-final-consumer', [ReporterController::class, 'viewBookFinalConsumer']);
@@ -1047,7 +1077,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/kardex/get-recalculate-cost', [KardexController::class, 'getRecalculateCost']);
     Route::get('/kardex/recalculate-kardex-cost/{variation_id}', [KardexController::class, 'recalculateProductCost']);
     Route::get('/kardex/check-cost-balance', [KardexController::class, 'checkCostBalance']);
-    Route::resource('kardex', 'KardexController');
+    Route::resource('kardex', KardexController::class);
     Route::get('/kardex/refresh-balance/{warehouse_id}/{variation_id}', [KardexController::class, 'refreshBalance']);
     Route::get('register-kardex', [KardexController::class, 'getRegisterKardex']);
     Route::post('post-register-kardex', [KardexController::class, 'postRegisterKardex']);
@@ -1117,7 +1147,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/sell/payment_method/{id}', [TransactionPaymentController::class, 'editPaymentMethod']);
 
     // Physical inventory routes
-    Route::resource('physical-inventory', 'PhysicalInventoryController');
+    Route::resource('physical-inventory', PhysicalInventoryController::class);
     Route::get('/physical-inventory/change-status/{id}/{status}', [PhysicalInventoryController::class, 'changeStatus']);
     Route::get('/physical-inventory/finalize/{id}', [PhysicalInventoryController::class, 'finalize']);
     Route::get('/physical-inventory/products/list', [PhysicalInventoryController::class, 'getProducts']);
@@ -1126,7 +1156,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/physical-inventory/update-code', [PhysicalInventoryController::class, 'updateCode']);
 
     // Physical inventory line routes
-    Route::resource('physical-inventory-line', 'PhysicalInventoryLineController');
+    Route::resource('physical-inventory-line', PhysicalInventoryLineController::class);
     Route::post('/physical-inventory-line/update-line', [PhysicalInventoryLineController::class, 'updateLine']);
 
     //Products history
@@ -1193,7 +1223,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/reports/detailed-commissions-report', [ReportController::class, 'postDetailedCommissionsReport']);
 
     // International Purchases
-    Route::resource('/international-purchases', 'InternationalPurchaseController');
+    Route::resource('/international-purchases', InternationalPurchaseController::class);
     // Check if the client has Tax number and nrc in purchases
     Route::get('/contact/verify-tax-number-reg-number', [ContactController::class, 'verifyTaxNumberAndRegNumber']);
 
@@ -1202,7 +1232,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/import-price-list/import', [ProductController::class, 'postPriceList'])->name('import-price-lists');
 
     // Import expenses routes
-    Route::resource('import-expenses', 'ImportExpenseController');
+    Route::resource('import-expenses', ImportExpenseController::class);
 
     // Calculate tax and payments
     Route::get('/sales/calculate-tax-and-payments', [SellPosController::class, 'calculateTaxAndPayments']);
@@ -1214,7 +1244,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/customers/create-opening-balances/{business_id}', [CustomerController::class, 'createAllOpeningBalances']);
 
     // Apportionments
-    Route::resource('/apportionments', 'ApportionmentController');
+    Route::resource('/apportionments', ApportionmentController::class);
     Route::get('/get_import_expenses', [ImportExpenseController::class, 'getImportExpenses']);
     Route::post('/get_import_expense_row', [ImportExpenseController::class, 'getImportExpenseRow']);
     Route::get('/get_purchases', [PurchaseController::class, 'getPurchases']);
@@ -1251,7 +1281,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/treasury-annexes/annex-9', [ReporterController::class, 'exportAnnex9']);
 
     // Retentions routes
-    Route::resource('retentions', 'RetentionController');
+    Route::resource('retentions', RetentionController::class);
 
     // Cost history report
     Route::get('/reports/cost-history/{variation_id}', [ReportController::class, 'generateCostHistory']);
@@ -1273,32 +1303,32 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/reports/payment', [ReportController::class, 'postPaymentReport']);
 
     // Binnacle routes
-    Route::resource('binnacle', 'BinnacleController');
+    Route::resource('binnacle', BinnacleController::class);
 
     // --- BEGIN OPTICS ROUTES ---
 
-    Route::group(function () {
+    Route::group([], function () {
         // Patients Routes
         Route::get('patients/getPatientsData', [Optics\PatientController::class, 'getPatientsData']);
-        Route::resource('patients', 'PatientController');
+        Route::resource('patients', PatientController::class);
         Route::get('patients/getEmployeeByCode/{code}', [Optics\PatientController::class, 'getEmployeeByCode']);
         Route::get('patients_lab/get_patients', [Optics\PatientController::class, 'getPatients']);
         Route::get('patients/create/{patient_name?}', [Optics\PatientController::class, 'create']);
 
         // Material types
-        Route::resource('material_type', 'MaterialTypeController');
+        Route::resource('material_type', MaterialTypeController::class);
 
         // Diagnostics
-        Route::resource('diagnostic', 'DiagnosticController');
+        Route::resource('diagnostic', DiagnosticController::class);
 
         // External labs
-        Route::resource('external-labs', 'ExternalLabController');
+        Route::resource('external-labs', ExternalLabController::class);
 
         // Status lab orders
-        Route::resource('status-lab-orders', 'StatusLabOrderController');
+        Route::resource('status-lab-orders', StatusLabOrderController::class);
 
         // Graduation cards
-        Route::resource('graduation-cards', 'GraduationCardController');
+        Route::resource('graduation-cards', GraduationCardController::class);
 
         // Lab erders
         Route::get('lab-orders/addProduct/{variation_id}/{warehouse_id}', [Optics\LabOrderController::class, 'addProduct']);
@@ -1320,13 +1350,13 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
         Route::get('/lab-orders/getHoops', [Optics\LabOrderController::class, 'getHoops']);
         Route::get('lab_order/get_toggle_dropdown/{id}', [Optics\LabOrderController::class, 'getToggleDropdown']);
         Route::post('/lab_orders/multiple-change-status', [Optics\LabOrderController::class, 'multipleChangeStatus']);
-        Route::resource('lab-orders', 'LabOrderController');
+        Route::resource('lab-orders', LabOrderController::class);
 
         // Flow reasons
-        Route::resource('flow-reason', 'FlowReasonController');
+        Route::resource('flow-reason', FlowReasonController::class);
 
         // Inflows and outflows
-        Route::resource('inflow-outflow', 'InflowOutflowController');
+        Route::resource('inflow-outflow', InflowOutflowController::class);
         Route::get('inflow-outflow/create/{type}', [Optics\InflowOutflowController::class, 'create']);
         Route::get('/pos/inflow-outflow/get_suppliers', [Optics\InflowOutflowController::class, 'getSuppliers']);
         Route::get('/pos/inflow-outflow/get_employees', [Optics\InflowOutflowController::class, 'getEmployees']);
@@ -1408,7 +1438,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/expenses/get_expense_details/{expense_id}', [Optics\ExpenseController::class, 'getExpenseDetails']);
 
             // Expense categories
-            Route::resource('expense-categories', 'ExpenseCategoryController');
+            Route::resource('expense-categories', ExpenseCategoryController::class);
         }
     });
 
@@ -1423,7 +1453,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('customer-and-patient/store', [CustomerController::class, 'storeCustomerAndPatient']);
 
     // Reservations
-    Route::resource('reservations', 'ReservationController');
+    Route::resource('reservations', ReservationController::class);
     Route::get('pos/reservations/get_reservations', [ReservationController::class, 'getReservations']);
     Route::get('reservations/get_product_row/{quote_id}/{variation_id}/{location_id}/{row_count}', [ReservationController::class, 'getProductRow']);
     Route::get('reservations/get_payment_row/{removable}/{row_index}/{payment_id}', [ReservationController::class, 'getPaymentRow']);

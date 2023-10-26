@@ -125,13 +125,13 @@ class StockAdjustmentController extends Controller
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="print-invoice" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, 'printInvoice'], [$id]) }}">
+                                <a href="#" class="print-invoice" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, \'printInvoice\'], [$id]) }}">
                                     <i class="fa fa-print" aria-hidden="true"></i>
                                     @lang("messages.print")
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="delete_stock_adjustment '.$hide.'" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, 'destroy'], [$id]) }}">
+                                <a href="#" class="delete_stock_adjustment '.$hide.'" data-href="{{ action([\App\Http\Controllers\StockAdjustmentController::class, \'destroy\'], [$id]) }}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     @lang("messages.delete")
                                 </a>
