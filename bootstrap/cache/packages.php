@@ -21,6 +21,13 @@
       'PDF' => 'Barryvdh\\DomPDF\\Facade',
     ),
   ),
+  'consoletvs/charts' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
+    ),
+  ),
   'facade/ignition' => 
   array (
     'providers' => 
@@ -30,13 +37,6 @@
     'aliases' => 
     array (
       'Flare' => 'Facade\\Ignition\\Facades\\Flare',
-    ),
-  ),
-  'fruitcake/laravel-cors' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Fruitcake\\Cors\\CorsServiceProvider',
     ),
   ),
   'fruitcake/laravel-cors' => 
