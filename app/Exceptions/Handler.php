@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Throwable;
 use App\Mail\ExceptionOccured;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -33,7 +34,7 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         if ($this->shouldReport($exception)) {
             if (config('app.env') == 'demo') {
@@ -50,7 +51,7 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
     }
