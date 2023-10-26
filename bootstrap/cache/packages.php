@@ -7,7 +7,7 @@
     ),
     'aliases' => 
     array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facade',
+      'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
   ),
   'barryvdh/laravel-dompdf' => 
@@ -21,11 +21,15 @@
       'PDF' => 'Barryvdh\\DomPDF\\Facade',
     ),
   ),
-  'beyondcode/laravel-dump-server' => 
+  'facade/ignition' => 
   array (
     'providers' => 
     array (
-      0 => 'BeyondCode\\DumpServer\\DumpServerServiceProvider',
+      0 => 'Facade\\Ignition\\IgnitionServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Flare' => 'Facade\\Ignition\\Facades\\Flare',
     ),
   ),
   'fideloper/proxy' => 
@@ -74,6 +78,18 @@
     'aliases' => 
     array (
       'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+    ),
+  ),
+  'milon/barcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Milon\\Barcode\\BarcodeServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'DNS1D' => 'Milon\\Barcode\\Facades\\DNS1DFacade',
+      'DNS2D' => 'Milon\\Barcode\\Facades\\DNS2DFacade',
     ),
   ),
   'nesbot/carbon' => 
@@ -131,20 +147,6 @@
     'providers' => 
     array (
       0 => 'Theanik\\LaravelMoreCommand\\LaravelMoreCommandProvider',
-    ),
-  ),
-  'yajra/laravel-datatables-buttons' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    ),
-  ),
-  'yajra/laravel-datatables-html' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\HtmlServiceProvider',
     ),
   ),
   'yajra/laravel-datatables-oracle' => 

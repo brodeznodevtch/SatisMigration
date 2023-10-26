@@ -18,6 +18,7 @@
         "iatstuti/laravel-cascade-soft-deletes": "^2.0",
         "knox/pesapal": "^1.4",
         "laravel/framework": "^6.20",
+        "laravel/helpers": "*",
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",

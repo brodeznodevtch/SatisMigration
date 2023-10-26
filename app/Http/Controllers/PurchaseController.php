@@ -2941,4 +2941,9 @@ class PurchaseController extends Controller
 
         return $output;
     }
+
+    public function showDebsToPay() {
+        return view('debs_to_pay.index');
+    }
+
 }

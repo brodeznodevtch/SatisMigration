@@ -6976,4 +6976,8 @@ class ReportController extends Controller
 
         return $result;
     }
+
+    public function printTest() {
+        return view('reports.print_test');
+    }
 }

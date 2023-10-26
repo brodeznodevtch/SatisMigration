@@ -15,9 +15,8 @@ include_once 'install_r.php';
 
 Route::middleware(['IsInstalled'])->group(function () {
 
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    Route::get('/', 'HomeController@welcome');
+
     Auth::routes();
     Route::post('/new-login', 'Auth\LoginController@postLogin')->name('new_login');
     Route::get('/business/register', 'BusinessController@getRegister')->name('business.getRegister');
@@ -891,9 +890,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('credit-documents', 'CreditDocumentsController');
 
     Route::post('print_pos', 'ReporterController@printPOS');
-    Route::get('print_test', function () {
-        return view('reports.print_test');
-    });
+    Route::get('print_test', 'ReportController@printTest');
+
 
     // Movement Types Routes
     Route::resource('movement-types', 'MovementTypeController');
@@ -988,9 +986,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/reports/price-lists-report', 'ReportController@getPriceListsReport');
     Route::post('/reports/post-price-lists-report', 'ReportController@postPriceListsReport');
 
-    Route::get('/debs-pay', function () {
-        return view('debs_to_pay.index');
-    });
+    Route::get('/debs-pay', 'PurchaseController@showDebsToPay');
+
 
     Route::post('/tax_groups/get_tax_groups', 'TaxGroupController@getTaxGroups');
     Route::post('/tax_groups/get_taxes', 'TaxGroupController@getTaxes');

@@ -170,4 +170,8 @@ class UserController extends Controller
 
         return redirect('home')->with('status', $output);
     }
+
+    public function getCurrentUser(Request $request) {
+        return $request->user();
+    }
 }

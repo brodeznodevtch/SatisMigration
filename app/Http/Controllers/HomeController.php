@@ -803,4 +803,9 @@ class HomeController extends Controller
             return response()->json(['labels' => $labels, 'sell_values_previous_week' => $sell_values_previous_week, 'sell_values_current_week' => $sell_values_current_week]);
         }
     }
+
+    public function welcome() {
+        return view('welcome');
+    }
+
 }
