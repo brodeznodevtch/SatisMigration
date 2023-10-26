@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,7 +12,6 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', 'UserController@getCurrentUser');
-
 
 Route::get('position', 'ManagePositionsController@list');
 Route::get('positionlist', 'ManagePositionsController@datos');
