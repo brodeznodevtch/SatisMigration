@@ -134,139 +134,141 @@ class HomeController extends Controller
             }
         }
 
-        // Chart sales last 30 days
         $sells_chart_1 = null;
-        if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1) {
-            $sells_chart_1 = Charts::create('bar', 'highcharts')
-                ->title(' ')
-                ->template('material')
-                ->values($sell_values)
-                ->labels($labels)
-                ->elementLabel(__('home.total_sells', ['currency' => $currency->code]))
-                ->responsive(true);
-        }
 
-        // Chart purchases last 30 days
-        $purchases_chart_1 = null;
-        if (isset($dashboard_settings['purchases_month']) && $dashboard_settings['purchases_month'] == 1) {
-            $purchases_chart_1 = Charts::create('bar', 'highcharts')
-                ->title(' ')
-                ->template('material')
-                ->values($purchase_values)
-                ->labels($labels)
-                ->elementLabel(__('home.total_purchases', ['currency' => $currency->code]));
-        }
+        // Chart sales last 30 days
+        // $sells_chart_1 = null;
+        // if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1) {
+        //     $sells_chart_1 = Charts::create('bar', 'highcharts')
+        //         ->title(' ')
+        //         ->template('material')
+        //         ->values($sell_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__('home.total_sells', ['currency' => $currency->code]))
+        //         ->responsive(true);
+        // }
 
-        // Chart for stock last 30 days
-        $stocks_chart_1 = null;
-        if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1) {
-            $stocks_chart_1 = Charts::create('bar', 'highcharts')
-                ->title(' ')
-                ->template('material')
-                ->values($stock_values)
-                ->labels($labels)
-                ->elementLabel(__('home.total_stocks', ['currency' => $currency->code]));
-        }
+        // // Chart purchases last 30 days
+        // $purchases_chart_1 = null;
+        // if (isset($dashboard_settings['purchases_month']) && $dashboard_settings['purchases_month'] == 1) {
+        //     $purchases_chart_1 = Charts::create('bar', 'highcharts')
+        //         ->title(' ')
+        //         ->template('material')
+        //         ->values($purchase_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__('home.total_purchases', ['currency' => $currency->code]));
+        // }
 
-        $labels = [];
+        // // Chart for stock last 30 days
+        // $stocks_chart_1 = null;
+        // if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1) {
+        //     $stocks_chart_1 = Charts::create('bar', 'highcharts')
+        //         ->title(' ')
+        //         ->template('material')
+        //         ->values($stock_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__('home.total_stocks', ['currency' => $currency->code]));
+        // }
 
-        // Chart for sells this financial year
-        if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
-            $sells_this_fy = $this->transactionUtil->getSellsCurrentFy($business_id, $fy['start'], $fy['end']);
-            $sell_values = [];
-        }
+        // $labels = [];
 
-        // Purchases current financial year
-        if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
-            $purchases_this_fy = $this->transactionUtil->getPurchasesCurrentFy($business_id, $fy['start'], $fy['end']);
-            $purchase_values = [];
-        }
+        // // Chart for sells this financial year
+        // if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
+        //     $sells_this_fy = $this->transactionUtil->getSellsCurrentFy($business_id, $fy['start'], $fy['end']);
+        //     $sell_values = [];
+        // }
 
-        // Stock current financial year
-        if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
-            $stocks_this_fy = $this->transactionUtil->getStockCurrentFy($business_id, $fy['start']);
-            $stock_values = [];
-        }
+        // // Purchases current financial year
+        // if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
+        //     $purchases_this_fy = $this->transactionUtil->getPurchasesCurrentFy($business_id, $fy['start'], $fy['end']);
+        //     $purchase_values = [];
+        // }
 
-        $months = [];
-        $date = strtotime($fy['start']);
-        $last = date('m-Y', strtotime($fy['end']));
+        // // Stock current financial year
+        // if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
+        //     $stocks_this_fy = $this->transactionUtil->getStockCurrentFy($business_id, $fy['start']);
+        //     $stock_values = [];
+        // }
 
-        do {
-            $month_year = date('m-Y', $date);
+        // $months = [];
+        // $date = strtotime($fy['start']);
+        // $last = date('m-Y', strtotime($fy['end']));
 
-            $month_number = date('m', $date);
+        // do {
+        //     $month_year = date('m-Y', $date);
 
-            $labels[] = \Carbon::createFromFormat('m-Y', $month_year)
-                ->format('M-Y');
-            $date = strtotime('+1 month', $date);
+        //     $month_number = date('m', $date);
 
-            if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
-                if (! empty($sells_this_fy[$month_year])) {
-                    $sell_values[] = $sells_this_fy[$month_year];
-                } else {
-                    $sell_values[] = 0;
-                }
-            }
+        //     $labels[] = \Carbon::createFromFormat('m-Y', $month_year)
+        //         ->format('M-Y');
+        //     $date = strtotime('+1 month', $date);
 
-            if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
-                if (! empty($purchases_this_fy[$month_year])) {
-                    $purchase_values[] = $purchases_this_fy[$month_year];
-                } else {
-                    $purchase_values[] = 0;
-                }
-            }
+        //     if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
+        //         if (! empty($sells_this_fy[$month_year])) {
+        //             $sell_values[] = $sells_this_fy[$month_year];
+        //         } else {
+        //             $sell_values[] = 0;
+        //         }
+        //     }
 
-            if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
-                if (! empty($stocks_this_fy[$month_year])) {
-                    $stock_values[] = $stocks_this_fy[$month_year];
-                } else {
-                    $stock_values[] = 0;
-                }
-            }
-        } while ($month_year != $last);
+        //     if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
+        //         if (! empty($purchases_this_fy[$month_year])) {
+        //             $purchase_values[] = $purchases_this_fy[$month_year];
+        //         } else {
+        //             $purchase_values[] = 0;
+        //         }
+        //     }
 
-        // Chart for sells this financial year
-        $sells_chart_2 = null;
-        if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
-            $sells_chart_2 = Charts::create('bar', 'highcharts')
-                ->title(__(' '))
-                ->template('material')
-                ->values($sell_values)
-                ->labels($labels)
-                ->elementLabel(__(
-                    'home.total_sells',
-                    ['currency' => $currency->code]
-                ));
-        }
+        //     if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
+        //         if (! empty($stocks_this_fy[$month_year])) {
+        //             $stock_values[] = $stocks_this_fy[$month_year];
+        //         } else {
+        //             $stock_values[] = 0;
+        //         }
+        //     }
+        // } while ($month_year != $last);
 
-        // Chart purchases current financial year
-        $purchases_chart_2 = null;
-        if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
-            $purchases_chart_2 = Charts::create('bar', 'highcharts')
-                ->title(__(' '))
-                ->template('material')
-                ->values($purchase_values)
-                ->labels($labels)
-                ->elementLabel(__(
-                    'home.total_purchases',
-                    ['currency' => $currency->code]
-                ));
-        }
+        // // Chart for sells this financial year
+        // $sells_chart_2 = null;
+        // if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
+        //     $sells_chart_2 = Charts::create('bar', 'highcharts')
+        //         ->title(__(' '))
+        //         ->template('material')
+        //         ->values($sell_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__(
+        //             'home.total_sells',
+        //             ['currency' => $currency->code]
+        //         ));
+        // }
 
-        // Chart stock current financial year
-        $stocks_chart_2 = null;
-        if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
-            $stocks_chart_2 = Charts::create('bar', 'highcharts')
-                ->title(__(' '))
-                ->template('material')
-                ->values($stock_values)
-                ->labels($labels)
-                ->elementLabel(__(
-                    'home.total_stocks',
-                    ['currency' => $currency->code]
-                ));
-        }
+        // // Chart purchases current financial year
+        // $purchases_chart_2 = null;
+        // if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
+        //     $purchases_chart_2 = Charts::create('bar', 'highcharts')
+        //         ->title(__(' '))
+        //         ->template('material')
+        //         ->values($purchase_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__(
+        //             'home.total_purchases',
+        //             ['currency' => $currency->code]
+        //         ));
+        // }
+
+        // // Chart stock current financial year
+        // $stocks_chart_2 = null;
+        // if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
+        //     $stocks_chart_2 = Charts::create('bar', 'highcharts')
+        //         ->title(__(' '))
+        //         ->template('material')
+        //         ->values($stock_values)
+        //         ->labels($labels)
+        //         ->elementLabel(__(
+        //             'home.total_stocks',
+        //             ['currency' => $currency->code]
+        //         ));
+        // }
 
         $months = [
             '01' => __('accounting.january'),
@@ -318,12 +320,12 @@ class HomeController extends Controller
 
         return view('home.index', compact(
             'date_filters',
-            'sells_chart_1',
-            'sells_chart_2',
-            'purchases_chart_1',
-            'purchases_chart_2',
-            'stocks_chart_1',
-            'stocks_chart_2',
+            // 'sells_chart_1',
+            // 'sells_chart_2',
+            // 'purchases_chart_1',
+            // 'purchases_chart_2',
+            // 'stocks_chart_1',
+            // 'stocks_chart_2',
             'months',
             'business_locations',
             'locations',

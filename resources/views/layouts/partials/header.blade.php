@@ -40,8 +40,8 @@
         @endcan
 
         @php
-          use App\Business;
-          use App\User;
+          use App\Models\Business;
+          use App\Models\User;
           $businessIds = User::select('business_id')
             ->where('username', Auth::user()->username)
             ->where('email', Auth::user()->email)

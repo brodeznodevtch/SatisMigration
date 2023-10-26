@@ -93,7 +93,6 @@
       'Carbon' => 'Carbon\\Carbon',
       'DNS1D' => 'Milon\\Barcode\\Facades\\DNS1DFacade',
       'DNS2D' => 'Milon\\Barcode\\Facades\\DNS2DFacade',
-      'Charts' => 'ConsoleTVs\\Charts\\Facades\\Charts',
       'Datatables' => 'Yajra\\DataTables\\Facades\\DataTables',
       'PDF' => 'Barryvdh\\DomPDF\\Facade',
       'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',

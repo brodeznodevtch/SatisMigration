@@ -2,7 +2,7 @@
 @section('title', __('home.home'))
 
 @section('css')
-    {!! Charts::styles(['highcharts']) !!}
+    {{-- {!! Charts::styles(['highcharts']) !!} --}}
     <style>
         /* Slider */
         .carousel-fade .carousel-inner .item {
@@ -406,7 +406,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $sells_chart_1->html() !!}
+                               
                             </div>
                         </div>
                     </div>
@@ -424,7 +424,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $sells_chart_2->html() !!}
+                              
                             </div>
                         </div>
                     </div>
@@ -456,9 +456,7 @@
                             </div>
                             <div class="box-body">
                                 <div id="peak_sales_hours_chart">
-                                    <iframe id="frame_chart_month"
-                                        src="{{ action('HomeController@getPeakSalesHoursByMonthChart', ['location_month' => $first_location]) }}"
-                                        width="100%" height="400"></iframe>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -488,9 +486,7 @@
                             </div>
                             <div class="box-body">
                                 <div id="peak_sales_hours_chart">
-                                    <iframe id="frame_chart"
-                                        src="{{ action('HomeController@getPeakSalesHoursChart', ['location' => $first_location]) }}"
-                                        width="100%" height="400"></iframe>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -509,7 +505,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $purchases_chart_1->html() !!}
+                            
                             </div>
                         </div>
                     </div>
@@ -527,7 +523,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $purchases_chart_2->html() !!}
+                                
                             </div>
                         </div>
                     </div>
@@ -545,7 +541,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $stocks_chart_1->html() !!}
+                               
                             </div>
                         </div>
                     </div>
@@ -563,7 +559,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                {!! $stocks_chart_2->html() !!}
+                               
                             </div>
                         </div>
                     </div>
@@ -579,32 +575,7 @@
 
     @section('javascript')
         
-        <script src="{{ asset('plugins\chart\highchart\highcharts.js?v=' . $asset_v) }}"></script>
-        <!-- {!! Charts::assets(['highcharts']) !!} -->
-        <script src="{{ asset('js/home.js?v=' . $asset_v) }}"></script>
-        @if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1)
-            {!! $sells_chart_1->script() !!}
-        @endif
 
-        @if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1)
-            {!! $sells_chart_2->script() !!}
-        @endif
-
-        @if (isset($dashboard_settings['purchases_month']) && $dashboard_settings['purchases_month'] == 1)
-            {!! $purchases_chart_1->script() !!}
-        @endif
-
-        @if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1)
-            {!! $purchases_chart_2->script() !!}
-        @endif
-
-        @if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1)
-            {!! $stocks_chart_1->script() !!}
-        @endif
-
-        @if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1)
-            {!! $stocks_chart_2->script() !!}
-        @endif
         <!-- <script src="jquery.min.js"></> -->
         <!-- <script src="bootstrap/js/bootstrap.min.js"></script> -->
         <script>
