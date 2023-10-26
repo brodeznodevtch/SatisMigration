@@ -67,12 +67,12 @@ class CashRegisterController extends Controller
         // Check if there is a open register, if yes then redirect to POS screen.
         if (config('app.business') == 'optics') {
             if ($this->cashRegisterUtil->countOpenedRegister() != 0) {
-                return redirect()->action('SellPosController@create');
+                return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create']);
             }
 
         } else {
             if ($this->cashierUtil->countOpenedCashier() != 0) {
-                return redirect()->action('SellPosController@create');
+                return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create']);
             }
         }
 
@@ -108,7 +108,7 @@ class CashRegisterController extends Controller
         $opening_receipt = true;
 
         if ($this->cashierUtil->countOpenedCashier() != 0) {
-            return redirect()->action('SellPosController@create');
+            return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create']);
         }
 
         try {
@@ -174,9 +174,9 @@ class CashRegisterController extends Controller
         }
 
         if ($opening_receipt) {
-            return redirect()->action('SellPosController@create', ['cashier_closure_id' => $cashier_closure_id]);
+            return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create'], ['cashier_closure_id' => $cashier_closure_id]);
         } else {
-            return redirect()->action('SellPosController@create');
+            return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create']);
         }
     }
 
@@ -271,7 +271,7 @@ class CashRegisterController extends Controller
             \Log::emergency('File: '.$e->getFile().' Line: '.$e->getLine().' Message: '.$e->getMessage());
         }
 
-        return redirect()->action('SellPosController@create');
+        return redirect()->action([\App\Http\Controllers\SellPosController::class, 'create']);
     }
 
     /**
@@ -435,7 +435,7 @@ class CashRegisterController extends Controller
                     'msg' => 'Feature disabled in demo!!',
                 ];
 
-                return redirect()->action('HomeController@index')->with('status', $output);
+                return redirect()->action([\App\Http\Controllers\HomeController::class, 'index'])->with('status', $output);
             }
 
             $input = $request->only([
@@ -552,6 +552,6 @@ class CashRegisterController extends Controller
             ];
         }
 
-        return redirect()->action('HomeController@index')->with('status', $output);
+        return redirect()->action([\App\Http\Controllers\HomeController::class, 'index'])->with('status', $output);
     }
 }

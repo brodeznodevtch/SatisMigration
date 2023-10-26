@@ -27,7 +27,7 @@
     {{-- Number of decimal places to store and use in calculations --}}
     <input type="hidden" id="price_precision" value="{{ config('app.price_precision') }}">
 
-    {!! Form::open(['url' => action('ApportionmentController@update', [$apportionment->id]), 'method' => 'put', 'id' => 'edit_apportionment_form', 'files' => true]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\ApportionmentController::class, 'update'], [$apportionment->id]), 'method' => 'put', 'id' => 'edit_apportionment_form', 'files' => true]) !!}
 
     {{-- Expense type --}}
     {!! Form::hidden('expense_type', 'retaceo', ['id' => 'expense_type']) !!}
@@ -225,7 +225,7 @@
                 <div class="box-body">
                     <div class="pull-right">
                         @if ($apportionment->is_finished)
-                        <a class="btn btn-block btn-default" href="{{ action('ApportionmentController@index') }}">
+                        <a class="btn btn-block btn-default" href="{{ action([\App\Http\Controllers\ApportionmentController::class, 'index']) }}">
                             @lang('messages.go_back')
                         </a>
                         @else

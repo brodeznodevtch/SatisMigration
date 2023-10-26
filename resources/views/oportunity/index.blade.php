@@ -28,7 +28,7 @@
                 @can('crm-oportunities.create')
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                            data-href="{{ action('OportunityController@create') }}" data-container=".oportunity_modal">
+                            data-href="{{ action([\App\Http\Controllers\OportunityController::class, 'create']) }}" data-container=".oportunity_modal">
                             <i class="fa fa-plus"></i> @lang('messages.add')
                         </button>
                     </div>

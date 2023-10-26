@@ -14,7 +14,7 @@
     @endphp
     <!-- Main content -->
     <section class="content">
-        {!! Form::open(['url' => action('ContactController@store'), 'method' => 'post', 'id' => $form_id]) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\ContactController::class, 'store']), 'method' => 'post', 'id' => $form_id]) !!}
         <div class="boxform_u box-solid_u">
             <div class="box-body">
                 <div class="row">
@@ -336,7 +336,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-right">
                         <button type="submit" class="btn btn-primary" id="submit">@lang('messages.save')</button>
-                        <a class="btn btn-default" href="{{action('ContactController@index', ['type' => 'supplier'])}}">@lang('messages.close')</a>
+                        <a class="btn btn-default" href="{{action([\App\Http\Controllers\ContactController::class, 'index'], ['type' => 'supplier'])}}">@lang('messages.close')</a>
                     </div>
                 </div>
             </div>

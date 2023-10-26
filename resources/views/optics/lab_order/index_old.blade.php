@@ -27,7 +27,7 @@
             @can('lab_order.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{ action('Optics\LabOrderController@createLabOrder') }}" 
+                    data-href="{{ action([\App\Http\Controllers\Optics\LabOrderController::class, 'createLabOrder']) }}" 
                     data-container=".add_lab_order_modal" id="btn-new-lab-orders">
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )
                 </button>

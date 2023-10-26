@@ -16,7 +16,7 @@
             @can('physical_inventory.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{ action('PhysicalInventoryController@create') }}" 
+                    data-href="{{ action([\App\Http\Controllers\PhysicalInventoryController::class, 'create']) }}" 
                     data-container=".physical_inventory_modal">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </button>

@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog" id="modal-create">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('MovementTypeController@store'),
+        {!! Form::open(['url' => action([\App\Http\Controllers\MovementTypeController::class, 'store']),
             'method' => 'post', 'id' => 'movement_type_add_form']) !!}
 
         <div class="modal-header">

@@ -24,7 +24,7 @@
             @if(auth()->user()->can('supplier.create') || auth()->user()->can('customer.create'))
             	<div class="box-tools">
                     <a class="btn btn-block btn-primary" 
-                    href="{{action('ContactController@create', ['type' => $type])}}">
+                    href="{{action([\App\Http\Controllers\ContactController::class, 'create'], ['type' => $type])}}">
                     <i class="fa fa-plus"></i> @lang('messages.add')</a>
                 </div>
             @endif

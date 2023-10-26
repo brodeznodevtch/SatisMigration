@@ -133,16 +133,16 @@ class CreditDocumentsController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('cdocs.reception')) {
-                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@reception', [$row->id]).'" class="reception_cdocs_button"><i class="glyphicon glyphicon-copy"></i> '.__('cxc.add_reception').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\CreditDocumentsController::class, 'reception'], [$row->id]).'" class="reception_cdocs_button"><i class="glyphicon glyphicon-copy"></i> '.__('cxc.add_reception').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.custodian')) {
-                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@custodian', [$row->id]).'" class="custodian_cdocs_button"><i class="glyphicon glyphicon-lock"></i> '.__('cxc.add_custodian').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\CreditDocumentsController::class, 'custodian'], [$row->id]).'" class="custodian_cdocs_button"><i class="glyphicon glyphicon-lock"></i> '.__('cxc.add_custodian').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.view')) {
-                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@show', [$row->id]).'" class="show_cdocs_button"><i class="glyphicon glyphicon-search"></i> '.__('messages.view').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\CreditDocumentsController::class, 'show'], [$row->id]).'" class="show_cdocs_button"><i class="glyphicon glyphicon-search"></i> '.__('messages.view').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.update')) {
-                        $html .= '<li><a href="#" data-href="'.action('CreditDocumentsController@edit', [$row->id]).'" class="edit_cdocs_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\CreditDocumentsController::class, 'edit'], [$row->id]).'" class="edit_cdocs_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
                     if (auth()->user()->can('cdocs.delete')) {
                         $html .= '<li><a href="#" onClick="deleteCreditDocuments('.$row->id.')" class="delete_cdocs_button"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';

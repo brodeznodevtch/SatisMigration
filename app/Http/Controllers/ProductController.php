@@ -95,7 +95,7 @@ class ProductController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('products', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('ProductController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action([\App\Http\Controllers\ProductController::class, 'index']));
         }
 
         // Locations
@@ -196,7 +196,7 @@ class ProductController extends Controller
                 $datatable = $datatable->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can('sell.view')) {
-                            return action('SellController@show', [$row->id]);
+                            return action([\App\Http\Controllers\SellController::class, 'show'], [$row->id]);
                         } else {
                             return '';
                         }
@@ -313,7 +313,7 @@ class ProductController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('products', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('ProductController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action([\App\Http\Controllers\ProductController::class, 'index']));
         }
 
         $categories = Category::where('business_id', $business_id)
@@ -613,11 +613,11 @@ class ProductController extends Controller
         }
 
         if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
-            return redirect()->action('OpeningStockController@add', ['product_id' => $product->id]);
+            return redirect()->action([\App\Http\Controllers\OpeningStockController::class, 'add'], ['product_id' => $product->id]);
         } elseif ($request->input('submit_type') == 'submit_n_add_selling_prices') {
-            return redirect()->action('ProductController@addSellingPrices', [$product->id]);
+            return redirect()->action([\App\Http\Controllers\ProductController::class, 'addSellingPrices'], [$product->id]);
         } elseif ($request->input('submit_type') == 'save_n_add_another') {
-            return redirect()->action('ProductController@create')->with('status', $output);
+            return redirect()->action([\App\Http\Controllers\ProductController::class, 'create'])->with('status', $output);
         } else {
             return redirect('products')->with('status', $output);
         }
@@ -2041,13 +2041,11 @@ class ProductController extends Controller
             ];
         }
         if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
-            return redirect()->action(
-                'OpeningStockController@add',
+            return redirect()->action([\App\Http\Controllers\OpeningStockController::class, 'add'],
                 ['product_id' => $product->id]
             );
         } elseif ($request->input('submit_type') == 'save_n_add_another') {
-            return redirect()->action(
-                'ProductController@create'
+            return redirect()->action([\App\Http\Controllers\ProductController::class, 'create']
             )->with('status', $output);
         }
 
@@ -2470,7 +2468,7 @@ class ProductController extends Controller
                 ->addColumn(
                     'action',
                     function ($row) {
-                        return '<button data-href="'.action('ProductController@destroySalePriceScale', [$row->id]).'" class="btn btn-xs btn-danger delete_sale_price_button"><i class="fa fa-times"></i></button>';
+                        return '<button data-href="'.action([\App\Http\Controllers\ProductController::class, 'destroySalePriceScale'], [$row->id]).'" class="btn btn-xs btn-danger delete_sale_price_button"><i class="fa fa-times"></i></button>';
                     }
                 )
                 ->rawColumns(['action'])

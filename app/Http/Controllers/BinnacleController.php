@@ -103,7 +103,7 @@ class BinnacleController extends Controller
                 })->rawColumns(['id', 'ip', 'action', 'machine_name', 'realized_in', 'user', 'geolocation', 'domain', 'actions'])
                 ->setRowAttr([
                     'data-href' => function ($row) {
-                        return action('BinnacleController@show', [$row->id]);
+                        return action([\App\Http\Controllers\BinnacleController::class, 'show'], [$row->id]);
                     },
                 ])->make(true);
         }

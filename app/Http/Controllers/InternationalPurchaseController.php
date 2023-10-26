@@ -235,7 +235,7 @@ class InternationalPurchaseController extends Controller
             $business_id = auth()->user()->business_id;
             //Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\PurchaseController::class, 'index']));
             }
 
             $transaction_data = $request->only([
@@ -449,7 +449,7 @@ class InternationalPurchaseController extends Controller
 
         //Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\PurchaseController::class, 'index']));
         }
 
         //Check if the transaction can be edited or not.

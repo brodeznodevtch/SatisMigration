@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('MovementTypeController@update',
+        {!! Form::open(['url' => action([\App\Http\Controllers\MovementTypeController::class, 'update'],
             [$movement_type->id]), 'method' => 'PUT', 'id' => 'movement_types_edit_form']) !!}
 
         <div class="modal-header">

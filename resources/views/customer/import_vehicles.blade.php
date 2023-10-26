@@ -15,7 +15,7 @@
             <div class="box box-solid box-default">
                 <div class="box-body">
                     {!! Form::open([
-                        'url' => action('CustomerVehicleController@postImporter'),
+                        'url' => action([\App\Http\Controllers\CustomerVehicleController::class, 'postImporter']),
                         'method' => 'post',
                         'enctype' => 'multipart/form-data',
                         'id' => 'send_form'
@@ -98,7 +98,7 @@
 
                         <div class="box-body">
                             {!! Form::open([
-                                'url' => action('CustomerVehicleController@import'),
+                                'url' => action([\App\Http\Controllers\CustomerVehicleController::class, 'import']),
                                 'method' => 'post',
                                 'enctype' => 'multipart/form-data',
                                 'id' => 'import_form'

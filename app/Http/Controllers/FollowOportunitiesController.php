@@ -427,7 +427,7 @@ class FollowOportunitiesController extends Controller
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
-                    $html .= '<li><a href="#" data-href="'.action('FollowOportunitiesController@edit', [$row->id]).'" class="edit_oportunities_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                    $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\FollowOportunitiesController::class, 'edit'], [$row->id]).'" class="edit_oportunities_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     $html .= '<li><a href="#" onclick="deleteOport('.$row->id.')"><i class="glyphicon glyphicon-trash"></i> '.__('messages.delete').'</a></li>';
 
                     $html .= '</ul></div>';

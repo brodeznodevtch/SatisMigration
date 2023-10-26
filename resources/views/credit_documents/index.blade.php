@@ -12,7 +12,7 @@
             <div class="box-header">
                 <div class="box-tools">
                     <button type="button" class="btn btn-block btn-primary btn-modal"
-                        data-href="{{ action('CreditDocumentsController@create') }}" data-container=".cdocs_modal">
+                        data-href="{{ action([\App\Http\Controllers\CreditDocumentsController::class, 'create']) }}" data-container=".cdocs_modal">
                         <i class="fa fa-plus"></i> @lang('messages.add')
                     </button>
                 </div>

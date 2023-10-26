@@ -104,7 +104,7 @@ class MailController extends Controller
             ];
         }
 
-        return redirect()->action('CustomerController@indexBalancesCustomer')->with('status', $output);
+        return redirect()->action([\App\Http\Controllers\CustomerController::class, 'indexBalancesCustomer'])->with('status', $output);
     }
 
     /**

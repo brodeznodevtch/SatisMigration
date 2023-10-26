@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
-        {!! Form::open(['url' => action('FixedAssetTypeController@store'),
+        {!! Form::open(['url' => action([\App\Http\Controllers\FixedAssetTypeController::class, 'store']),
             'method' => 'post', 'id' => 'fixed_asset_type_add_form']) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span

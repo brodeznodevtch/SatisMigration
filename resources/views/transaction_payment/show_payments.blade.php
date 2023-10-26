@@ -221,7 +221,7 @@
                     <div class="row no-print">
                         <div class="col-md-12 text-right">
                             <button type="button" class="btn btn-info btn-modal btn-xs"
-                                data-href="{{ action('NotificationController@getTemplate', ['transaction_id' => $transaction->id, 'template_for' => 'payment_paid']) }}"
+                                data-href="{{ action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id, 'template_for' => 'payment_paid']) }}"
                                 data-container=".view_modal"><i class="fa fa-envelope"></i>
                                 @lang('lang_v1.payment_paid_notification')</button>
                         </div>
@@ -232,14 +232,14 @@
                     <div class="row no-print">
                         <div class="col-md-12 text-right">
                             <button type="button" class="btn btn-info btn-modal btn-xs"
-                                data-href="{{ action('NotificationController@getTemplate', ['transaction_id' => $transaction->id, 'template_for' => 'payment_received']) }}"
+                                data-href="{{ action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id, 'template_for' => 'payment_received']) }}"
                                 data-container=".view_modal"><i class="fa fa-envelope"></i>
                                 @lang('lang_v1.payment_received_notification')</button>
 
                             @if ($transaction->payment_status != 'paid')
                                 &nbsp;
                                 <button type="button" class="btn btn-warning btn-modal btn-xs"
-                                    data-href="{{ action('NotificationController@getTemplate', ['transaction_id' => $transaction->id, 'template_for' => 'payment_reminder']) }}"
+                                    data-href="{{ action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id, 'template_for' => 'payment_reminder']) }}"
                                     data-container=".view_modal"><i class="fa fa-envelope"></i>
                                     @lang('lang_v1.send_payment_reminder')</button>
                             @endif
@@ -257,7 +257,7 @@
                             (auth()->user()->can('expense.access'))
                         )
                             @if ($entity_type != 'quote')
-                                <a href="{{ action('TransactionPaymentController@addPayment', [$transaction->id]) }}"
+                                <a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$transaction->id]) }}"
                                     class="btn btn-primary btn-xs pull-right add_payment_modal no-print">
                                     <i class="fa fa-plus" aria-hidden="true"></i> @lang("purchase.add_payment")
                                 </a>
@@ -306,9 +306,9 @@
                                             class="edit_payment"
                                             style="cursor:pointer;"
                                             @if ($entity_type == 'transaction')
-                                                data-href="{{ action('TransactionPaymentController@edit', [$payment->id]) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'edit'], [$payment->id]) }}"
                                             @else
-                                                data-href="{{ action('TransactionPaymentController@edit', ['id' => $payment->id, 'entity_type' => 'quote']) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'edit'], ['id' => $payment->id, 'entity_type' => 'quote']) }}"
                                             @endif>
                                             <i class="glyphicon glyphicon-edit"></i>
                                             {{ __('messages.edit') }}
@@ -319,9 +319,9 @@
                                             aria-hidden="true"
                                             style="cursor:pointer;"
                                             @if ($entity_type == 'transaction')
-                                                data-href="{{ action('TransactionPaymentController@destroy', [$payment->id]) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'destroy'], [$payment->id]) }}"
                                             @else
-                                                data-href="{{ action('TransactionPaymentController@destroy', ['id' => $payment->id, 'entity_type' => 'quote']) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'destroy'], ['id' => $payment->id, 'entity_type' => 'quote']) }}"
                                             @endif>
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                             {{ __('messages.delete') }}
@@ -332,9 +332,9 @@
                                             class="view_payment"
                                             style="cursor:pointer;"
                                             @if ($entity_type == 'transaction')
-                                                data-href="{{ action('TransactionPaymentController@viewPayment', [$payment->id]) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'viewPayment'], [$payment->id]) }}"
                                             @else
-                                                data-href="{{ action('TransactionPaymentController@viewPayment', ['payment_id' => $payment->id, 'entity_type' => 'quote']) }}"
+                                                data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'viewPayment'], ['payment_id' => $payment->id, 'entity_type' => 'quote']) }}"
                                             @endif>
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             {{ __('messages.view') }}

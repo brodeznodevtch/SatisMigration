@@ -228,7 +228,7 @@
 									{{-- Lab order --}}
 									<button type="button"
 										class="btn bg-maroon btn-block btn-flat btn-modal no-print pos-express-btn"
-										data-href="{{ action('Optics\LabOrderController@createLabOrder') }}"
+										data-href="{{ action([\App\Http\Controllers\Optics\LabOrderController::class, 'createLabOrder']) }}"
 										data-container=".add_lab_order_modal"
 										data-backdrop="static"
 										title="@lang('lab_order.lab_order')">
@@ -278,7 +278,7 @@
 										data-toggle="tooltip"
 										data-placement="top"
 										data-container=".inflow_outflow_modal"
-										data-href="{{ action('Optics\InflowOutflowController@create', ['type' => 'input']) }}"
+										data-href="{{ action([\App\Http\Controllers\Optics\InflowOutflowController::class, 'create'], ['type' => 'input']) }}"
 										class="btn btn-success btn-block btn-flat btn-lg no-print pos-express-btn"
 										@if (! empty($edit)) disabled @endif>
 										<div class="text-center" style="font-size: 0.9em">
@@ -303,7 +303,7 @@
 										data-placement="top"
 										class="btn bg-red btn-block btn-flat btn-lg no-print pos-express-btn"
 										data-container=".inflow_outflow_modal" 
-										data-href="{{ action('Optics\InflowOutflowController@create', ['type' => 'output']) }}"
+										data-href="{{ action([\App\Http\Controllers\Optics\InflowOutflowController::class, 'create'], ['type' => 'output']) }}"
 										@if (! empty($edit)) disabled @endif>
 										<div class="text-center" style="font-size: 0.9em;">
 											<i class="fa fa-arrow-circle-up" aria-hidden="true"></i>

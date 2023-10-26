@@ -11,7 +11,7 @@
     <section class="content">
         <div class="boxform_u box-solid_u">
             {!! Form::open([
-                'url' => action('RrhhSettingController@store'),
+                'url' => action([\App\Http\Controllers\RrhhSettingController::class, 'store']),
                 'method' => 'post',
                 'id' => 'form_add',
                 'files' => true,

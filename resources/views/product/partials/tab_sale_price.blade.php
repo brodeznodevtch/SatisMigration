@@ -1,6 +1,6 @@
 <br>
 <div class="row">
-  {!! Form::open(['url' => action('ProductController@storeSalePriceScale'), 'method' => 'post', 'id' =>
+  {!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'storeSalePriceScale']), 'method' => 'post', 'id' =>
   'sale_price_add_form']) !!}
   <div class="col-sm-4">
     <!-- Product -->

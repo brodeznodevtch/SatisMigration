@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {{-- {!! Form::model(['url' => [action('CreditDocumentsController@update'), $credit_document->id], 'method' => 'post', 'id' => 'cdocs_add_form']) !!}
+        {{-- {!! Form::model(['url' => [action([\App\Http\Controllers\CreditDocumentsController::class, 'update']), $credit_document->id], 'method' => 'post', 'id' => 'cdocs_add_form']) !!}
         --}}
         <form id="form-edit-credit-documents">
         <div class="modal-header">

@@ -23,7 +23,7 @@
             @can('category.create')
         	<div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                	data-href="{{action('CategoryController@create')}}" 
+                	data-href="{{action([\App\Http\Controllers\CategoryController::class, 'create'])}}" 
                 	data-container=".category_modal">
                 	<i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>

@@ -18,7 +18,7 @@
         	<div class="box box-solid box-default">
                 <div class="box-body">
                     {!! Form::open([
-                        'url' => action('ImportProductsController@checkFile'),
+                        'url' => action([\App\Http\Controllers\ImportProductsController::class, 'checkFile']),
                         'method' => 'post',
                         'enctype' => 'multipart/form-data',
                         'id' => 'send_form'
@@ -105,7 +105,7 @@
 
                         <div class="box-body">
                             {!! Form::open([
-                                'url' => action('ImportProductsController@import'),
+                                'url' => action([\App\Http\Controllers\ImportProductsController::class, 'import']),
                                 'method' => 'post',
                                 'enctype' => 'multipart/form-data',
                                 'id' => 'import_form'

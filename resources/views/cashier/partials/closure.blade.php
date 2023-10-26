@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      {!! Form::open(['url' => action('CashierClosureController@postCashierClosure'), 'method' => 'post', 'id' => 'cashier_closure_form']) !!}
+      {!! Form::open(['url' => action([\App\Http\Controllers\CashierClosureController::class, 'postCashierClosure']), 'method' => 'post', 'id' => 'cashier_closure_form']) !!}
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h3 class="modal-title">@lang( 'cash_register.cashier_closure' ) ( {{ \Carbon::createFromFormat('Y-m-d H:i:s', $cashier_closure->open_date)->format('d/m/Y H:i:s') }} - {{ \Carbon::now()->format('d/m/Y H:i:s') }} )</h3>

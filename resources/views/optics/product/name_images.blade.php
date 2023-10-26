@@ -32,7 +32,7 @@
         <div class="box">
           <div class="box-body">
             {!! Form::open([
-                'url' => action('Optics\ProductController@postNameImages'),
+                'url' => action([\App\Http\Controllers\Optics\ProductController::class, 'postNameImages']),
                 'method' => 'post',
                 'enctype' => 'multipart/form-data'
             ]) !!}

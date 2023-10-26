@@ -75,7 +75,7 @@
 					<td>
 						@can('product.download_cost_history')
 						<a
-							href="{{ action('ReportController@generateCostHistory', ['variation_id' => $variation->id]) }}"
+							href="{{ action([\App\Http\Controllers\ReportController::class, 'generateCostHistory'], ['variation_id' => $variation->id]) }}"
 							target="_blank"
 							id="btn-history"
 							title

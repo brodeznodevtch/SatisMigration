@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
   <div class="modal-content" style="border-radius: 10px;">
-    {!! Form::open(['url' => action('FollowCustomerController@store'),
+    {!! Form::open(['url' => action([\App\Http\Controllers\FollowCustomerController::class, 'store']),
         'method' => 'post', 'id' => 'follow_customer_add_form']) !!}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">

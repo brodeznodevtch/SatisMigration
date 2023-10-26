@@ -10,13 +10,13 @@
 
 {{-- Main content --}}
 <section class="content no-print">
-	{!! Form::open(['url' => action('StockTransferController@update', [$sell_transfer->id]), 'method' => 'put', 'id' => 'stock_transfer_form' ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\StockTransferController::class, 'update'], [$sell_transfer->id]), 'method' => 'put', 'id' => 'stock_transfer_form' ]) !!}
 
 	{{-- Redirect url --}}
-	{!! Form::hidden('redirect_url', action('StockTransferController@index'), ['id' => 'redirect_url']) !!}
+	{!! Form::hidden('redirect_url', action([\App\Http\Controllers\StockTransferController::class, 'index']), ['id' => 'redirect_url']) !!}
 
 	{{-- Send url --}}
-	<input type="hidden" id="send_url" value="{{ action('StockTransferController@send') }}">
+	<input type="hidden" id="send_url" value="{{ action([\App\Http\Controllers\StockTransferController::class, 'send']) }}">
 
 	{{-- Id --}}
 	{!! Form::hidden('id', $sell_transfer->id, ['id' => 'transaction_id']) !!}

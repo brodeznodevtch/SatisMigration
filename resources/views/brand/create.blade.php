@@ -2,7 +2,7 @@
   <div class="modal-content" style="border-radius: 20px;">
 
     {!! Form::open([
-      'url' => action('BrandController@store'),
+      'url' => action([\App\Http\Controllers\BrandController::class, 'store']),
       'method' => 'post',
       'id' => $quick_add ? 'quick_add_brand_form' : 'brand_add_form',
       'files' => true

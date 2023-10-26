@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md modal-dialog-centered" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('QuoteController@updateLostSale', [$lost_sale->id]), 'method' => 'post', 'id' => 'lost_sale_edit_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\QuoteController::class, 'updateLostSale'], [$lost_sale->id]), 'method' => 'post', 'id' => 'lost_sale_edit_form']) !!}
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

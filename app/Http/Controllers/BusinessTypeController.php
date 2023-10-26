@@ -34,7 +34,7 @@ class BusinessTypeController extends Controller
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('business_type.update')) {
-                        $html .= '<li><a href="#" data-href="'.action('BusinessTypeController@edit', [$row->id]).'" class="edit_business_type_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\BusinessTypeController::class, 'edit'], [$row->id]).'" class="edit_business_type_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('business_type.delete')) {

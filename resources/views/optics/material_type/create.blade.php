@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog" id="modal-create">
   <div class="modal-content" style="border-radius: 10px;">
-    {!! Form::open(['url' => action('Optics\MaterialTypeController@store'), 'method' => 'post',
+    {!! Form::open(['url' => action([\App\Http\Controllers\Optics\MaterialTypeController::class, 'store']), 'method' => 'post',
       'id' => $quick_add ? 'quick_add_material_type_form' : 'material_type_add_form']) !!}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">

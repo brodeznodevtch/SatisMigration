@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('SupportDocumentsController@update', [$sdocs->id]), 'method' => 'PUT', 'id' =>
+        {!! Form::open(['url' => action([\App\Http\Controllers\SupportDocumentsController::class, 'update'], [$sdocs->id]), 'method' => 'PUT', 'id' =>
         'sdocs_edit_form']) !!}
 
         <div class="modal-header">

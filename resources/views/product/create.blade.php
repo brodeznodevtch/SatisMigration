@@ -1,5 +1,5 @@
 <!-- Main content -->
-{!! Form::open(['url' => action('ProductController@store'), 'method' => 'post', 'id' => 'product_add_form','class' =>
+{!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'store']), 'method' => 'post', 'id' => 'product_add_form','class' =>
 'product_form', 'files' => true ]) !!}
 <div class="boxform_u box-solid_u">
   <div class="box-body">
@@ -51,7 +51,7 @@
               disabled
               @endif
               class="btn btn-default bg-white btn-flat btn-modal"
-              data-href="{{ action('CategoryController@create', ['quick_add' => true, 'type' => 'category']) }}"
+              data-href="{{ action([\App\Http\Controllers\CategoryController::class, 'create'], ['quick_add' => true, 'type' => 'category']) }}"
               title="@lang('category.add_category')"
               data-container=".view_modal">
               <i class="fa fa-plus-circle text-primary fa-lg"></i>
@@ -77,7 +77,7 @@
                 disabled
                 @endif
                 class="btn btn-default bg-white btn-flat btn-modal"
-                data-href="{{ action('CategoryController@create', ['quick_add' => true, 'type' => 'sub-category']) }}"
+                data-href="{{ action([\App\Http\Controllers\CategoryController::class, 'create'], ['quick_add' => true, 'type' => 'sub-category']) }}"
                 title="@lang('category.add_category')"
                 data-container=".view_modal">
                 <i class="fa fa-plus-circle text-primary fa-lg"></i>
@@ -117,7 +117,7 @@
               select2']); !!}
               <span class="input-group-btn">
                 <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default
-                  bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}"
+                  bg-white btn-flat btn-modal" data-href="{{action([\App\Http\Controllers\BrandController::class, 'create'], ['quick_add' => true])}}"
                   title="@lang('brand.add_brand')" data-container=".view_modal"><i
                     class="fa fa-plus-circle text-primary fa-lg"></i></button>
               </span>
@@ -140,7 +140,7 @@
                   disabled
                   @endif
                   class="btn btn-default bg-white btn-flat btn-modal"
-                  data-href="{{ action('UnitController@create', ['quick_add' => true]) }}"
+                  data-href="{{ action([\App\Http\Controllers\UnitController::class, 'create'], ['quick_add' => true]) }}"
                   title="@lang('unit.add_unit')"
                   data-container=".view_modal">
                   <i class="fa fa-plus-circle text-primary fa-lg"></i>

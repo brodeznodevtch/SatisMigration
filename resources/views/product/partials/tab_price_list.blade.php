@@ -1,5 +1,5 @@
 <br>
-{!! Form::open(['url' => action('ProductController@saveSellingPrices'), 'method' => 'post', 'id' =>
+{!! Form::open(['url' => action([\App\Http\Controllers\ProductController::class, 'saveSellingPrices']), 'method' => 'post', 'id' =>
 'selling_price_form']) !!}
 {!! Form::hidden('product_id', $product->id) !!}
 <div class="row">

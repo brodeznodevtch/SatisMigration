@@ -213,18 +213,18 @@ class PurchaseController extends Controller
                         if (! is_null($row->import_type)) {
                             $html .= '<li><a href="#" data-href="'.route('international-purchases.show', $row->id).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-eye" aria-hidden="true"></i>'.__('messages.view').'</a></li>';
                         } else {
-                            $html .= '<li><a href="#" data-href="'.action('PurchaseController@show', [$row->id]).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-eye" aria-hidden="true"></i>'.__('messages.view').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->id]).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-eye" aria-hidden="true"></i>'.__('messages.view').'</a></li>';
                         }
                     }
                     if (auth()->user()->can('purchase.view')) {
                         if (! is_null($row->import_type)) {
-                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action('PurchaseController@printInvoice', [$row->id, 'import']).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'printInvoice'], [$row->id, 'import']).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         } else {
-                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action('PurchaseController@printInvoice', [$row->id, 'national']).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'printInvoice'], [$row->id, 'national']).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         }
                     }
                     if (auth()->user()->can('purchase.update')) {
-                        $html .= '<li><a href="'.action('PurchaseController@edit', [$row->id]).'"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\PurchaseController::class, 'edit'], [$row->id]).'"><i class="glyphicon glyphicon-edit"></i>'.__('messages.edit').'</a></li>';
                     }
 
                     $is_finished = 0;
@@ -240,10 +240,10 @@ class PurchaseController extends Controller
                     }
 
                     if (auth()->user()->can('purchase.delete') && $is_finished == 0) {
-                        $html .= '<li><a href="'.action('PurchaseController@destroy', [$row->id]).'" class="delete-purchase"><i class="fa fa-trash"></i>'.__('messages.delete').'</a></li>';
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\PurchaseController::class, 'destroy'], [$row->id]).'" class="delete-purchase"><i class="fa fa-trash"></i>'.__('messages.delete').'</a></li>';
                     }
 
-                    $html .= '<li><a href="'.action('LabelsController@show').'?purchase_id='.$row->id.'" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i>'.__('barcode.labels').'</a></li>';
+                    $html .= '<li><a href="'.action([\App\Http\Controllers\LabelsController::class, 'show']).'?purchase_id='.$row->id.'" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i>'.__('barcode.labels').'</a></li>';
 
                     if (auth()->user()->can('purchase.view') && ! empty($row->document)) {
                         $document_name = ! empty(explode('_', $row->document, 2)[1]) ? explode('_', $row->document, 2)[1] : $row->document;
@@ -253,29 +253,29 @@ class PurchaseController extends Controller
                     if (auth()->user()->can('purchase.create')) {
                         $html .= '<li class="divider"></li>';
                         if ($row->payment_status != 'paid') {
-                            $html .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->id]).'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i>'.__('purchase.add_payment').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$row->id]).'" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i>'.__('purchase.add_payment').'</a></li>';
                         }
-                        $html .= '<li><a href="'.action('TransactionPaymentController@show', [$row->id]).
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$row->id]).
                             '" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i>'.__('purchase.view_payments').'</a></li>';
                     }
 
                     if (auth()->user()->can('purchase.update')) {
-                        $html .= '<li><a href="'.action('PurchaseReturnController@add', [$row->id]).
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\PurchaseReturnController::class, 'add'], [$row->id]).
                             '"><i class="fa fa-undo" aria-hidden="true" ></i>'.__('lang_v1.purchase_return').'</a></li>';
                     }
 
                     if (auth()->user()->can('purchase.update')) {
-                        $html .= '<li><a class="return_discount" href="'.action('PurchaseReturnController@getPurchaseReturnDiscount', [$row->id]).
+                        $html .= '<li><a class="return_discount" href="'.action([\App\Http\Controllers\PurchaseReturnController::class, 'getPurchaseReturnDiscount'], [$row->id]).
                             '"><i class="fa fa-undo" aria-hidden="true" ></i>'.__('lang_v1.purchase_return_discount').'</a></li>';
                     }
 
                     if (auth()->user()->can('send_notification')) {
                         if ($row->status == 'ordered') {
-                            $html .= '<li><a href="#" data-href="'.action('NotificationController@getTemplate', ['transaction_id' => $row->id, 'template_for' => 'new_order']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.new_order_notification').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $row->id, 'template_for' => 'new_order']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.new_order_notification').'</a></li>';
                         } elseif ($row->status == 'received') {
-                            $html .= '<li><a href="#" data-href="'.action('NotificationController@getTemplate', ['transaction_id' => $row->id, 'template_for' => 'items_received']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.item_received_notification').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $row->id, 'template_for' => 'items_received']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.item_received_notification').'</a></li>';
                         } elseif ($row->status == 'pending') {
-                            $html .= '<li><a href="#" data-href="'.action('NotificationController@getTemplate', ['transaction_id' => $row->id, 'template_for' => 'items_pending']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.item_pending_notification').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $row->id, 'template_for' => 'items_pending']).'" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i> '.__('lang_v1.item_pending_notification').'</a></li>';
                         }
                     }
 
@@ -299,7 +299,7 @@ class PurchaseController extends Controller
                 )
                 ->editColumn(
                     'payment_status',
-                    '<a href="{{ action("TransactionPaymentController@show", [$id])}}" class="view_payment_modal payment-status payment-status-label" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
+                    '<a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id])}}" class="view_payment_modal payment-status payment-status-label" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
                         </span></a>'
                 )
                 ->addColumn('payment_due', function ($row) {
@@ -308,7 +308,7 @@ class PurchaseController extends Controller
 
                     if (! empty($row->return_exists)) {
                         $return_due = round($row->amount_return, 2) - round($row->return_paid, 2);
-                        $due_html .= '<br><strong>'.__('lang_v1.purchase_return').':</strong> <a href="'.action('TransactionPaymentController@show', [$row->return_transaction_id]).'" class="view_purchase_return_payment_modal"><span class="display_currency purchase_return" data-currency_symbol="true" data-orig-value="'.$return_due.'">'.$return_due.'</span></a>';
+                        $due_html .= '<br><strong>'.__('lang_v1.purchase_return').':</strong> <a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$row->return_transaction_id]).'" class="view_purchase_return_payment_modal"><span class="display_currency purchase_return" data-currency_symbol="true" data-orig-value="'.$return_due.'">'.$return_due.'</span></a>';
                     }
 
                     return $due_html;
@@ -359,7 +359,7 @@ class PurchaseController extends Controller
                         if (auth()->user()->can('purchase.view')) {
                             $route = ! is_null($row->import_type) ?
                                 route('international-purchases.show', $row->id) :
-                                action('PurchaseController@show', [$row->id]);
+                                action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->id]);
                         }
 
                         return $route;
@@ -548,7 +548,7 @@ class PurchaseController extends Controller
 
             //Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\PurchaseController::class, 'index']));
             }
 
             $transaction_data = $request->only([
@@ -839,7 +839,7 @@ class PurchaseController extends Controller
 
         //Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\PurchaseController::class, 'index']));
         }
 
         //Check if the transaction can be edited or not.
@@ -2408,7 +2408,7 @@ class PurchaseController extends Controller
 
             // Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\PurchaseController::class, 'index']));
             }
 
             // Purchase lines

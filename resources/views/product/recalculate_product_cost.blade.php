@@ -21,7 +21,7 @@
         
         <div class="box-body">
             {!! Form::open([
-                'url' => action('ProductController@postRecalculateCost'),
+                'url' => action([\App\Http\Controllers\ProductController::class, 'postRecalculateCost']),
                 'method' => 'post',
                 'id' => 'recalculate_cost_form'
             ]) !!}

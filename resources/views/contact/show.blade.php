@@ -161,7 +161,7 @@
                             <div class="clearfix"></div>
                             <div class="col-sm-12" style="display:none;">
                                 @if(($contact->total_purchase - $contact->purchase_paid) > 0)
-                                    <a href="{{action('TransactionPaymentController@getPayContactDue', [$contact->id])}}?type=purchase" class="pay_purchase_due btn btn-primary btn-sm pull-right"><i class="fa fa-money" aria-hidden="true"></i> @lang("contact.pay_due_amount")</a>
+                                    <a href="{{action([\App\Http\Controllers\TransactionPaymentController::class, 'getPayContactDue'], [$contact->id])}}?type=purchase" class="pay_purchase_due btn btn-primary btn-sm pull-right"><i class="fa fa-money" aria-hidden="true"></i> @lang("contact.pay_due_amount")</a>
                                 @endif
                             </div>
                         @endif

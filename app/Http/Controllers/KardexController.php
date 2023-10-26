@@ -112,9 +112,9 @@ class KardexController extends Controller
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
                     if (auth()->user()->can('purchase.view')) {
                         if ($row->type == 'input') {
-                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action('KardexController@printInvoicePurchase', [$row->transaction_id, $row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\KardexController::class, 'printInvoicePurchase'], [$row->transaction_id, $row->id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         } else {
-                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action('SellPosController@printInvoice', [$row->transaction_id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
+                            $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\SellPosController::class, 'printInvoice'], [$row->transaction_id]).'"><i class="fa fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                         }
                     }
 

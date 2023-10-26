@@ -11,7 +11,7 @@
     <section class="content">
         <div class="boxform_u box-solid_u">
             {!! Form::model($employee, [
-                'url' => action('EmployeesController@update', $employee->id),
+                'url' => action([\App\Http\Controllers\EmployeesController::class, 'update'], $employee->id),
                 'method' => 'patch',
                 'id' => 'form_edit',
                 'files' => true,

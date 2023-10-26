@@ -17,7 +17,7 @@
         	<h3 class="box-title">@lang('fixed_asset.all_your_fixed_assets')</h3>
             @can('fixed_asset_type.create')
             	<div class="box-tools">
-                    <a class="btn btn-block btn-primary add-fixed-asset" href="{{action('FixedAssetController@create')}}">
+                    <a class="btn btn-block btn-primary add-fixed-asset" href="{{action([\App\Http\Controllers\FixedAssetController::class, 'create'])}}">
                         <i class="fa fa-plus"></i> @lang('messages.add')</a>
                 </div>
             @endcan

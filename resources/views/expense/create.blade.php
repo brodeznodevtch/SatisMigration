@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-xl" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('ExpenseController@store'), 'method' => 'post', 'id' => 'expense_add_form', 'files' => true]) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\ExpenseController::class, 'store']), 'method' => 'post', 'id' => 'expense_add_form', 'files' => true]) !!}
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('PaymentTermController@update', [$payment_term->id]), 'method' => 'PUT', 'id'
+        {!! Form::open(['url' => action([\App\Http\Controllers\PaymentTermController::class, 'update'], [$payment_term->id]), 'method' => 'PUT', 'id'
         => 'payment_term_edit_form']) !!}
 
         <div class="modal-header">

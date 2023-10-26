@@ -132,15 +132,15 @@ class OportunityController extends Controller
                     }
 
                     if (auth()->user()->can('oportunities.update')) {
-                        $html .= '<li><a href="#" data-href="'.action('OportunityController@edit', [$row->id]).'" class="edit_oportunity_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\OportunityController::class, 'edit'], [$row->id]).'" class="edit_oportunity_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
                     if (auth()->user()->can('follow_oportunities.create')) {
-                        $html .= '<li><a data-href="'.action('FollowOportunitiesController@create', [$row->id]).'" data-container=".oportunities_modal" class="btn-modal" style="cursor:pointer;"><i class="glyphicon probar glyphicon-comment"></i> '.__('crm.tracing').'</a></li>';
+                        $html .= '<li><a data-href="'.action([\App\Http\Controllers\FollowOportunitiesController::class, 'create'], [$row->id]).'" data-container=".oportunities_modal" class="btn-modal" style="cursor:pointer;"><i class="glyphicon probar glyphicon-comment"></i> '.__('crm.tracing').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.create')) {
-                        $html .= '<li><a href="#" data-href="'.action('OportunityController@createCustomer', [$row->id]).'" class="convert_customer_button"><i class="fa fa-star"></i> '.__('crm.convert_to_customer').'</a></li>';
+                        $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\OportunityController::class, 'createCustomer'], [$row->id]).'" class="convert_customer_button"><i class="fa fa-star"></i> '.__('crm.convert_to_customer').'</a></li>';
                     }
 
                     if (auth()->user()->can('oportunities.delete')) {

@@ -26,7 +26,7 @@
               </div>
               <div id="collapseFilter" class="panel-collapse active collapse in" aria-expanded="true">
                 <div class="box-body">
-                  {!! Form::open(['url' => action('ReportController@getExpenseReport'), 'method' => 'get' ]) !!}
+                  {!! Form::open(['url' => action([\App\Http\Controllers\ReportController::class, 'getExpenseReport']), 'method' => 'get' ]) !!}
                     <div class="col-md-4">
                         <div class="form-group">
                             {!! Form::label('location_id',  __('purchase.business_location') . ':') !!}

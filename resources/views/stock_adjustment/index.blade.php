@@ -17,7 +17,7 @@
         <div class="box-header">
         	<h3 class="box-title">@lang('stock_adjustment.manage_stock_adjustments')</h3>
             <div class="box-tools">
-                <a class="btn btn-block btn-primary" href="{{action('StockAdjustmentController@create')}}">
+                <a class="btn btn-block btn-primary" href="{{action([\App\Http\Controllers\StockAdjustmentController::class, 'create'])}}">
                 <i class="fa fa-plus"></i> @lang('messages.add')</a>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
-        {!! Form::open(["url" => action("CostCenterController@store"), "method" => "post", "id" => "add_cost_center_form", "file" => false]) !!}
+        {!! Form::open(["url" => action([\App\Http\Controllers\CostCenterController::class, 'store']), "method" => "post", "id" => "add_cost_center_form", "file" => false]) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

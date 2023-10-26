@@ -1534,7 +1534,7 @@ class LabOrderController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can('sell.view')) {
-                            return action('Optics\LabOrderController@show', [$row->id]);
+                            return action([\App\Http\Controllers\Optics\LabOrderController::class, 'show'], [$row->id]);
                         } else {
                             return '';
                         }

@@ -7,7 +7,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
 
-    {!! Form::open(['url' => action('NotificationController@send'), 'method' => 'post', 'id' => 'send_notification_form' ]) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\NotificationController::class, 'send']), 'method' => 'post', 'id' => 'send_notification_form' ]) !!}
 
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

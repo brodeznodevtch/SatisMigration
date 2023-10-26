@@ -16,7 +16,7 @@
         	<div class="box box-solid box-default">
                 <div class="box-body">
                     {!! Form::open([
-                        'url' => action('RrhhImportEmployeesController@checkEditFile'),
+                        'url' => action([\App\Http\Controllers\RrhhImportEmployeesController::class, 'checkEditFile']),
                         'method' => 'post',
                         'enctype' => 'multipart/form-data',
                         'id' => 'send_form'
@@ -103,7 +103,7 @@
                         <div class="box-body">
                             <h4>{{ __('rrhh.message_file_validated') }}</h4>
                             {!! Form::open([
-                                'url' => action('RrhhImportEmployeesController@update'),
+                                'url' => action([\App\Http\Controllers\RrhhImportEmployeesController::class, 'update']),
                                 'method' => 'post',
                                 'enctype' => 'multipart/form-data',
                                 'id' => 'import_form'

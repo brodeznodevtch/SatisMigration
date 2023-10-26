@@ -44,15 +44,15 @@ class CostCenterController extends Controller
                         </button>
                         <ul class='dropdown-menu dropdown-menu-right' role='menu'>";
                     if (auth()->user()->can('cost_center.accounts')) {
-                        $html .= "<li><a href='".action('CostCenterController@getMainAccounts', [$row->id])."' class='add_main_accounts'><i class='fa fa-book'></i>".__('cost_center.main_accounts').'</li>';
-                        $html .= "<li><a href='".action('CostCenterController@getOperationAccounts', [$row->id])."' class='add_operation_accounts'><i class='fa fa-book'></i>".__('cost_center.operation_accounts').'</li>';
+                        $html .= "<li><a href='".action([\App\Http\Controllers\CostCenterController::class, 'getMainAccounts'], [$row->id])."' class='add_main_accounts'><i class='fa fa-book'></i>".__('cost_center.main_accounts').'</li>';
+                        $html .= "<li><a href='".action([\App\Http\Controllers\CostCenterController::class, 'getOperationAccounts'], [$row->id])."' class='add_operation_accounts'><i class='fa fa-book'></i>".__('cost_center.operation_accounts').'</li>';
                         $html .= "<li class='divider'></li>";
                     }
                     if (auth()->user()->can('cost_center.edit')) {
-                        $html .= "<li><a href='".action('CostCenterController@edit', [$row->id])."' class='btn_edit_cost_center'><i class='glyphicon glyphicon-edit'></i>".__('messages.edit').'</a></li>';
+                        $html .= "<li><a href='".action([\App\Http\Controllers\CostCenterController::class, 'edit'], [$row->id])."' class='btn_edit_cost_center'><i class='glyphicon glyphicon-edit'></i>".__('messages.edit').'</a></li>';
                     }
                     if (auth()->user()->can('cost_center.delete')) {
-                        $html .= "<li><a href='".action('CostCenterController@destroy', [$row->id])."' class='btn_delete_cost_center'><i class='fa fa-trash'></i>".__('messages.delete').'</a></li>';
+                        $html .= "<li><a href='".action([\App\Http\Controllers\CostCenterController::class, 'destroy'], [$row->id])."' class='btn_delete_cost_center'><i class='fa fa-trash'></i>".__('messages.delete').'</a></li>';
                     }
                     $html .= '</ul></div>';
 

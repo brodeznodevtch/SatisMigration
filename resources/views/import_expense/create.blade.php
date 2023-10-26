@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="dialog" id="modal-create">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('ImportExpenseController@store'),
+        {!! Form::open(['url' => action([\App\Http\Controllers\ImportExpenseController::class, 'store']),
             'method' => 'post', 'id' => 'import_expense_add_form']) !!}
 
         <div class="modal-header">

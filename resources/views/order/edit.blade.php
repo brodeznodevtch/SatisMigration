@@ -12,7 +12,7 @@
     {{-- App business --}}
     <input type="hidden" id="app_business" value="{{ config('app.business') }}">
 
-    {!! Form::open(['url' => action('OrderController@update', [$order->id]), 'method' => 'PUT',
+    {!! Form::open(['url' => action([\App\Http\Controllers\OrderController::class, 'update'], [$order->id]), 'method' => 'PUT',
         'id' => 'edit_order_form' ]) !!}
     <div class="row" style="margin-top: -0.5cm;">
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12"></div>

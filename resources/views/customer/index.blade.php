@@ -43,13 +43,13 @@
       </div>
       <div class="box-tools">
         <button type="button" class="btn btn-block btn-primary btn-modal"
-          data-href="{{ action('CustomerController@create') }}" data-container=".customer_modal" data-backdrop="static"
+          data-href="{{ action([\App\Http\Controllers\CustomerController::class, 'create']) }}" data-container=".customer_modal" data-backdrop="static"
           id="btn-new-customer">
           <i class="fa fa-plus"></i> @lang('messages.add')
         </button>
 
         <button type="button" class="btn btn-block btn-success btn-modal"
-          data-href="{{ action('CustomerController@export') }}" id="btn-report">
+          data-href="{{ action([\App\Http\Controllers\CustomerController::class, 'export']) }}" id="btn-report">
           <i class="fa fa-download"></i>&nbsp; @lang('report.export')
         </button>
       </div>

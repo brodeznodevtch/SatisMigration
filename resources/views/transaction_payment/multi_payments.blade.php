@@ -29,7 +29,7 @@
 <section class="content">
     <div class="box">
         <div class="box-body">
-            {!! Form::open(['url' => action('TransactionPaymentController@storeMultiPayments'),
+            {!! Form::open(['url' => action([\App\Http\Controllers\TransactionPaymentController::class, 'storeMultiPayments']),
                 'method' => 'post', 'id' => 'multi_payments_form', 'files' => true]) !!}
             <div class="row">
                 <div class="col-lg-6 col-md-8 col-sm-12">

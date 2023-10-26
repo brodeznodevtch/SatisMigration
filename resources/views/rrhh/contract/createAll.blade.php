@@ -10,7 +10,7 @@
 <!-- Main content -->
 <section class="content">
   <div class="boxform_u box-solid_u">
-    {!! Form::open(['url' => action('RrhhContractController@storeMassive'), 'method' => 'post', 'id' => 'form_add']) !!}
+    {!! Form::open(['url' => action([\App\Http\Controllers\RrhhContractController::class, 'storeMassive']), 'method' => 'post', 'id' => 'form_add']) !!}
     <div class="box-body">
         <div class="row">
             <div class="col-lg-12">

@@ -15,7 +15,7 @@
             <h3 class="box-title">@lang( 'lang_v1.all_sales')</h3>
             @can('sell.create')
             <div class="box-tools">
-                <a class="btn btn-block btn-primary" href="{{ action('SellPosController@create') }}">
+                <a class="btn btn-block btn-primary" href="{{ action([\App\Http\Controllers\SellPosController::class, 'create']) }}">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </a>
             </div>

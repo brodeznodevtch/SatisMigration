@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('SellController@update', [$transaction->id]), 'method' => 'PUT', 'id' => 'transaction_edit_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\SellController::class, 'update'], [$transaction->id]), 'method' => 'PUT', 'id' => 'transaction_edit_form']) !!}
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -163,7 +163,7 @@
                                     auth()->user()->can('expense.access'))
                                     <li>
                                         <a aria-hidden="true" class="edit_invoice_payment" style="cursor:pointer; color: rgb(59, 59, 59);"
-                                            data-href="{{ action('TransactionPaymentController@editPaymentMethod', [$payment->id]) }}">
+                                            data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'editPaymentMethod'], [$payment->id]) }}">
                                             <i class="glyphicon glyphicon-edit"></i> {{ __('messages.edit') }}</a>
                                     </li>
                                     </ul>

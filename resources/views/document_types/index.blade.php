@@ -23,7 +23,7 @@
             @can('document_type.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{action('DocumentTypeController@create')}}" 
+                    data-href="{{action([\App\Http\Controllers\DocumentTypeController::class, 'create'])}}" 
                     data-container=".documents_modal">
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>

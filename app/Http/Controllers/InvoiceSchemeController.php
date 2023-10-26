@@ -154,7 +154,7 @@ class InvoiceSchemeController extends Controller
 
             }
 
-            return redirect()->action('InvoiceSchemeController@index');
+            return redirect()->action([\App\Http\Controllers\InvoiceSchemeController::class, 'index']);
         }
     }
 

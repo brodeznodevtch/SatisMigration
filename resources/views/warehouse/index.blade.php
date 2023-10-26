@@ -19,7 +19,7 @@
             @can('warehouse.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{ action('WarehouseController@create') }}" 
+                    data-href="{{ action([\App\Http\Controllers\WarehouseController::class, 'create']) }}" 
                     data-container=".warehouses_modal">
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )
                 </button>

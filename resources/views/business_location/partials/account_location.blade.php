@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
   
-      {!! Form::open(['url' => action('BusinessLocationController@postAccountingAccountByLocation'), 'method' => 'post', 'id' => 'account_business_location_form' ]) !!}
+      {!! Form::open(['url' => action([\App\Http\Controllers\BusinessLocationController::class, 'postAccountingAccountByLocation']), 'method' => 'post', 'id' => 'account_business_location_form' ]) !!}
   
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

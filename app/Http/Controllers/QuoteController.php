@@ -879,9 +879,9 @@ class QuoteController extends Controller
                         $due_date = \Carbon::parse($row->due_date);
                         if ($now->gt($due_date)) {
                             if (is_null($row->lost_sale_id)) {
-                                $html .= '<li><a href="#" data-href="'.action('QuoteController@createLostSale', [$row->id]).'" class="add_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Venta perdida').'</a></li>';
+                                $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\QuoteController::class, 'createLostSale'], [$row->id]).'" class="add_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Venta perdida').'</a></li>';
                             } else {
-                                $html .= '<li><a href="#" data-href="'.action('QuoteController@editLostSale', [$row->lost_sale_id]).'" class="edit_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Editar venta perdida').'</a></li>';
+                                $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\QuoteController::class, 'editLostSale'], [$row->lost_sale_id]).'" class="edit_lost_sale"><i class="fa fa-exclamation-triangle"></i> '.__('Editar venta perdida').'</a></li>';
                             }
                         }
                     }

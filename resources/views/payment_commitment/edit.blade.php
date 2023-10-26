@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-        {!! Form::open(['url' => action('PaymentCommitmentController@update', $pc->id),
+        {!! Form::open(['url' => action([\App\Http\Controllers\PaymentCommitmentController::class, 'update'], $pc->id),
             'method' => 'put', 'id' => 'payment_commitment_edit_form']) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span

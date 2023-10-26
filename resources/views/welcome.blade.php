@@ -93,9 +93,9 @@
 
                 @if (Route::has('login'))
                     @if (Auth::check())
-                        <a href="{{ action('HomeController@index') }}" style="color: #0057E1; font-weight: bold; text-decoration: underline;">@lang('home.home')</a>
+                        <a href="{{ action([\App\Http\Controllers\HomeController::class, 'index']) }}" style="color: #0057E1; font-weight: bold; text-decoration: underline;">@lang('home.home')</a>
                     @else
-                        <a href="{{ action('Auth\LoginController@login') }}" style="color: #0057E1; font-weight: bold; text-decoration: underline;">@lang('home.login')</a>
+                        <a href="{{ action([\App\Http\Controllers\Auth\LoginController::class, 'login']) }}" style="color: #0057E1; font-weight: bold; text-decoration: underline;">@lang('home.login')</a>
                     @endif
                 @endif
             </div>

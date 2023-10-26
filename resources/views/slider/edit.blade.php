@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 {!! Form::open([
-                    'url' => action('SliderController@update', [$image->id]),
+                    'url' => action([\App\Http\Controllers\SliderController::class, 'update'], [$image->id]),
                     'method' => 'PATCH',
                     'id' => 'image_update_form'
                 ]) !!}

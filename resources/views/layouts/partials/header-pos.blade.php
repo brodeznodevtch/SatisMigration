@@ -6,7 +6,7 @@
     <div class="col-md-10 col-md-offset-1" style="padding: 0 20px;">
       {{-- Go back --}}
       <a
-        href="{{ action('SellController@index') }}"
+        href="{{ action([\App\Http\Controllers\SellController::class, 'index']) }}"
         title="{{ __('lang_v1.go_back') }}"
         data-toggle="tooltip"
         data-placement="bottom"
@@ -26,7 +26,7 @@
         data-placement="bottom"
         class="btn btn-danger btn-flat m-6 btn-xs m-5 pull-right btn-header-pos"
         data-container=".close_register_modal" 
-        data-href="{{ action('CashRegisterController@getCloseRegister') }}"
+        data-href="{{ action([\App\Http\Controllers\CashRegisterController::class, 'getCloseRegister']) }}"
         @if (! empty($is_edit)) disabled @endif>
         <strong>
           <i class="fa fa-window-close fa-lg"></i>&nbsp;
@@ -39,7 +39,7 @@
     <div class="col-md-10">
       {{-- Go back --}}
       <a
-        href="{{ action('SellController@index')}}"
+        href="{{ action([\App\Http\Controllers\SellController::class, 'index'])}}"
         title="{{ __('lang_v1.go_back') }}"
         data-toggle="tooltip"
         data-placement="bottom"
@@ -58,7 +58,7 @@
         data-placement="bottom"
         class="btn btn-danger btn-flat m-6 btn-xs m-5 pull-right"
         data-container=".close_register_modal" 
-        data-href="{{ action('CashierClosureController@getCashierClosure') }}">
+        data-href="{{ action([\App\Http\Controllers\CashierClosureController::class, 'getCashierClosure']) }}">
         <strong>
           <i class="fa fa-window-close fa-lg"></i>
         </strong>
@@ -73,7 +73,7 @@
         data-placement="bottom"
         class="btn btn-success btn-flat m-6 btn-xs m-5 btn-modal pull-right"
         data-container=".register_details_modal" 
-        data-href="{{ action('CashRegisterController@getRegisterDetails') }}">
+        data-href="{{ action([\App\Http\Controllers\CashRegisterController::class, 'getRegisterDetails']) }}">
         <strong>
           <i class="fa fa-briefcase fa-lg" aria-hidden="true"></i>
         </strong>
@@ -117,7 +117,7 @@
         data-placement="bottom"
         class="btn bg-yellow btn-flat m-6 btn-xs m-5 btn-modal pull-right"
         data-container=".view_modal" 
-        data-href="{{ action('SellController@index') }}?suspended=1">
+        data-href="{{ action([\App\Http\Controllers\SellController::class, 'index']) }}?suspended=1">
         <strong>
           <i class="fa fa-pause-circle-o fa-lg"></i>
         </strong>

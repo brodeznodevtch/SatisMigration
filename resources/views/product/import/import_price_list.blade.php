@@ -29,7 +29,7 @@
             <div class="col-sm-12">
                 <div class="box">
                     <div class="box-body">
-                        <form action="{{ action('ProductController@postPriceList') }}" method="POST"
+                        <form action="{{ action([\App\Http\Controllers\ProductController::class, 'postPriceList']) }}" method="POST"
                             enctype="multipart/form-data">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <div class="row">

@@ -1,4 +1,4 @@
-{!! Form::open(['url' => action('CustomerController@addContact', [$customer->id]), 'method' => 'post', 'id' => 'form_add_contact']) !!}
+{!! Form::open(['url' => action([\App\Http\Controllers\CustomerController::class, 'addContact'], [$customer->id]), 'method' => 'post', 'id' => 'form_add_contact']) !!}
 <div class="modal-dialog modal-lg" role="document" id="modalContact">
     <form id="form-edit-customer">
         <div class="modal-content" style="border-radius: 20px;">

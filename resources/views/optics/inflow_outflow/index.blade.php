@@ -19,7 +19,7 @@
             {{-- @can('inflow_outflow.create')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal"
-                    data-href="{{ action('Optics\InflowOutflowController@create', ['type' => 'both']) }}" 
+                    data-href="{{ action([\App\Http\Controllers\Optics\InflowOutflowController::class, 'create'], ['type' => 'both']) }}" 
                     data-container=".inflow_outflows_modal">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </button>

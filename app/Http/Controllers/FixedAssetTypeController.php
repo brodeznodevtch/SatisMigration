@@ -38,10 +38,10 @@ class FixedAssetTypeController extends Controller
                 ->addColumn('action', function ($row) {
                     $action = '';
                     if (auth()->user()->can('fixed_asset_type.edit')) {
-                        $action .= "<a class='btn btn-primary btn-xs edit_fixed_asset_type' href=".action('FixedAssetTypeController@edit', [$row->id])."><i class='glyphicon glyphicon-edit'></i></a>";
+                        $action .= "<a class='btn btn-primary btn-xs edit_fixed_asset_type' href=".action([\App\Http\Controllers\FixedAssetTypeController::class, 'edit'], [$row->id])."><i class='glyphicon glyphicon-edit'></i></a>";
                     }
                     if (auth()->user()->can('fixed_asset_type.delete')) {
-                        $action .= "&nbsp;<a class='btn btn-danger btn-xs delete_fixed_asset_type' href=".action('FixedAssetTypeController@destroy', [$row->id])."><i class='glyphicon glyphicon-trash'></i></a>";
+                        $action .= "&nbsp;<a class='btn btn-danger btn-xs delete_fixed_asset_type' href=".action([\App\Http\Controllers\FixedAssetTypeController::class, 'destroy'], [$row->id])."><i class='glyphicon glyphicon-trash'></i></a>";
                     }
 
                     return $action;

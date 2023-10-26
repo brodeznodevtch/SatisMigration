@@ -127,9 +127,9 @@ class ExpenseController extends Controller
                         <a style="cursor: pointer" data-href="{{action(\'Optics\ExpenseController@destroy\', [$id])}}" class="optics_delete_expense"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</a></li>
                     <li class="divider"></li> 
                     @if($payment_status != "paid")
-                        <li><a href="{{action("TransactionPaymentController@addPayment", [$id])}}" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> @lang("purchase.add_payment")</a></li>
+                        <li><a href="{{action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$id])}}" class="add_payment_modal"><i class="fa fa-money" aria-hidden="true"></i> @lang("purchase.add_payment")</a></li>
                     @endif
-                    <li><a href="{{action("TransactionPaymentController@show", [$id])}}" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> @lang("purchase.view_payments")</a></li>
+                    <li><a href="{{action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id])}}" class="view_payment_modal"><i class="fa fa-money" aria-hidden="true" ></i> @lang("purchase.view_payments")</a></li>
                     </ul></div>'
                 )
                 ->removeColumn('id')
@@ -140,7 +140,7 @@ class ExpenseController extends Controller
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->editColumn(
                     'payment_status',
-                    '<a href="{{ action("TransactionPaymentController@show", [$id])}}" class="view_payment_modal payment-status" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
+                    '<a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id])}}" class="view_payment_modal payment-status" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
                         </span></a>'
                 )
                 ->addColumn('payment_due', function ($row) {
@@ -180,7 +180,7 @@ class ExpenseController extends Controller
 
         //Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\Optics\ExpenseController::class, 'index']));
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id);
@@ -209,7 +209,7 @@ class ExpenseController extends Controller
 
             //Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\Optics\ExpenseController::class, 'index']));
             }
 
             //Validate document size
@@ -289,7 +289,7 @@ class ExpenseController extends Controller
 
         //Check if subscribed or not
         if (! $this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
+            return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\Optics\ExpenseController::class, 'index']));
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id);
@@ -329,7 +329,7 @@ class ExpenseController extends Controller
 
             //Check if subscribed or not
             if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse(action('Optics\ExpenseController@index'));
+                return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\Optics\ExpenseController::class, 'index']));
             }
 
             $transaction_data['transaction_date'] = \Carbon::createFromFormat(

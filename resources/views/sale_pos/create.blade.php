@@ -135,7 +135,7 @@
 					</div>
 				</div>
 
-				{!! Form::open(['url' => action('SellPosController@store'), 'method' => 'post', 'id' => 'add_pos_sell_form' ]) !!}
+				{!! Form::open(['url' => action([\App\Http\Controllers\SellPosController::class, 'store']), 'method' => 'post', 'id' => 'add_pos_sell_form' ]) !!}
 
 				{!! Form::hidden('location_id', $default_location, ['id' => 'location_id', 'data-receipt_printer_type' => isset($bl_attributes[$default_location]['data-receipt_printer_type']) ? $bl_attributes[$default_location]['data-receipt_printer_type'] : 'browser']) !!}
 				{!! Form::hidden('warehouse_id', null, ['id' => 'warehouse_id']) !!}
@@ -150,7 +150,7 @@
 				<input type="hidden" id="price_precision" value="{{ config('app.price_precision') }}">
 
 				<input type="hidden" id="flag-reservation" value="0">
-				<input type="hidden" id="reservation-route" value="{{ action('ReservationController@store') }}">
+				<input type="hidden" id="reservation-route" value="{{ action([\App\Http\Controllers\ReservationController::class, 'store']) }}">
 				<input type="hidden" name="reservation_id" id="reservation_id" value="">
 				<input type="hidden" name="flag-first-row" id="flag-first-row" value="0">
 
@@ -160,7 +160,7 @@
 				<input type="hidden" id="flag-payment-note" value="0">
 
 				{{-- Final correlative --}}
-				<input type="hidden" id="final-correlative" value="" data-route="{{ action('SellPosController@getFinalCorrelative') }}">
+				<input type="hidden" id="final-correlative" value="" data-route="{{ action([\App\Http\Controllers\SellPosController::class, 'getFinalCorrelative']) }}">
 				@endif
 
 				{{-- App business --}}
@@ -466,7 +466,7 @@
 											]) !!}
 
 											<span class="input-group-btn">
-												<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{ config('app.business') == 'optics' ? action('Optics\ProductController@quickAdd') : action('ProductController@quickAdd') }}" data-container=".quick_add_product_modal">
+												<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{ config('app.business') == 'optics' ? action([\App\Http\Controllers\Optics\ProductController::class, 'quickAdd']) : action([\App\Http\Controllers\ProductController::class, 'quickAdd']) }}" data-container=".quick_add_product_modal">
 													<i class="fa fa-plus-circle text-primary fa-lg"></i>
 												</button>
 											</span>
@@ -633,7 +633,7 @@
 											'autofocus' => is_null($default_location) ? false : true,
 										]) !!}
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{ config('app.business') == 'optics' ? action('Optics\ProductController@quickAdd') : action('ProductController@quickAdd') }}" data-container=".quick_add_product_modal">
+											<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{ config('app.business') == 'optics' ? action([\App\Http\Controllers\Optics\ProductController::class, 'quickAdd']) : action([\App\Http\Controllers\ProductController::class, 'quickAdd']) }}" data-container=".quick_add_product_modal">
 												<i class="fa fa-plus-circle text-primary fa-lg"></i>
 											</button>
 										</span>

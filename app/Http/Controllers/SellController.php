@@ -173,7 +173,7 @@ class SellController extends Controller
 
                         if ($row->amount_return > 0) {
                             $total .= '<br><strong>'.__('sale.return').':</strong><br>';
-                            $total .= '<a href="'.action('SellReturnController@show', [$row->id]).'" class="btn-modal">';
+                            $total .= '<a href="'.action([\App\Http\Controllers\SellReturnController::class, 'show'], [$row->id]).'" class="btn-modal">';
                             $total .= '<span class="display_currency" data-currency_symbol="true">'.$row->amount_return.'</span></a>';
                         }
 
@@ -217,7 +217,7 @@ class SellController extends Controller
                 ->editColumn(
                     'payment_status',
                     '<p class="text-center" style="margin-bottom: 0;">
-                        <a href="{{ action("TransactionPaymentController@show", [$id]) }}" class="view_payment_modal payment-status-label" data-orig-value="{{ $payment_status }}" data-status-name="{{ __(\'lang_v1.\' . $payment_status) }}">
+                        <a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id]) }}" class="view_payment_modal payment-status-label" data-orig-value="{{ $payment_status }}" data-status-name="{{ __(\'lang_v1.\' . $payment_status) }}">
                             <span class="label @payment_status($payment_status)">{{ __(\'lang_v1.\' . $payment_status) }}</span>
                         </a>
                     </p>'
@@ -267,7 +267,7 @@ class SellController extends Controller
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('sell.payments')) {
-                            $html .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->id]).'" class="add_payment_customer" style="cursor: p"><i class="fa fa-credit-card"></i> '.__('messages.add_payment').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$row->id]).'" class="add_payment_customer" style="cursor: p"><i class="fa fa-credit-card"></i> '.__('messages.add_payment').'</a></li>';
                         }
 
                         $html .= '</ul></div>';
@@ -280,7 +280,7 @@ class SellController extends Controller
                 $datatable = $datatable->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can('sell.view')) {
-                            return action('SellController@show', [$row->id]);
+                            return action([\App\Http\Controllers\SellController::class, 'show'], [$row->id]);
                         } else {
                             return '';
                         }
@@ -363,7 +363,7 @@ class SellController extends Controller
         if (! $this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellController@index'));
+            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action([\App\Http\Controllers\SellController::class, 'index']));
         }
 
         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
@@ -941,7 +941,7 @@ class SellController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can('sell.view')) {
-                            return action('SellController@show', [$row->id]);
+                            return action([\App\Http\Controllers\SellController::class, 'show'], [$row->id]);
                         } else {
                             return '';
                         }
@@ -1021,9 +1021,9 @@ class SellController extends Controller
         }
 
         if ($duplicate_transaction->is_direct_sale == 1) {
-            return redirect()->action('SellController@edit', [$duplicate_transaction->id])->with(['status', $output]);
+            return redirect()->action([\App\Http\Controllers\SellController::class, 'edit'], [$duplicate_transaction->id])->with(['status', $output]);
         } else {
-            return redirect()->action('SellPosController@edit', [$duplicate_transaction->id])->with(['status', $output]);
+            return redirect()->action([\App\Http\Controllers\SellPosController::class, 'edit'], [$duplicate_transaction->id])->with(['status', $output]);
         }
     }
 

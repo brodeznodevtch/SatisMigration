@@ -19,7 +19,7 @@
             <div class="box-tools">
                 <button
                     class="btn btn-block btn-primary btn-modal"
-                    data-href="{{ action('Optics\PatientController@create') }}"
+                    data-href="{{ action([\App\Http\Controllers\Optics\PatientController::class, 'create']) }}"
                     data-container=".patients_modal">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </button>

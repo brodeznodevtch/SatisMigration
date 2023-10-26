@@ -37,7 +37,7 @@
     
     <div class="row">
         <div class="col-sm-6">
-            {!! Form::open(['url' => action('UserController@updateProfile'), 'method' => 'post', 'id' => 'edit_user_profile_form',
+            {!! Form::open(['url' => action([\App\Http\Controllers\UserController::class, 'updateProfile']), 'method' => 'post', 'id' => 'edit_user_profile_form',
             'class' => 'form-horizontal', 'files' => true ]) !!}
             <div class="boxform_u box-solid_u">
                 <!--business info box start-->
@@ -97,7 +97,7 @@
             {!! Form::close() !!}
         </div>
         <div class="col-sm-6">
-            {!! Form::open(['url' => action('UserController@updatePassword'), 'method' => 'post', 'id' => 'edit_password_form',
+            {!! Form::open(['url' => action([\App\Http\Controllers\UserController::class, 'updatePassword']), 'method' => 'post', 'id' => 'edit_password_form',
             'class' => 'form-horizontal' ]) !!}
             <div class="boxform_u box-solid_u">
                 <!--business info box start-->

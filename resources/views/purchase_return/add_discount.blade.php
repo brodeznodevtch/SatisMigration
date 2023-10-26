@@ -5,7 +5,7 @@
             <h4 class="modal-title" id="modalTitle"> @lang('lang_v1.return_discount') ({{ $purchase->ref_no }})</h4>
         </div>
 
-		{!! Form::open(['url' => action('PurchaseReturnController@postPurchaseReturnDiscount', [$purchase->id]), 'method' => 'post']) !!}
+		{!! Form::open(['url' => action([\App\Http\Controllers\PurchaseReturnController::class, 'postPurchaseReturnDiscount'], [$purchase->id]), 'method' => 'post']) !!}
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-4">

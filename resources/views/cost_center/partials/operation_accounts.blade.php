@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-        {!! Form::open(["url" => action("CostCenterController@postOperationAccounts", [$cost_center->id]), "method" => "post",
+        {!! Form::open(["url" => action([\App\Http\Controllers\CostCenterController::class, 'postOperationAccounts'], [$cost_center->id]), "method" => "post",
             "id" => "create_operation_accounts_form", "file" => false, "class" => "form-horizontal"]) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -1109,21 +1109,21 @@ class CustomerController extends Controller
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                     if (auth()->user()->can('customer.view')) {
-                        //$html .= '<li><a href="#" data-href="' . action('CustomerController@show', [$row->id]) . '" class="view_customer_button"><i class="glyphicon glyphicon-eye-open"></i> '.__("messages.view").'</a></li>'
+                        //$html .= '<li><a href="#" data-href="' . action([\App\Http\Controllers\CustomerController::class, 'show'], [$row->id]) . '" class="view_customer_button"><i class="glyphicon glyphicon-eye-open"></i> '.__("messages.view").'</a></li>'
                         $html .= '<li><a href="#" onClick="viewCustomer('.$row->id.')"><i class="glyphicon glyphicon-eye-open"></i> '.__('messages.view').'</a></li>';
                     }
 
                     if (auth()->user()->can('customer.update')) {
-                        $html .= '<li><a href="'.action('CustomerController@edit', [$row->id]).'" ><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                        $html .= '<li><a href="'.action([\App\Http\Controllers\CustomerController::class, 'edit'], [$row->id]).'" ><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                     }
 
-                    $html .= '<li><a href="#" data-href="'.action('CustomerController@getContacts', [$row->id]).'" class="contact_button"><i class="fa fa-address-book"></i> '.__('customer.Contacts').'</a></li>';
+                    $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\CustomerController::class, 'getContacts'], [$row->id]).'" class="contact_button"><i class="fa fa-address-book"></i> '.__('customer.Contacts').'</a></li>';
 
-                    $html .= '<li><a href="'.action('TransactionPaymentController@show', [$row->opening_balance_id]).'" class="view_payment_modal"><i class="fa fa-money"></i> '.__('purchase.view_payments').'</a></li>';
+                    $html .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$row->opening_balance_id]).'" class="view_payment_modal"><i class="fa fa-money"></i> '.__('purchase.view_payments').'</a></li>';
 
                     if (auth()->user()->can('purchase.payments') || auth()->user()->can('sell.payments')) {
                         if (($row->opening_balance - $row->total_paid) > 0) {
-                            $html .= '<li><a href="'.action('TransactionPaymentController@addPayment', [$row->opening_balance_id]).'" class="add_payment_modal"><i class="fa fa-money"></i> '.__('customer.pay_opening_balance').'</a></li>';
+                            $html .= '<li><a href="'.action([\App\Http\Controllers\TransactionPaymentController::class, 'addPayment'], [$row->opening_balance_id]).'" class="add_payment_modal"><i class="fa fa-money"></i> '.__('customer.pay_opening_balance').'</a></li>';
                         }
                     }
 
@@ -1574,7 +1574,7 @@ class CustomerController extends Controller
             return redirect()->route('customers.import')->with('notification', $output);
         }
 
-        return redirect()->action('CustomerController@index')->with('status', $output);
+        return redirect()->action([\App\Http\Controllers\CustomerController::class, 'index'])->with('status', $output);
     }
 
     /**
@@ -1794,7 +1794,7 @@ class CustomerController extends Controller
             ->setRowAttr([
                 'data-href' => function ($row) {
                     if (auth()->user()->can('customer.view')) {
-                        return action('CustomerController@showBalances', [$row->id]);
+                        return action([\App\Http\Controllers\CustomerController::class, 'showBalances'], [$row->id]);
                     } else {
                         return '';
                     }

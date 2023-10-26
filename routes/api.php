@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\ManagePositionsController;
+use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -11,8 +16,8 @@
 |
 */
 
-Route::middleware('auth:api')->get('/user', 'UserController@getCurrentUser');
+Route::middleware('auth:api')->get('/user', [UserController::class, 'getCurrentUser']);
 
-Route::get('position', 'ManagePositionsController@list');
-Route::get('positionlist', 'ManagePositionsController@datos');
-Route::get('userlist/{business_id}', 'ManageUserController@getUsersDatos');
+Route::get('position', [ManagePositionsController::class, 'list']);
+Route::get('positionlist', [ManagePositionsController::class, 'datos']);
+Route::get('userlist/{business_id}', [ManageUserController::class, 'getUsersDatos']);

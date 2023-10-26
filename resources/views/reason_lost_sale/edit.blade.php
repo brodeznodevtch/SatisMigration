@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-md modal-dialog-centered" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('ReasonController@update', [$reason->id]), 'method' => 'PUT', 'id' => 'reason_add_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\ReasonController::class, 'update'], [$reason->id]), 'method' => 'PUT', 'id' => 'reason_add_form']) !!}
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

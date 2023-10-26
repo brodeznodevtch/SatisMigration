@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-lg" role="dialog">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('ManageEmployeesController@store'), 'method' => 'post', 'id' =>
+        {!! Form::open(['url' => action([\App\Http\Controllers\ManageEmployeesController::class, 'store']), 'method' => 'post', 'id' =>
         'employees_add_form']) !!}
 
         <div class="modal-header">

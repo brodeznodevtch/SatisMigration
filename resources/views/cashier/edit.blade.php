@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="border-radius: 10px;">
-        {!! Form::open(['url' => action('CashierController@update', [$cashier->id]), 'method' => 'PUT', 'id' => 'cashiers_edit_form']) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\CashierController::class, 'update'], [$cashier->id]), 'method' => 'PUT', 'id' => 'cashiers_edit_form']) !!}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

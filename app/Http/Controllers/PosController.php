@@ -47,7 +47,7 @@ class PosController extends Controller
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can('pos.update')) {
-                            $html .= '<li><a href="#" data-href="'.action('PosController@edit', [$row->id]).'" class="edit_pos_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
+                            $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\PosController::class, 'edit'], [$row->id]).'" class="edit_pos_button"><i class="glyphicon glyphicon-edit"></i> '.__('messages.edit').'</a></li>';
                         }
                         if ($row->status == 'active') {
                             $html .= '<li><a href="#" onclick="anulPos('.$row->id.')"><i class="fa fa-lock" aria-hidden="true"></i> '.__('payment.pos_anull').'</a></li>';

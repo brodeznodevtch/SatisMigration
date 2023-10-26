@@ -14,7 +14,7 @@
 
 <!-- Main content -->
 <section class="content"> 
-    {!! Form::open(['url' => action('BusinessController@postBusinessSettings'), 'method' => 'post', 'id' => 'bussiness_edit_form',
+    {!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'postBusinessSettings']), 'method' => 'post', 'id' => 'bussiness_edit_form',
     'files' => true ]) !!}
     <div class="row">
         <div class="col-xs-12">

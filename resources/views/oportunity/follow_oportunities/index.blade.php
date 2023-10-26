@@ -135,7 +135,7 @@
                             <div class="form-group float-right col-lg-2 col-md-2 col-sm-2 col-xs-12">
 
                                 <button type="button" class="btn btn-block btn-primary btn-modal"
-                                    data-href="{{ action('FollowOportunitiesController@create', $oportunity->id) }}"
+                                    data-href="{{ action([\App\Http\Controllers\FollowOportunitiesController::class, 'create'], $oportunity->id) }}"
                                     data-container=".oportunities_modal">
                                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                             </div>

@@ -16,7 +16,7 @@
         <div class="box">
             <div class="box-body">
                 <div class="col-sm-6">
-                    {!! Form::open(['url' => action('Restaurant\OrderController@index'), 'method' => 'get', 'id' => 'select_service_staff_form' ]) !!}
+                    {!! Form::open(['url' => action([\App\Http\Controllers\Restaurant\OrderController::class, 'index']), 'method' => 'get', 'id' => 'select_service_staff_form' ]) !!}
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon">

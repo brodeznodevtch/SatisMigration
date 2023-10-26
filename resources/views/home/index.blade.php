@@ -239,7 +239,7 @@
                         <div class="icon">
                             <i class="ion ion-ios-cart-outline"></i>
                         </div>
-                        <a href="{{ action('SellController@index') }}" class="small-box-footer">
+                        <a href="{{ action([\App\Http\Controllers\SellController::class, 'index']) }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -257,7 +257,7 @@
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="{{ action('SellController@index') }}" class="small-box-footer">
+                        <a href="{{ action([\App\Http\Controllers\SellController::class, 'index']) }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -274,7 +274,7 @@
                         <div class="icon">
                             <i class="fa fa-minus-circle"></i>
                         </div>
-                        <a href="{{ action('ExpenseController@index') }}" class="small-box-footer">
+                        <a href="{{ action([\App\Http\Controllers\ExpenseController::class, 'index']) }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -307,7 +307,7 @@
                         <div class="icon">
                             <i class="fa fa-dollar"></i>
                         </div>
-                        <a href="{{ action('CustomerController@indexBalancesCustomer') }}" class="small-box-footer">
+                        <a href="{{ action([\App\Http\Controllers\CustomerController::class, 'indexBalancesCustomer']) }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -324,7 +324,7 @@
                         <div class="icon">
                             <i class="ion ion-ios-paper-outline"></i>
                         </div>
-                        <a href="{{ action('PurchaseController@debtsToPayReport') }}" class="small-box-footer">
+                        <a href="{{ action([\App\Http\Controllers\PurchaseController::class, 'debtsToPayReport']) }}" class="small-box-footer">
                             @lang('home.more_information') <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -582,14 +582,14 @@
             $(document).ready(function() {
                 $('#location').change(function() {
                     let param = $(this).val();
-                    let route = "{{ action('HomeController@getPeakSalesHoursChart') }}" + "?location=" + param;
+                    let route = "{{ action([\App\Http\Controllers\HomeController::class, 'getPeakSalesHoursChart']) }}" + "?location=" + param;
                     $('#frame_chart').attr('src', route);
                     return false;
                 });
 
                 $('#location_month').change(function() {
                     let param = $(this).val();
-                    let route = "{{ action('HomeController@getPeakSalesHoursByMonthChart') }}" +
+                    let route = "{{ action([\App\Http\Controllers\HomeController::class, 'getPeakSalesHoursByMonthChart']) }}" +
                         "?location_month=" + param;
                     $('#frame_chart_month').attr('src', route);
                     return false;

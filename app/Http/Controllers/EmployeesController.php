@@ -327,9 +327,9 @@ class EmployeesController extends Controller
         }
 
         if ($request->input('submit_type') == 'complete') {
-            return redirect()->action('EmployeesController@edit', [$employee->id]);
+            return redirect()->action([\App\Http\Controllers\EmployeesController::class, 'edit'], [$employee->id]);
         } elseif ($request->input('submit_type') == 'other') {
-            return redirect()->action('EmployeesController@create')->with('status', $output);
+            return redirect()->action([\App\Http\Controllers\EmployeesController::class, 'create'])->with('status', $output);
         } else {
             return redirect('rrhh-employees')->with('status', $output);
         }

@@ -32,7 +32,7 @@
 
         @include('layouts.partials.error')
 
-        {!! Form::open(['url' => action('PurchaseController@store'), 'method' => 'post', 'id' => 'add_purchase_form', 'files' => true]) !!}
+        {!! Form::open(['url' => action([\App\Http\Controllers\PurchaseController::class, 'store']), 'method' => 'post', 'id' => 'add_purchase_form', 'files' => true]) !!}
 
         {{-- Purchase type --}}
         {!! Form::hidden('purchase_type', $purchase_type, ['id' => 'purchase_type']) !!}
@@ -394,7 +394,7 @@
                     <div class="col-sm-2">
                         {{--<div class="form-group">
                             <button tabindex="-1" type="button" class="btn btn-link btn-modal"
-                                data-href="{{ action('ProductController@quickAdd') }}"
+                                data-href="{{ action([\App\Http\Controllers\ProductController::class, 'quickAdd']) }}"
                                 data-container=".quick_add_product_modal"><i class="fa fa-plus"></i> @lang(
                                 'product.add_new_product' ) </button>
                         </div>--}}

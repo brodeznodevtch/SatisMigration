@@ -13,7 +13,7 @@
 
     <!-- Main content -->
     <section class="content">
-      {!! Form::open(['url' => action('Optics\ProductController@update' , [$product->id] ), 'method' => 'PUT', 'id' => 'product_add_form',
+      {!! Form::open(['url' => action([\App\Http\Controllers\Optics\ProductController::class, 'update'] , [$product->id] ), 'method' => 'PUT', 'id' => 'product_add_form',
       'class' => 'product_form', 'files' => true ]) !!}
       <input type="hidden" id="product_id" value="{{ $product->id }}">
       <input type="hidden" id="product_clasification" value="{{ $product->clasification }}">
@@ -25,7 +25,7 @@
       <input type="hidden" id="no-verified-supplier" value="1">
 
       {{-- Check sku url --}}
-      <input type="hidden" id="check-sku-url" value="{{ action('Optics\ProductController@checkSkuUnique') }}">
+      <input type="hidden" id="check-sku-url" value="{{ action([\App\Http\Controllers\Optics\ProductController::class, 'checkSkuUnique']) }}">
 
       <div class="boxform_u box-solid_u">
         <div class="box-body">
@@ -154,7 +154,7 @@
                       <button type="button"
                       @if(!auth()->user()->can('material_type.create')) disabled @endif
                       class="btn btn-default bg-white btn-flat btn-modal"
-                      data-href="{{action('Optics\MaterialTypeController@create', ['quick_add' => true])}}"
+                      data-href="{{action([\App\Http\Controllers\Optics\MaterialTypeController::class, 'create'], ['quick_add' => true])}}"
                       title="@lang('material_type.add_material_type')" data-container=".view_modal">
                       <i class="fa fa-plus-circle text-primary fa-lg"></i>
                     </button>
@@ -170,7 +170,7 @@
                 <div class="input-group">
                   {!! Form::select('brand_id', $brands, $product->brand_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
                   <span class="input-group-btn">
-                    <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                    <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action([\App\Http\Controllers\BrandController::class, 'create'], ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
                   </span>
                 </div>
               </div>
@@ -186,7 +186,7 @@
                 <div class="input-group">
                   {!! Form::select('unit_id', $units, $product->unit_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2', 'required', 'id' => 'unit_id']); !!}
                   <span class="input-group-btn">
-                    <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif class="btn btn-default bg-white btn-flat quick_add_unit btn-modal" data-href="{{action('UnitController@create', ['quick_add' => true])}}" title="@lang('unit.add_unit')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                    <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif class="btn btn-default bg-white btn-flat quick_add_unit btn-modal" data-href="{{action([\App\Http\Controllers\UnitController::class, 'create'], ['quick_add' => true])}}" title="@lang('unit.add_unit')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
                   </span>
                 </div>
                 @endif
