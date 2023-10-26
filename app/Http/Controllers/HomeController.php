@@ -804,8 +804,8 @@ class HomeController extends Controller
         }
     }
 
-    public function welcome() {
+    public function welcome()
+    {
         return view('welcome');
     }
-
 }

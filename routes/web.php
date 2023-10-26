@@ -892,7 +892,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('print_pos', 'ReporterController@printPOS');
     Route::get('print_test', 'ReportController@printTest');
 
-
     // Movement Types Routes
     Route::resource('movement-types', 'MovementTypeController');
 
@@ -987,7 +986,6 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::post('/reports/post-price-lists-report', 'ReportController@postPriceListsReport');
 
     Route::get('/debs-pay', 'PurchaseController@showDebsToPay');
-
 
     Route::post('/tax_groups/get_tax_groups', 'TaxGroupController@getTaxGroups');
     Route::post('/tax_groups/get_taxes', 'TaxGroupController@getTaxes');
