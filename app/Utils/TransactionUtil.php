@@ -40,6 +40,7 @@ use App\Models\Variation;
 use App\Models\VariationLocationDetails;
 use App\Restaurant\ResTable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TransactionUtil extends Util
 {
@@ -2524,7 +2525,7 @@ class TransactionUtil extends Util
 
             return $invoice_no;
         } else {
-            return str_random(5);
+            return Str::random(5);
         }
     }
 

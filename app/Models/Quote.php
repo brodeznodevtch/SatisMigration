@@ -11,8 +11,6 @@ class Quote extends Model
 
     protected $guarded = ['id'];
 
-    protected $dates = ['deleted_at'];
-
     protected $fillable = [
         'customer_id',
         'employee_id',

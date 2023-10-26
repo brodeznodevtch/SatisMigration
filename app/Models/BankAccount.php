@@ -9,8 +9,6 @@ class BankAccount extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     protected $fillable = ['business_id', 'bank_id', 'catalogue_id', 'name', 'description', 'type', 'number'];
 
     public function bankTransaction()

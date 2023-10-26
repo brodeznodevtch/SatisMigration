@@ -9,8 +9,6 @@ class LabOrder extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     protected $guarded = ['id'];
 
     protected $fillable = [

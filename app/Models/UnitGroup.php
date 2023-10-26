@@ -10,8 +10,6 @@ class UnitGroup extends Model
 {
     use SoftDeletes, CascadeSoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     protected $cascadeDeletes = ['UnitGroupLines'];
 
     protected $fillable = ['business_id', 'unit_id', 'description'];

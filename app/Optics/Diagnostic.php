@@ -12,13 +12,6 @@ class Diagnostic extends Model
     protected $table = 'diagnostics';
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-
-    /**
      * The attributes that aren't mass assignable.
      *
      * @var array

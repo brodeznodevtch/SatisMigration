@@ -10,8 +10,6 @@ class Bank extends Model
 {
     use SoftDeletes, CascadeSoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     protected $cascadeDeletes = ['bankAccount'];
 
     protected $fillable = ['name', 'business_id', 'print_format'];
