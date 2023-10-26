@@ -2,107 +2,7 @@
 @section('title', __('home.home'))
 
 @section('css')
-    {{-- {!! Charts::styles(['highcharts']) !!} --}}
-    <style>
-        /* Slider */
-        .carousel-fade .carousel-inner .item {
-            opacity: 0;
-            transition-property: opacity;
-        }
-
-        .carousel-fade .carousel-inner .active {
-            opacity: 1;
-        }
-
-        .carousel-fade .carousel-inner .active.left,
-        .carousel-fade .carousel-inner .active.right {
-            left: 0;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .carousel-fade .carousel-inner .next.left,
-        .carousel-fade .carousel-inner .prev.right {
-            opacity: 1;
-        }
-
-        .carousel-fade .carousel-control {
-            z-index: 2;
-        }
-
-        /*
-              WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
-              now override the 3.3 new styles for modern browsers & apply opacity
-              */
-        @media all and (transform-3d),
-        (-webkit-transform-3d) {
-
-            .carousel-fade .carousel-inner>.item.next,
-            .carousel-fade .carousel-inner>.item.active.right {
-                opacity: 0;
-                -webkit-transform: translate3d(0, 0, 0);
-                transform: translate3d(0, 0, 0);
-            }
-
-            .carousel-fade .carousel-inner>.item.prev,
-            .carousel-fade .carousel-inner>.item.active.left {
-                opacity: 0;
-                -webkit-transform: translate3d(0, 0, 0);
-                transform: translate3d(0, 0, 0);
-            }
-
-            .carousel-fade .carousel-inner>.item.next.left,
-            .carousel-fade .carousel-inner>.item.prev.right,
-            .carousel-fade .carousel-inner>.item.active {
-                opacity: 1;
-                -webkit-transform: translate3d(0, 0, 0);
-                transform: translate3d(0, 0, 0);
-            }
-        }
-
-        /* just for demo purpose */
-        html,
-        body,
-        .carousel,
-        .carousel-inner,
-        .carousel-inner .item {
-            height: 100%;
-        }
-
-        .item:nth-child(1) {
-            background: blue;
-        }
-
-        .item:nth-child(2) {
-            background: red;
-        }
-
-        .item:nth-child(3) {
-            background: orange;
-        }
-
-        .card-custom {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .custom-row {
-            display: flex;
-            align-items: stretch;
-            justify-content: space-between;
-            column-gap: 10px;
-
-            @media (max-width: 50%) {
-                flex-direction: column;
-            }
-
-            @media (width: 100%) {
-                flex-direction: column;
-            }
-        }
-    </style>
-    <!-- <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"> -->
-
+<link rel="stylesheet" href="css/index.home.css">
 @endsection
 
 @section('content')
@@ -406,7 +306,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                               
+                                {!! $sells_chart_1->container() !!}
                             </div>
                         </div>
                     </div>
@@ -424,7 +324,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                              
+                                {!! $sells_chart_2->container() !!}
                             </div>
                         </div>
                     </div>
@@ -505,7 +405,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                            
+                                {!! $purchases_chart_1->container() !!}
                             </div>
                         </div>
                     </div>
@@ -523,7 +423,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                                
+                                {!! $purchases_chart_2->container() !!}
                             </div>
                         </div>
                     </div>
@@ -541,7 +441,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                               
+                                {!! $stocks_chart_1->container() !!}
                             </div>
                         </div>
                     </div>
@@ -559,7 +459,7 @@
                                 </h3>
                             </div>
                             <div class="box-body">
-                               
+                                {!! $stocks_chart_2->container() !!}
                             </div>
                         </div>
                     </div>
@@ -572,24 +472,49 @@
         <!-- /.content -->
 
     @stop
+@endif
 
-    @section('javascript')
+@section('javascript')
         
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    <script src="{{ asset('js/home.js?v=' . $asset_v) }}"></script>
 
-        <!-- <script src="jquery.min.js"></> -->
-        <!-- <script src="bootstrap/js/bootstrap.min.js"></script> -->
+        @if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1)
+            {!! $sells_chart_1->script() !!}
+        @endif
+
+        @if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1)
+            {!! $sells_chart_2->script() !!}
+        @endif
+
+        @if (isset($dashboard_settings['purchases_month']) && $dashboard_settings['purchases_month'] == 1)
+            {!! $purchases_chart_1->script() !!}
+        @endif
+
+        @if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1)
+            {!! $purchases_chart_2->script() !!}
+        @endif
+
+        @if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1)
+            {!! $stocks_chart_1->script() !!}
+        @endif
+
+        @if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1)
+            {!! $stocks_chart_2->script() !!}
+        @endif
+    
         <script>
             $(document).ready(function() {
                 $('#location').change(function() {
                     let param = $(this).val();
-                    let route = "{{ action([\App\Http\Controllers\HomeController::class, 'getPeakSalesHoursChart']) }}" + "?location=" + param;
+                    let route = "{{ route('getPeakSalesHoursByMonthChart') }}" + "?location=" + param;
                     $('#frame_chart').attr('src', route);
                     return false;
                 });
 
                 $('#location_month').change(function() {
                     let param = $(this).val();
-                    let route = "{{ action([\App\Http\Controllers\HomeController::class, 'getPeakSalesHoursByMonthChart']) }}" +
+                    let route = "{{ route('getPeakSalesHoursByMonthChart') }}" +
                         "?location_month=" + param;
                     $('#frame_chart_month').attr('src', route);
                     return false;
@@ -647,5 +572,5 @@
                 $('#range-date-filter').data('daterangepicker').setEndDate(moment(range_picker_end, 'YYYY-MM-DD'));
             });
         </script>
-    @endif
+
 @endsection

@@ -3280,7 +3280,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2023-10-27T15:25:26+00:00"
+=======
+            "time": "2023-02-06T13:44:46+00:00"
+>>>>>>> a84fc06d (restored basic function)
         },
         {
             "name": "nesbot/carbon",
@@ -10479,7 +10483,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+<<<<<<< HEAD
         "php": "^8.1.0"
+=======
+        "php": "^8.1"
+>>>>>>> a84fc06d (restored basic function)
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"

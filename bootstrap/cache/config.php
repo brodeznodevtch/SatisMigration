@@ -1050,6 +1050,27 @@
       'time' => 2,
     ),
   ),
+  'larapex-charts' => 
+  array (
+    'font_family' => 'Helvetica, Arial, sans-serif',
+    'font_color' => '#373d3f',
+    'colors' => 
+    array (
+      0 => '#008FFB',
+      1 => '#00E396',
+      2 => '#feb019',
+      3 => '#ff455f',
+      4 => '#775dd0',
+      5 => '#80effe',
+      6 => '#0077B5',
+      7 => '#ff6384',
+      8 => '#c9cbcf',
+      9 => '#0057ff',
+      10 => '#00a9f4',
+      11 => '#2ccdc9',
+      12 => '#5e72e4',
+    ),
+  ),
   'logging' => 
   array (
     'default' => 'stack',

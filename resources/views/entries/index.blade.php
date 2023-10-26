@@ -457,7 +457,7 @@
             <strong id="msj3"></strong>
         </div>
         
-        {!! Form::open(['action' => 'ReporterController@allEntries', 'method' => 'post', 'target' => '_blank']) !!}
+        {!! Form::open(['url' => route("entries.allentries"), 'method' => 'post', 'target' => '_blank']) !!}
         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
         <div  class="row">
             <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">

@@ -1,16 +1,31 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/storage/
-/vendor
-/.idea
-/.vagrant
-Homestead.json
-Homestead.yaml
+# Directorios y archivos generados por Composer
+/vendor/
+/composer.lock
+vendor.zip
+ 
+# Directorios y archivos generados por npm o yarn
+/node_modules/
 npm-debug.log
-docker
+ 
+# Entorno y configuraciones
 .env
+.env.backup
+.env.example
+ 
+# Directorio de caché de Laravel
+/bootstrap/cache/
+ 
+# Directorio de almacenamiento de Laravel (excluye el almacenamiento de enlaces simbólicos)
+/storage/
+!storage/.gitignore
+/storage/*.key
+ 
+# Directorio de caché de configuración
+/config/cache/
+ 
+# Directorio publico (enlace simbólico para almacenamiento)
+public/storage
+public/hot
 /public/uploads/business_logos
 /public/uploads/slides
 /public/uploads/documents
@@ -21,5 +36,23 @@ docker
 /public/uploads/employee_documents
 /public/uploads/employee_contracts
 /public/uploads/employee_personnel_actions
+ 
+# Backups
 /backups
-vendor.zip
+ 
+# Docker
+/docker
+ 
+# Archivos temporales generados por el IDE o editores de texto
+*.swp
+*.swo
+*.swn
+/.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+ 
+# Vagrant & Homestead
+/.vagrant
+Homestead.json
+Homestead.yaml

@@ -246,8 +246,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/image/{id}/download', [SliderController::class, 'downloadSlide']);
     Route::delete('/image/{id}/delete', [SliderController::class, 'destroy']);
     // Peak sales hours chart routes
-    Route::get('/home/peak-sales-hours-month-chart', [HomeController::class, 'getPeakSalesHoursByMonthChart']);
-    Route::get('/home/peak-sales-hours-chart', [HomeController::class, 'getPeakSalesHoursChart']);
+    Route::get('/home/peak-sales-hours-month-chart', [HomeController::class, 'getPeakSalesHoursByMonthChart'])->name("getPeakSalesHoursByMonthChart");
+    Route::get('/home/peak-sales-hours-chart', [HomeController::class, 'getPeakSalesHoursChart'])->name("getPeakSalesHoursChart");
 
     Route::get('/business/change-modal', [BusinessController::class, 'getChangeBusiness'])->name('business.getChangeBusiness');
     Route::patch('/business/change', [BusinessController::class, 'changeBusiness'])->name('business.changeBusiness');
@@ -683,7 +683,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('entries/getEntrieDetailsDebe/{id}', [AccountingEntrieController::class, 'getEntrieDetailsDebe']);
     Route::get('entries/getEntrieDetailsHaber/{id}', [AccountingEntrieController::class, 'getEntrieDetailsHaber']);
     Route::post('entries/editEntrie', [AccountingEntrieController::class, 'editEntrie']);
-    Route::post('entries/allentries', [ReporterController::class, 'allEntries']);
+    Route::post('entries/allentries', [ReporterController::class, 'allEntries'])->name("entries.allentries");
     Route::get('entries/singleEntrie/{id}/{type}', [ReporterController::class, 'singleEntrie']);
     Route::get('entries/searchBankTransaction/{id}', [AccountingEntrieController::class, 'searchBankTransaction']);
     Route::get('entries/getNumberEntrie/{date}', [AccountingEntrieController::class, 'getNumberEntrie']);
@@ -978,7 +978,11 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('manage-credit-requests/getCreditsData', [ManageCreditRequestController::class, 'getCreditsData']);
     Route::post('manage-credit-requests/edit', [ManageCreditRequestController::class, 'editCredit']);
 
+<<<<<<< HEAD
 /*    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestControllerupdate/product::class, 'viewCredit']);*/
+=======
+    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestController::class, 'viewCredit']);
+>>>>>>> a84fc06d (restored basic function)
     Route::resource('manage-credit-requests', ManageCreditRequestController::class);
 
     // Customers
@@ -1030,7 +1034,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('print_test', [ReportController::class, 'printTest']);
 
     // Movement Types Routes
-    Route::resource('movement-types', \App\Http\Controllers\MovementTypeController::class);
+    Route::resource('movement-types', MovementTypeController::class);
 
     // Payment terms
     Route::get('/payment-terms/get-payment-terms', [PaymentTermController::class, 'getPaymentTerms']);
