@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model
 {
+    use HasFactory;
+
     use SoftDeletes, CascadeSoftDeletes;
 
     protected $cascadeDeletes = ['permission'];

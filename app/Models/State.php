@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class State extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'zip_code', 'business_id', 'country_id', 'zone_id'];
 
     public function zone()

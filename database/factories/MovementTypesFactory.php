@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SupportDocumentsFactory extends Factory
+class MovementTypesFactory extends Factory
 {
     /**
      * Define the model's default state.

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Catalogue extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['code', 'name', 'parent', 'type', 'status', 'level', 'catalogue_id', 'business_id'];
 
     public function detail()
