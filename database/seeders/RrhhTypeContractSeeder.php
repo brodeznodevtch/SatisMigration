@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Business;
 use App\Models\RrhhTypeContract;
 use Illuminate\Database\Seeder;

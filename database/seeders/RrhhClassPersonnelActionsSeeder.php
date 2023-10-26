@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\RrhhClassPersonnelAction;
 use Illuminate\Database\Seeder;
 

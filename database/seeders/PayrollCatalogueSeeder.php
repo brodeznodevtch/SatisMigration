@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\BonusCalculation;
 use App\Models\Business;
 use App\Models\InstitutionLaw;

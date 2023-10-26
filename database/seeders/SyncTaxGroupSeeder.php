@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Business;
-use App\Models\Unit;
+use App\Models\TaxGroup;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
-class SyncUnitSeeder extends Seeder
+class SyncTaxGroupSeeder extends Seeder
 {
     private $productUtil;
 
@@ -38,11 +40,11 @@ class SyncUnitSeeder extends Seeder
         $business = Business::where('id', '!=', $business_id)->get();
 
         foreach ($business as $b) {
-            /** Get units from other business */
-            $units = Unit::where('business_id', $business_id)->get();
+            /** Get brands from other business */
+            $tax_groups = TaxGroup::where('business_id', $business_id)->get();
 
-            foreach ($units as $u) {
-                $this->productUtil->syncUnit($u->id, $u->actual_name);
+            foreach ($tax_groups as $tg) {
+                $this->productUtil->syncTaxGroup($tg->id, $tg->description);
             }
         }
     }

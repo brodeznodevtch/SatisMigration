@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Models\Brands;
 use App\Models\Business;
-use App\Models\Product;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
-class SyncProductSeeder extends Seeder
+class SyncBrandSeeder extends Seeder
 {
     private $productUtil;
 
@@ -38,22 +40,11 @@ class SyncProductSeeder extends Seeder
         $business = Business::where('id', '!=', $business_id)->get();
 
         foreach ($business as $b) {
-            /** Get products from other business */
-            $products = Product::where('business_id', $business_id)
-                ->where('clasification', 'product')
-                ->select('id', 'sku')->get();
+            /** Get brands from other business */
+            $brands = Brands::where('business_id', $business_id)->get();
 
-            foreach ($products as $p) {
-                $this->productUtil->syncProduct($p->id, $p->sku);
-            }
-
-            /** Get kits and service from other business */
-            $products = Product::where('business_id', $business_id)
-                ->where('clasification', '!=', 'product')
-                ->select('id', 'sku')->get();
-
-            foreach ($products as $p) {
-                $this->productUtil->syncProduct($p->id, $p->sku);
+            foreach ($brands as $br) {
+                $this->productUtil->syncBrand($br->id, $br->name);
             }
         }
     }

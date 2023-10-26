@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Http\Controllers\KardexController;
 use App\Models\Business;
 use App\Models\BusinessLocation;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\ExpenseLine;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;

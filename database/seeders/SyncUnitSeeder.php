@@ -1,11 +1,13 @@
 <?php
 
-use App\Models\Brands;
+namespace Database\Seeders;
+
 use App\Models\Business;
+use App\Models\Unit;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
-class SyncBrandSeeder extends Seeder
+class SyncUnitSeeder extends Seeder
 {
     private $productUtil;
 
@@ -38,11 +40,11 @@ class SyncBrandSeeder extends Seeder
         $business = Business::where('id', '!=', $business_id)->get();
 
         foreach ($business as $b) {
-            /** Get brands from other business */
-            $brands = Brands::where('business_id', $business_id)->get();
+            /** Get units from other business */
+            $units = Unit::where('business_id', $business_id)->get();
 
-            foreach ($brands as $br) {
-                $this->productUtil->syncBrand($br->id, $br->name);
+            foreach ($units as $u) {
+                $this->productUtil->syncUnit($u->id, $u->actual_name);
             }
         }
     }

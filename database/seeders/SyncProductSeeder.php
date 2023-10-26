@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Business;
-use App\Models\Category;
+use App\Models\Product;
 use App\Utils\ProductUtil;
 use Illuminate\Database\Seeder;
 
-class SyncCategorySeeder extends Seeder
+class SyncProductSeeder extends Seeder
 {
     private $productUtil;
 
@@ -38,20 +40,22 @@ class SyncCategorySeeder extends Seeder
         $business = Business::where('id', '!=', $business_id)->get();
 
         foreach ($business as $b) {
-            /** Get categories from other business */
-            $categories = Category::where('business_id', $business_id)
-                ->where('parent_id', '0')->get();
+            /** Get products from other business */
+            $products = Product::where('business_id', $business_id)
+                ->where('clasification', 'product')
+                ->select('id', 'sku')->get();
 
-            foreach ($categories as $c) {
-                $this->productUtil->syncCategory($c->id, $c->name);
+            foreach ($products as $p) {
+                $this->productUtil->syncProduct($p->id, $p->sku);
             }
 
-            /** Get sub categories from other business */
-            $sub_categories = Category::where('business_id', $business_id)
-                ->where('parent_id', '!=', '0')->get();
+            /** Get kits and service from other business */
+            $products = Product::where('business_id', $business_id)
+                ->where('clasification', '!=', 'product')
+                ->select('id', 'sku')->get();
 
-            foreach ($sub_categories as $sc) {
-                $this->productUtil->syncCategory($sc->id, $sc->name);
+            foreach ($products as $p) {
+                $this->productUtil->syncProduct($p->id, $p->sku);
             }
         }
     }
