@@ -184,13 +184,13 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
 
         Collective\Html\HtmlServiceProvider::class,
-        Yajra\Datatables\DatatablesServiceProvider::class,
+      //  Yajra\Datatables\DatatablesServiceProvider::class,
 
         Milon\Barcode\BarcodeServiceProvider::class,
-        ConsoleTVs\Charts\ChartsServiceProvider::class,
+       // ConsoleTVs\Charts\ChartsServiceProvider::class,
         App\Providers\DropboxServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
+      //  Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\PHPExcelMacroServiceProvider::class,
 
     ],
