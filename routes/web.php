@@ -302,7 +302,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('oportunities/convert-to-customer/{id}', 'OportunityController@createCustomer');
     Route::post('oportunities/convert-to-customer', 'OportunityController@storeCustomer');
 
-    Route::resource('follow-oportunities', 'FollowOportunitiesController', ['except' => 'create']);
+    Route::resource('follow-oportunities', 'FollowOportunitiesController')->except('create');
     Route::get('/follow-oportunities/create/{id}', 'FollowOportunitiesController@create');
     Route::get('/follow-oportunities/showOportunities', 'FollowOportunitiesController@showOportunities');
 
@@ -481,9 +481,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     //Backup
     Route::get('backup/download/{file_name}', 'BackUpController@download');
     Route::get('backup/delete/{file_name}', 'BackUpController@delete');
-    Route::resource('backup', 'BackUpController', ['only' => [
-        'index', 'create', 'store',
-    ]]);
+    Route::resource('backup', 'BackUpController')->only('index', 'create', 'store');
 
     Route::resource('selling-price-group', 'SellingPriceGroupController');
 
@@ -497,7 +495,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::resource('/purchase-return', 'PurchaseReturnController');
 
     //Restaurant module
-    Route::group(['prefix' => 'mod'], function () {
+    Route::prefix('mod')->group(function () {
 
         Route::resource('tables', 'Restaurant\TableController');
         Route::resource('modifiers', 'Restaurant\ModifierSetsController');
