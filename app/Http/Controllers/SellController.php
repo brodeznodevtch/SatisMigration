@@ -216,11 +216,11 @@ class SellController extends Controller
                 )
                 ->editColumn(
                     'payment_status',
-                    '<p class="text-center" style="margin-bottom: 0;">
-                        <a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id]) }}" class="view_payment_modal payment-status-label" data-orig-value="{{ $payment_status }}" data-status-name="{{ __(\'lang_v1.\' . $payment_status) }}">
-                            <span class="label @payment_status($payment_status)">{{ __(\'lang_v1.\' . $payment_status) }}</span>
-                        </a>
-                    </p>'
+                    '<p class="text-center" style="margin-bottom: 0;">' .
+                    '<a href="' . action([\App\Http\Controllers\TransactionPaymentController::class, 'show'], [$id]) . '" class="view_payment_modal payment-status-label" data-orig-value="' . $payment_status . '" data-status-name="' . __('lang_v1.' . $payment_status) . '">' .
+                    '<span class="label ' . payment_status($payment_status) . '">' . __('lang_v1.' . $payment_status) . '</span>' .
+                    '</a>' .
+                    '</p>'
                 )
                 ->editColumn(
                     'customer_name', function ($row) {
