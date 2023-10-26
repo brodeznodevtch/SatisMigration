@@ -27,5 +27,5 @@ return [
     'payment_dues' => 'Ödenmemiş Ödemeler',
     'due_amount' => 'Ödenmemiş Tutar',
     'stock_expiry_alert' => 'Stok Son Kullanma Tarihi Uyarısı',
-    'todays_profit' => "Bugünün karı",
-    ];
+    'todays_profit' => 'Bugünün karı',
+];

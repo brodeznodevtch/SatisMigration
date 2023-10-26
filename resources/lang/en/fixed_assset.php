@@ -1,4 +1,5 @@
 <?php
+
 return [
     'fixed_asset' => 'Fixed Asset',
     'fixed_assets' => 'Fixed Assets',

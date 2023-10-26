@@ -1,4 +1,5 @@
 <?php
+
 return [
     'welcome' => 'Welcome to ',
     'password_reset' => 'Password reset ',
@@ -10,5 +11,5 @@ return [
     'username' => 'Username',
     'password' => 'Password',
     'click_to_login' => 'Click to login',
-    'best_regards' => 'Best regards'
+    'best_regards' => 'Best regards',
 ];

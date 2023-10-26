@@ -1,7 +1,8 @@
-<?php 
-return[
+<?php
+
+return [
     'error_list' => 'Error list',
-    'edit'=> 'Edit',
+    'edit' => 'Edit',
     'add' => 'Add',
     'add_calculate' => 'Add and calculate',
     'actions' => 'Actions',
@@ -26,7 +27,7 @@ return[
     'calculation_type' => 'Calculation type',
     'fixed_fee' => 'Fixed fee ($)',
     'employee_percentage' => 'Employee percentage (%)',
-    'employer_value' => 'Employer value (%)', 
+    'employer_value' => 'Employer value (%)',
     'institution_law' => 'Institution law',
     'status' => 'Status',
     'year' => 'Year',
@@ -36,17 +37,17 @@ return[
     'period' => 'Period',
     'payment_period' => 'Payment period',
     'january' => 'January',
-	'febrary' => 'Febrary',
-	'march' => 'March',
-	'april' => 'April',
-	'may' => 'May',
-	'june' => 'June',
-	'july' => 'July',
-	'august' => 'August',
-	'september' => 'September',
-	'october' => 'October',
-	'november' => 'November',
-	'december' => 'December',
+    'febrary' => 'Febrary',
+    'march' => 'March',
+    'april' => 'April',
+    'may' => 'May',
+    'june' => 'June',
+    'july' => 'July',
+    'august' => 'August',
+    'september' => 'September',
+    'october' => 'October',
+    'november' => 'November',
+    'december' => 'December',
     'number_daytime_overtime' => 'Number daytime overtime',
     'number_night_overtime_hours' => 'Number night overtime hours',
     'hours' => 'Hours worked',
@@ -113,5 +114,5 @@ return[
     'proportional_vacation' => 'Proportional vacation',
     'complete_vacation' => 'Complete vacation',
     'description' => 'Description',
-    'annual_summary' => 'Annual summaty'
+    'annual_summary' => 'Annual summaty',
 ];

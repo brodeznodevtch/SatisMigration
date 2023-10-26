@@ -1,4 +1,5 @@
 <?php
+
 return [
     'fixed_asset' => 'Activo Fijo',
     'fixed_assets' => 'Activos Fijos',

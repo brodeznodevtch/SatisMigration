@@ -87,7 +87,7 @@ return [
     'click_on_any_booking_to_view_or_change_status' => 'Click on any booking to view details or change status',
     'double_click_on_any_day_to_add_new_booking' => 'Double click on any day to add new booking',
     'todays_bookings' => "Today's Bookings",
-    'hello_name' => 'Hello :name!', 
+    'hello_name' => 'Hello :name!',
     'booking_confirmed' => 'Your booking has been confirmed.',
     'table_info' => 'Table: :table',
     'booking_time_info' => 'From :from TO :to',

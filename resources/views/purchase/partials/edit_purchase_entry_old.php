@@ -182,7 +182,7 @@
 
             <td><i class="fa fa-times remove_purchase_entry_row text-danger" title="Remove" style="cursor:pointer;"></i></td>
         </tr>
-        <?php $row_count = $loop->index + 1 ; ?>
+        <?php $row_count = $loop->index + 1; ?>
     @endforeach
         </tbody>
     </table>

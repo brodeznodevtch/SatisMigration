@@ -184,13 +184,13 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
 
         Collective\Html\HtmlServiceProvider::class,
-      //  Yajra\Datatables\DatatablesServiceProvider::class,
+        //  Yajra\Datatables\DatatablesServiceProvider::class,
 
         Milon\Barcode\BarcodeServiceProvider::class,
-       // ConsoleTVs\Charts\ChartsServiceProvider::class,
+        // ConsoleTVs\Charts\ChartsServiceProvider::class,
         App\Providers\DropboxServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-      //  Maatwebsite\Excel\ExcelServiceProvider::class,
+        //  Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\PHPExcelMacroServiceProvider::class,
 
     ],
@@ -248,7 +248,7 @@ return [
         'Carbon' => 'Carbon\Carbon',
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
-       // 'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+        // 'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Datatables' => Yajra\DataTables\Facades\DataTables::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,

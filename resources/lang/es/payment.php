@@ -1,4 +1,5 @@
 <?php
+
 return [
     'payment' => 'Pago',
     'card_holder_name' => 'Titular de la tarjeta',
@@ -17,7 +18,7 @@ return [
     'card_type' => 'Tipo de tarjeta',
     'card_pos' => 'POS',
     'credit_card' => 'Tarjeta de crédito',
-    'debit_card' => 'Tarjeta de débito',    
+    'debit_card' => 'Tarjeta de débito',
     'check_number' => 'Número de cheque',
     'check_account' => 'Número de cuenta',
     'check_bank' => 'Banco',
@@ -41,9 +42,9 @@ return [
     'payment_terms_delete' => 'Borrado Correctamente',
     // POS translations
     'pos' => 'Terminales',
-    'pos_bank'=>'Banco',
-    'pos_business'=>'Empresa',
-    'pos_name'=>'Nombre',
+    'pos_bank' => 'Banco',
+    'pos_business' => 'Empresa',
+    'pos_name' => 'Nombre',
     'pos_description' => 'Descripcion',
     'pos_location' => 'Sucursal',
     'pos_status' => 'Estado',

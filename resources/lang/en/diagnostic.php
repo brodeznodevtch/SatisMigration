@@ -1,4 +1,5 @@
 <?php
+
 return [
     'add_diagnostic' => 'Add Diagnostic',
     'added_success' => 'Material type added successfully',

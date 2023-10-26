@@ -1,4 +1,5 @@
 <?php
+
 return [
     'manage_reservations' => 'Administrar reservas',
     'all_your_reservations' => 'Todas sus reservas',

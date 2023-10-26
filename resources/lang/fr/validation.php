@@ -149,6 +149,6 @@ return [
 
     'custom-messages' => [
         'quantity_not_available' => 'Seulement :qty :unit disponible',
-        'this_field_is_required' => 'Ce champ est requis'
+        'this_field_is_required' => 'Ce champ est requis',
     ],
 ];

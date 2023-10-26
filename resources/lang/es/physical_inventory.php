@@ -1,4 +1,5 @@
 <?php
+
 return [
     'physical_inventory' => 'Inventario físico',
     'manage_physical_inventory' => 'Administrar inventarios físicos',

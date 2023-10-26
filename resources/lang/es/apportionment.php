@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'apportionment' => 'Retaceo',
     'apportionments' => 'Retaceos',

@@ -12,7 +12,7 @@ return [
     */
 
     'brands' => 'Brands',
-    "brand" => "Brand",
+    'brand' => 'Brand',
     'manage_your_brands' => 'Manage your brands',
     'all_your_brands' => 'All your brands',
     'note' => 'Note',
@@ -23,6 +23,6 @@ return [
     'deleted_success' => 'Brand deleted successfully',
     'add_brand' => 'Add brand',
     'edit_brand' => 'Edit brand',
-    "all_brands" => "All brands",
-    "logo" => "Logo",
+    'all_brands' => 'All brands',
+    'logo' => 'Logo',
 ];

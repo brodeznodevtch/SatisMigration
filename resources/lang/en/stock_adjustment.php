@@ -31,5 +31,5 @@ return [
     'manage_stock_adjustments' => 'Manage stock adjustments',
     'created_by' => 'Created by',
     'view_detail' => 'View detail',
-    "adjustments" => 'Adjustments',
+    'adjustments' => 'Adjustments',
 ];
