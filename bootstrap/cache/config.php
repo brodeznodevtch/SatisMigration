@@ -1,16 +1,16 @@
 <?php return array (
   'app' => 
   array (
-    'name' => 'Envex ERP',
+    'name' => 'Satis ERP',
     'owner' => 'DevTech S.A. de C.V.',
     'env' => 'local',
     'debug' => true,
-    'url' => 'https://satismigration.test',
+    'url' => 'http://satis.test',
     'url_assistance' => 'http://satis.test',
     'timezone' => 'Asia/Kolkata',
     'locale' => 'es',
     'fallback_locale' => 'es',
-    'key' => 'base64:W8UqtE9LHZW+gRag78o4BCbN1M0w4HdaIFdLqHJ/9PA=',
+    'key' => 'base64:wYWxS7/HkkpwIaT3bX6gBj1G7o1vbnmOO+uBIwJr6rw=',
     'cipher' => 'AES-256-CBC',
     'log' => 'daily',
     'log_level' => 'debug',
@@ -99,7 +99,7 @@
     ),
     'business' => 'general',
     'price_precision' => '6',
-    'clone_product' => false,
+    'clone_product' => true,
     'disable_sql_req_pk' => false,
     'app_version' => 11.22,
     'assistance_employee_url' => 'http://127.0.0.1:8000/api/image-assistance/',
@@ -163,12 +163,12 @@
         array (
           'include' => 
           array (
-            0 => 'C:\\laragon\\www\\SatisMigration\\storage\\app/public',
+            0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app/public',
           ),
           'exclude' => 
           array (
-            0 => 'C:\\laragon\\www\\SatisMigration\\vendor',
-            1 => 'C:\\laragon\\www\\SatisMigration\\node_modules',
+            0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\vendor',
+            1 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\node_modules',
           ),
           'followLinks' => false,
         ),
@@ -233,7 +233,7 @@
     array (
       0 => 
       array (
-        'name' => 'Envex ERP',
+        'name' => 'Satis ERP',
         'disks' => 
         array (
           0 => 'local',
@@ -258,7 +258,7 @@
   ),
   'barcode' => 
   array (
-    'store_path' => 'C:\\laragon\\www\\SatisMigration\\public\\/',
+    'store_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\public\\/',
   ),
   'broadcasting' => 
   array (
@@ -314,7 +314,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/cache/data',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -353,7 +353,7 @@
         'endpoint' => NULL,
       ),
     ),
-    'prefix' => 'envex_erp_cache',
+    'prefix' => 'satis_erp_cache',
   ),
   'charts' => 
   array (
@@ -492,11 +492,11 @@
         ),
         'scripts' => 
         array (
-          0 => 'https://satismigration.test/plugins/chart/highchart/highcharts.js',
-          1 => 'https://satismigration.test/plugins/chart/highchart/offline-exporting.js',
-          2 => 'https://satismigration.test/plugins/chart/highchart/map.js',
-          3 => 'https://satismigration.test/plugins/chart/highchart/data.js',
-          4 => 'https://satismigration.test/plugins/chart/highchart/world.js',
+          0 => 'http://satis.test/plugins/chart/highchart/highcharts.js',
+          1 => 'http://satis.test/plugins/chart/highchart/offline-exporting.js',
+          2 => 'http://satis.test/plugins/chart/highchart/map.js',
+          3 => 'http://satis.test/plugins/chart/highchart/data.js',
+          4 => 'http://satis.test/plugins/chart/highchart/world.js',
         ),
       ),
       'justgage' => 
@@ -616,7 +616,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'envex-erp-nuves',
+        'database' => 'satis-erp-demo',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -624,11 +624,11 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
-        'database' => 'envex-erp-nuves',
+        'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -644,11 +644,11 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
-        'database' => 'envex-erp-nuves',
+        'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -659,11 +659,11 @@
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
-        'database' => 'envex-erp-nuves',
+        'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -676,7 +676,7 @@
       'options' => 
       array (
         'cluster' => 'predis',
-        'prefix' => 'envex_erp_database_',
+        'prefix' => 'satis_erp_database_',
       ),
       'default' => 
       array (
@@ -754,7 +754,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\debugbar',
+      'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\debugbar',
       'connection' => NULL,
       'provider' => '',
     ),
@@ -922,7 +922,7 @@
     ),
     'temporary_files' => 
     array (
-      'local_path' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/laravel-excel',
+      'local_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/laravel-excel',
       'remote_disk' => NULL,
       'remote_prefix' => NULL,
       'force_resync_remote' => NULL,
@@ -949,13 +949,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\SatisMigration\\storage\\app',
+        'root' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\SatisMigration\\storage\\app/public',
-        'url' => 'https://satismigration.test/storage',
+        'root' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app/public',
+        'url' => 'http://satis.test/storage',
         'visibility' => 'public',
       ),
       's3' => 
@@ -1000,13 +1000,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -1059,7 +1059,7 @@
     'from' => 
     array (
       'address' => 'devtch.envex@gmail.com',
-      'name' => 'Envex ERP Notifications',
+      'name' => 'Satis ERP Notifications',
     ),
     'encryption' => 'tls',
     'username' => 'devtch.envex@gmail.com',
@@ -1070,7 +1070,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\SatisMigration\\resources\\views/vendor/mail',
+        0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\resources\\views/vendor/mail',
       ),
     ),
     'log_channel' => NULL,
@@ -1081,7 +1081,7 @@
     'stubs' => 
     array (
       'enabled' => false,
-      'path' => 'C:\\laragon\\www\\SatisMigration/vendor/nwidart/laravel-modules/src/Commands/stubs',
+      'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration/vendor/nwidart/laravel-modules/src/Commands/stubs',
       'files' => 
       array (
         'start' => 'start.php',
@@ -1145,9 +1145,9 @@
     ),
     'paths' => 
     array (
-      'modules' => 'C:\\laragon\\www\\SatisMigration\\Modules',
-      'assets' => 'C:\\laragon\\www\\SatisMigration\\public\\modules',
-      'migration' => 'C:\\laragon\\www\\SatisMigration\\database/migrations',
+      'modules' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\Modules',
+      'assets' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\public\\modules',
+      'migration' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\database/migrations',
       'generator' => 
       array (
         'config' => 
@@ -1272,7 +1272,7 @@
       'enabled' => false,
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\SatisMigration\\vendor/*/*',
+        0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\vendor/*/*',
       ),
     ),
     'composer' => 
@@ -1451,11 +1451,11 @@
   ),
   'session' => 
   array (
-    'driver' => 'database',
+    'driver' => 'file',
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/sessions',
+    'files' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -1464,7 +1464,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'envex_erp_session',
+    'cookie' => 'satis_erp_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => false,
@@ -1475,9 +1475,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\SatisMigration\\resources\\views',
+      0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\resources\\views',
     ),
-    'compiled' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework\\views',
+    'compiled' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework\\views',
   ),
   'dompdf' => 
   array (
@@ -1485,10 +1485,10 @@
     'orientation' => 'portrait',
     'defines' => 
     array (
-      'font_dir' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts/',
-      'font_cache' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts/',
-      'temp_dir' => 'C:\\Users\\DEVELO~1\\AppData\\Local\\Temp',
-      'chroot' => 'C:\\laragon\\www\\SatisMigration',
+      'font_dir' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts/',
+      'font_cache' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts/',
+      'temp_dir' => 'C:\\Users\\BAYRON~1\\AppData\\Local\\Temp',
+      'chroot' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration',
       'enable_font_subsetting' => false,
       'pdf_backend' => 'CPDF',
       'default_media_type' => 'screen',
@@ -1505,6 +1505,70 @@
   'debug-server' => 
   array (
     'host' => 'tcp://127.0.0.1:9912',
+  ),
+  'datatables-buttons' => 
+  array (
+    'namespace' => 
+    array (
+      'base' => 'DataTables',
+      'model' => '',
+    ),
+    'pdf_generator' => 'snappy',
+    'snappy' => 
+    array (
+      'options' => 
+      array (
+        'no-outline' => true,
+        'margin-left' => '0',
+        'margin-right' => '0',
+        'margin-top' => '10mm',
+        'margin-bottom' => '10mm',
+      ),
+      'orientation' => 'landscape',
+    ),
+    'parameters' => 
+    array (
+      'dom' => 'Bfrtip',
+      'order' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => 'desc',
+        ),
+      ),
+      'buttons' => 
+      array (
+        0 => 'create',
+        1 => 'export',
+        2 => 'print',
+        3 => 'reset',
+        4 => 'reload',
+      ),
+    ),
+    'generator' => 
+    array (
+      'columns' => 'id,add your columns,created_at,updated_at',
+      'buttons' => 'create,export,print,reset,reload',
+      'dom' => 'Bfrtip',
+    ),
+  ),
+  'datatables-html' => 
+  array (
+    'namespace' => 'LaravelDataTables',
+    'table' => 
+    array (
+      'class' => 'table',
+      'id' => 'dataTableBuilder',
+    ),
+    'callback' => 
+    array (
+      0 => '$',
+      1 => '$.',
+      2 => 'function',
+    ),
+    'script' => 'datatables::script',
+    'editor' => 'datatables::editor',
   ),
   'trustedproxy' => 
   array (
