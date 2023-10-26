@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'active' => 'Active',
     'sales_settings' => 'Sales Settings',
@@ -9,7 +10,7 @@ return [
     'business_location' => 'Location',
     'code' => 'Code',
     'confirm_button_delete' => 'Yes, delete it!',
-    "deleted_success" => "Cashier deleted successful",
+    'deleted_success' => 'Cashier deleted successful',
     'edit_cashier' => 'Edit cashier',
     'inactive' => 'Inactive',
     'manage_cashiers' => 'Manage cashiers',

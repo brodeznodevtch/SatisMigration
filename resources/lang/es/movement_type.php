@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_movement_type' => 'Registrar tipo de movimiento',
     'added_success' => 'Tipo de movimiento registrado exitosamente',

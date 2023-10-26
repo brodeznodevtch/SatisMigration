@@ -14,7 +14,7 @@ return [
     'categories' => 'Categories',
     'manage_your_categories' => 'Manage your categories',
     'all_your_categories' => 'All your categories',
-    "all_categories" => "All categories",
+    'all_categories' => 'All categories',
     'category' => 'Category',
     'category_name' => 'Category name',
     'code' => 'Category Code',
@@ -25,5 +25,5 @@ return [
     'deleted_success' => 'Category deleted successfully',
     'add_category' => 'Add Category',
     'edit_category' => 'Edit Category',
-    "no_category" => "no category",
+    'no_category' => 'no category',
 ];

@@ -1,7 +1,8 @@
-<?php 
-return[
+<?php
+
+return [
     'error_list' => 'Lista de errores',
-    'edit'=> 'Editar',
+    'edit' => 'Editar',
     'add' => 'Agregar',
     'create' => 'Crear',
     'create_calculate' => 'Crear y calcular',
@@ -27,7 +28,7 @@ return[
     'calculation_type' => 'Tipo de cálculo',
     'fixed_fee' => 'Cuota fija ($)',
     'employee_percentage' => 'Porcentaje de empleado (%)',
-    'employer_value' => 'Valor patronal (%)', 
+    'employer_value' => 'Valor patronal (%)',
     'institution_law' => 'Institución de ley',
     'status' => 'Estado',
     'year' => 'Año',
@@ -37,17 +38,17 @@ return[
     'period' => 'Periodo',
     'payment_period' => 'Periodo de pago',
     'january' => 'Enero',
-	'febrary' => 'Febrero',
-	'march' => 'Marzo',
-	'april' => 'Abril',
-	'may' => 'Mayo',
-	'june' => 'Junio',
-	'july' => 'Julio',
-	'august' => 'Agosto',
-	'september' => 'Septiembre',
-	'october' => 'Octubre',
-	'november' => 'Noviembre',
-	'december' => 'Diciembre',
+    'febrary' => 'Febrero',
+    'march' => 'Marzo',
+    'april' => 'Abril',
+    'may' => 'Mayo',
+    'june' => 'Junio',
+    'july' => 'Julio',
+    'august' => 'Agosto',
+    'september' => 'Septiembre',
+    'october' => 'Octubre',
+    'november' => 'Noviembre',
+    'december' => 'Diciembre',
     'number_daytime_overtime' => 'Horas extras',
     'number_night_overtime_hours' => 'Número de horas extras nocturnas',
     'hours' => 'Horas trabajadas',
@@ -116,5 +117,5 @@ return[
     'vacation_bonus' => 'Bono por vacaciones',
     'proportional_vacation' => 'Vacación proporcional',
     'complete_vacation' => 'Vacación completa',
-    'annual_summary' => 'Resumen anual'
+    'annual_summary' => 'Resumen anual',
 ];

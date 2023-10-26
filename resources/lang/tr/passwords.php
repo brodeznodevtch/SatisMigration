@@ -17,6 +17,6 @@ return [
     'reset' => 'Şifreniz sıfırlandı!',
     'sent' => 'Şifre sıfırlama bağlantınızı e-posta adresinize gönderdik!',
     'token' => 'Geçersiz şifre sıfırlama işlemi(belirteci).',
-    'user' => "Bu e-posta adresine sahip bir kullanıcı bulamıyoruz.",
+    'user' => 'Bu e-posta adresine sahip bir kullanıcı bulamıyoruz.',
 
 ];

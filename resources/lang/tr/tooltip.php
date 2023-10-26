@@ -76,12 +76,12 @@ return [
 
     'tax_groups' => 'Grup Vergi Oranları - Yukarıda tanımlanmış, Alış / Satış bölümlerinde bir arada kullanılacak.',
 
-    'unit_allow_decimal' => "Ondalıklar, ilgili ürünleri kesirlerle satmanıza izin verir.",
+    'unit_allow_decimal' => 'Ondalıklar, ilgili ürünleri kesirlerle satmanıza izin verir.',
 
     'print_label' => 'Ürün ekle -> Etiketler de gösterilecek bilgileri seç -> Barkod Ayarını Seç -> Etiketleri Önizle -> Yazdır',
 
     'expense_for' => 'Giderin ilişkili olduğu kullanıcıyı seçin. <i>(İsteğe bağlı)</i><br/><small>Örnek: Bir çalışanın maaşı.</small>',
-    
+
     'all_location_permission' => 'Eğer <b>Tüm Şubeler</b> bu rol seçilirse tüm şubelere erişim iznine sahip olacaktır',
 
     'dashboard_permission' => 'İşaretlenmezse, yalnızca Hoş Geldiniz mesajı Ana Sayfada görüntülenir.',
@@ -90,7 +90,7 @@ return [
 
     'print_receipt_on_invoice' => 'Faturanın otomatik yazdırılmasını etkinleştirin veya devre dışı bırakın',
 
-    'receipt_printer_type' => "<i>Internet tarayıcı tabanlı yazıcı</i>: Fatura önizlemesini internet tarayıcıda yazdırma iletişim kutusunda göster <br/><br/> <i>Yapılandırılmış Fiş Yazıcısı Kullan</i>: Yazdırmak için yapılandırılmış bir fiş / termal yazıcı seçin",
+    'receipt_printer_type' => '<i>Internet tarayıcı tabanlı yazıcı</i>: Fatura önizlemesini internet tarayıcıda yazdırma iletişim kutusunda göster <br/><br/> <i>Yapılandırılmış Fiş Yazıcısı Kullan</i>: Yazdırmak için yapılandırılmış bir fiş / termal yazıcı seçin',
 
     'adjustment_type' => '<i>Normal</i>: Kaçak, Hasar vb. Normal nedenlerden dolayı ayar yapılması. <br/><br/> <i>Anormal</i>: Yangın, Kaza vb. Sebeplerden dolayı ayar yapılması.',
 
@@ -110,6 +110,6 @@ return [
 
     'transaction_edit_days' => 'İşlem Tarihinden itibaren bir işlemin düzenlenebileceği gün sayısı.',
     'stock_expiry_alert' => "Süresi dolmuş stokların listesi :days gün <br> <small class='text-muted'>Gün numaralarını İşletme Ayarlarından Yapabilirsiniz.</small>",
-    'sub_sku' => "Stok Kodu SKU isteğe bağlı.<br><br><small> Stok Kodu SKU Otomatik olarak oluşturmak için boş bırakın.<small>",
-    'shipping' => "Nakliye ayrıntılarını ve nakliye ücretlerini ayarlayın. Gönderim detaylarını ve ücretlerini eklemek / güncellemek için aşağıdaki düzenle simgesine tıklayın."
+    'sub_sku' => 'Stok Kodu SKU isteğe bağlı.<br><br><small> Stok Kodu SKU Otomatik olarak oluşturmak için boş bırakın.<small>',
+    'shipping' => 'Nakliye ayrıntılarını ve nakliye ücretlerini ayarlayın. Gönderim detaylarını ve ücretlerini eklemek / güncellemek için aşağıdaki düzenle simgesine tıklayın.',
 ];

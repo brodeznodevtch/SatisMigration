@@ -1,30 +1,31 @@
-<?php 
- return [ 
-    "home" => "Inicio", /* modified */
-    "welcome_message" => "Bienvenido :name",
-    "total_sell" => "Ventas totales",
-    "total_purchase" => "Compras totales", /* modified */
-    "invoice_due" => "Cuentas por Cobrar",
-    "purchase_due" => "Cuentas por pagar",
-    "total_expense" => "Gastos totales",
-    "sells" => "Ventas",
-    "products" => "Producto",
-    "amount" => "Cantidad",
-    "total_sells1" => "Ventas",
-    "last_sale" => "Última venta",
-    "trending_products" => "Productos en tendencia (más vendidos)",
-    "today" => "Hoy",
-    "this_week" => "Esta semana",
-    "this_month" => "Este mes",
-    "this_fy" => "Este año fiscal", /* modified */
-    "sells_last_30_days" => "Ventas últimos 30 días",
-    "sells_current_fy" => "Año fiscal actual de ventas", /* modified */
-    "total_sells" => "Ventas totales (:currency)",
-    "product_stock_alert" => "Alerta de stock del producto",
-    "payment_dues" => "Cuota de pago",
-    "due_amount" => "Cantidad debida",
-    "stock_expiry_alert" => "Alerta de caducidad", 
-    "todays_profit" => "Ganancias de hoy",
+<?php
+
+return [
+    'home' => 'Inicio', /* modified */
+    'welcome_message' => 'Bienvenido :name',
+    'total_sell' => 'Ventas totales',
+    'total_purchase' => 'Compras totales', /* modified */
+    'invoice_due' => 'Cuentas por Cobrar',
+    'purchase_due' => 'Cuentas por pagar',
+    'total_expense' => 'Gastos totales',
+    'sells' => 'Ventas',
+    'products' => 'Producto',
+    'amount' => 'Cantidad',
+    'total_sells1' => 'Ventas',
+    'last_sale' => 'Última venta',
+    'trending_products' => 'Productos en tendencia (más vendidos)',
+    'today' => 'Hoy',
+    'this_week' => 'Esta semana',
+    'this_month' => 'Este mes',
+    'this_fy' => 'Este año fiscal', /* modified */
+    'sells_last_30_days' => 'Ventas últimos 30 días',
+    'sells_current_fy' => 'Año fiscal actual de ventas', /* modified */
+    'total_sells' => 'Ventas totales (:currency)',
+    'product_stock_alert' => 'Alerta de stock del producto',
+    'payment_dues' => 'Cuota de pago',
+    'due_amount' => 'Cantidad debida',
+    'stock_expiry_alert' => 'Alerta de caducidad',
+    'todays_profit' => 'Ganancias de hoy',
     'login' => 'Inicio de sesión',
     'register' => 'Registro',
     'choose_month' => 'Elegir mes',
@@ -46,5 +47,5 @@
     'net_earnings' => 'Ganancia neta',
     'average_sales' => 'Promedio de ventas',
     'conected_business' => 'Cambiar de empresa',
-    'implementations' => 'Implementaciones'
+    'implementations' => 'Implementaciones',
 ];

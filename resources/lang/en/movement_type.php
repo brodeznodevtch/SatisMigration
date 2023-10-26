@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 return [
     'add_movement_type' => 'Add movement type',
     'added_success' => 'Movement type added successfully',

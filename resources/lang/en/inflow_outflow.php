@@ -1,4 +1,5 @@
 <?php
+
 return [
     'inputs' => 'Inputs',
     'outputs' => 'Outputs',

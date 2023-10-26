@@ -1,4 +1,5 @@
 <?php
+
 return [
     'inputs' => 'Entradas',
     'outputs' => 'Salidas',

@@ -1,11 +1,12 @@
 <?php
+
 return [
     'add_status_lab_order' => 'Registrar estado de la orden de laboratorio',
     'added_success' => 'Estado de la orden de laboratorio registrado exitosamente',
     'all_status_lab_orders' => 'Todos los estados de las órdenes de laboratorio',
     'status_lab_orders' => 'Estados de las órdenes de laboratorio',
     'confirm_button_delete' => '¡Sí, elimínala!',
-    "deleted_success" => "Estado de la orden de laboratorio eliminada exitosamente",
+    'deleted_success' => 'Estado de la orden de laboratorio eliminada exitosamente',
     'edit_status_lab_order' => 'Actualizar datos del estado de la orden de laboratorio',
     'manage_status_lab_orders' => 'Administrar estados de las órdenes de laboratorio',
     'text_confirm_delete' => '¡No podrás revertir esto!',

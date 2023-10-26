@@ -1,4 +1,5 @@
 <?php
+
 return [
     'card_pos' => 'POS for card payments',
     'manage' => 'Manage for card payments',

@@ -27,6 +27,6 @@ return [
     'tax_groups' => 'Vergi grupları',
     'edit_tax_group' => 'Vergi grubunu düzenle',
     'sub_taxes' => 'Alt vergiler',
-    'can_not_be_deleted' => 'Bu vergi oranı bazı vergi gruplarına aittir.'
+    'can_not_be_deleted' => 'Bu vergi oranı bazı vergi gruplarına aittir.',
 
 ];
