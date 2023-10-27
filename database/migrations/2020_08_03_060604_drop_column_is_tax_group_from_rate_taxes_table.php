@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropColumnIsTaxGroupFromRateTaxesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -30,4 +30,4 @@ class DropColumnIsTaxGroupFromRateTaxesTable extends Migration
                 ->default(0);
         });
     }
-}
+};

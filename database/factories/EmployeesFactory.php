@@ -27,9 +27,9 @@ class EmployeesFactory extends Factory
         static $password;
 
         return [
-            'name' => $this->faker->name,
-            'lastname' => $this->faker->lastName,
-            'email' => $this->faker->unique()->safeEmail,
+            'name' => $this->faker->name(),
+            'lastname' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'mobile' => $this->faker->mobile,
         ];
     }

@@ -3,7 +3,7 @@
 use App\Models\Business;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyProductSettingsColumnFromBusinessTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -46,4 +46,4 @@ class ModifyProductSettingsColumnFromBusinessTable extends Migration
             $item->save();
         }
     }
-}
+};

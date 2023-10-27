@@ -3,7 +3,7 @@
 use App\Models\Transaction;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyTypeColumnToTransactionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -31,4 +31,4 @@ class ModifyTypeColumnToTransactionsTable extends Migration
     {
         DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('purchase', 'sell', 'expense', 'stock_adjustment', 'sell_transfer', 'purchase_transfer', 'opening_stock', 'sell_return', 'opening_balance', 'purchase_return') DEFAULT NULL");
     }
-}
+};

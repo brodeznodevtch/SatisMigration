@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyAmountColumnToTransactionPaymentsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class ModifyAmountColumnToTransactionPaymentsTable extends Migration
     {
         DB::statement('ALTER TABLE transaction_payments MODIFY COLUMN amount DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }
-}
+};

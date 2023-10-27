@@ -57,7 +57,7 @@ class BookingController extends Controller
 
             foreach ($bookings as $booking) {
                 $customer_name = $booking->customer->name;
-                $table_name = optional($booking->table)->name;
+                $table_name = $booking->table?->name;
 
                 $backgroundColor = '#3c8dbc';
                 $borderColor = '#3c8dbc';

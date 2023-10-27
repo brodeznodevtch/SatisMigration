@@ -8,30 +8,17 @@ use App\Http\Controllers\BackUpController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BankCheckbookController;
 use App\Http\Controllers\BankController;
-use App\Http\Controllers\BinnacleController;
-use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BankTransactionController;
 use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\BinnacleController;
 use App\Http\Controllers\BonusCalculationController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessLocationController;
 use App\Http\Controllers\BusinessTypeController;
-use App\Http\Controllers\CRMContactModeController;
-use App\Http\Controllers\CRMContactReasonController;
-use App\Http\Controllers\InternationalPurchaseController;
-use App\Http\Controllers\Optics\DiagnosticController;
-use App\Http\Controllers\Optics\ExternalLabController;
-use App\Http\Controllers\Optics\FlowReasonController;
-use App\Http\Controllers\Optics\GraduationCardController;
-use App\Http\Controllers\Optics\InflowOutflowController;
-use App\Http\Controllers\Optics\LabOrderController;
-use App\Http\Controllers\Optics\MaterialTypeController;
-use App\Http\Controllers\Optics\PatientController;
-use App\Http\Controllers\Optics\StatusLabOrderController;
-use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\CashDetailController;
-use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\CashierClosureController;
+use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
@@ -42,6 +29,8 @@ use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CreditDocumentsController;
 use App\Http\Controllers\CreditRequestController;
+use App\Http\Controllers\CRMContactModeController;
+use App\Http\Controllers\CRMContactReasonController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\CustomerPortfolioController;
@@ -49,8 +38,8 @@ use App\Http\Controllers\CustomerVehicleController;
 use App\Http\Controllers\DocumentCorrelativeController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\EmployeesController;
-use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\FixedAssetController;
 use App\Http\Controllers\FixedAssetTypeController;
@@ -62,8 +51,9 @@ use App\Http\Controllers\ImplementationController;
 use App\Http\Controllers\ImportExpenseController;
 use App\Http\Controllers\ImportOpeningStockController;
 use App\Http\Controllers\ImportProductsController;
-use App\Http\Controllers\InvoiceLayoutController;
 use App\Http\Controllers\InstitutionLawController;
+use App\Http\Controllers\InternationalPurchaseController;
+use App\Http\Controllers\InvoiceLayoutController;
 use App\Http\Controllers\InvoiceSchemeController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\LabelsController;
@@ -79,6 +69,15 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OpeningStockController;
 use App\Http\Controllers\OportunityController;
 use App\Http\Controllers\Optics;
+use App\Http\Controllers\Optics\DiagnosticController;
+use App\Http\Controllers\Optics\ExternalLabController;
+use App\Http\Controllers\Optics\FlowReasonController;
+use App\Http\Controllers\Optics\GraduationCardController;
+use App\Http\Controllers\Optics\InflowOutflowController;
+use App\Http\Controllers\Optics\LabOrderController;
+use App\Http\Controllers\Optics\MaterialTypeController;
+use App\Http\Controllers\Optics\PatientController;
+use App\Http\Controllers\Optics\StatusLabOrderController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentCommitmentController;
 use App\Http\Controllers\PaymentTermController;
@@ -88,11 +87,12 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PhysicalInventoryController;
 use App\Http\Controllers\PhysicalInventoryLineController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
-use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReporterController;
 use App\Http\Controllers\ReservationController;
@@ -116,9 +116,9 @@ use App\Http\Controllers\RrhhTypePersonnelActionController;
 use App\Http\Controllers\RrhhTypeWageController;
 use App\Http\Controllers\SalesCommissionAgentController;
 use App\Http\Controllers\SellController;
+use App\Http\Controllers\SellingPriceGroupController;
 use App\Http\Controllers\SellPosController;
 use App\Http\Controllers\SellReturnController;
-use App\Http\Controllers\SellingPriceGroupController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\StatusClaimController;
@@ -136,8 +136,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VariationTemplateController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\ZoneController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -246,8 +246,8 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('/image/{id}/download', [SliderController::class, 'downloadSlide']);
     Route::delete('/image/{id}/delete', [SliderController::class, 'destroy']);
     // Peak sales hours chart routes
-    Route::get('/home/peak-sales-hours-month-chart', [HomeController::class, 'getPeakSalesHoursByMonthChart'])->name("getPeakSalesHoursByMonthChart");
-    Route::get('/home/peak-sales-hours-chart', [HomeController::class, 'getPeakSalesHoursChart'])->name("getPeakSalesHoursChart");
+    Route::get('/home/peak-sales-hours-month-chart', [HomeController::class, 'getPeakSalesHoursByMonthChart'])->name('getPeakSalesHoursByMonthChart');
+    Route::get('/home/peak-sales-hours-chart', [HomeController::class, 'getPeakSalesHoursChart'])->name('getPeakSalesHoursChart');
 
     Route::get('/business/change-modal', [BusinessController::class, 'getChangeBusiness'])->name('business.getChangeBusiness');
     Route::patch('/business/change', [BusinessController::class, 'changeBusiness'])->name('business.changeBusiness');
@@ -264,7 +264,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     //DocumentType
     Route::resource('documents', DocumentTypeController::class);
 
-/*    Route::resource('payment-account', 'PaymentAccountController');*/
+    /*    Route::resource('payment-account', 'PaymentAccountController');*/
 
     Route::resource('tax-rates', TaxRateController::class);
     Route::post('/tax_groups/get_tax_groups', [TaxGroupController::class, 'getTaxGroups']);
@@ -683,7 +683,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('entries/getEntrieDetailsDebe/{id}', [AccountingEntrieController::class, 'getEntrieDetailsDebe']);
     Route::get('entries/getEntrieDetailsHaber/{id}', [AccountingEntrieController::class, 'getEntrieDetailsHaber']);
     Route::post('entries/editEntrie', [AccountingEntrieController::class, 'editEntrie']);
-    Route::post('entries/allentries', [ReporterController::class, 'allEntries'])->name("entries.allentries");
+    Route::post('entries/allentries', [ReporterController::class, 'allEntries'])->name('entries.allentries');
     Route::get('entries/singleEntrie/{id}/{type}', [ReporterController::class, 'singleEntrie']);
     Route::get('entries/searchBankTransaction/{id}', [AccountingEntrieController::class, 'searchBankTransaction']);
     Route::get('entries/getNumberEntrie/{date}', [AccountingEntrieController::class, 'getNumberEntrie']);
@@ -1108,19 +1108,19 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     /** Dispatched products report */
     Route::get('/reports/dispatched-products-count', [ReportController::class, 'getDispatchedProductsCount']);
     Route::get('/reports/dispatched-products-report', [ReportController::class, 'getDispatchedProducts']);
-    Route::post('/reports/dispatched-products-report', [ReportController::class, 'postDispatchedProducts'])->name("sales.postDispatchedProducts");
+    Route::post('/reports/dispatched-products-report', [ReportController::class, 'postDispatchedProducts'])->name('sales.postDispatchedProducts');
 
     /** Connect report for Disproci */
     Route::get('/reports/connect-report', [ReportController::class, 'getConnectReport']);
-    Route::post('/reports/connect-report', [ReportController::class, 'postConnectReport'])->name("sales.postConnectReport");
+    Route::post('/reports/connect-report', [ReportController::class, 'postConnectReport'])->name('sales.postConnectReport');
 
     /** Sale cost by product report */
     Route::get('/reports/sale-cost-product-report', [ReportController::class, 'saleCostProductReport']);
-    Route::post('/reports/sale-cost-product-report', [ReportController::class, 'getSaleCostProductReport'])->name("sales.getSaleCostProductReport");
+    Route::post('/reports/sale-cost-product-report', [ReportController::class, 'getSaleCostProductReport'])->name('sales.getSaleCostProductReport');
 
     /** Price List report for Nuves/AGL */
     Route::get('/reports/price-lists-report', [ReportController::class, 'getPriceListsReport']);
-    Route::post('/reports/post-price-lists-report', [ReportController::class, 'postPriceListsReport'])->name("postPriceListsReport");
+    Route::post('/reports/post-price-lists-report', [ReportController::class, 'postPriceListsReport'])->name('postPriceListsReport');
 
     Route::get('/debs-pay', [PurchaseController::class, 'showDebsToPay']);
 
@@ -1191,19 +1191,19 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // All Sales report routes
     Route::get('/sales-reports/all-sales-report', [ReportController::class, 'getAllSalesReport']);
-    Route::post('/sales-reports/all-sales-report', [ReportController::class, 'postAllSalesReport'])->name("sales_reports.all_sales_report");
+    Route::post('/sales-reports/all-sales-report', [ReportController::class, 'postAllSalesReport'])->name('sales_reports.all_sales_report');
 
     // All Sales report routes
     Route::get('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'getAllSalesWithUtilityReport']);
-    Route::post('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'postAllSalesWithUtilityReport'])->name("sales.postAllSalesWithUtility");
+    Route::post('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'postAllSalesWithUtilityReport'])->name('sales.postAllSalesWithUtility');
 
     /** Sales summary by seller */
     Route::get('/reports/sales-summary-report', [ReporterController::class, 'getSalesSummarySellerReport']);
-    Route::post('/reports/sales-summary-report', [ReporterController::class, 'postSalesSummarySellerReport'])->name("sales.postSalesSummarySellerReport");
+    Route::post('/reports/sales-summary-report', [ReporterController::class, 'postSalesSummarySellerReport'])->name('sales.postSalesSummarySellerReport');
 
     /** Sales by seller report */
     Route::get('/reports/sales-by-seller-report', [ReporterController::class, 'getSalesBySellerReport']);
-    Route::post('/reports/sales-by-seller-report', [ReporterController::class, 'postSalesBySellerReport'])->name("sales.postSalesBySellerReport");
+    Route::post('/reports/sales-by-seller-report', [ReporterController::class, 'postSalesBySellerReport'])->name('sales.postSalesBySellerReport');
 
     /** Expense Purchase report */
     Route::get('/reports/expense-purchase-report', [ReporterController::class, 'getExpensePurchaseReport']);
@@ -1290,11 +1290,11 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // Sales per seller report
     Route::get('/reports/sales-per-seller', [ReportController::class, 'getSalesPerSellerReport']);
-    Route::post('/reports/sales-per-seller', [ReportController::class, 'postSalesPerSellerReport'])->name("sales_per_seller");
+    Route::post('/reports/sales-per-seller', [ReportController::class, 'postSalesPerSellerReport'])->name('sales_per_seller');
 
     // Payment report
-    Route::get('/reports/payment', [ReportController::class, 'getPaymentReport'])->name("payment_report_get");
-    Route::post('/reports/payment', [ReportController::class, 'postPaymentReport'])->name("payment_report_post");
+    Route::get('/reports/payment', [ReportController::class, 'getPaymentReport'])->name('payment_report_get');
+    Route::post('/reports/payment', [ReportController::class, 'postPaymentReport'])->name('payment_report_post');
 
     // Binnacle routes
     Route::resource('binnacle', BinnacleController::class);
@@ -1397,7 +1397,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/products/get-recalculate-cost', [Optics\ProductController::class, 'getRecalculateCost']);
             Route::post('/products/get-recalculate-cost', [Optics\ProductController::class, 'postRecalculateCost']);
 
-            Route::resource('products', 'ProductController');
+            Route::resource('products', ProductController::class);
 
             // Materials
             Route::get('/products/getMaterialsData', [Optics\ProductController::class, 'getMaterialsData']);
@@ -1424,7 +1424,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/expenses/get_contacts', [Optics\ExpenseController::class, 'getAccount']);
             Route::get('/expenses/update-taxes', [Optics\ExpenseController::class, 'updateTaxes']);
             Route::get('/expenses/set-final-total-from-expenses', [Optics\ExpenseController::class, 'setFinalTotalFromExpenses']);
-            Route::resource('expenses', 'ExpenseController');
+            Route::resource('expenses', ExpenseController::class);
             Route::get('/expenses/get_add_expenses/{bank_transaction_id?}', [Optics\ExpenseController::class, 'getAddExpenses']);
             Route::post('/expenses/post_add_expenses', [Optics\ExpenseController::class, 'postAddExpenses']);
             Route::get('/expenses/get_add_expense', [Optics\ExpenseController::class, 'getAddExpense']);

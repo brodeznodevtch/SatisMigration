@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
 
-class AddRolePermissions extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -27,4 +27,4 @@ class AddRolePermissions extends Migration
     {
         //
     }
-}
+};

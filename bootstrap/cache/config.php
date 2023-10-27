@@ -1,16 +1,16 @@
 <?php return array (
   'app' => 
   array (
-    'name' => 'Envex ERP',
+    'name' => 'Satis ERP',
     'owner' => 'DevTech S.A. de C.V.',
     'env' => 'local',
     'debug' => true,
-    'url' => 'https://satismigration.test',
+    'url' => 'http://satis.test',
     'url_assistance' => 'http://satis.test',
     'timezone' => 'Asia/Kolkata',
     'locale' => 'es',
     'fallback_locale' => 'es',
-    'key' => 'base64:W8UqtE9LHZW+gRag78o4BCbN1M0w4HdaIFdLqHJ/9PA=',
+    'key' => 'base64:wYWxS7/HkkpwIaT3bX6gBj1G7o1vbnmOO+uBIwJr6rw=',
     'cipher' => 'AES-256-CBC',
     'log' => 'daily',
     'log_level' => 'debug',
@@ -81,7 +81,6 @@
       'Queue' => 'Illuminate\\Support\\Facades\\Queue',
       'RateLimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
       'Redirect' => 'Illuminate\\Support\\Facades\\Redirect',
-      'Redis' => 'Illuminate\\Support\\Facades\\Redis',
       'Request' => 'Illuminate\\Support\\Facades\\Request',
       'Response' => 'Illuminate\\Support\\Facades\\Response',
       'Route' => 'Illuminate\\Support\\Facades\\Route',
@@ -92,18 +91,20 @@
       'URL' => 'Illuminate\\Support\\Facades\\URL',
       'Validator' => 'Illuminate\\Support\\Facades\\Validator',
       'View' => 'Illuminate\\Support\\Facades\\View',
-      'Form' => 'Collective\\Html\\FormFacade',
-      'Html' => 'Collective\\Html\\HtmlFacade',
+      'Vite' => 'Illuminate\\Support\\Facades\\Vite',
       'Carbon' => 'Carbon\\Carbon',
       'DNS1D' => 'Milon\\Barcode\\Facades\\DNS1DFacade',
       'DNS2D' => 'Milon\\Barcode\\Facades\\DNS2DFacade',
       'Datatables' => 'Yajra\\DataTables\\Facades\\DataTables',
-      'PDF' => 'Barryvdh\\DomPDF\\Facade',
       'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+      'Form' => 'Collective\\Html\\FormFacade',
+      'Html' => 'Collective\\Html\\HtmlFacade',
+      'PDF' => 'Barryvdh\\DomPDF\\Facade',
+      'Redis' => 'Illuminate\\Support\\Facades\\Redis',
     ),
     'business' => 'general',
     'price_precision' => '6',
-    'clone_product' => false,
+    'clone_product' => true,
     'disable_sql_req_pk' => false,
     'app_version' => 11.22,
     'assistance_employee_url' => 'http://127.0.0.1:8000/api/image-assistance/',
@@ -164,12 +165,12 @@
         array (
           'include' => 
           array (
-            0 => 'C:\\laragon\\www\\SatisMigration\\storage\\app/public',
+            0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app/public',
           ),
           'exclude' => 
           array (
-            0 => 'C:\\laragon\\www\\SatisMigration\\vendor',
-            1 => 'C:\\laragon\\www\\SatisMigration\\node_modules',
+            0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\vendor',
+            1 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\node_modules',
           ),
           'followLinks' => false,
         ),
@@ -234,7 +235,7 @@
     array (
       0 => 
       array (
-        'name' => 'Envex ERP',
+        'name' => 'Satis ERP',
         'disks' => 
         array (
           0 => 'local',
@@ -263,7 +264,7 @@
     array (
       0 => 
       array (
-        'name' => 'Envex ERP',
+        'name' => 'Satis ERP',
         'disks' => 
         array (
           0 => 'local',
@@ -275,7 +276,7 @@
   ),
   'barcode' => 
   array (
-    'store_path' => 'C:\\laragon\\www\\SatisMigration\\public\\/',
+    'store_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\public\\/',
   ),
   'broadcasting' => 
   array (
@@ -290,8 +291,14 @@
         'app_id' => '',
         'options' => 
         array (
-          'cluster' => NULL,
+          'host' => 'api-mt1.pusher.com',
+          'port' => 443,
+          'scheme' => 'https',
+          'encrypted' => true,
           'useTLS' => true,
+        ),
+        'client_options' => 
+        array (
         ),
       ),
       'ably' => 
@@ -338,7 +345,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/cache/data',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -382,7 +389,7 @@
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'envex_erp_cache',
+    'prefix' => 'satis_erp_cache_',
   ),
   'charts' => 
   array (
@@ -522,11 +529,11 @@
         ),
         'scripts' => 
         array (
-          0 => 'https://satismigration.test/plugins/chart/highchart/highcharts.js',
-          1 => 'https://satismigration.test/plugins/chart/highchart/offline-exporting.js',
-          2 => 'https://satismigration.test/plugins/chart/highchart/map.js',
-          3 => 'https://satismigration.test/plugins/chart/highchart/data.js',
-          4 => 'https://satismigration.test/plugins/chart/highchart/world.js',
+          0 => 'http://satis.test/plugins/chart/highchart/highcharts.js',
+          1 => 'http://satis.test/plugins/chart/highchart/offline-exporting.js',
+          2 => 'http://satis.test/plugins/chart/highchart/map.js',
+          3 => 'http://satis.test/plugins/chart/highchart/data.js',
+          4 => 'http://satis.test/plugins/chart/highchart/world.js',
         ),
       ),
       'justgage' => 
@@ -682,11 +689,11 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
         'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -702,26 +709,26 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
         'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
-        'schema' => 'public',
+        'search_path' => 'public',
         'sslmode' => 'prefer',
       ),
       'sqlsrv' => 
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'port' => '3306',
         'database' => 'satis-erp-demo',
         'username' => 'root',
-        'password' => '',
+        'password' => 'Myrootpass2023',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -734,7 +741,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'envex_erp_database_',
+        'prefix' => 'satis_erp_database_',
       ),
       'default' => 
       array (
@@ -812,7 +819,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\debugbar',
+      'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\debugbar',
       'connection' => NULL,
       'provider' => '',
     ),
@@ -996,7 +1003,7 @@
     ),
     'temporary_files' => 
     array (
-      'local_path' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/laravel-excel',
+      'local_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/laravel-excel',
       'remote_disk' => NULL,
       'remote_prefix' => NULL,
       'force_resync_remote' => NULL,
@@ -1010,14 +1017,16 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\SatisMigration\\storage\\app',
+        'root' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app',
+        'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\SatisMigration\\storage\\app/public',
-        'url' => 'https://satismigration.test/storage',
+        'root' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app/public',
+        'url' => 'http://satis.test/storage',
         'visibility' => 'public',
+        'throw' => false,
       ),
       's3' => 
       array (
@@ -1029,11 +1038,12 @@
         'url' => NULL,
         'endpoint' => NULL,
         'use_path_style_endpoint' => false,
+        'throw' => false,
       ),
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\SatisMigration\\public\\storage' => 'C:\\laragon\\www\\SatisMigration\\storage\\app/public',
+      'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\public\\storage' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -1045,9 +1055,9 @@
     ),
     'argon' => 
     array (
-      'memory' => 1024,
-      'threads' => 2,
-      'time' => 2,
+      'memory' => 65536,
+      'threads' => 1,
+      'time' => 4,
     ),
   ),
   'larapex-charts' => 
@@ -1074,7 +1084,11 @@
   'logging' => 
   array (
     'default' => 'stack',
-    'deprecations' => 'null',
+    'deprecations' => 
+    array (
+      'channel' => 'null',
+      'trace' => false,
+    ),
     'channels' => 
     array (
       'stack' => 
@@ -1089,13 +1103,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -1116,6 +1130,7 @@
         array (
           'host' => NULL,
           'port' => NULL,
+          'connectionString' => 'tls://:',
         ),
       ),
       'stderr' => 
@@ -1146,7 +1161,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\laragon\\www\\SatisMigration\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -1161,10 +1176,10 @@
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'encryption' => 'tls',
-        'username' => 'notificaciones.satiserp@gmail.com',
-        'password' => 'kjmkczdmfjvhsxjz',
+        'username' => 'devtch.envex@gmail.com',
+        'password' => 'd7uXR23jTiq75gy',
         'timeout' => NULL,
-        'auth_mode' => NULL,
+        'local_domain' => NULL,
       ),
       'ses' => 
       array (
@@ -1181,7 +1196,7 @@
       'sendmail' => 
       array (
         'transport' => 'sendmail',
-        'path' => '/usr/sbin/sendmail -bs',
+        'path' => '/usr/sbin/sendmail -bs -i',
       ),
       'log' => 
       array (
@@ -1192,18 +1207,27 @@
       array (
         'transport' => 'array',
       ),
+      'failover' => 
+      array (
+        'transport' => 'failover',
+        'mailers' => 
+        array (
+          0 => 'smtp',
+          1 => 'log',
+        ),
+      ),
     ),
     'from' => 
     array (
       'address' => 'devtch.envex@gmail.com',
-      'name' => 'Envex ERP Notifications',
+      'name' => 'Satis ERP Notifications',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\SatisMigration\\resources\\views/vendor/mail',
+        0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -1213,7 +1237,7 @@
     'stubs' => 
     array (
       'enabled' => false,
-      'path' => 'C:\\laragon\\www\\SatisMigration/vendor/nwidart/laravel-modules/src/Commands/stubs',
+      'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration/vendor/nwidart/laravel-modules/src/Commands/stubs',
       'files' => 
       array (
         'start' => 'start.php',
@@ -1277,9 +1301,9 @@
     ),
     'paths' => 
     array (
-      'modules' => 'C:\\laragon\\www\\SatisMigration\\Modules',
-      'assets' => 'C:\\laragon\\www\\SatisMigration\\public\\modules',
-      'migration' => 'C:\\laragon\\www\\SatisMigration\\database/migrations',
+      'modules' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\Modules',
+      'assets' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\public\\modules',
+      'migration' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\database/migrations',
       'generator' => 
       array (
         'config' => 
@@ -1404,7 +1428,7 @@
       'enabled' => false,
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\SatisMigration\\vendor/*/*',
+        0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\vendor/*/*',
       ),
     ),
     'composer' => 
@@ -1427,6 +1451,17 @@
       'translations' => true,
       'files' => 'register',
     ),
+    'activators' => 
+    array (
+      'file' => 
+      array (
+        'class' => 'Nwidart\\Modules\\Activators\\FileActivator',
+        'statuses-file' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\modules_statuses.json',
+        'cache-key' => 'activator.installed',
+        'cache-lifetime' => 604800,
+      ),
+    ),
+    'activator' => 'file',
   ),
   'paypal' => 
   array (
@@ -1470,8 +1505,13 @@
     ),
     'column_names' => 
     array (
+      'role_pivot_key' => NULL,
+      'permission_pivot_key' => NULL,
       'model_morph_key' => 'model_id',
+      'team_foreign_key' => 'team_id',
     ),
+    'register_permission_check_method' => true,
+    'teams' => false,
     'display_permission_in_exception' => false,
     'display_role_in_exception' => false,
     'enable_wildcard_permission' => false,
@@ -1497,7 +1537,6 @@
          'have_special_relative' => 0,
       )),
       'key' => 'spatie.permission.cache',
-      'model_key' => 'name',
       'store' => 'default',
     ),
     'cache_expiration_time' => 1440,
@@ -1572,6 +1611,7 @@
       'domain' => NULL,
       'secret' => NULL,
       'endpoint' => 'api.mailgun.net',
+      'scheme' => 'https',
     ),
     'postmark' => 
     array (
@@ -1586,11 +1626,11 @@
   ),
   'session' => 
   array (
-    'driver' => 'database',
+    'driver' => 'file',
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework/sessions',
+    'files' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -1599,7 +1639,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'envex_erp_session',
+    'cookie' => 'satis_erp_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
@@ -1610,9 +1650,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\SatisMigration\\resources\\views',
+      0 => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\resources\\views',
     ),
-    'compiled' => 'C:\\laragon\\www\\SatisMigration\\storage\\framework\\views',
+    'compiled' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework\\views',
   ),
   'dompdf' => 
   array (
@@ -1621,10 +1661,10 @@
     'convert_entities' => true,
     'defines' => 
     array (
-      'font_dir' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts',
-      'font_cache' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts',
-      'temp_dir' => 'C:\\Users\\DEVELO~1\\AppData\\Local\\Temp',
-      'chroot' => 'C:\\laragon\\www\\SatisMigration',
+      'font_dir' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts',
+      'font_cache' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts',
+      'temp_dir' => 'C:\\Users\\BAYRON~1\\AppData\\Local\\Temp',
+      'chroot' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration',
       'enable_font_subsetting' => false,
       'pdf_backend' => 'CPDF',
       'default_media_type' => 'screen',
@@ -1641,42 +1681,87 @@
   'flare' => 
   array (
     'key' => NULL,
-    'reporting' => 
+    'flare_middleware' => 
     array (
-      'anonymize_ips' => true,
-      'collect_git_information' => false,
-      'report_queries' => true,
-      'maximum_number_of_collected_queries' => 200,
-      'report_query_bindings' => true,
-      'report_view_data' => true,
-      'grouping_type' => NULL,
-      'report_logs' => true,
-      'maximum_number_of_collected_logs' => 200,
-      'censor_request_body_fields' => 
+      0 => 'Spatie\\FlareClient\\FlareMiddleware\\RemoveRequestIp',
+      1 => 'Spatie\\FlareClient\\FlareMiddleware\\AddGitInformation',
+      2 => 'Spatie\\LaravelIgnition\\FlareMiddleware\\AddNotifierName',
+      3 => 'Spatie\\LaravelIgnition\\FlareMiddleware\\AddEnvironmentInformation',
+      4 => 'Spatie\\LaravelIgnition\\FlareMiddleware\\AddExceptionInformation',
+      5 => 'Spatie\\LaravelIgnition\\FlareMiddleware\\AddDumps',
+      'Spatie\\LaravelIgnition\\FlareMiddleware\\AddLogs' => 
       array (
-        0 => 'password',
+        'maximum_number_of_collected_logs' => 200,
+      ),
+      'Spatie\\LaravelIgnition\\FlareMiddleware\\AddQueries' => 
+      array (
+        'maximum_number_of_collected_queries' => 200,
+        'report_query_bindings' => true,
+      ),
+      'Spatie\\LaravelIgnition\\FlareMiddleware\\AddJobs' => 
+      array (
+        'max_chained_job_reporting_depth' => 5,
+      ),
+      'Spatie\\FlareClient\\FlareMiddleware\\CensorRequestBodyFields' => 
+      array (
+        'censor_fields' => 
+        array (
+          0 => 'password',
+          1 => 'password_confirmation',
+        ),
+      ),
+      'Spatie\\FlareClient\\FlareMiddleware\\CensorRequestHeaders' => 
+      array (
+        'headers' => 
+        array (
+          0 => 'API-KEY',
+        ),
       ),
     ),
     'send_logs_as_events' => true,
-    'censor_request_body_fields' => 
-    array (
-      0 => 'password',
-    ),
   ),
   'ignition' => 
   array (
     'editor' => 'phpstorm',
-    'theme' => 'light',
+    'theme' => 'auto',
     'enable_share_button' => true,
     'register_commands' => false,
+    'solution_providers' => 
+    array (
+      0 => 'Spatie\\Ignition\\Solutions\\SolutionProviders\\BadMethodCallSolutionProvider',
+      1 => 'Spatie\\Ignition\\Solutions\\SolutionProviders\\MergeConflictSolutionProvider',
+      2 => 'Spatie\\Ignition\\Solutions\\SolutionProviders\\UndefinedPropertySolutionProvider',
+      3 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\IncorrectValetDbCredentialsSolutionProvider',
+      4 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingAppKeySolutionProvider',
+      5 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\DefaultDbNameSolutionProvider',
+      6 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\TableNotFoundSolutionProvider',
+      7 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingImportSolutionProvider',
+      8 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\InvalidRouteActionSolutionProvider',
+      9 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\ViewNotFoundSolutionProvider',
+      10 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\RunningLaravelDuskInProductionProvider',
+      11 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingColumnSolutionProvider',
+      12 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\UnknownValidationSolutionProvider',
+      13 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingMixManifestSolutionProvider',
+      14 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingViteManifestSolutionProvider',
+      15 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingLivewireComponentSolutionProvider',
+      16 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\UndefinedViewVariableSolutionProvider',
+      17 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\GenericLaravelExceptionSolutionProvider',
+    ),
     'ignored_solution_providers' => 
     array (
-      0 => 'Facade\\Ignition\\SolutionProviders\\MissingPackageSolutionProvider',
     ),
     'enable_runnable_solutions' => NULL,
-    'remote_sites_path' => '',
+    'remote_sites_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration',
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
+    'settings_file_path' => '',
+    'recorders' => 
+    array (
+      0 => 'Spatie\\LaravelIgnition\\Recorders\\DumpRecorder\\DumpRecorder',
+      1 => 'Spatie\\LaravelIgnition\\Recorders\\JobRecorder\\JobRecorder',
+      2 => 'Spatie\\LaravelIgnition\\Recorders\\LogRecorder\\LogRecorder',
+      3 => 'Spatie\\LaravelIgnition\\Recorders\\QueryRecorder\\QueryRecorder',
+    ),
   ),
   'tinker' => 
   array (

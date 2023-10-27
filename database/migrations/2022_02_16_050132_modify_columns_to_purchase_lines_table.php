@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToPurchaseLinesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -37,4 +37,4 @@ class ModifyColumnsToPurchaseLinesTable extends Migration
         DB::statement('ALTER TABLE purchase_lines MODIFY COLUMN initial_purchase_price DECIMAL(20, 4) NULL');
         DB::statement('ALTER TABLE purchase_lines MODIFY COLUMN import_expense_amount DECIMAL(20, 4) NULL');
     }
-}
+};

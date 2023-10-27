@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionHasImportExpensesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -37,4 +37,4 @@ class CreateTransactionHasImportExpensesTable extends Migration
     {
         Schema::dropIfExists('transaction_has_import_expenses');
     }
-}
+};

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
 
-class AddOpeningStockPermission extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -28,4 +28,4 @@ class AddOpeningStockPermission extends Migration
     {
         //
     }
-}
+};

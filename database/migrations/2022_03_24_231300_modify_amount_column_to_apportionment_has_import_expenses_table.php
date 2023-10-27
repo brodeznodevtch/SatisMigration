@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyAmountColumnToApportionmentHasImportExpensesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class ModifyAmountColumnToApportionmentHasImportExpensesTable extends Migration
     {
         DB::statement('ALTER TABLE apportionment_has_import_expenses MODIFY COLUMN amount DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }
-}
+};

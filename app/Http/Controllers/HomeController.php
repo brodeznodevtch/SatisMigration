@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\CurrentFinancialYear;
+use App\Charts\Last30DaySales;
+use App\Charts\PurchasesLast30Days;
+use App\Charts\SellsFinancialYear;
+use App\Charts\StockCurrentFinancialYear;
+use App\Charts\StockLast30Days;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Currency;
@@ -14,15 +20,8 @@ use App\Utils\BusinessUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;
-use App\Charts\Last30DaySales;
-use App\Charts\CurrentFinancialYear;
-use App\Charts\PurchasesLast30Days;
-use App\Charts\SellsFinancialYear;
-use App\Charts\StockCurrentFinancialYear;
-use App\Charts\StockLast30Days;
 use DB;
 use Illuminate\Http\Request;
-use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class HomeController extends Controller
 {
@@ -143,11 +142,11 @@ class HomeController extends Controller
         // Chart sales last 30 days
         $sells_chart_1 = null;
         if (isset($dashboard_settings['sales_month']) && $dashboard_settings['sales_month'] == 1) {
-        $sells_chart_1 = new Last30DaySales;
+            $sells_chart_1 = new Last30DaySales;
             $sells_chart_1->labels($labels);
-            $sells_chart_1->dataset(__('home.total_sells', ['currency' => $currency->code]), "bar", $sell_values)
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+            $sells_chart_1->dataset(__('home.total_sells', ['currency' => $currency->code]), 'bar', $sell_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
         }
 
         // Chart purchases last 30 days
@@ -155,19 +154,19 @@ class HomeController extends Controller
         if (isset($dashboard_settings['purchases_month']) && $dashboard_settings['purchases_month'] == 1) {
             $purchases_chart_1 = new PurchasesLast30Days;
             $purchases_chart_1->labels($labels);
-            $purchases_chart_1->dataset(__('home.total_purchases', ['currency' => $currency->code]), "bar", $purchase_values)
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
-        }    
+            $purchases_chart_1->dataset(__('home.total_purchases', ['currency' => $currency->code]), 'bar', $purchase_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+        }
 
         // Chart for stock last 30 days
         $stocks_chart_1 = null;
         if (isset($dashboard_settings['stock_month']) && $dashboard_settings['stock_month'] == 1) {
-        $stocks_chart_1 = new StockLast30Days;
+            $stocks_chart_1 = new StockLast30Days;
             $stocks_chart_1->labels($labels);
-            $stocks_chart_1->dataset(__('home.total_stocks', ['currency' => $currency->code]), "bar", $stock_values)     
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+            $stocks_chart_1->dataset(__('home.total_stocks', ['currency' => $currency->code]), 'bar', $stock_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
         }
 
         $labels = [];
@@ -177,7 +176,6 @@ class HomeController extends Controller
             $sells_this_fy = $this->transactionUtil->getSellsCurrentFy($business_id, $fy['start'], $fy['end']);
             $sell_values = [];
         }
-        
 
         // Purchases current financial year
         if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
@@ -232,21 +230,21 @@ class HomeController extends Controller
         // Chart for sells this financial year
         $sells_chart_2 = null;
         if (isset($dashboard_settings['sales_year']) && $dashboard_settings['sales_year'] == 1) {
-        $sells_chart_2 = new SellsFinancialYear;
+            $sells_chart_2 = new SellsFinancialYear;
             $sells_chart_2->labels($labels);
-            $sells_chart_2->dataset(__('home.total_sells', ['currency' => $currency->code]), "bar", $sell_values)
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+            $sells_chart_2->dataset(__('home.total_sells', ['currency' => $currency->code]), 'bar', $sell_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
         }
 
         // Chart purchases current financial year
         $purchases_chart_2 = null;
         if (isset($dashboard_settings['purchases_year']) && $dashboard_settings['purchases_year'] == 1) {
-        $purchases_chart_2 = new CurrentFinancialYear;
+            $purchases_chart_2 = new CurrentFinancialYear;
             $purchases_chart_2->labels($labels);
-            $purchases_chart_2->dataset(__('home.total_purchases', ['currency' => $currency->code]), "bar", $purchase_values)
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+            $purchases_chart_2->dataset(__('home.total_purchases', ['currency' => $currency->code]), 'bar', $purchase_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
         }
 
         // Chart stock current financial year
@@ -254,9 +252,9 @@ class HomeController extends Controller
         if (isset($dashboard_settings['stock_year']) && $dashboard_settings['stock_year'] == 1) {
             $stocks_chart_2 = new StockCurrentFinancialYear;
             $stocks_chart_2->labels($labels);
-            $stocks_chart_2->dataset(__('home.total_stocks', ['currency' => $currency->code]), "bar", $stock_values)
-            ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
-            ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab','#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
+            $stocks_chart_2->dataset(__('home.total_stocks', ['currency' => $currency->code]), 'bar', $stock_values)
+                ->color(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b'])
+                ->backgroundcolor(['#f6db60', '#f5cac3', '#84a59d', '#f28482', '#bbdef0', '#00a6a6', '#efca08', '#2e86ab', '#F6F5AE', '#f5f749', '#f24236', '#416788', '#4f517D', '#de3c4b']);
         }
 
         $months = [

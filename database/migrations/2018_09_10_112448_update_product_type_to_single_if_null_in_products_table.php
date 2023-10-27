@@ -3,7 +3,7 @@
 use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateProductTypeToSingleIfNullInProductsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -24,4 +24,4 @@ class UpdateProductTypeToSingleIfNullInProductsTable extends Migration
     {
         //
     }
-}
+};

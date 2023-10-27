@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePhysicalInventoryLinesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -52,4 +52,4 @@ class CreatePhysicalInventoryLinesTable extends Migration
     {
         Schema::dropIfExists('physical_inventory_lines');
     }
-}
+};

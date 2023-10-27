@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddExemptAmountColumnToTransactionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,4 +29,4 @@ class AddExemptAmountColumnToTransactionsTable extends Migration
             $table->dropColumn('exempt_amount');
         });
     }
-}
+};

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTransactionsTableExchangeRate extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class UpdateTransactionsTableExchangeRate extends Migration
     {
         //
     }
-}
+};

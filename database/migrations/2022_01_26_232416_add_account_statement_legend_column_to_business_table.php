@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAccountStatementLegendColumnToBusinessTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,4 +29,4 @@ class AddAccountStatementLegendColumnToBusinessTable extends Migration
             $table->dropColumn('account_statement_legend');
         });
     }
-}
+};

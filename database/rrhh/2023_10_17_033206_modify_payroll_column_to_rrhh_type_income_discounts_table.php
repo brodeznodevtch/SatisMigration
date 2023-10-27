@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyPayrollColumnToRrhhTypeIncomeDiscountsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class ModifyPayrollColumnToRrhhTypeIncomeDiscountsTable extends Migration
     {
         //
     }
-}
+};

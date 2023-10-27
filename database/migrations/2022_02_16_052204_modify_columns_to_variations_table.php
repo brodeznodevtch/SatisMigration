@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToVariationsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -31,4 +31,4 @@ class ModifyColumnsToVariationsTable extends Migration
         DB::statement('ALTER TABLE variations MODIFY COLUMN default_sell_price DECIMAL(20, 4) NULL');
         DB::statement('ALTER TABLE variations MODIFY COLUMN sell_price_inc_tax DECIMAL(20, 4) NULL');
     }
-}
+};

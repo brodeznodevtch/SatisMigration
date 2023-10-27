@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DeleteCustomFieldsToProducts extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -32,4 +32,4 @@ class DeleteCustomFieldsToProducts extends Migration
             $table->dropColumn('product_custom_field4');
         });
     }
-}
+};
