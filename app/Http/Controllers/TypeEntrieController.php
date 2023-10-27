@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\AccountingEntrie;
 use App\Models\TypeEntrie;
 use Datatables;
@@ -15,7 +17,7 @@ class TypeEntrieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('entries.index');
     }
@@ -25,7 +27,7 @@ class TypeEntrieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('entries.index');
     }
@@ -35,7 +37,7 @@ class TypeEntrieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validateData = $request->validate(
             [
@@ -64,7 +66,7 @@ class TypeEntrieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(TypeEntrie $typeEntrie)
+    public function show(TypeEntrie $typeEntrie): JsonResponse
     {
         return response()->json($typeEntrie);
     }
@@ -75,7 +77,7 @@ class TypeEntrieController extends Controller
      * @param  \App\Models\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $typeEntrie = TypeEntrie::findOrFail($id);
 
@@ -88,7 +90,7 @@ class TypeEntrieController extends Controller
      * @param  \App\Models\TypeEntrie  $typeEntrie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $typeEntrie = TypeEntrie::findOrFail($id);
         $validateData = $request->validate(
@@ -149,7 +151,7 @@ class TypeEntrieController extends Controller
         }
     }
 
-    public function getTypes()
+    public function getTypes(): JsonResponse
     {
         $types = TypeEntrie::select('id', 'name')->get();
 

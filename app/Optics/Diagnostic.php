@@ -2,6 +2,7 @@
 
 namespace App\Optics;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,7 +34,7 @@ class Diagnostic extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function business_location()
+    public function business_location(): HasRelationships
     {
         return $this->belongsTo(\App\Models\BusinessLocation::class);
     }
@@ -46,7 +47,7 @@ class Diagnostic extends Model
      * @param  array  $receipt_printer_type_attribute
      * @return array
      */
-    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    public static function forDropdown(int $business_id, $prepend_none = true, $prepend_all = false): array
     {
         $query = Diagnostic::where('business_id', $business_id);
 

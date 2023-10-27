@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Optics\ExternalLab;
 use App\Utils\Util;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class ExternalLabController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('external_lab.create')) {
             abort(403, 'Unauthorized action.');
@@ -131,7 +132,7 @@ class ExternalLabController extends Controller
      * @param  \App\ExternalLab  $externalLab
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('external_lab.update')) {
             abort(403, 'Unauthorized action.');

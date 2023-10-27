@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasImportExpense;
 use App\Models\ApportionmentHasTransaction;
@@ -110,7 +112,7 @@ class ApportionmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('apportionment.create')) {
             abort(403, 'Unauthorized action.');
@@ -133,7 +135,7 @@ class ApportionmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('apportionment.create')) {
             abort(403, 'Unauthorized action.');
@@ -197,7 +199,7 @@ class ApportionmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('apportionment.view')) {
             abort(403, 'Unauthorized action.');
@@ -329,7 +331,7 @@ class ApportionmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('apportionments.update')) {
             abort(403, 'Unauthorized action.');
@@ -424,7 +426,7 @@ class ApportionmentController extends Controller
      * @param  \App\Models\Apportionment  $apportionment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('apportionments.update')) {
             abort(403, 'Unauthorized action.');
@@ -590,7 +592,7 @@ class ApportionmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function addProductRow()
+    public function addProductRow(): View
     {
         if (request()->ajax()) {
             $id = request()->input('id');
@@ -638,7 +640,7 @@ class ApportionmentController extends Controller
      * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
-    public function save($apportionment, Request $request)
+    public function save(Apportionment $apportionment, Request $request)
     {
         // Save import expenses
         $expenses = $request->input('import_expenses');
@@ -710,7 +712,7 @@ class ApportionmentController extends Controller
      * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
-    public function updateApportionment($apportionment, Request $request)
+    public function updateApportionment(Apportionment $apportionment, Request $request)
     {
         // Save import expenses
         $expenses = $request->input('import_expenses');
@@ -820,7 +822,7 @@ class ApportionmentController extends Controller
      * @param  int  $apportionment_id
      * @return void
      */
-    public function calculateAvgCost($apportionment_id)
+    public function calculateAvgCost(int $apportionment_id)
     {
         $business_id = request()->session()->get('user.business_id');
 

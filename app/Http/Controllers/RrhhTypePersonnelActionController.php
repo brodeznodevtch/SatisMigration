@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\RrhhTypePersonnelAction;
 use DataTables;
 use DB;
@@ -67,7 +68,7 @@ class RrhhTypePersonnelActionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
@@ -152,7 +153,7 @@ class RrhhTypePersonnelActionController extends Controller
      * @param  \App\Models\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');

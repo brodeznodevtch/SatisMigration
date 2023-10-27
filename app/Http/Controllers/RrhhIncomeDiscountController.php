@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\Employees;
 use App\Models\PaymentPeriod;
@@ -37,7 +38,7 @@ class RrhhIncomeDiscountController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
@@ -59,7 +60,7 @@ class RrhhIncomeDiscountController extends Controller
         //
     }
 
-    public function createIncomeDiscount($id)
+    public function createIncomeDiscount($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.create')) {
             abort(403, 'Unauthorized action.');
@@ -161,7 +162,7 @@ class RrhhIncomeDiscountController extends Controller
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
@@ -181,7 +182,7 @@ class RrhhIncomeDiscountController extends Controller
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.edit')) {
             abort(403, 'Unauthorized action.');

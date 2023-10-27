@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Exports\OrderTransactionExport;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -157,7 +159,7 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('order.create')) {
             abort(403, 'Unauthorized action.');
@@ -220,7 +222,7 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('order.create')) {
             abort(403, 'Unauthorized action.');
@@ -359,7 +361,7 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -414,7 +416,7 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -533,7 +535,7 @@ class OrderController extends Controller
      * @param  \App\Models\Quote  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -661,7 +663,7 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('order.delete')) {
             abort(403, 'Unauthorized action');
@@ -706,7 +708,7 @@ class OrderController extends Controller
     /**
      * Get all orders for orders planner
      */
-    public function orderPlanner()
+    public function orderPlanner(): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -769,7 +771,7 @@ class OrderController extends Controller
      * @param  string  $q
      * @return JSON
      */
-    public function getOrders()
+    public function getOrders(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -903,7 +905,7 @@ class OrderController extends Controller
      *
      * @param  int  $quote_id
      */
-    public function getQuoteLines()
+    public function getQuoteLines(): View
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', null);
@@ -1015,7 +1017,7 @@ class OrderController extends Controller
      *
      * @param  int  $id
      */
-    public function changeOrderStatus($id, $employee_id = null)
+    public function changeOrderStatus(int $id, $employee_id = null)
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -1070,7 +1072,7 @@ class OrderController extends Controller
      *
      * @return Json $output
      */
-    public function refreshOrdersList()
+    public function refreshOrdersList(): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -1211,7 +1213,7 @@ class OrderController extends Controller
      * @param  int  $variation_id
      * @return json
      */
-    public function addSpare($variation_id)
+    public function addSpare(int $variation_id): json
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', '');
@@ -1301,7 +1303,7 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getSpareLines()
+    public function getSpareLines(): View
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', null);

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use App\Mail\NotifyUserCreated;
 use App\Models\Business;
 use App\Models\System;
@@ -33,7 +36,7 @@ class ManageUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         if (! auth()->user()->can('user.view') && ! auth()->user()->can('user.create')) {
@@ -102,7 +105,7 @@ class ManageUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): RedirectResponse
     {
 
         return redirect('/home');
@@ -216,7 +219,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         if (! auth()->user()->can('user.view')) {
             abort(403, 'Unauthorized action.');
@@ -240,7 +243,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): JsonResponse
     {
 
         if (! auth()->user()->can('user.update')) {
@@ -264,7 +267,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         if (! auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');
@@ -331,7 +334,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         if (! auth()->user()->can('user.delete')) {
             abort(403, 'Unauthorized action.');
@@ -356,7 +359,7 @@ class ManageUserController extends Controller
         }
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): JsonResponse
     {
         if (! auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');

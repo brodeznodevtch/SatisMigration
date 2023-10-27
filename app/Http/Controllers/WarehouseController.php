@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
 use App\Models\Module;
@@ -76,7 +78,7 @@ class WarehouseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('warehouse.create')) {
             abort(403, 'Unauthorized action.');
@@ -155,7 +157,7 @@ class WarehouseController extends Controller
      * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('warehouse.update')) {
             abort(403, 'Unauthorized action.');
@@ -176,7 +178,7 @@ class WarehouseController extends Controller
         }
     }
 
-    public function getWarehouseByLocation($id)
+    public function getWarehouseByLocation($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $warehouses = Warehouse::where('business_id', $business_id)
@@ -291,7 +293,7 @@ class WarehouseController extends Controller
      * @param  int  $warehouse_id
      * @return int
      */
-    public function getLocation($warehouse_id)
+    public function getLocation(int $warehouse_id)
     {
         if (empty($warehouse_id)) {
             return null;

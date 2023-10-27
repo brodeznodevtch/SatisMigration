@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Customer;
 use App\Models\Transaction;
 use App\Utils\TransactionUtil;
@@ -100,7 +101,7 @@ class RetentionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('retentions.create')) {
             abort(403, 'Unauthorized action.');
@@ -174,7 +175,7 @@ class RetentionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -185,7 +186,7 @@ class RetentionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('retentions.update')) {
             abort(403, 'Unauthorized action.');
@@ -205,7 +206,7 @@ class RetentionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('retentions.update')) {
             abort(403, 'Unauthorized action.');
@@ -261,7 +262,7 @@ class RetentionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('retentions.delete')) {
             abort(403, 'Unauthorized action.');

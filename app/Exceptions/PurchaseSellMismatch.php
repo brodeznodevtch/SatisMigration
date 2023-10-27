@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Exception;
 
 class PurchaseSellMismatch extends Exception
@@ -13,7 +15,7 @@ class PurchaseSellMismatch extends Exception
      * @param  array  $guards
      * @return void
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         parent::__construct($message);
     }
@@ -24,7 +26,7 @@ class PurchaseSellMismatch extends Exception
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function render($request)
+    public function render(Request $request): Response
     {
         $output = ['success' => 0,
             'msg' => $this->getMessage(),

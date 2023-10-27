@@ -31,7 +31,7 @@ class CollectionReport implements WithEvents, WithTitle
      * @param App\Utils\TransactionUtil
      * @return void
      */
-    public function __construct($collection_transactions, $collections, $business_name, $start_date, $end_date, $transactionUtil)
+    public function __construct($collection_transactions, $collections, string $business_name, string $start_date, string $end_date, $transactionUtil)
     {
         $this->collection_transactions = $collection_transactions;
         $this->collections = $collections;
@@ -248,7 +248,7 @@ class CollectionReport implements WithEvents, WithTitle
      * @param  string  $row
      * @return void
      */
-    private function setCommonValues($event, $record, $row)
+    private function setCommonValues(object $event, object $record, string $row): void
     {
         $event->sheet->setCellValue('A'.$row, $this->transactionUtil->format_date($record->transaction_date));
         $event->sheet->setCellValue('B'.$row, $record->correlative);

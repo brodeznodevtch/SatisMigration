@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\CreditHasFamilyMember;
 use App\Models\CreditHasReference;
@@ -17,7 +18,7 @@ class CreditRequestController extends Controller
      *
      @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         $business = Business::where('id', 3)->first();

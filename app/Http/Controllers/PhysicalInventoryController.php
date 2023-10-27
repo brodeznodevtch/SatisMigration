@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Kardex;
@@ -142,7 +144,7 @@ class PhysicalInventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('physical_inventory.create')) {
             abort(403, 'Unauthorized action.');
@@ -337,7 +339,7 @@ class PhysicalInventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         if (! auth()->user()->can('physical_inventory.view')) {
             abort(403, 'Unauthorized action.');
@@ -371,7 +373,7 @@ class PhysicalInventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('physical_inventory.update')) {
             abort(403, 'Unauthorized action.');
@@ -412,7 +414,7 @@ class PhysicalInventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -537,7 +539,7 @@ class PhysicalInventoryController extends Controller
      * @param  string  $status
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus($id, $status)
+    public function changeStatus(int $id, string $status): RedirectResponse
     {
         // Check status
         if ($status == 'review') {
@@ -596,7 +598,7 @@ class PhysicalInventoryController extends Controller
      * @param  string  $status
      * @return \Illuminate\Http\Response
      */
-    public function finalize($id)
+    public function finalize(int $id): RedirectResponse
     {
         if (! auth()->user()->can('physical_inventory.finalize')) {
             abort(403, 'Unauthorized action.');
@@ -769,7 +771,7 @@ class PhysicalInventoryController extends Controller
      * @param  int  $is_editable
      * @return \Illuminate\Http\Response
      */
-    public function getData($id, $is_editable)
+    public function getData(int $id, int $is_editable)
     {
         $pi = PhysicalInventory::find($id);
 
@@ -893,7 +895,7 @@ class PhysicalInventoryController extends Controller
      *
      * @return json
      */
-    public function getProducts()
+    public function getProducts(): json
     {
         if (request()->ajax()) {
             // Params
@@ -954,7 +956,7 @@ class PhysicalInventoryController extends Controller
      * @param  int  $id
      * @return array
      */
-    public function mapping($id)
+    public function mapping(int $id)
     {
         try {
             DB::beginTransaction();
@@ -1038,7 +1040,7 @@ class PhysicalInventoryController extends Controller
      *
      * @return json
      */
-    public function updateExecutionDate()
+    public function updateExecutionDate(): json
     {
         if (request()->ajax()) {
             $physical_inventory_id = request()->input('physical_inventory_id');
@@ -1072,7 +1074,7 @@ class PhysicalInventoryController extends Controller
      *
      * @return json
      */
-    public function updateCode()
+    public function updateCode(): json
     {
         if (request()->ajax()) {
             $physical_inventory_id = request()->input('physical_inventory_id');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
@@ -50,7 +52,7 @@ class RrhhContractController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_contract.view')) {
             abort(403, 'Unauthorized action.');
@@ -85,7 +87,7 @@ class RrhhContractController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create($id): View
     {
         if (! auth()->user()->can('rrhh_contract.create')) {
             abort(403, 'Unauthorized action.');
@@ -440,7 +442,7 @@ class RrhhContractController extends Controller
         }
     }
 
-    public function createDocument($id, $employee_id)
+    public function createDocument($id, $employee_id): View
     {
         if (! auth()->user()->can('rrhh_contract.uploads')) {
             abort(403, 'Unauthorized action.');
@@ -508,7 +510,7 @@ class RrhhContractController extends Controller
      * @param  \App\Models\RrhhContract  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $employee_id)
+    public function show($id, $employee_id): View
     {
         if (! auth()->user()->can('rrhh_contract.view')) {
             abort(403, 'Unauthorized action.');
@@ -526,7 +528,7 @@ class RrhhContractController extends Controller
         return view('rrhh.contract.show', compact('route', 'contract'));
     }
 
-    public function createMassive()
+    public function createMassive(): View
     {
         if (! auth()->user()->can('rrhh_contract.create')) {
             abort(403, 'Unauthorized action.');
@@ -539,7 +541,7 @@ class RrhhContractController extends Controller
         return view('rrhh.contract.createAll', compact('employees', 'types'));
     }
 
-    public function storeMassive(Request $request)
+    public function storeMassive(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_contract.create')) {
             abort(403, 'Unauthorized action.');

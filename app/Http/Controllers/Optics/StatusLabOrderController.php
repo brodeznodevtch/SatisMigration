@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Models\Module;
 use App\Models\Permission;
 use App\Optics\StatusLabOrder;
@@ -76,7 +77,7 @@ class StatusLabOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('status_lab_order.create')) {
             abort(403, 'Unauthorized action.');
@@ -251,7 +252,7 @@ class StatusLabOrderController extends Controller
      * @param  \App\StatusLabOrder  $statusLabOrder
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('status_lab_order.update')) {
             abort(403, 'Unauthorized action.');

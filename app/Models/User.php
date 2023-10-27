@@ -59,7 +59,7 @@ class User extends Authenticatable
      *
      * @return object
      */
-    public static function create_user($details)
+    public static function create_user($details): object
     {
         $user = User::create([
             'first_name' => $details['first_name'],
@@ -78,7 +78,7 @@ class User extends Authenticatable
      *
      * @return string or array
      */
-    public static function permitted_locations()
+    public static function permitted_locations(): string
     {
         if (auth()->user()->can('access_all_locations')) {
             return 'all';
@@ -103,7 +103,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public static function can_access_this_location($location_id)
+    public static function can_access_this_location($location_id): bool
     {
         $permitted_locations = User::permitted_locations();
 
@@ -122,7 +122,7 @@ class User extends Authenticatable
      * @param $include_commission_agents = false (boolean)
      * @return array users
      */
-    public static function forDropdown($business_id, $prepend_none = true, $include_commission_agents = false, $prepend_all = false)
+    public static function forDropdown($business_id, $prepend_none = true, $include_commission_agents = false, $prepend_all = false): array
     {
 
         $query = User::where('business_id', $business_id);
@@ -155,7 +155,7 @@ class User extends Authenticatable
      * @param $include_commission_agents = false (boolean)
      * @return array users
      */
-    public static function forDropdownAllBusiness($prepend_none = false, $include_commission_agents = false, $prepend_all = false)
+    public static function forDropdownAllBusiness($prepend_none = false, $include_commission_agents = false, $prepend_all = false): array
     {
         $query = User::all();
 
@@ -187,7 +187,7 @@ class User extends Authenticatable
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function saleCommissionAgentsDropdown($business_id, $prepend_none = true)
+    public static function saleCommissionAgentsDropdown($business_id, $prepend_none = true): array
     {
 
         $all_cmmsn_agnts = User::where('business_id', $business_id)
@@ -211,7 +211,7 @@ class User extends Authenticatable
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function saleCommissionAgentsDropdownAllBusiness($prepend_none = false)
+    public static function saleCommissionAgentsDropdownAllBusiness($prepend_none = false): array
     {
         $all_cmmsn_agnts = User::where('is_cmmsn_agnt', 1)
             ->select('id', DB::raw("CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name, '')) as full_name"));
@@ -233,7 +233,7 @@ class User extends Authenticatable
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function allUsersDropdown($business_id, $prepend_none = true)
+    public static function allUsersDropdown($business_id, $prepend_none = true): array
     {
 
         $all_users = User::where('business_id', $business_id)
@@ -254,7 +254,7 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getUserFullNameAttribute()
+    public function getUserFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }
@@ -269,7 +269,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public static function isSelectedContacts($user_id)
+    public static function isSelectedContacts($user_id): bool
     {
         $user = User::findOrFail($user_id);
 

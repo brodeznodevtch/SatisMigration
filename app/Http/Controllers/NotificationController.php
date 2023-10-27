@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\NotificationTemplate;
 use App\Models\Transaction;
 use App\Notifications\CustomerNotification;
@@ -30,7 +31,7 @@ class NotificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTemplate($transaction_id, $template_for)
+    public function getTemplate($transaction_id, $template_for): View
     {
         if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');

@@ -25,7 +25,7 @@ class CustomerGroup extends Model
      * @param $prepend_all = false (boolean)
      * @return array
      */
-    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false): array
     {
         $all_cg = CustomerGroup::where('business_id', $business_id);
         $all_cg = $all_cg->pluck('name', 'id');

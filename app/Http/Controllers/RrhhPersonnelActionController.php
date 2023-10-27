@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
@@ -46,7 +47,7 @@ class RrhhPersonnelActionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.authorize')) {
             abort(403, 'Unauthorized action.');
@@ -81,7 +82,7 @@ class RrhhPersonnelActionController extends Controller
             })->toJson();
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.view')) {
             abort(403, 'Unauthorized action.');
@@ -110,7 +111,7 @@ class RrhhPersonnelActionController extends Controller
         //
     }
 
-    public function createPersonnelAction($id)
+    public function createPersonnelAction($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.create')) {
             abort(403, 'Unauthorized action.');
@@ -402,7 +403,7 @@ class RrhhPersonnelActionController extends Controller
     }
 
     //List uploads files of personnel actions
-    public function files($id)
+    public function files($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.view')) {
             abort(403, 'Unauthorized action.');
@@ -415,7 +416,7 @@ class RrhhPersonnelActionController extends Controller
     }
 
     //View uploads files of personnel actions
-    public function viewFile($id)
+    public function viewFile($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.view')) {
             abort(403, 'Unauthorized action.');
@@ -430,7 +431,7 @@ class RrhhPersonnelActionController extends Controller
         return view('rrhh.personnel_actions.view_file', compact('route', 'ext'));
     }
 
-    public function createMasive()
+    public function createMasive(): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.create')) {
             abort(403, 'Unauthorized action.');
@@ -762,7 +763,7 @@ class RrhhPersonnelActionController extends Controller
     {
     }
 
-    public function viewPersonnelAction(RrhhPersonnelAction $rrhhPersonnelAction, $id)
+    public function viewPersonnelAction(RrhhPersonnelAction $rrhhPersonnelAction, $id): View
     {
         $user_id = auth()->user()->id;
         $personnelAction = DB::table('rrhh_personnel_actions as personnel_action')
@@ -805,7 +806,7 @@ class RrhhPersonnelActionController extends Controller
      * @param  \App\Models\RrhhPersonnelAction  $rrhhPersonnelAction
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.edit')) {
             abort(403, 'Unauthorized action.');
@@ -1106,7 +1107,7 @@ class RrhhPersonnelActionController extends Controller
         return $output;
     }
 
-    public function createDocument($id)
+    public function createDocument($id): View
     {
         if (! auth()->user()->can('rrhh_personnel_action.create')) {
             abort(403, 'Unauthorized action.');

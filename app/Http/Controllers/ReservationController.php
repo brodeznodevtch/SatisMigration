@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Bank;
 use App\Models\Brands;
 use App\Models\BusinessLocation;
@@ -514,7 +515,7 @@ class ReservationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('reservation.view')) {
             abort(403, 'Unauthorized action.');
@@ -572,7 +573,7 @@ class ReservationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('reservation.update')) {
             abort(403, 'Unauthorized action.');
@@ -837,7 +838,7 @@ class ReservationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('reservation.update')) {
             abort(403, 'Unauthorized action.');
@@ -996,7 +997,7 @@ class ReservationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('reservation.delete')) {
             abort(403, 'Unauthorized action.');
@@ -1064,7 +1065,7 @@ class ReservationController extends Controller
      * @param  string  $q
      * @return JSON
      */
-    public function getReservations()
+    public function getReservations(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');

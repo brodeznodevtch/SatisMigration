@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\AccountBusinessLocation;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
@@ -167,7 +168,7 @@ class BusinessLocationController extends Controller
      * @param  \App\StoreFront  $storeFront
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('location.update')) {
             abort(403, 'Unauthorized action.');
@@ -241,7 +242,7 @@ class BusinessLocationController extends Controller
      *
      * @param  int  $location_id
      */
-    public function getAccountingAccountByLocation($location_id)
+    public function getAccountingAccountByLocation(int $location_id): View
     {
         $location =
             BusinessLocation::where('id', $location_id)

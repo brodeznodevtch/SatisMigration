@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Module;
 use App\Models\Permission;
 use DataTables;
@@ -15,7 +17,7 @@ class ModuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('module.view')) {
             abort(403, 'Unauthorized action.');
@@ -29,7 +31,7 @@ class ModuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('module.create')) {
             abort(403, 'Unauthorized action.');
@@ -70,7 +72,7 @@ class ModuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(Module $module): JsonResponse
     {
         if (! auth()->user()->can('module.view')) {
             abort(403, 'Unauthorized action.');
@@ -84,7 +86,7 @@ class ModuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Module $module)
+    public function edit(Module $module): JsonResponse
     {
         if (! auth()->user()->can('module.update')) {
             abort(403, 'Unauthorized action.');
@@ -168,7 +170,7 @@ class ModuleController extends Controller
         return DataTables::of($modules)->toJson();
     }
 
-    public function getModules()
+    public function getModules(): JsonResponse
     {
         $modules = Module::select('id', 'name')->get();
 

@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -25,7 +26,7 @@ class AssistanceEmployeeReportExport implements WithEvents, WithTitle
      * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($assistances, $assistanceSummary, $business, $transactionUtil)
+    public function __construct($assistances, array $assistanceSummary, Business $business, $transactionUtil)
     {
         $this->assistances = $assistances;
         $this->assistanceSummary = $assistanceSummary;

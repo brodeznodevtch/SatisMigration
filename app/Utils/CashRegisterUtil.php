@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use App\Quote;
 use App\Models\Cashier;
 use App\Models\CashRegister;
 use App\Models\CashRegisterTransaction;
@@ -18,7 +19,7 @@ class CashRegisterUtil extends Util
      *
      * @return int
      */
-    public function countOpenedRegister()
+    public function countOpenedRegister(): int
     {
         $user_id = auth()->user()->id;
 
@@ -46,7 +47,7 @@ class CashRegisterUtil extends Util
      * @param  array  $payments
      * @return bool
      */
-    public function addSellPayments($transaction, $payments)
+    public function addSellPayments(object $transaction, array $payments): bool
     {
         $user_id = auth()->user()->id;
         $register = CashRegister::where('cashier_id', $transaction->cashier_id)
@@ -77,7 +78,7 @@ class CashRegisterUtil extends Util
      * @param object/int $transaction
      * @return bool
      */
-    public function addCreditSellPayment($transaction, $total_paid, $final_amount)
+    public function addCreditSellPayment(object $transaction, $total_paid, $final_amount): bool
     {
         $amount = $final_amount - $total_paid;
 
@@ -97,7 +98,7 @@ class CashRegisterUtil extends Util
      * @param  array  $payments
      * @return bool
      */
-    public function updateSellPayments($status_before, $transaction, $payments)
+    public function updateSellPayments($status_before, object $transaction, array $payments): bool
     {
         $user_id = auth()->user()->id;
         $register = CashRegister::where('user_id', $user_id)
@@ -168,7 +169,7 @@ class CashRegisterUtil extends Util
      * @param object/int $transaction
      * @return bool
      */
-    public function refundSell($transaction)
+    public function refundSell(object $transaction): bool
     {
         /*$user_id = auth()->user()->id;
         $register =  CashRegister::where('user_id', $user_id)
@@ -227,7 +228,7 @@ class CashRegisterUtil extends Util
      * @param  string  $close_date
      * @return object
      */
-    public function getRegisterDetails($cashier_id, $start_date, $end_date, $close_date)
+    public function getRegisterDetails(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
         $query = CashRegisterTransaction::join('transactions as t', 'cash_register_transactions.transaction_id', 't.id')
             ->join('cash_registers as cr', 'cr.id', 'cash_register_transactions.cash_register_id')
@@ -281,7 +282,7 @@ class CashRegisterUtil extends Util
      * @param $close_time datetime
      * @return array
      */
-    public function getRegisterTransactionDetails($user_id, $open_time, $close_time)
+    public function getRegisterTransactionDetails($user_id, $open_time, $close_time): array
     {
         $product_details = Transaction::whereBetween('transaction_date', [$open_time, $close_time])
             ->where('transactions.type', 'sell')
@@ -320,7 +321,7 @@ class CashRegisterUtil extends Util
      * @param  string  $end_date
      * @return object
      */
-    public function getRegisterDetailsWithPayments($cashier_id, $start_date, $end_date)
+    public function getRegisterDetailsWithPayments(int $cashier_id, string $start_date, string $end_date): object
     {
         $payment_details = TransactionPayment::join('transactions as t', 't.id', 'transaction_payments.transaction_id')
             // ->join('user as u', 'u.id', 'cash_registers.user_id')
@@ -358,7 +359,7 @@ class CashRegisterUtil extends Util
      * @param  string  $end_date
      * @return float
      */
-    public function getInitialAmount($cashier_id, $start_date, $end_date)
+    public function getInitialAmount(int $cashier_id, string $start_date, string $end_date): float
     {
         $initial = CashRegister::join('cash_register_transactions as ct', 'ct.cash_register_id', 'cash_registers.id')
             ->whereBetween('cash_registers.created_at', [$start_date, $end_date])
@@ -377,7 +378,7 @@ class CashRegisterUtil extends Util
      * @param  string  $end_date
      * @return float
      */
-    public function getInflowOutflow($cashier_id, $start_date, $end_date)
+    public function getInflowOutflow(int $cashier_id, string $start_date, string $end_date): float
     {
         $inflow_outflow = InflowOutflow::whereBetween('created_at', [$start_date, $end_date])
             ->where('cashier_id', $cashier_id)
@@ -399,7 +400,7 @@ class CashRegisterUtil extends Util
      * @param  string  $close_date
      * @return object
      */
-    public function getReservationPayments($cashier_id, $start_date, $end_date, $close_date)
+    public function getReservationPayments(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
         $query = CashRegisterTransaction::join('quotes as q', 'cash_register_transactions.quote_id', 'q.id')
             ->join('cash_registers as cr', 'cr.id', 'cash_register_transactions.cash_register_id')
@@ -449,7 +450,7 @@ class CashRegisterUtil extends Util
      * @param  string  $close_date
      * @return object
      */
-    public function getReservationPays($cashier_id, $start_date, $end_date, $close_date)
+    public function getReservationPays(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
         $payment_details = TransactionPayment::join('quotes as q', 'q.id', 'transaction_payments.quote_id')
             ->whereBetween('transaction_payments.paid_on', [$start_date, $end_date])
@@ -478,7 +479,7 @@ class CashRegisterUtil extends Util
      * @param  string  $close_date
      * @return object
      */
-    public function getReservationsToSales($cashier_id, $start_date, $end_date, $close_date)
+    public function getReservationsToSales(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
         $query = CashRegisterTransaction::join('quotes as q', 'cash_register_transactions.quote_id', 'q.id')
             ->join('cash_registers as cr', 'cr.id', 'cash_register_transactions.cash_register_id')
@@ -527,7 +528,7 @@ class CashRegisterUtil extends Util
      * @param  array  $payments
      * @return bool
      */
-    public function addSellPaymentsToQuotes($quote, $payments)
+    public function addSellPaymentsToQuotes(Quote $quote, array $payments): bool
     {
         $register = CashRegister::where('cashier_id', $quote->cashier_id)
             ->where('status', 'open')
@@ -558,7 +559,7 @@ class CashRegisterUtil extends Util
      * @param  \App\Quote  $quote
      * @return bool
      */
-    public function addCreditSellPaymentToQuotes($quote, $total_paid, $final_amount)
+    public function addCreditSellPaymentToQuotes(Quote $quote, $total_paid, $final_amount): bool
     {
         $amount = $final_amount - $total_paid;
 
@@ -577,7 +578,7 @@ class CashRegisterUtil extends Util
      * @param object/int $transaction
      * @return bool
      */
-    public function refundQuote($quote)
+    public function refundQuote($quote): bool
     {
         $total_payment = CashRegisterTransaction::where('quote_id', $quote->id)
             ->select(

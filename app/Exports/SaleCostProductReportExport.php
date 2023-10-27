@@ -22,7 +22,7 @@ class SaleCostProductReportExport implements WithEvents, WithTitle
      * @param  string  $date;
      * @return void
      */
-    public function __construct($transactions, $business_name, $report_name)
+    public function __construct(collect $transactions, string $business_name, $report_name)
     {
         $this->transactions = $transactions;
         $this->business_name = $business_name;

@@ -27,7 +27,7 @@ class ConnectReport implements WithEvents, WithTitle
      *
      * @author
      */
-    public function __construct($transactions, $business_name, $start_date, $end_date)
+    public function __construct(collect $transactions, string $business_name, string $start_date, string $end_date)
     {
         $this->transactions = $transactions;
         $this->business_name = $business_name;

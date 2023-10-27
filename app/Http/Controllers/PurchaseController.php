@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Exports\DebtsToPayReportExport;
 use App\Exports\SuggestedPurchaseReportExport;
 use App\Models\AccountBusinessLocation;
@@ -766,7 +767,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('purchase.view')) {
             abort(403, 'Unauthorized action.');
@@ -829,7 +830,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -1037,7 +1038,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -1386,7 +1387,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('purchase.delete')) {
             abort(403, 'Unauthorized action.');
@@ -1691,7 +1692,7 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPurchaseEntryRow()
+    public function getPurchaseEntryRow(): View
     {
         if (request()->ajax()) {
             $product_id = request()->input('product_id');
@@ -1923,7 +1924,7 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function getImportPurchases()
+    public function getImportPurchases(): View
     {
         if (! auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
@@ -2527,7 +2528,7 @@ class PurchaseController extends Controller
      *
      * @param  int  $transaction_id
      */
-    public function createAccountinEntry($transaction_id)
+    public function createAccountinEntry(int $transaction_id)
     {
         $transaction =
             Transaction::join('business_locations as bl', 'transactions.location_id', 'bl.id')
@@ -2576,7 +2577,7 @@ class PurchaseController extends Controller
      *
      * @param  int  $transaction_id
      */
-    private function getPurchaseAccountingEntry($transaction_id)
+    private function getPurchaseAccountingEntry(int $transaction_id)
     {
         $transaction = Transaction::find($transaction_id);
         $business = Business::find($transaction->business_id);
@@ -2719,7 +2720,7 @@ class PurchaseController extends Controller
      * @param \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function suggestedPurchase(Request $request)
+    public function suggestedPurchase(Request $request): View
     {
         if (! auth()->user()->can('suggested_purchase.view')) {
             abort(403, 'Unauthorized action.');
@@ -2740,7 +2741,7 @@ class PurchaseController extends Controller
      * @param \Illuminate\Http\Request
      * @return Excel
      */
-    public function suggestedPurchaseReport(Request $request)
+    public function suggestedPurchaseReport(Request $request): Excel
     {
         if (! auth()->user()->can('suggested_purchase.view')) {
             abort(403, 'Unauthorized action.');
@@ -2831,7 +2832,7 @@ class PurchaseController extends Controller
      *
      * @return json
      */
-    public function getPurchases()
+    public function getPurchases(): json
     {
         if (request()->ajax()) {
             $term = request()->term;
@@ -2869,7 +2870,7 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPurchaseRow()
+    public function getPurchaseRow(): View
     {
         if (request()->ajax()) {
             $id = request()->input('id');
@@ -2942,7 +2943,7 @@ class PurchaseController extends Controller
         return $output;
     }
 
-    public function showDebsToPay()
+    public function showDebsToPay(): View
     {
         return view('debs_to_pay.index');
     }

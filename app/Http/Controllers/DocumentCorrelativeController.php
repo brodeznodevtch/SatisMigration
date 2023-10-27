@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\DocumentCorrelative;
 use App\Models\DocumentType;
@@ -35,7 +36,7 @@ class DocumentCorrelativeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('correlatives.view') && ! auth()->user()->can('correlatives.create')) {
             abort(403, 'Unauthorized action.');
@@ -175,7 +176,7 @@ class DocumentCorrelativeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('correlatives.create')) {
             abort(403, 'Unauthorized action.');
@@ -226,7 +227,7 @@ class DocumentCorrelativeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -237,7 +238,7 @@ class DocumentCorrelativeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('correlatives.update')) {
             abort(403, 'Unauthorized action.');
@@ -260,7 +261,7 @@ class DocumentCorrelativeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('correlatives.update')) {
             abort(403, 'Unauthorized action.');
@@ -297,7 +298,7 @@ class DocumentCorrelativeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('correlatives.delete')) {
             abort(403, 'Unauthorized action.');

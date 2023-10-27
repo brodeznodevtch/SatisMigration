@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessType;
 use DataTables;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class BusinessTypeController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('business_type.view')) {
             abort(403, 'Unauthorized action.');
@@ -50,7 +51,7 @@ class BusinessTypeController extends Controller
             ->toJson();
     }
 
-    public function create()
+    public function create(): View
     {
         return view('business_type.create');
     }
@@ -99,7 +100,7 @@ class BusinessTypeController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         $business_type = BusinessType::findOrFail($id);
 

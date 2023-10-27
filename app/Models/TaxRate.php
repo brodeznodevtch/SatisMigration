@@ -28,7 +28,7 @@ class TaxRate extends Model
         $business_id,
         $prepend_none = true,
         $include_attributes = false
-    ) {
+    ): array {
 
         //$all_taxes = TaxRates::where('business_id', $business_id);
         //$tax_rates = $all_taxes->pluck('name', 'id');
@@ -59,7 +59,7 @@ class TaxRate extends Model
      *
      * @return array
      */
-    public static function forBusiness($business_id)
+    public static function forBusiness($business_id): array
     {
         $tax_rates = TaxRate::where('business_id', $business_id)
             ->select(['id', 'name', 'percent'])
@@ -74,7 +74,7 @@ class TaxRate extends Model
      *
      * @return object
      */
-    public function tax_groups()
+    public function tax_groups(): object
     {
         return $this->belongsToMany(\App\Models\TaxGroup::class, 'tax_rate_tax_group', 'tax_rate_id', 'tax_group_id');
     }

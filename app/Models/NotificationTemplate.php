@@ -20,7 +20,7 @@ class NotificationTemplate extends Model
      * @param  string  $template_for
      * @return array $template
      */
-    public static function getTemplate($business_id, $template_for)
+    public static function getTemplate(int $business_id, string $template_for): array
     {
 
         $notif_template = NotificationTemplate::where('business_id', $business_id)

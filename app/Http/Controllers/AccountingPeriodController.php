@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingPeriod;
 use DataTables;
@@ -37,7 +38,7 @@ class AccountingPeriodController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -72,7 +73,7 @@ class AccountingPeriodController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(AccountingPeriod $accountingPeriod)
+    public function show(AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         return response()->json($accountingPeriod);
@@ -83,7 +84,7 @@ class AccountingPeriodController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(AccountingPeriod $accountingPeriod)
+    public function edit(AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         return response()->json($accountingPeriod);
@@ -94,7 +95,7 @@ class AccountingPeriodController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccountingPeriod $accountingPeriod)
+    public function update(Request $request, AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         $validateData = $request->validate(

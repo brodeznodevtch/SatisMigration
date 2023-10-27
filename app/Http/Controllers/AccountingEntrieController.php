@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingEntriesDetail;
 use App\Models\AccountingPeriod;
@@ -433,7 +434,7 @@ class AccountingEntrieController extends Controller
     }
 
     //Additional Functions
-    public function search($id)
+    public function search($id): JsonResponse
     {
 
         $cuenta = Catalogue::where('id', $id)
@@ -496,7 +497,7 @@ class AccountingEntrieController extends Controller
         return DataTables::of($entries)->toJson();
     }
 
-    public function getDetails($id)
+    public function getDetails($id): JsonResponse
     {
 
         $detalles = DB::table('accounting_entries_details as detalle')
@@ -568,7 +569,7 @@ class AccountingEntrieController extends Controller
 
     }
 
-    public function getPeriods()
+    public function getPeriods(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -716,7 +717,7 @@ class AccountingEntrieController extends Controller
 
     }
 
-    public function getEntrieDetailsDebe($id)
+    public function getEntrieDetailsDebe($id): JsonResponse
     {
 
         $detalles = DB::table('accounting_entries_details as detalle')
@@ -730,7 +731,7 @@ class AccountingEntrieController extends Controller
         return response()->json($detalles);
     }
 
-    public function getEntrieDetailsHaber($id)
+    public function getEntrieDetailsHaber($id): JsonResponse
     {
 
         $detalles = DB::table('accounting_entries_details as detalle')
@@ -744,7 +745,7 @@ class AccountingEntrieController extends Controller
         return response()->json($detalles);
     }
 
-    public function getEntrieDetails($id)
+    public function getEntrieDetails($id): JsonResponse
     {
 
         $detalles = DB::table('accounting_entries_details as detalle')
@@ -882,7 +883,7 @@ class AccountingEntrieController extends Controller
         return $output;
     }
 
-    public function getNumberEntrie($date)
+    public function getNumberEntrie($date): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -940,7 +941,7 @@ class AccountingEntrieController extends Controller
         ]);
     }
 
-    public function getCorrelativeEntrie($date)
+    public function getCorrelativeEntrie($date): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1047,7 +1048,7 @@ class AccountingEntrieController extends Controller
         return $output;
     }
 
-    public function getResultCreditorAccounts($date)
+    public function getResultCreditorAccounts($date): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1071,7 +1072,7 @@ class AccountingEntrieController extends Controller
 
     }
 
-    public function getResultDebtorAccounts($date)
+    public function getResultDebtorAccounts($date): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1094,7 +1095,7 @@ class AccountingEntrieController extends Controller
         return response()->json($accounts_debit);
     }
 
-    public function getProfitAndLossAccount()
+    public function getProfitAndLossAccount(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1263,7 +1264,7 @@ class AccountingEntrieController extends Controller
         return $output;
     }
 
-    public function getApertureDebitAccounts($date)
+    public function getApertureDebitAccounts($date): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
@@ -1290,7 +1291,7 @@ class AccountingEntrieController extends Controller
         return response()->json($accounts_debit);
     }
 
-    public function getApertureCreditAccounts($date)
+    public function getApertureCreditAccounts($date): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Permission;
 use DataTables;
 use DB;
@@ -14,7 +16,7 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -28,7 +30,7 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -70,7 +72,7 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Permission $permission)
+    public function show(Permission $permission): JsonResponse
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -85,7 +87,7 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Permission $permission)
+    public function edit(Permission $permission): JsonResponse
     {
         if (! auth()->user()->can('permission.update')) {
             abort(403, 'Unauthorized action.');

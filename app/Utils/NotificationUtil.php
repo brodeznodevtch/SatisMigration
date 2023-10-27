@@ -19,7 +19,7 @@ class NotificationUtil extends Util
      * @param  int  $transaction_id
      * @return array
      */
-    public function replaceTags($business_id, $data, $transaction)
+    public function replaceTags($business_id, $data, $transaction): array
     {
         if (! is_object($transaction)) {
             $transaction = Transaction::where('business_id', $business_id)
@@ -98,7 +98,7 @@ class NotificationUtil extends Util
      * @param  obj  $contact
      * @return void
      */
-    public function autoSendNotification($business_id, $notification_type, $transaction, $contact)
+    public function autoSendNotification(int $business_id, string $notification_type, obj $transaction, obj $contact): void
     {
         $notification_template = NotificationTemplate::where('business_id', $business_id)
             ->where('template_for', $notification_type)
@@ -151,7 +151,7 @@ class NotificationUtil extends Util
      * @param  int  $booking_id
      * @return array
      */
-    public function replaceBookingTags($business_id, $data, $booking_id)
+    public function replaceBookingTags($business_id, $data, int $booking_id): array
     {
 
         $business = Business::findOrFail($business_id);

@@ -114,7 +114,7 @@ class PayrollReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getAnnualSummaryData($params)
+    public function getAnnualSummaryData(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');

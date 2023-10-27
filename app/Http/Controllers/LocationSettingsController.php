@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\InvoiceLayout;
 use App\Models\InvoiceScheme;
@@ -31,7 +32,7 @@ class LocationSettingsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($location_id)
+    public function index($location_id): View
     {
         //Check for locations access permission
         if (! auth()->user()->can('business_settings.access') ||

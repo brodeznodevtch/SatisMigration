@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Barcode;
 use Datatables;
 use Illuminate\Http\Request;
@@ -59,7 +61,7 @@ class BarcodeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -73,7 +75,7 @@ class BarcodeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -132,7 +134,7 @@ class BarcodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -151,7 +153,7 @@ class BarcodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         if (! auth()->user()->can('barcode_settings.update')) {
             abort(403, 'Unauthorized action.');
@@ -194,7 +196,7 @@ class BarcodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -231,7 +233,7 @@ class BarcodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function setDefault($id)
+    public function setDefault(int $id)
     {
         if (! auth()->user()->can('barcode_settings.access')) {
             abort(403, 'Unauthorized action.');

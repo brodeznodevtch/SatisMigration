@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\CustomerGroup;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -50,7 +51,7 @@ class CustomerGroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('customer_group.create')) {
             abort(403, 'Unauthorized action.');
@@ -97,7 +98,7 @@ class CustomerGroupController extends Controller
      * @param  \App\Models\CustomerGroup  $customerGroup
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('customer_group.update')) {
             abort(403, 'Unauthorized action.');
@@ -118,7 +119,7 @@ class CustomerGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('customer_group.update')) {
             abort(403, 'Unauthorized action.');
@@ -155,7 +156,7 @@ class CustomerGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('customer_group.delete')) {
             abort(403, 'Unauthorized action.');

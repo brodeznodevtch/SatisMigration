@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
 use App\Models\Positions;
@@ -23,7 +24,7 @@ class ManageEmployeesController extends Controller
     }
 
     // Mostrar vista para listar los empleados
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('employees.view') && ! auth()->user()->can('employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -77,7 +78,7 @@ class ManageEmployeesController extends Controller
     }
 
     //Mostrar el formulario para registrar un nuevo Empleado
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -224,7 +225,7 @@ class ManageEmployeesController extends Controller
     }
 
     //Mostrar el formulario para editar un Empleado
-    public function edit($id)
+    public function edit($id): View
     {
 
         //Verificar si tiene permisos el usuario

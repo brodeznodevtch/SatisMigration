@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\Module;
 use DB;
@@ -10,7 +12,7 @@ use Spatie\Permission\Models\Role;
 
 class ImplementationController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         // if(!auth()->user()->can('business_settings.access_module')){
         //     abort(403, "Unauthorized action.");
@@ -34,7 +36,7 @@ class ImplementationController extends Controller
         return view('implementations.index', compact('modules', 'enabled'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         // if (! auth()->user()->can('business_settings.access_module')) {
         //     abort(403, 'Unauthorized action.');

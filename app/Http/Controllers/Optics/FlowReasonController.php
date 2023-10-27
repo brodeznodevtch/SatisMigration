@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Optics\FlowReason;
 use App\Utils\Util;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class FlowReasonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('flow_reason.create')) {
             abort(403, 'Unauthorized action.');
@@ -140,7 +141,7 @@ class FlowReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('flow_reason.update')) {
             abort(403, 'Unauthorized action.');
@@ -159,7 +160,7 @@ class FlowReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('flow_reason.update')) {
             abort(403, 'Unauthorized action.');
@@ -208,7 +209,7 @@ class FlowReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('flow_reason.delete')) {
             abort(403, 'Unauthorized action.');

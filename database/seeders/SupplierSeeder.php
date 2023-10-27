@@ -46,7 +46,7 @@ class SupplierSeeder extends Seeder
      *
      * @author Arquímides Martínez
      */
-    public function syncSupplier($id, $code, $business_id)
+    public function syncSupplier(int $id, string $code, int $business_id): void
     {
         /** If business_id not setted, exit */
         if (is_null($business_id)) {

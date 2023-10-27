@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Restaurant;
 
+use Illuminate\View\View;
 use App\Models\Product;
 use App\Models\Variation;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class ProductModifierSetController extends Controller
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -36,7 +37,7 @@ class ProductModifierSetController extends Controller
      *
      * @return Response
      */
-    public function product_row($product_id)
+    public function product_row($product_id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -55,7 +56,7 @@ class ProductModifierSetController extends Controller
      *
      * @return Response
      */
-    public function update($modifier_set_id, Request $request)
+    public function update($modifier_set_id, Request $request): Response
     {
         try {
             DB::beginTransaction();

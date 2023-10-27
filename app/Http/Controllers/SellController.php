@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
@@ -444,7 +447,7 @@ class SellController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('sell.view') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -496,7 +499,7 @@ class SellController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -636,7 +639,7 @@ class SellController extends Controller
             ->with(compact('business_details', 'taxes', 'sell_details', 'transaction', 'commission_agent', 'types', 'customer_groups', 'price_groups', 'pos_settings'));
     }
 
-    public function editInvoiceTrans($id)
+    public function editInvoiceTrans($id): View
     {
         if (! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -769,7 +772,7 @@ class SellController extends Controller
      * @param  datetime  $new_date
      * @return void
      */
-    private function updatePaidOn($transaction_id, $old_date, $new_date)
+    private function updatePaidOn(int $transaction_id, datetime $old_date, datetime $new_date): void
     {
         $payments = TransactionPayment::where('transaction_id', $transaction_id)
             ->whereRaw('DATE(paid_on) = DATE(?)', [$old_date])
@@ -786,7 +789,7 @@ class SellController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDrafts()
+    public function getDrafts(): View
     {
         if (! auth()->user()->can('sell.draft') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -800,7 +803,7 @@ class SellController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getQuotations()
+    public function getQuotations(): View
     {
         if (! auth()->user()->can('sell.quotation') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -817,7 +820,7 @@ class SellController extends Controller
      *
      * @author Arquímides Martínez
      */
-    public function getParentCorrelative(Request $request)
+    public function getParentCorrelative(Request $request): json
     {
         $q = $request->get('q');
         $location_id = $request->input('location');
@@ -848,7 +851,7 @@ class SellController extends Controller
      * @param  int  $customer_id
      * @return json
      */
-    public function getTransDueByCustomer(Request $request, $customer_id)
+    public function getTransDueByCustomer(Request $request, int $customer_id): JsonResponse
     {
         $q = $request->get('q');
         $business_id = auth()->user()->business_id;
@@ -958,7 +961,7 @@ class SellController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function duplicateSell($id)
+    public function duplicateSell(int $id): RedirectResponse
     {
         if (! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1033,7 +1036,7 @@ class SellController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getSalesData($params)
+    public function getSalesData(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
 use App\Models\Category;
@@ -41,7 +43,7 @@ class OportunityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('oportunities.view') && ! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
@@ -162,7 +164,7 @@ class OportunityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
@@ -236,7 +238,7 @@ class OportunityController extends Controller
      * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         if (! auth()->user()->can('oportunities.view')) {
             abort(403, 'Unauthorized action.');
@@ -264,7 +266,7 @@ class OportunityController extends Controller
      * @param  \App\Models\Oportunity  $oportunity
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('oportunities.update')) {
             abort(403, 'Unauthorized action.');
@@ -407,7 +409,7 @@ class OportunityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createCustomer($id)
+    public function createCustomer($id): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');

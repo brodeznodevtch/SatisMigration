@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\SupportDocuments;
 use DB;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class SupportDocumentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -28,7 +29,7 @@ class SupportDocumentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -112,7 +113,7 @@ class SupportDocumentsController extends Controller
      * @param  \App\Models\SupportDocuments  $supportDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('sdocs.update')) {
             abort(403, 'Unauthorized action.');

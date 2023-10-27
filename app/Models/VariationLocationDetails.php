@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Model;
 
 class VariationLocationDetails extends Model
@@ -11,7 +12,7 @@ class VariationLocationDetails extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function warehouse()
+    public function warehouse(): HasRelationships
     {
         return $this->belongsTo(\App\Models\Warehouse::class);
     }
@@ -21,7 +22,7 @@ class VariationLocationDetails extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function location()
+    public function location(): HasRelationships
     {
         return $this->belongsTo(\App\Models\BusinessLocation::class);
     }

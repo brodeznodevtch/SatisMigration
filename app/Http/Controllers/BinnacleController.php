@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Binnacle;
 use App\Models\User;
 use App\Utils\Util;
@@ -142,7 +143,7 @@ class BinnacleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('binnacle.view')) {
             abort(403, 'Unauthorized action.');

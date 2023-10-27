@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\Catalogue;
 use App\Models\ExpenseCategory;
@@ -52,7 +53,7 @@ class ExpenseCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('expense_category.create')) {
             abort(403, 'Unauthorized action.');
@@ -118,7 +119,7 @@ class ExpenseCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('expense_category.update')) {
             abort(403, 'Unauthorized action.');
@@ -161,7 +162,7 @@ class ExpenseCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('expense_category.update')) {
             abort(403, 'Unauthorized action.');
@@ -200,7 +201,7 @@ class ExpenseCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('expense_category.delete')) {
             abort(403, 'Unauthorized action.');

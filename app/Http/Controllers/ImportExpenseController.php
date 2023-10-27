@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\ImportExpense;
 use App\Utils\TransactionUtil;
@@ -75,7 +76,7 @@ class ImportExpenseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('import_expense.create')) {
             abort(403, 'Unauthorized action.');
@@ -137,7 +138,7 @@ class ImportExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('import_expense.update')) {
             abort(403, 'Unauthorized action.');
@@ -194,7 +195,7 @@ class ImportExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('import_expense.delete')) {
             abort(403, 'Unauthorized action.');
@@ -229,7 +230,7 @@ class ImportExpenseController extends Controller
      *
      * @return json
      */
-    public function getImportExpenses()
+    public function getImportExpenses(): json
     {
         if (request()->ajax()) {
             $term = request()->term;
@@ -256,7 +257,7 @@ class ImportExpenseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getImportExpenseRow()
+    public function getImportExpenseRow(): View
     {
         if (request()->ajax()) {
             $id = request()->input('id');

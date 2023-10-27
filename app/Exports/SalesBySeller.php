@@ -22,7 +22,7 @@ class SalesBySeller implements WithEvents, WithTitle
      * @param  array  $transactions
      * @return void
      */
-    public function __construct($transactions, $start_date, $end_date, $business_name)
+    public function __construct(array $transactions, $start_date, $end_date, $business_name)
     {
         $this->transactions = $transactions;
         $this->start_date = $start_date;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Exports\AssistanceEmployeeReportExport;
 use App\Models\AssistanceEmployee;
 use App\Models\Business;
@@ -249,7 +250,7 @@ class AssistanceEmployeeController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getAssitancesData($params)
+    public function getAssitancesData(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -824,7 +825,7 @@ class AssistanceEmployeeController extends Controller
     }
 
     //Show employee assistance detail
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('rrhh_assistance.view')) {
             abort(403, 'Unauthorized action.');
@@ -866,7 +867,7 @@ class AssistanceEmployeeController extends Controller
     }
 
     //Show the employee's photo in a larger way in the assitance detail
-    public function viewImage($id)
+    public function viewImage($id): View
     {
         $business_id = request()->session()->get('user.business_id');
         $assistance = AssistanceEmployee::where('id', $id)

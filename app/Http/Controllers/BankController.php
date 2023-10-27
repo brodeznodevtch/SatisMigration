@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Bank;
 use App\Models\BankAccount;
 use App\Models\BankCheckbook;
@@ -39,7 +41,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -152,7 +154,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -163,7 +165,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -198,7 +200,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Bank $bank)
+    public function show(Bank $bank): JsonResponse
     {
 
         return response()->json($bank);
@@ -209,7 +211,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Bank $bank)
+    public function edit(Bank $bank): JsonResponse
     {
 
         return response()->json($bank);
@@ -220,7 +222,7 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bank $bank)
+    public function update(Request $request, Bank $bank): JsonResponse
     {
 
         $id = $bank->id;
@@ -298,7 +300,7 @@ class BankController extends Controller
         return DataTables::of($banks)->toJson();
     }
 
-    public function getBanks()
+    public function getBanks(): JsonResponse
     {
 
         $banks = Bank::select('id', 'name')->get();
@@ -306,7 +308,7 @@ class BankController extends Controller
         return response()->json($banks);
     }
 
-    public function getCheckNumber($id)
+    public function getCheckNumber($id): JsonResponse
     {
 
         $checkbook = BankCheckbook::findOrFail($id);
@@ -325,7 +327,7 @@ class BankController extends Controller
      * @param  int  $bank_id
      * @return json
      */
-    public function getBankAccounts($bank_id)
+    public function getBankAccounts(int $bank_id): JsonResponse
     {
 
         $bank_accounts = BankAccount::where('bank_id', $bank_id)

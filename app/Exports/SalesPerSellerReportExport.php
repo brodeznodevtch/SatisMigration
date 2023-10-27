@@ -29,7 +29,7 @@ class SalesPerSellerReportExport implements WithEvents, WithTitle
      * @param  string  $end
      * @return void
      */
-    public function __construct($records, Business $business, $start, $end, TransactionUtil $transactionUtil)
+    public function __construct(array $records, Business $business, string $start, string $end, TransactionUtil $transactionUtil)
     {
         $this->records = $records;
         $this->business = $business;

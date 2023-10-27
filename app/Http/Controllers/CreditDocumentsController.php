@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\CreditDocuments;
 use App\Models\Customer;
 use App\Models\DocumentType;
@@ -22,7 +23,7 @@ class CreditDocumentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('cdocs.view') && ! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -37,7 +38,7 @@ class CreditDocumentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -194,7 +195,7 @@ class CreditDocumentsController extends Controller
      * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('cdocs.view')) {
             abort(403, 'Unauthorized action.');
@@ -217,7 +218,7 @@ class CreditDocumentsController extends Controller
         }
     }
 
-    public function reception($id)
+    public function reception($id): View
     {
         if (! auth()->user()->can('cdocs.reception')) {
             abort(403, 'Unauthorized action.');
@@ -235,7 +236,7 @@ class CreditDocumentsController extends Controller
         }
     }
 
-    public function custodian($id)
+    public function custodian($id): View
     {
         if (! auth()->user()->can('cdocs.custodian')) {
             abort(403, 'Unauthorized action.');
@@ -328,7 +329,7 @@ class CreditDocumentsController extends Controller
      * @param  \App\Models\CreditDocuments  $creditDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
 
         if (! auth()->user()->can('cdocs.update')) {

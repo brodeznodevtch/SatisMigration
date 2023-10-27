@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasTransaction;
 use App\Models\Brands;
@@ -457,7 +460,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //dd($request);
         if (! auth()->user()->can('product.create')) {
@@ -629,7 +632,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
@@ -647,7 +650,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -768,7 +771,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         //dd($request);
         if (! auth()->user()->can('product.update')) {
@@ -1178,7 +1181,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getProductVariationFormPart(Request $request)
+    public function getProductVariationFormPart(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $business = Business::findorfail($business_id);
@@ -1221,7 +1224,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getVariationValueRow(Request $request)
+    public function getVariationValueRow(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $business = Business::findorfail($business_id);
@@ -1241,7 +1244,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getProductVariationRow(Request $request)
+    public function getProductVariationRow(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $business = Business::findorfail($business_id);
@@ -1263,7 +1266,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getVariationTemplate(Request $request)
+    public function getVariationTemplate(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $business = Business::findorfail($business_id);
@@ -1285,7 +1288,7 @@ class ProductController extends Controller
      * @param  bool  $check_qty
      * @return JSON
      */
-    public function getProducts()
+    public function getProducts(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('term', '');
@@ -1628,7 +1631,7 @@ class ProductController extends Controller
      * @param  bool  $check_qty
      * @return JSON
      */
-    public function getProductsWithoutVariations()
+    public function getProductsWithoutVariations(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('term', '');
@@ -1713,7 +1716,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function quickAdd()
+    public function quickAdd(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -1845,7 +1848,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function view($id)
+    public function view($id): View
     {
         if (! auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
@@ -1907,7 +1910,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function massDestroy(Request $request)
+    public function massDestroy(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.delete')) {
             abort(403, 'Unauthorized action.');
@@ -1962,7 +1965,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function addSellingPrices($id)
+    public function addSellingPrices(int $id): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -1990,7 +1993,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function saveSellingPrices(Request $request)
+    public function saveSellingPrices(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -2052,7 +2055,7 @@ class ProductController extends Controller
         return redirect('products')->with('status', $output);
     }
 
-    public function viewGroupPrice($id)
+    public function viewGroupPrice($id): View
     {
 
         if (! auth()->user()->can('product.view')) {
@@ -2086,7 +2089,7 @@ class ProductController extends Controller
         return view('product.view-product-group-prices')->with(compact('product', 'allowed_group_prices', 'group_price_details'));
     }
 
-    public function viewSupplier($id)
+    public function viewSupplier($id): View
     {
         $suppliers = DB::table('product_has_suppliers')
             ->join('contacts', 'contacts.id', '=', 'product_has_suppliers.contact_id')
@@ -2140,7 +2143,7 @@ class ProductController extends Controller
         return view('product.view-supplier', compact('dataSupplier', 'product'));
     }
 
-    public function addSupplier(Request $request, $id)
+    public function addSupplier(Request $request, $id): RedirectResponse
     {
         try {
             $product = Product::findOrFail($id);
@@ -2189,7 +2192,7 @@ class ProductController extends Controller
         }
     }
 
-    public function showProduct($id)
+    public function showProduct($id): JsonResponse
     {
         $products = DB::table('variations')
             ->leftJoin('products', 'products.id', '=', 'variations.product_id')
@@ -2202,7 +2205,7 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
-    public function showStock($variation_id, $location_id)
+    public function showStock($variation_id, $location_id): JsonResponse
     {
         $products = DB::table('variations')
             ->leftJoin('products', 'products.id', '=', 'variations.product_id')
@@ -2269,7 +2272,7 @@ class ProductController extends Controller
         return $dataSupplier;
     }
 
-    public function kitHasProduct($id)
+    public function kitHasProduct($id): JsonResponse
     {
         $kit_lines = KitHasProduct::select('id', 'children_id', 'quantity', 'unit_id', 'unit_group_id_line')->where('parent_id', $id)->get();
         $datos = [];
@@ -2391,7 +2394,7 @@ class ProductController extends Controller
         return $datos;
     }
 
-    public function viewKit($id)
+    public function viewKit($id): View
     {
         $kit = Product::select('name')->where('id', $id)->first();
         $kit_name = $kit->name;
@@ -2573,7 +2576,7 @@ class ProductController extends Controller
         }
     }
 
-    public function getHistoryPurchase($id)
+    public function getHistoryPurchase($id): View
     {
         if (! auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
@@ -2629,7 +2632,7 @@ class ProductController extends Controller
         }
     }
 
-    public function getPriceList()
+    public function getPriceList(): View
     {
 
         if (! auth()->user()->can('product.import-price-list')) {
@@ -2653,7 +2656,7 @@ class ProductController extends Controller
         }
     }
 
-    public function postPriceList(Request $request)
+    public function postPriceList(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.import-price-list')) {
             abort(403, 'Unauthorized action.');
@@ -2775,7 +2778,7 @@ class ProductController extends Controller
      *
      * @return json
      */
-    public function getServices()
+    public function getServices(): json
     {
         if (request()->ajax()) {
             $term = request()->input('term', '');
@@ -2820,7 +2823,7 @@ class ProductController extends Controller
      * @param  int  $variation_id
      * @return array
      */
-    public function recalculateProductCost($variation_id)
+    public function recalculateProductCost(int $variation_id)
     {
         if (! auth()->user()->can('product.recalculate_cost')) {
             abort(403, 'Unauthorized action.');
@@ -2965,7 +2968,7 @@ class ProductController extends Controller
      *
      * @author Arquímides Martínez
      */
-    public function getProductAccountsLocation(Request $request, $product_id)
+    public function getProductAccountsLocation(Request $request, int $product_id): View
     {
         $business_id = $request->user()->business_id;
 
@@ -3050,7 +3053,7 @@ class ProductController extends Controller
      *
      * @author Arquímides Martínez
      */
-    public function postProductAccountsLocation(Request $request, $product_id)
+    public function postProductAccountsLocation(Request $request, int $product_id)
     {
         try {
             DB::beginTransaction();
@@ -3127,7 +3130,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getRecalculateCost()
+    public function getRecalculateCost(): View
     {
         return view('product.recalculate_product_cost');
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\MovementType;
@@ -40,7 +42,7 @@ class ImportOpeningStockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('product.opening_stock')) {
             abort(403, 'Unauthorized action.');
@@ -66,7 +68,7 @@ class ImportOpeningStockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.opening_stock')) {
             abort(403, 'Unauthorized action.');
@@ -229,7 +231,7 @@ class ImportOpeningStockController extends Controller
      * @param  int  $business_id
      * @return void
      */
-    private function addOpeningStock($opening_stock, $product, $business_id, $unit_cost_before_tax, $transaction = null)
+    private function addOpeningStock(array $opening_stock, obj $product, int $business_id, $unit_cost_before_tax, $transaction = null): void
     {
 
         $user_id = request()->session()->get('user.id');

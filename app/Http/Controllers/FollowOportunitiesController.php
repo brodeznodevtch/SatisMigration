@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\BusinessLocation;
 use App\Models\Category;
 use App\Models\Contact;
@@ -23,12 +25,12 @@ class FollowOportunitiesController extends Controller
         $this->transactionUtil = $transactionUtil;
     }
 
-    public function index()
+    public function index(): View
     {
         // return view()
     }
 
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('follow_oportunities.view')) {
             abort(403, 'Unauthorized action.');
@@ -51,7 +53,7 @@ class FollowOportunitiesController extends Controller
         return view('oportunity.follow_oportunities.index', compact('oportunity'));
     }
 
-    public function create($id)
+    public function create($id): View
     {
         if (! auth()->user()->can('follow_oportunities.create')) {
             abort(403, 'Unauthorized action.');
@@ -196,7 +198,7 @@ class FollowOportunitiesController extends Controller
         return view('oportunity.follow_oportunities.index', compact('followOportunitie'));
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('follow_oportunities.update')) {
             abort(403, 'Unauthorized action.');
@@ -439,7 +441,7 @@ class FollowOportunitiesController extends Controller
             ->toJson();
     }
 
-    public function getProductsByFollowOportunity($id)
+    public function getProductsByFollowOportunity($id): JsonResponse
     {
         $items = DB::table('follow_oportunities_has_products as follow')
             ->join('variations as variation', 'variation.id', '=', 'follow.variation_id')

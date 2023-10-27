@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -25,7 +26,7 @@ class AnnualPayrollSummaryExport implements WithEvents, WithTitle, ShouldAutoSiz
      * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($summaries, $business, $year, $moduleUtil)
+    public function __construct($summaries, Business $business, $year, $moduleUtil)
     {
         $this->summaries = $summaries;
         $this->business = $business;

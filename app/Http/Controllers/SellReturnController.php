@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\DocumentCorrelative;
 use App\Models\DocumentType;
@@ -523,7 +524,7 @@ class SellReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('sell.view')) {
             abort(403, 'Unauthorized action.');
@@ -570,7 +571,7 @@ class SellReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -581,7 +582,7 @@ class SellReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -592,7 +593,7 @@ class SellReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }
@@ -617,11 +618,11 @@ class SellReturnController extends Controller
      * @return array
      */
     private function receiptContent(
-        $business_id,
-        $location_id,
-        $transaction_id,
-        $printer_type = null
-    ) {
+        int $business_id,
+        int $location_id,
+        int $transaction_id,
+        string $printer_type = null
+    ): array {
 
         $output = [
             'is_enabled' => false,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\PaymentTerm;
 use DataTables;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentTermController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('payment_term.view')) {
             abort(403, 'Unauthorized action.');
@@ -49,7 +50,7 @@ class PaymentTermController extends Controller
             ->toJson();
     }
 
-    public function create()
+    public function create(): View
     {
         return view('payment_terms.create');
     }
@@ -100,7 +101,7 @@ class PaymentTermController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         $payment_term = PaymentTerm::findOrFail($id);
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
 use App\Models\CostCenter;
@@ -71,7 +73,7 @@ class CostCenterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('cost_center.create')) {
             abort(403, 'Unauthorized action');
@@ -126,7 +128,7 @@ class CostCenterController extends Controller
      * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $costCenter = CostCenter::findOrFail($id);
 
@@ -139,7 +141,7 @@ class CostCenterController extends Controller
      * @param  \App\Models\CostCenter  $costCenter
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('cost_center.edit')) {
             abort(403, 'Unauthorized action');
@@ -226,7 +228,7 @@ class CostCenterController extends Controller
      * @param  int  $cost_center_id
      * @return \Response
      */
-    public function getMainAccounts($cost_center_id)
+    public function getMainAccounts(int $cost_center_id): View
     {
         if (! auth()->user()->can('cost_center.accounts')) {
             abort(403, 'Unauthorized action');
@@ -258,7 +260,7 @@ class CostCenterController extends Controller
      * @param  int  $cost_center_id
      * @return JSON
      */
-    public function postMainAccounts($cost_center_id)
+    public function postMainAccounts(int $cost_center_id): JSON
     {
         if (! auth()->user()->can('cost_center.accounts')) {
             abort(403, 'Unauthorized action');
@@ -296,7 +298,7 @@ class CostCenterController extends Controller
      * @param  int  $cost_center_id
      * @return \Response
      */
-    public function getOperationAccounts($cost_center_id)
+    public function getOperationAccounts(int $cost_center_id): View
     {
         if (! auth()->user()->can('cost_center.accounts')) {
             abort(403, 'Unauthorized action');
@@ -349,7 +351,7 @@ class CostCenterController extends Controller
      * @param  int  $cost_center_id
      * @return JSON
      */
-    public function postOperationAccounts($cost_center_id)
+    public function postOperationAccounts(int $cost_center_id): JSON
     {
         if (! auth()->user()->can('cost_center.accounts')) {
             abort(403, 'Unauthorized action');

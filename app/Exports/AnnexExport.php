@@ -29,7 +29,7 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
      * @param  string  $title
      * @return void
      */
-    public function __construct($data, $title)
+    public function __construct(array $data, string $title)
     {
         $this->data = $data;
         $this->title = $title;
@@ -50,7 +50,7 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
      * @param  mixed  $value
      * @return bool
      */
-    public function bindValue(Cell $cell, $value)
+    public function bindValue(Cell $cell, $value): bool
     {
         if (in_array($cell->getColumn(), $this->columns)) {
             $cell->setValueExplicit($value, DataType::TYPE_STRING);

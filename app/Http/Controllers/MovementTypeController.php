@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\MovementType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -62,7 +63,7 @@ class MovementTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('movement_type.create')) {
             abort(403, 'Unauthorized action.');
@@ -126,7 +127,7 @@ class MovementTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('movement_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -145,7 +146,7 @@ class MovementTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('movement_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -185,7 +186,7 @@ class MovementTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id)
     {
         if (! auth()->user()->can('movement_type.delete')) {
             abort(403, 'Unauthorized action.');

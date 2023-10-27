@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\User;
@@ -68,14 +70,14 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         $business = Business::where('is_active', 1)->pluck('name', 'id');
 
         return view('auth.login')->with(compact('business'));
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(Request $request): RedirectResponse
     {
         $credenciales = $this->validate(request(), [
             'username' => 'required',
@@ -97,7 +99,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         request()->session()->invalidate();
         request()->session()->flush();
@@ -147,7 +149,7 @@ class LoginController extends Controller
      *
      * @return array
      */
-    protected function credentials(Request $request)
+    protected function credentials(Request $request): array
     {
         return $request->only($this->username(), 'password', 'business_id');
     }

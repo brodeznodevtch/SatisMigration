@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\BankCheckbook;
 use App\Models\BankTransaction;
 use DataTables;
@@ -15,7 +17,7 @@ class BankCheckbookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         return view('banks.index');
@@ -26,7 +28,7 @@ class BankCheckbookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -102,7 +104,7 @@ class BankCheckbookController extends Controller
      * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
 
         $bankCheckbook = BankCheckbook::findOrFail($id);
@@ -116,7 +118,7 @@ class BankCheckbookController extends Controller
      * @param  \App\Models\BankCheckbook  $bankCheckbook
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
 
         $bankCheckbook = DB::table('bank_checkbooks as checkbook')
@@ -254,7 +256,7 @@ class BankCheckbookController extends Controller
         return DataTables::of($checkbooks)->toJson();
     }
 
-    public function getBankCheckbooks($id)
+    public function getBankCheckbooks($id): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');

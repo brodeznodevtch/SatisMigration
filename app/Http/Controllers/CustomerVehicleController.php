@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Brands;
 use App\Models\Customer;
 use App\Models\CustomerVehicle;
@@ -16,7 +18,7 @@ class CustomerVehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getImporter()
+    public function getImporter(): View
     {
         if (! auth()->user()->can('customer.create') || config('app.business') != 'workshop') {
             abort(403, 'Unauthorized action.');
@@ -49,7 +51,7 @@ class CustomerVehicleController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function postImporter(Request $request)
+    public function postImporter(Request $request): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -256,7 +258,7 @@ class CustomerVehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function import()
+    public function import(): RedirectResponse
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');

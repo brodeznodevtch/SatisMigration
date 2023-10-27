@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\RrhhHeader;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class RrhhHeaderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.view')) {

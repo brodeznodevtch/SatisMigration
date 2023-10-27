@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SliderController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('alert.view')) {
             abort(403, 'Unauthorized action.');
@@ -19,7 +21,7 @@ class SliderController extends Controller
         return view('slider.index');
     }
 
-    public function getSliderIndex()
+    public function getSliderIndex(): JsonResponse
     {
         if (! auth()->user()->can('alert.view')) {
             abort(403, 'Unauthorized action.');
@@ -30,7 +32,7 @@ class SliderController extends Controller
         return response()->json(['data' => $uploadedImages]);
     }
 
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('alert.create')) {
             abort(403, 'Unauthorized action.');
@@ -39,7 +41,7 @@ class SliderController extends Controller
         return view('slider.create');
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('alert.edit')) {
             abort(403, 'Unauthorized action.');
@@ -50,7 +52,7 @@ class SliderController extends Controller
         return view('slider.edit')->with(compact('image', 'file'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         if (! auth()->user()->can('alert.create')) {
             abort(403, 'Unauthorized action.');
@@ -105,7 +107,7 @@ class SliderController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         if (! auth()->user()->can('alert.edit')) {
             abort(403, 'Unauthorized action.');
@@ -141,7 +143,7 @@ class SliderController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         if (! auth()->user()->can('alert.delete')) {
             abort(403, 'Unauthorized action.');
@@ -157,7 +159,7 @@ class SliderController extends Controller
         return response()->json(['msg' => 'Error, contacte al administrador', 'success' => false]);
     }
 
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('alert.view')) {
             abort(403, 'Unauthorized action.');
@@ -182,7 +184,7 @@ class SliderController extends Controller
 
     }
 
-    public function setImageStatus($id)
+    public function setImageStatus($id): JsonResponse
     {
         if (! auth()->user()->can('alert.edit')) {
             abort(403, 'Unauthorized action.');

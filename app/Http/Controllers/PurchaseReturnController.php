@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Models\DocumentType;
 use App\Models\MovementType;
 use App\Models\PurchaseLine;
@@ -145,7 +147,7 @@ class PurchaseReturnController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function add($id)
+    public function add($id): View
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -187,7 +189,7 @@ class PurchaseReturnController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -306,7 +308,7 @@ class PurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('purchase.view')) {
             abort(403, 'Unauthorized action.');
@@ -340,7 +342,7 @@ class PurchaseReturnController extends Controller
      *
      * @author Arquímides Martínez
      */
-    public function getPurchaseReturnDiscount($id)
+    public function getPurchaseReturnDiscount(int $id): View
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -372,7 +374,7 @@ class PurchaseReturnController extends Controller
      *
      * @author Arquímides Martínez
      */
-    public function postPurchaseReturnDiscount(Request $request, $id)
+    public function postPurchaseReturnDiscount(Request $request, $id): json
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -440,7 +442,7 @@ class PurchaseReturnController extends Controller
      *
      * @author Arquímides Martínez
      */
-    private function updatePaymentStatus($parent_id, $final_total)
+    private function updatePaymentStatus(int $parent_id, float $final_total): void
     {
         $parent_transaction = Transaction::find($parent_id);
 

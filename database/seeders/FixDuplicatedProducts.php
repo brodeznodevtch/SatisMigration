@@ -101,7 +101,7 @@ class FixDuplicatedProducts extends Seeder
      * @param  int  $last_id
      * @return void
      */
-    private function update_records($first_id, $last_id, $business_id)
+    private function update_records(int $first_id, int $last_id, $business_id): void
     {
         try {
             Log::info('Replacing '.$last_id.' for '.$first_id);

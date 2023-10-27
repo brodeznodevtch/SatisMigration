@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Catalogue;
 use App\Models\FixedAsset;
 use App\Models\FixedAssetType;
@@ -58,7 +59,7 @@ class FixedAssetTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('fixed_asset_type.create')) {
             abort(403, 'Unauthorized action.');
@@ -101,7 +102,7 @@ class FixedAssetTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -112,7 +113,7 @@ class FixedAssetTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('fixed_asset_type.edit')) {
             abort(403, 'Unauthorized action.');
@@ -136,7 +137,7 @@ class FixedAssetTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('fixed_asset_type.edit')) {
             abort(403, 'Unauthorized action.');
@@ -165,7 +166,7 @@ class FixedAssetTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('fixed_asset_type.delete')) {
             abort(403, 'Unauthorized action.');

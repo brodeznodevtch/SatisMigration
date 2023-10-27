@@ -27,7 +27,7 @@ class DebtsToPayReportExport implements WithEvents, WithTitle
      * @param  App\Util\TransactionUtil  $transactionUtil;
      * @return void
      */
-    public function __construct($transactions, $business_name, $report_name, $final_totals, $transactionUtil)
+    public function __construct(array $transactions, string $business_name, string $report_name, $final_totals, $transactionUtil)
     {
         $this->transactions = $transactions;
         $this->business_name = $business_name;

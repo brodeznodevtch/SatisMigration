@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Customer;
 use App\Models\CustomerPortfolio;
 use App\Models\Employees;
@@ -22,7 +23,7 @@ class CustomerPortfolioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('portfolios.view') && ! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
@@ -37,7 +38,7 @@ class CustomerPortfolioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
@@ -126,7 +127,7 @@ class CustomerPortfolioController extends Controller
      * @param  \App\Models\CustomerPortfolio  $customerPortfolio
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('portfolios.update')) {
             abort(403, 'Unauthorized action.');

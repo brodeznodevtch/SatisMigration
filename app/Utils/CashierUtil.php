@@ -12,7 +12,7 @@ class CashierUtil extends Util
      *
      * @return int
      */
-    public function countOpenedCashier()
+    public function countOpenedCashier(): int
     {
         $permitted_cashiers = Cashier::permittedCashiers();
 
@@ -36,7 +36,7 @@ class CashierUtil extends Util
      * @param  int  $cashier_id
      * @return int
      */
-    public function getCashierClosureActive($cashier_id)
+    public function getCashierClosureActive(int $cashier_id): int
     {
         $cashier_closure =
             CashierClosure::whereNull('closed_by')
@@ -52,7 +52,7 @@ class CashierUtil extends Util
      *
      * @param  int  $cashier_id
      */
-    public function getLastCashierClosure($cashier_id)
+    public function getLastCashierClosure(int $cashier_id)
     {
         $cashier_closure =
             CashierClosure::orderBy('close_date', 'desc')

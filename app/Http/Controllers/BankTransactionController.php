@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Exports\BankReconciliationReportExport;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingEntriesDetail;
@@ -39,7 +41,7 @@ class BankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         return view('banks.index');
@@ -50,7 +52,7 @@ class BankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -474,7 +476,7 @@ class BankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(BankTransaction $bankTransaction)
+    public function show(BankTransaction $bankTransaction): JsonResponse
     {
 
         $transaction = DB::table('bank_transactions as transaction')
@@ -493,7 +495,7 @@ class BankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(BankTransaction $bankTransaction)
+    public function edit(BankTransaction $bankTransaction): JsonResponse
     {
 
         $transaction = DB::table('bank_transactions as transaction')
@@ -1235,7 +1237,7 @@ class BankTransactionController extends Controller
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheck($id, $print)
+    public function printCheck(int $id, int $print)
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1260,7 +1262,7 @@ class BankTransactionController extends Controller
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheckFormat1($id, $print)
+    public function printCheckFormat1(int $id, int $print)
     {
 
         // ----- CHECK -----
@@ -1620,7 +1622,7 @@ class BankTransactionController extends Controller
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheckFormat2($id, $print)
+    public function printCheckFormat2(int $id, int $print)
     {
 
         // ----- CHECK -----
@@ -2197,7 +2199,7 @@ class BankTransactionController extends Controller
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printTransferFormat($id)
+    public function printTransferFormat(int $id)
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
@@ -2468,7 +2470,7 @@ class BankTransactionController extends Controller
      * @param  string  $code
      * @return collect
      */
-    protected function getHigherEntrieBalance($id, $code)
+    protected function getHigherEntrieBalance(int $id, string $code): collect
     {
 
         $valor = DB::table('accounting_entries_details as detalle')
@@ -2819,7 +2821,7 @@ class BankTransactionController extends Controller
      * @param  string  $numero
      * @return string
      */
-    protected function convertir($numero)
+    protected function convertir(string $numero): string
     {
         $num = str_replace(',', '', $numero);
         $num = number_format($num, 2, '.', '');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\BankTransaction;
 use App\Models\TypeBankTransaction;
 use DataTables;
@@ -15,7 +17,7 @@ class TypeBankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('banks.index');
     }
@@ -25,7 +27,7 @@ class TypeBankTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('banks.index');
     }
@@ -79,7 +81,7 @@ class TypeBankTransactionController extends Controller
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
 
@@ -92,7 +94,7 @@ class TypeBankTransactionController extends Controller
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
 
@@ -178,7 +180,7 @@ class TypeBankTransactionController extends Controller
         }
     }
 
-    public function getTypeBankTransactions()
+    public function getTypeBankTransactions(): JsonResponse
     {
         $types = TypeBankTransaction::select('id', 'name')->get();
 
@@ -200,7 +202,7 @@ class TypeBankTransactionController extends Controller
      * @param  int  $bank_transaction_type_id
      * @return int
      */
-    public function getIfEnableCheckbook($bank_transaction_type_id)
+    public function getIfEnableCheckbook(int $bank_transaction_type_id)
     {
         if (! empty($bank_transaction_type_id)) {
             $bank_transaction_type = TypeBankTransaction::find($bank_transaction_type_id);

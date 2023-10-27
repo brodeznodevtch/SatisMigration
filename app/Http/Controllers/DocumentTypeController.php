@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Models\DocumentClass;
 use App\Models\DocumentType;
 use App\Models\Transaction;
@@ -74,7 +76,7 @@ class DocumentTypeController extends Controller
         return view('document_types.index');
     }
 
-    public function verifyDefault()
+    public function verifyDefault(): JsonResponse
     {
         $default = DocumentType::where('is_default', 1)
             ->where('is_document_sale', 1)
@@ -88,7 +90,7 @@ class DocumentTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('document_type.create')) {
             abort(403, 'Unauthorized action.');
@@ -155,7 +157,7 @@ class DocumentTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -166,7 +168,7 @@ class DocumentTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -188,7 +190,7 @@ class DocumentTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -245,7 +247,7 @@ class DocumentTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('document_type.delete')) {
             abort(403, 'Unauthorized action.');

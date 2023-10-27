@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\State;
 use App\Models\Zone;
 use DataTables;
@@ -14,7 +16,7 @@ class ZoneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('geography.index');
     }
@@ -24,7 +26,7 @@ class ZoneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('geography.index');
     }
@@ -71,7 +73,7 @@ class ZoneController extends Controller
      * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $zone = Zone::findOrFail($id);
 
@@ -84,7 +86,7 @@ class ZoneController extends Controller
      * @param  \App\Models\Zone  $zone
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $zone = Zone::findOrFail($id);
 
@@ -175,7 +177,7 @@ class ZoneController extends Controller
         return DataTables::of($zones)->toJson();
     }
 
-    public function getZones()
+    public function getZones(): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $zones = Zone::where('business_id', $business_id)->get();

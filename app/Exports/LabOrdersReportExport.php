@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -24,7 +25,7 @@ class LabOrdersReportExport implements FromView, WithEvents, WithTitle
      * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($lab_orders, $size, $business)
+    public function __construct(array $lab_orders, int $size, Business $business)
     {
         $this->lab_orders = $lab_orders;
         $this->size = $size;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\AccountingPeriod;
 use App\Models\FiscalYear;
 use DataTables;
@@ -34,7 +35,7 @@ class FiscalYearController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -65,7 +66,7 @@ class FiscalYearController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(FiscalYear $fiscalYear)
+    public function show(FiscalYear $fiscalYear): JsonResponse
     {
         return response()->json($fiscalYear);
     }
@@ -75,7 +76,7 @@ class FiscalYearController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(FiscalYear $fiscalYear)
+    public function edit(FiscalYear $fiscalYear): JsonResponse
     {
         return response()->json($fiscalYear);
     }
@@ -85,7 +86,7 @@ class FiscalYearController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FiscalYear $fiscalYear)
+    public function update(Request $request, FiscalYear $fiscalYear): JsonResponse
     {
         $validateData = $request->validate(
             [
@@ -151,7 +152,7 @@ class FiscalYearController extends Controller
         return DataTables::of($years)->toJson();
     }
 
-    public function getYears()
+    public function getYears(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');

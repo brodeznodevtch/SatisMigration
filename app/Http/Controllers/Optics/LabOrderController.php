@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
 use App\Models\Employees;
@@ -244,7 +246,7 @@ class LabOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('lab_order.create')) {
             abort(403, 'Unauthorized action.');
@@ -547,7 +549,7 @@ class LabOrderController extends Controller
      * @param  \App\LabOrder  $labOrder
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('sell.view')) {
             abort(403, 'Unauthorized action.');
@@ -603,7 +605,7 @@ class LabOrderController extends Controller
      * @param  \App\LabOrder  $labOrder
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         if (! auth()->user()->can('lab_order.update')) {
             abort(403, 'Unauthorized action.');
@@ -1167,7 +1169,7 @@ class LabOrderController extends Controller
         }
     }
 
-    public function addMaterial($variation_id, $warehouse_id)
+    public function addMaterial($variation_id, $warehouse_id): JsonResponse
     {
         $products = DB::table('variations as variation')
             ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
@@ -1180,7 +1182,7 @@ class LabOrderController extends Controller
         return response()->json($products);
     }
 
-    public function addProduct($variation_id, $warehouse_id)
+    public function addProduct($variation_id, $warehouse_id): JsonResponse
     {
         $products = DB::table('variations as variation')
             ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
@@ -1202,14 +1204,14 @@ class LabOrderController extends Controller
         return response()->json($products);
     }
 
-    public function getProductsByOrder($id)
+    public function getProductsByOrder($id): JsonResponse
     {
         $products = $this->getMaterialsByOrder($id);
 
         return response()->json($products);
     }
 
-    public function getReport(Request $request, $id)
+    public function getReport(Request $request, $id): View
     {
         if (! auth()->user()->can('lab_order.view')) {
             abort(403, 'Unauthorized action.');
@@ -1310,7 +1312,7 @@ class LabOrderController extends Controller
         return view('optics.lab_order.orders_ext_lab');
     }
 
-    public function fillHoopFields($variation_id, $transaction_id)
+    public function fillHoopFields($variation_id, $transaction_id): JsonResponse
     {
         $hoop_values = TransactionSellLine::join('variations as v', 'transaction_sell_lines.variation_id', 'v.id')
             ->join('products as p', 'v.product_id', 'p.id')
@@ -1329,7 +1331,7 @@ class LabOrderController extends Controller
         return response()->json($hoop_values);
     }
 
-    public function fillHoopFields2($variation_id)
+    public function fillHoopFields2($variation_id): JsonResponse
     {
         $hoop_values = DB::table('variations as v')
             ->join('products as p', 'v.product_id', 'p.id')
@@ -1352,7 +1354,7 @@ class LabOrderController extends Controller
      *
      * @param  int  $transaction_id
      */
-    public function createLabOrder()
+    public function createLabOrder(): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -1616,7 +1618,7 @@ class LabOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function print($id)
+    public function print(int $id)
     {
         if (! auth()->user()->can('lab_order.print')) {
             abort(403, 'Unauthorized action.');
@@ -1692,7 +1694,7 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndPrint($id, $status_id)
+    public function changeStatusAndPrint(int $id, int $status_id)
     {
         if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
@@ -1787,7 +1789,7 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus($order_id, $status_id)
+    public function changeStatus(int $order_id, int $status_id)
     {
         if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
@@ -1879,7 +1881,7 @@ class LabOrderController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getLabOrders($params)
+    public function getLabOrders(array $params)
     {
         // Location filter
         if (! empty($params['location_id']) && $params['location_id'] != 'all') {
@@ -1998,7 +2000,7 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndTransfer($id, $status_id)
+    public function changeStatusAndTransfer(int $id, int $status_id)
     {
         if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
@@ -2053,7 +2055,7 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndCopy($id, $status_id)
+    public function changeStatusAndCopy(int $id, int $status_id)
     {
         if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');
@@ -2109,7 +2111,7 @@ class LabOrderController extends Controller
      * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatusAndEdit($id, $status_id)
+    public function changeStatusAndEdit(int $id, int $status_id)
     {
         if (! auth()->user()->can('status_lab_order.'.$status_id)) {
             abort(403, 'Unauthorized action.');

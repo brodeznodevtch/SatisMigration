@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,7 +39,7 @@ class PhysicalInventoryLine extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Product::class, 'product_id');
     }
@@ -48,7 +49,7 @@ class PhysicalInventoryLine extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function variation()
+    public function variation(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Variation::class, 'variation_id');
     }

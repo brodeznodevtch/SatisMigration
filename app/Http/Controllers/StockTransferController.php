@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\MovementType;
 use App\Models\PurchaseLine;
@@ -480,7 +481,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('stock_transfer.view')) {
             abort(403, 'Unauthorized action.');
@@ -531,7 +532,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('stock_transfer.update')) {
             abort(403, 'Unauthorized action.');
@@ -608,7 +609,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('stock_transfer.update')) {
             abort(403, 'Unauthorized action.');
@@ -922,7 +923,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('stock_transfer.delete')) {
             abort(403, 'Unauthorized action.');
@@ -1070,7 +1071,7 @@ class StockTransferController extends Controller
      * @param Resquest
      * @return view
      */
-    public function getProductRowTransfer(Request $request)
+    public function getProductRowTransfer(Request $request): View
     {
         if (request()->ajax()) {
             $row_index = $request->input('row_index');
@@ -1168,7 +1169,7 @@ class StockTransferController extends Controller
      * @param  int  $old_qty
      * @return void
      */
-    public function reserve($sell_transfer, $product, $type = 'create', $old_qty = 0)
+    public function reserve(Transaction $sell_transfer, array $product, string $type = 'create', int $old_qty = 0)
     {
         if ($product['enable_stock']) {
             // Create view
@@ -1209,7 +1210,7 @@ class StockTransferController extends Controller
      * @param  int  $old_qty
      * @return void
      */
-    public function send($sell_transfer, $product, $type = 'create', $old_qty = 0)
+    public function send(Transaction $sell_transfer, array $product, string $type = 'create', int $old_qty = 0)
     {
         if ($product['enable_stock']) {
             // Decrese quantity for existing products
@@ -1244,7 +1245,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return array
      */
-    public function receive($id)
+    public function receive(int $id)
     {
         if (! auth()->user()->can('stock_transfer.update')) {
             abort(403, 'Unauthorized action.');
@@ -1382,7 +1383,7 @@ class StockTransferController extends Controller
      * @param  int  $id
      * @return array
      */
-    public function count($id)
+    public function count(int $id)
     {
         try {
             DB::beginTransaction();
@@ -1427,7 +1428,7 @@ class StockTransferController extends Controller
      * @param  int  $transaction_id
      * @return string
      */
-    public function fixTransfer($transaction_id)
+    public function fixTransfer(int $transaction_id)
     {
         try {
             DB::beginTransaction();

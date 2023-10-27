@@ -27,7 +27,7 @@ class Util
      * @param  int  $input_number
      * @return float
      */
-    public function num_uf($input_number, $currency_details = [])
+    public function num_uf(int $input_number, $currency_details = []): float
     {
         $thousand_separator = '';
         $decimal_separator = '';
@@ -53,7 +53,7 @@ class Util
      * @param  bool  $add_symbol = false
      * @return string
      */
-    public function num_f($input_number, $add_symbol = false, $precision = 2)
+    public function num_f(int $input_number, bool $add_symbol = false, $precision = 2): string
     {
         $formatted = number_format($input_number, $precision, session('currency')['decimal_separator'], session('currency')['thousand_separator']);
 
@@ -76,7 +76,7 @@ class Util
      * @param  int  $addition default = 0
      * @return float
      */
-    public function calc_percentage($number, $percent, $addition = 0)
+    public function calc_percentage(int $number, int $percent, int $addition = 0): float
     {
         return $addition + ($number * ($percent / 100));
     }
@@ -88,7 +88,7 @@ class Util
      * @param  int  $percent
      * @return float
      */
-    public function calc_percentage_base($number, $percent)
+    public function calc_percentage_base(int $number, int $percent): float
     {
 
         return ($number * 100) / (100 + $percent);
@@ -101,7 +101,7 @@ class Util
      * @param  int  $number
      * @return float
      */
-    public function get_percent($base, $number)
+    public function get_percent(int $base, int $number): float
     {
         $diff = $number - $base;
         if ($base <= 0) {
@@ -124,7 +124,7 @@ class Util
      * @param  float  $amount
      * @return float
      */
-    public function getTaxPercent($tax_group_id)
+    public function getTaxPercent(int $tax_group_id): float
     {
         if (is_null($tax_group_id)) {
             return null;
@@ -147,7 +147,7 @@ class Util
      *
      * @return array
      */
-    public function print_formats()
+    public function print_formats(): array
     {
         $print_formats = [
             'invoice' => __('document_type.invoice'),
@@ -169,7 +169,7 @@ class Util
      *
      * @return array
      */
-    public function payment_types()
+    public function payment_types(): array
     {
         $payment_types = [
             'cash' => __('lang_v1.cash'),
@@ -186,7 +186,7 @@ class Util
      *
      * @return array
      */
-    public function allModulesEnabled()
+    public function allModulesEnabled(): array
     {
         $nameModules = Module::where('status', 1)->orderBy('name', 'ASC')->get()->pluck('name');
         $enabled_modules = $nameModules->all();
@@ -200,7 +200,7 @@ class Util
      *
      * @return array
      */
-    public function isModuleEnabled($module)
+    public function isModuleEnabled($module): array
     {
         $enabled_modules = $this->allModulesEnabled();
 
@@ -218,7 +218,7 @@ class Util
      * @param  bool  $time (default = false)
      * @return strin
      */
-    public function uf_date($date, $time = false)
+    public function uf_date(string $date, bool $time = false): strin
     {
         $date_format = session('business.date_format');
         $mysql_format = 'Y-m-d';
@@ -240,7 +240,7 @@ class Util
      * @param  string  $time
      * @return strin
      */
-    public function uf_time($time)
+    public function uf_time(string $time): strin
     {
         $time_format = 'H:i';
         if (session('business.time_format') == 12) {
@@ -256,7 +256,7 @@ class Util
      * @param  string  $time
      * @return strin
      */
-    public function format_time($time)
+    public function format_time(string $time): strin
     {
         $time_format = 'H:i';
         if (session('business.time_format') == 12) {
@@ -273,7 +273,7 @@ class Util
      * @param  bool  $time (default = false)
      * @return strin
      */
-    public function format_date($date, $show_time = false)
+    public function format_date(string $date, $show_time = false): strin
     {
         $format = session('business.date_format');
         if (! empty($show_time)) {
@@ -296,7 +296,7 @@ class Util
      * @param  bool  $setter
      * @return int
      */
-    public function setAndGetReferenceCount($type, $business_id = null, $setter = true)
+    public function setAndGetReferenceCount(string $type, int $business_id = null, bool $setter = true): int
     {
         if (empty($business_id)) {
             $business_id = request()->session()->get('user.business_id');
@@ -332,7 +332,7 @@ class Util
      * @param  int  $business_id
      * @return int
      */
-    public function generateReferenceNumber($type, $ref_count, $business_id = null)
+    public function generateReferenceNumber(string $type, $ref_count, int $business_id = null): int
     {
 
         $prefix = '';
@@ -398,7 +398,7 @@ class Util
      * @param  int  $business_id
      * @return string
      */
-    public function generateFixedAssetPrefix($business_id, $last_id)
+    public function generateFixedAssetPrefix(int $business_id, $last_id): string
     {
         $business = Business::find($business_id);
 
@@ -426,7 +426,7 @@ class Util
      * @param  int  $business_id
      * @return bool
      */
-    public function is_admin($user, $business_id)
+    public function is_admin(obj $user, int $business_id): bool
     {
         return $user->hasRole('Admin#'.$business_id) ? true : false;
     }
@@ -457,7 +457,7 @@ class Util
      * @param  array  $data
      * @return void
      */
-    public function sendSms($data)
+    public function sendSms(array $data): void
     {
         $sms_settings = $data['sms_settings'];
         $request_data = [
@@ -498,7 +498,7 @@ class Util
      * @param  obj  $request, string $file_name, string dir_name
      * @return string
      */
-    public function uploadFile($request, $file_name, $dir_name)
+    public function uploadFile($request, $file_name, $dir_name): string
     {
         //If app environment is demo return null
         if (config('app.env') == 'demo') {
@@ -533,7 +533,7 @@ class Util
      *
      * @return array
      */
-    public function checkbook_formats()
+    public function checkbook_formats(): array
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::find($business_id);
@@ -574,7 +574,7 @@ class Util
      * @param  mixed  $actual_date,
      * @return array
      */
-    public function first_last_month_day($actual_date)
+    public function first_last_month_day($actual_date): array
     {
         // Actual month first day
         $month = date('m', strtotime($actual_date));
@@ -597,7 +597,7 @@ class Util
      * @param  int  $location_id
      * @return string
      */
-    public function generateLabOrderCode($location_id = null)
+    public function generateLabOrderCode(int $location_id = null): string
     {
         $business_id = request()->session()->get('user.business_id');
         $laborder_prefix = Business::where('id', $business_id)->value('laborder_prefix');
@@ -627,7 +627,7 @@ class Util
      *
      * @return string
      */
-    public function generateStatusLabOrderCode()
+    public function generateStatusLabOrderCode(): string
     {
         $business_id = request()->session()->get('user.business_id');
         $slo_prefix = Business::where('id', $business_id)->value('status_laborder_prefix');
@@ -652,7 +652,7 @@ class Util
      *
      * @return string
      */
-    public function generatePatientsCode()
+    public function generatePatientsCode(): string
     {
         $business_id = request()->session()->get('user.business_id');
         $patients_prefix = Business::where('id', $business_id)->value('patient_prefix');
@@ -677,7 +677,7 @@ class Util
      *
      * @return array
      */
-    public function Sexs()
+    public function Sexs(): array
     {
         return [
             'female' => __('lang_v1.female'),
@@ -695,7 +695,7 @@ class Util
      * @param  mixed  $new_record
      * @return void
      */
-    public function registerBinnacle($module, $action, $reference = null, $old_record = null, $new_record = null)
+    public function registerBinnacle(string $module, string $action, string $reference = null, $old_record = null, $new_record = null): void
     {
         $business = Business::find(request()->session()->get('user.business_id'));
         $globalUtil = new GlobalUtil;
@@ -764,7 +764,7 @@ class Util
      *
      * @return  string
      */
-    public function generateQuoteReference()
+    public function generateQuoteReference(): string
     {
         $business_id = request()->session()->get('user.business_id');
 

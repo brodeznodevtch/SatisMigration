@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Cashier;
 use App\Models\Module;
@@ -73,7 +74,7 @@ class CashierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('cashier.create')) {
             abort(403, 'Unauthorized action.');
@@ -146,7 +147,7 @@ class CashierController extends Controller
      * @param  \App\Models\Cashier  $cashier
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('cashier.update')) {
             abort(403, 'Unauthorized action.');

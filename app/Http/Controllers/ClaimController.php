@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Business;
 use App\Models\Claim;
 use App\Models\ClaimType;
@@ -19,7 +21,7 @@ class ClaimController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (auth()->user()->can('claim.view')) {
             if (! auth()->user()->can('claim.access')) {
@@ -87,7 +89,7 @@ class ClaimController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('claim.create')) {
             abort(403, 'Unauthorized action.');
@@ -176,7 +178,7 @@ class ClaimController extends Controller
      * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('claim.view')) {
             abort(403, 'Unauthorized action.');
@@ -202,7 +204,7 @@ class ClaimController extends Controller
      * @param  \App\Models\Claim  $claim
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         if (! auth()->user()->can('claim.update')) {
             abort(403, 'Unauthorized action.');
@@ -450,7 +452,7 @@ class ClaimController extends Controller
         return $output;
     }
 
-    public function getUsersByClaimType($id)
+    public function getUsersByClaimType($id): JsonResponse
     {
         if (! auth()->user()->can('claim.update')) {
             abort(403, 'Unauthorized action.');

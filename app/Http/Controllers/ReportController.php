@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Exports\AccountStatementExport;
 use App\Exports\AllSalesWithUtilityReportExport;
 use App\Exports\CollectionReport;
@@ -707,7 +708,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getStockDetails(Request $request)
+    public function getStockDetails(Request $request): View
     {
         //Return the details in ajax call
         if ($request->ajax()) {
@@ -815,7 +816,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTrendingProducts(Request $request)
+    public function getTrendingProducts(Request $request): View
     {
         if (! auth()->user()->can('trending_product_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -868,7 +869,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getExpenseReport(Request $request)
+    public function getExpenseReport(Request $request): View
     {
         if (! auth()->user()->can('expense_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -1159,7 +1160,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getSalesRepresentativeReport(Request $request)
+    public function getSalesRepresentativeReport(Request $request): View
     {
 
         if (! auth()->user()->can('sales_representative.view')) {
@@ -1180,7 +1181,7 @@ class ReportController extends Controller
      *
      * @return json
      */
-    public function getSalesRepresentativeTotalExpense(Request $request)
+    public function getSalesRepresentativeTotalExpense(Request $request): json
     {
 
         if (! auth()->user()->can('sales_representative.view')) {
@@ -1203,7 +1204,7 @@ class ReportController extends Controller
      *
      * @return json
      */
-    public function getSalesRepresentativeTotalSell(Request $request)
+    public function getSalesRepresentativeTotalSell(Request $request): json
     {
         if (! auth()->user()->can('sales_representative.view')) {
             abort(403, 'Unauthorized action.');
@@ -1230,7 +1231,7 @@ class ReportController extends Controller
      *
      * @return json
      */
-    public function getSalesRepresentativeTotalCommission(Request $request)
+    public function getSalesRepresentativeTotalCommission(Request $request): json
     {
         if (! auth()->user()->can('sales_representative.view')) {
             abort(403, 'Unauthorized action.');
@@ -1434,7 +1435,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getStockExpiryReportEditModal(Request $request, $purchase_line_id)
+    public function getStockExpiryReportEditModal(Request $request, $purchase_line_id): View
     {
 
         if (! auth()->user()->can('stock_expiry_report.update')) {
@@ -3977,7 +3978,7 @@ class ReportController extends Controller
      *
      * @return Illuminate\Http\Response
      */
-    public function getPriceListsReport()
+    public function getPriceListsReport(): View
     {
         if (! auth()->user()->can('price_lists_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -4000,7 +4001,7 @@ class ReportController extends Controller
      * @return Illuminate\Http\Request
      * @return Excel
      */
-    public function postPriceListsReport(Request $request)
+    public function postPriceListsReport(Request $request): Request
     {
         if (! auth()->user()->can('price_lists_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -4182,7 +4183,7 @@ class ReportController extends Controller
      * @param  bool  $print
      * @return array
      */
-    public function getSalesForReport($params, $print = false)
+    public function getSalesForReport(array $params, bool $print = false)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -4642,7 +4643,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToDetailedCommissionsReport($params)
+    public function getDataToDetailedCommissionsReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -4769,7 +4770,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getLinesForAccountStatement($params)
+    public function getLinesForAccountStatement(array $params)
     {
         // Customer filter
         $customer_id = ! empty($params['customer_id']) ? $params['customer_id'] : 0;
@@ -5519,7 +5520,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTransferSheet()
+    public function getTransferSheet(): View
     {
         if (! auth()->user()->can('transfer_sheet.view')) {
             abort(403, 'Unauthorized action.');
@@ -5740,7 +5741,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToPaymentNoteReport($params)
+    public function getDataToPaymentNoteReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -5907,7 +5908,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToLabOrdersReport($params)
+    public function getDataToLabOrdersReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -6333,7 +6334,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToGlassesConsumptionReport($params, $print = false)
+    public function getDataToGlassesConsumptionReport(array $params, $print = false)
     {
         // Business filter
         $business_id = $params['business_id'];
@@ -6545,7 +6546,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToStockReportByLocation($params, $print = false)
+    public function getDataToStockReportByLocation(array $params, $print = false)
     {
         // Business filter
         $business_id = $params['business_id'];
@@ -6601,7 +6602,7 @@ class ReportController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function getSalesPerSellerReport(Request $request)
+    public function getSalesPerSellerReport(Request $request): View
     {
         if (! auth()->user()->can('sales_per_seller_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -6714,7 +6715,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToSalesPerSellerReport($params)
+    public function getDataToSalesPerSellerReport(array $params)
     {
         // Business filter
         $business_id = $params['business']->id;
@@ -6792,7 +6793,7 @@ class ReportController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function getPaymentReport(Request $request)
+    public function getPaymentReport(Request $request): View
     {
         if (! auth()->user()->can('payment_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -6905,7 +6906,7 @@ class ReportController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getDataToPaymentReport($params)
+    public function getDataToPaymentReport(array $params)
     {
         // Business filter
         $business_id = $params['business']->id;
@@ -6977,7 +6978,7 @@ class ReportController extends Controller
         return $result;
     }
 
-    public function printTest()
+    public function printTest(): View
     {
         return view('reports.print_test');
     }

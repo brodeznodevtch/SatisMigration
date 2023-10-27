@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Employees;
 use App\Models\RrhhAbsenceInability;
 use App\Models\RrhhData;
@@ -35,7 +36,7 @@ class RrhhAbsenceInabilityController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.view')) {
             abort(403, 'Unauthorized action.');
@@ -57,7 +58,7 @@ class RrhhAbsenceInabilityController extends Controller
         //
     }
 
-    public function createAbsenceInability($id)
+    public function createAbsenceInability($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.create')) {
             abort(403, 'Unauthorized action.');
@@ -161,7 +162,7 @@ class RrhhAbsenceInabilityController extends Controller
      * @param  \App\Models\RrhhAbsenceInability  $rrhhDocuments
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.edit')) {
             abort(403, 'Unauthorized action.');

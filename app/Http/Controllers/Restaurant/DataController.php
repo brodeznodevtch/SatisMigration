@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Restaurant;
 
+use Illuminate\View\View;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Restaurant\ResTable;
@@ -27,7 +28,7 @@ class DataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPosDetails(Request $request)
+    public function getPosDetails(Request $request): View
     {
         if (request()->ajax()) {
             $business_id = $request->session()->get('user.business_id');

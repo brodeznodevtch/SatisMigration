@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
 use App\Optics\LabOrder;
@@ -35,7 +36,7 @@ class PatientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('patients.view') && ! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -50,7 +51,7 @@ class PatientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($patient_name = null)
+    public function create($patient_name = null): View
     {
         if (! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -164,7 +165,7 @@ class PatientController extends Controller
      * @param  \App\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('patients.update')) {
             abort(403, 'Unauthorized action.');
@@ -359,7 +360,7 @@ class PatientController extends Controller
      * @param  string  $q
      * @return JSON
      */
-    public function getPatients()
+    public function getPatients(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Business;
 use App\Models\StatusClaim;
 use DataTables;
@@ -83,7 +84,7 @@ class StatusClaimController extends Controller
      * @param  \App\Models\StatusClaim  $statusClaim
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         if (! auth()->user()->can('claim_status.update')) {
             abort(403, 'Unauthorized action.');
@@ -216,7 +217,7 @@ class StatusClaimController extends Controller
             ->toJson();
     }
 
-    public function getStatusClaims()
+    public function getStatusClaims(): JsonResponse
     {
         if (! auth()->user()->can('claim_status.view')) {
             abort(403, 'Unauthorized action.');

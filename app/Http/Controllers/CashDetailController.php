@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\CashDetail;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,7 @@ class CashDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('cash_detail.create');
     }

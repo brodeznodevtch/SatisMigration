@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
 use App\Models\TaxRateTaxGroup;
@@ -97,7 +98,7 @@ class TaxGroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         $business_id = request()->session()->get('user.business_id');
         $taxes = TaxRate::where('business_id', $business_id)
@@ -163,7 +164,7 @@ class TaxGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -174,7 +175,7 @@ class TaxGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('tax_group.edit')) {
             abort(403, 'Unauthorized action.');
@@ -201,7 +202,7 @@ class TaxGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('tax_group.edit')) {
             abort(403, 'Unauthorized action.');
@@ -266,7 +267,7 @@ class TaxGroupController extends Controller
      * @param  Interger  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Interger $id)
     {
         if (! auth()->user()->can('tax_group.delete')) {
             abort(403, 'Unauthorized action.');

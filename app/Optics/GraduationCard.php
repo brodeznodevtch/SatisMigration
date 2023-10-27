@@ -2,6 +2,7 @@
 
 namespace App\Optics;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -53,7 +54,7 @@ class GraduationCard extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function patient()
+    public function patient(): HasRelationships
     {
         return $this->belongsTo(\App\Optics\Patient::class);
     }

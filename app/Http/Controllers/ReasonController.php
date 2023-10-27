@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Reason;
 use Datatables;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class ReasonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('pos.create')) {
             abort(403, 'Unauthorized action.');
@@ -116,7 +117,7 @@ class ReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -127,7 +128,7 @@ class ReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('quotes.edit')) {
             abort(403, 'Unauthorized action.');
@@ -144,7 +145,7 @@ class ReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
@@ -186,7 +187,7 @@ class ReasonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');

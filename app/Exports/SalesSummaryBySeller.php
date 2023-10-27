@@ -16,7 +16,7 @@ class SalesSummaryBySeller implements WithEvents, WithTitle
      * @param  array  $transactions
      * @return void
      */
-    public function __construct($transactions)
+    public function __construct(array $transactions)
     {
         $this->transactions = $transactions;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Optics;
 
+use App\Models\Contact;
+use App\Models\Employees;
 use Illuminate\Database\Eloquent\Model;
 
 class InflowOutflow extends Model
@@ -39,7 +41,7 @@ class InflowOutflow extends Model
      *
      * @return \App\Models\Contact
      */
-    public function contact()
+    public function contact(): Contact
     {
         return $this->belongsTo(\App\Models\Contact::class, 'supplier_id');
     }
@@ -49,7 +51,7 @@ class InflowOutflow extends Model
      *
      * @return \App\Models\Employees
      */
-    public function employee()
+    public function employee(): Employees
     {
         return $this->belongsTo(\App\Models\Employees::class, 'employee_id');
     }

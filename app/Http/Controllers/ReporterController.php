@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Exports\AnnexExport;
 use App\Exports\AuxiliarReportExport;
 use App\Exports\BankTransactionsReportExport;
@@ -532,7 +534,7 @@ class ReporterController extends Controller
         return view('auxiliars.index', compact('accounts', 'clasifications'));
     }
 
-    public function getLedger($id)
+    public function getLedger($id): JsonResponse
     {
 
         $cuenta = Catalogue::where('id', $id)->first();
@@ -554,7 +556,7 @@ class ReporterController extends Controller
      * @param  date  $to
      * @return json
      */
-    public function getAuxiliarDetail($id, $from, $to)
+    public function getAuxiliarDetail(int $id, date $from, date $to): json
     {
 
         $account = DB::table('catalogues')
@@ -641,7 +643,7 @@ class ReporterController extends Controller
         return DataTables::of($lines)->toJson();
     }
 
-    public function getAuxiliarDetails()
+    public function getAuxiliarDetails(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -657,7 +659,7 @@ class ReporterController extends Controller
         return response()->json($accounts);
     }
 
-    public function getAuxiliarRange(Catalogue $start, Catalogue $end)
+    public function getAuxiliarRange(Catalogue $start, Catalogue $end): JsonResponse
     {
 
         $from = $start->code;
@@ -698,7 +700,7 @@ class ReporterController extends Controller
 
     }
 
-    public function getLedgerRange(Catalogue $start, Catalogue $end)
+    public function getLedgerRange(Catalogue $start, Catalogue $end): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1074,7 +1076,7 @@ class ReporterController extends Controller
      *
      * @return Json
      */
-    public function getGralJournalBook()
+    public function getGralJournalBook(): Json
     {
         if (request()->ajax()) {
             $business_id = request()->user()->business_id;
@@ -1136,7 +1138,7 @@ class ReporterController extends Controller
         }
     }
 
-    public function getHigherAccounts()
+    public function getHigherAccounts(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1534,7 +1536,7 @@ class ReporterController extends Controller
         }
     }
 
-    public function getSignatures($id)
+    public function getSignatures($id): JsonResponse
     {
         $business = Business::select('legal_representative', 'accountant', 'auditor', 'inscription_number_auditor')->where('id', $id)->first();
 
@@ -1891,7 +1893,7 @@ class ReporterController extends Controller
         return $output;
     }
 
-    public function getKardex()
+    public function getKardex(): View
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -2134,7 +2136,7 @@ class ReporterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function viewBookFinalConsumer()
+    public function viewBookFinalConsumer(): View
     {
         if (! auth()->user()->can('iva_book.book_final_consumer')) {
             abort(403, 'Unauthorized action.');
@@ -2207,7 +2209,7 @@ class ReporterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function viewBookTaxpayer()
+    public function viewBookTaxpayer(): View
     {
         if (! auth()->user()->can('iva_book.book_taxpayer')) {
             abort(403, 'Unauthorized action.');
@@ -2271,7 +2273,7 @@ class ReporterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function viewPurchasesBook()
+    public function viewPurchasesBook(): View
     {
         if (! auth()->user()->can('iva_book.purchases_book')) {
             abort(403, 'Unauthorized action.');
@@ -2339,7 +2341,7 @@ class ReporterController extends Controller
      * @param null
      * @return \PDF
      */
-    public function getCashRegisterReport()
+    public function getCashRegisterReport(): PDF
     {
         if (! auth()->user()->can('cash_register_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -2369,7 +2371,7 @@ class ReporterController extends Controller
      * @param null
      * @return \PDF
      */
-    public function getNewCashRegisterReport()
+    public function getNewCashRegisterReport(): PDF
     {
         if (! auth()->user()->can('cash_register_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -2424,7 +2426,7 @@ class ReporterController extends Controller
      * @param  int  $cashier_closure_id
      * @return \PDF
      */
-    public function getAuditTapeReport($cashier_closure_id)
+    public function getAuditTapeReport(int $cashier_closure_id): PDF
     {
         if (! auth()->user()->can('audit_tape.view')) {
             abort(403, 'Unauthorized action.');
@@ -2476,7 +2478,7 @@ class ReporterController extends Controller
         return $audit_tape_report_pdf->stream(__('report.audit_tape_report').'.pdf');
     }
 
-    public function getHistoryPurchaseClients()
+    public function getHistoryPurchaseClients(): View
     {
         if (! auth()->user()->can('cash_register_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -2741,7 +2743,7 @@ class ReporterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTreasuryAnnexes()
+    public function getTreasuryAnnexes(): View
     {
         if (! auth()->user()->can('treasury_annexes.view')) {
             abort(403, 'Unauthorized action.');

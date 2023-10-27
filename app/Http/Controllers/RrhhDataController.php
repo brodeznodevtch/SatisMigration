@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Employees;
 use App\Models\RrhhAbsenceInability;
 use App\Models\RrhhData;
@@ -109,7 +110,7 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function createItem($id)
+    public function createItem($id): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.create')) {
@@ -307,7 +308,7 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function editItem($id)
+    public function editItem($id): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.update')) {

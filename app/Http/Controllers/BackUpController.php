@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use Illuminate\Support\Facades\Artisan;
 use Log;
 use Storage;
@@ -13,7 +14,7 @@ class BackUpController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('backup')) {
             abort(403, 'Unauthorized action.');

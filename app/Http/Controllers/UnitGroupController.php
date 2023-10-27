@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\UnitGroup;
@@ -17,7 +19,7 @@ class UnitGroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('home');
     }
@@ -97,7 +99,7 @@ class UnitGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
 
@@ -110,7 +112,7 @@ class UnitGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): JsonResponse
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
 
@@ -123,7 +125,7 @@ class UnitGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
@@ -176,7 +178,7 @@ class UnitGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $group = UnitGroup::find($id);
         $products = Product::where('unit_id', $id)->count();

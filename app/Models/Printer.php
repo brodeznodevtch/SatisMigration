@@ -58,7 +58,7 @@ class Printer extends Model
      * @param  bool  $show_select = true
      * @return array
      */
-    public static function forDropdown($business_id, $show_select = true)
+    public static function forDropdown(int $business_id, bool $show_select = true): array
     {
         $query = Printer::where('business_id', $business_id);
 

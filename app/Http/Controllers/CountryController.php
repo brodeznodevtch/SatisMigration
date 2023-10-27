@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\Zone;
@@ -16,7 +18,7 @@ class CountryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -32,7 +34,7 @@ class CountryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('geography.index');
     }
@@ -86,7 +88,7 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $country = Country::findOrFail($id);
 
@@ -99,7 +101,7 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $country = Country::findOrFail($id);
 
@@ -112,7 +114,7 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): View
     {
         return view('geography.index');
     }
@@ -168,7 +170,7 @@ class CountryController extends Controller
             ->toJson();
     }
 
-    public function getCountries()
+    public function getCountries(): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $countries = Country::where('business_id', $business_id)->get();

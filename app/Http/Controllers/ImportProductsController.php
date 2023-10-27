@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Brands;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -60,7 +62,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexOld()
+    public function indexOld(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -86,7 +88,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -824,7 +826,7 @@ class ImportProductsController extends Controller
      * @param  int  $business_id
      * @return void
      */
-    private function addOpeningStock($opening_stock, $product, $business_id)
+    private function addOpeningStock(array $opening_stock, obj $product, int $business_id): void
     {
 
         $user_id = request()->session()->get('user.id');
@@ -1258,7 +1260,7 @@ class ImportProductsController extends Controller
      * @param  array  $default_data
      * @return array
      */
-    public function checkRow($row, $row_no, $default_data = null)
+    public function checkRow(array $row, int $row_no, array $default_data = null)
     {
         $product = [
             // Product
@@ -1867,7 +1869,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function import(Request $request)
+    public function import(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -2089,7 +2091,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -2121,7 +2123,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function checkEditFile(Request $request)
+    public function checkEditFile(Request $request): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -2562,7 +2564,7 @@ class ImportProductsController extends Controller
      * @param  int  $row_no
      * @return array
      */
-    public function checkEditRow($row, $row_no)
+    public function checkEditRow(array $row, int $row_no)
     {
         $product = [
             // Product
@@ -3411,7 +3413,7 @@ class ImportProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(): RedirectResponse
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Models\Employees;
 use App\Optics\Diagnostic;
 use App\Optics\GraduationCard;
@@ -70,7 +71,7 @@ class GraduationCardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');
@@ -176,7 +177,7 @@ class GraduationCardController extends Controller
      * @param  \App\GraduationCard  $graduationCard
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('graduation_card.update')) {
             abort(403, 'Unauthorized action.');
@@ -335,7 +336,7 @@ class GraduationCardController extends Controller
         }
     }
 
-    public function createOrder()
+    public function createOrder(): View
     {
         if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');

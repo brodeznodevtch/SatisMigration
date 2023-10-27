@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\CashDetail;
 use App\Models\Cashier;
 use App\Models\CashierClosure;
@@ -50,7 +52,7 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('cash_register.index');
     }
@@ -102,7 +104,7 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function storeCashier(Request $request)
+    public function storeCashier(Request $request): RedirectResponse
     {
         $cashier_closure_id = null;
         $opening_receipt = true;
@@ -185,7 +187,7 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function storeCashRegister(Request $request)
+    public function storeCashRegister(Request $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -280,7 +282,7 @@ class CashRegisterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         $cash_register = CashRegister::where('id', $id)
             ->first();
@@ -325,7 +327,7 @@ class CashRegisterController extends Controller
      * @param  void
      * @return \Illuminate\Http\Response
      */
-    public function getRegisterDetails()
+    public function getRegisterDetails(): View
     {
 
         $register_details = $this->cashRegisterUtil->getRegisterDetails(null, null, null, null);
@@ -345,7 +347,7 @@ class CashRegisterController extends Controller
      * @param  void
      * @return \Illuminate\Http\Response
      */
-    public function getCloseRegister()
+    public function getCloseRegister(): View
     {
         $close_date = request()->input('close_date');
         $cashier_id = request()->input('cashier_id');
@@ -425,7 +427,7 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postCloseRegister(Request $request)
+    public function postCloseRegister(Request $request): RedirectResponse
     {
         try {
             // Disable in demo

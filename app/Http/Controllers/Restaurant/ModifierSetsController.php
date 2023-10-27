@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Restaurant;
 
+use Illuminate\View\View;
 use App\Models\Product;
 use App\Utils\ProductUtil;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -86,7 +87,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -100,7 +101,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         try {
             if (! auth()->user()->can('product.create')) {
@@ -165,7 +166,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function show()
+    public function show(): View
     {
         return view('restaurant.modifier_sets.show');
     }
@@ -175,7 +176,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function edit($id, Request $request)
+    public function edit($id, Request $request): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -203,7 +204,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function update($id, Request $request)
+    public function update($id, Request $request): Response
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -283,7 +284,7 @@ class ModifierSetsController extends Controller
      *
      * @return Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($id, Request $request): Response
     {
         if (! auth()->user()->can('product.delete')) {
             abort(403, 'Unauthorized action.');

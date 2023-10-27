@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\CRMContactReason;
 use App\Utils\ModuleUtil;
 use DB;
@@ -15,7 +16,7 @@ class CRMContactReasonController extends Controller
         $this->moduleUtil = $moduleUtil;
     }
 
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('crm-contactreason.view') && ! auth()->user()->can('crm-contactreason.create')) {
             abort(403, 'Unauthorized action.');
@@ -52,7 +53,7 @@ class CRMContactReasonController extends Controller
             ->make(false);
     }
 
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('crm-contactreason.create')) {
             abort(403, 'Unauthorized action.');
@@ -82,7 +83,7 @@ class CRMContactReasonController extends Controller
         return $outpout;
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('crm-contactreason.update')) {
             abort(403, 'Unauthorized action.');

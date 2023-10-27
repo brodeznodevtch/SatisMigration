@@ -108,7 +108,7 @@ class Business extends Model
      *
      * @return object
      */
-    public static function create_business($details)
+    public static function create_business($details): object
     {
         $business = Business::create($details);
 
@@ -122,7 +122,7 @@ class Business extends Model
      * @param  array  $details
      * @return object
      */
-    public static function update_business($business_id, $details)
+    public static function update_business(int $business_id, array $details): object
     {
         if (! empty($details)) {
             Business::where('id', $business_id)

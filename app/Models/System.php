@@ -51,7 +51,7 @@ class System extends Model
      * @param $keys array
      * @return array
      */
-    public static function getProperties($keys, $pluck = false)
+    public static function getProperties($keys, $pluck = false): array
     {
         if ($pluck == true) {
             return System::whereIn('key', $keys)
@@ -69,7 +69,7 @@ class System extends Model
      * @param void
      * @return object
      */
-    public static function getCurrency()
+    public static function getCurrency(): object
     {
         $c_id = System::where('key', 'app_currency_id')
             ->first()
@@ -86,7 +86,7 @@ class System extends Model
      *
      * @return void
      */
-    public static function setProperty($key, $value)
+    public static function setProperty($key, $value): void
     {
         System::where('key', $key)
             ->update(['value' => $value]);

@@ -39,7 +39,7 @@ class Category extends Model
      * @param  int  $business_id
      * @return array
      */
-    public static function catAndSubCategories($business_id)
+    public static function catAndSubCategories(int $business_id): array
     {
         $categories = Category::where('business_id', $business_id)
             ->where('parent_id', 0)

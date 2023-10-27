@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Models\BusinessLocation;
@@ -179,7 +180,7 @@ class ExpenseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('expense.create')) {
             abort(403, 'Unauthorized action.');
@@ -254,7 +255,7 @@ class ExpenseController extends Controller
      *
      * @return json
      */
-    public function getCategories()
+    public function getCategories(): json
     {
         $term = request()->q;
         if (empty($term)) {
@@ -417,12 +418,12 @@ class ExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('expense.update')) {
             abort(403, 'Unauthorized action.');
@@ -470,7 +471,7 @@ class ExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         // dd($request->contact_id);
         if (! auth()->user()->can('expense.update')) {
@@ -615,7 +616,7 @@ class ExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('expense.delete')) {
             abort(403, 'Unauthorized action.');
@@ -655,7 +656,7 @@ class ExpenseController extends Controller
      * @param  date  $end_date
      * @return json
      */
-    public function accountingByRange($start_date, $end_date)
+    public function accountingByRange(date $start_date, date $end_date): json
     {
         if (! auth()->user()->can('entries.create')) {
             abort(403, 'Unauthorized action.');
@@ -685,7 +686,7 @@ class ExpenseController extends Controller
      * @param  int  $bank_transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function getAddExpenses($bank_transaction_id = null)
+    public function getAddExpenses(int $bank_transaction_id = null): View
     {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
@@ -837,7 +838,7 @@ class ExpenseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAddExpense()
+    public function getAddExpense(): View
     {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
@@ -863,7 +864,7 @@ class ExpenseController extends Controller
      * @param  int  $expense_id
      * @return json
      */
-    public function getExpenseDetails($expense_id)
+    public function getExpenseDetails(int $expense_id): json
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -1036,7 +1037,7 @@ class ExpenseController extends Controller
      * @param  float  $tax_percent
      * @return float
      */
-    public function calcContactTax($amount, $min_amount, $max_amount, $tax_percent)
+    public function calcContactTax(float $amount, float $min_amount, float $max_amount, float $tax_percent)
     {
         $tax_amount = 0;
 

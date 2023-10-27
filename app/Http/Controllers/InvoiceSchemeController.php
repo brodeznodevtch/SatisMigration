@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Models\DiscountCard;
 use App\Models\InvoiceLayout;
 use App\Models\InvoiceScheme;
@@ -87,7 +89,7 @@ class InvoiceSchemeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -134,7 +136,7 @@ class InvoiceSchemeController extends Controller
         return $output;
     }
 
-    public function UpdateDiscoount(Request $request)
+    public function UpdateDiscoount(Request $request): RedirectResponse
     {
         $messages = 'Descuento actualizado';
 
@@ -164,7 +166,7 @@ class InvoiceSchemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -179,7 +181,7 @@ class InvoiceSchemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -198,7 +200,7 @@ class InvoiceSchemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -229,7 +231,7 @@ class InvoiceSchemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -266,7 +268,7 @@ class InvoiceSchemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function setDefault($id)
+    public function setDefault(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');

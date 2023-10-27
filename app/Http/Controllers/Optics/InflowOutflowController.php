@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Optics;
 
+use Illuminate\View\View;
 use App\Models\Contact;
 use App\Models\DocumentType;
 use App\Models\Employees;
@@ -102,7 +103,7 @@ class InflowOutflowController extends Controller
      * @param  string  $type
      * @return \Illuminate\Http\Response
      */
-    public function create($type)
+    public function create(string $type): View
     {
         if (! auth()->user()->can('inflow_outflow.create')) {
             abort(403, 'Unauthorized action.');
@@ -317,7 +318,7 @@ class InflowOutflowController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('inflow_outflow.update')) {
             abort(403, 'Unauthorized action.');
@@ -343,7 +344,7 @@ class InflowOutflowController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('inflow_outflow.update')) {
             abort(403, 'Unauthorized action.');
@@ -394,7 +395,7 @@ class InflowOutflowController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('inflow_outflow.delete')) {
             abort(403, 'Unauthorized action.');

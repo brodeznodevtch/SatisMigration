@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Bank;
 use App\Models\City;
 use App\Models\Country;
@@ -30,7 +32,7 @@ class RrhhImportEmployeesController extends Controller
         $this->employeeUtil = $employeeUtil;
     }
 
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_import_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -200,7 +202,7 @@ class RrhhImportEmployeesController extends Controller
      * @param  array  $default_data
      * @return array
      */
-    public function checkRow($row, $row_no)
+    public function checkRow(array $row, int $row_no)
     {
         $employee = [
             'first_name' => null,
@@ -1126,7 +1128,7 @@ class RrhhImportEmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function import(Request $request)
+    public function import(Request $request): RedirectResponse
     {
         try {
             // Set maximum php execution time
@@ -1216,7 +1218,7 @@ class RrhhImportEmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(): View
     {
         if (! auth()->user()->can('rrhh_import_employees.update')) {
             abort(403, 'Unauthorized action.');
@@ -1386,7 +1388,7 @@ class RrhhImportEmployeesController extends Controller
      * @param  array  $default_data
      * @return array
      */
-    public function checkEditRow($row, $row_no)
+    public function checkEditRow(array $row, int $row_no)
     {
         $employee = [
             'id' => null,
@@ -2315,7 +2317,7 @@ class RrhhImportEmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_import_employee.update')) {
             abort(403, 'Unauthorized action.');

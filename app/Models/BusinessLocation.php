@@ -29,7 +29,7 @@ class BusinessLocation extends Model
      * @param  array  $receipt_printer_type_attribute =
      * @return array
      */
-    public static function forDropdown($business_id, $show_all = false, $receipt_printer_type_attribute = false)
+    public static function forDropdown(int $business_id, bool $show_all = false, array $receipt_printer_type_attribute = false): array
     {
         $query = BusinessLocation::where('business_id', $business_id);
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\City;
 use DataTables;
 use DB;
@@ -14,7 +16,7 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('geography.index');
     }
@@ -24,7 +26,7 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('geography.index');
     }
@@ -72,7 +74,7 @@ class CityController extends Controller
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $city = City::findOrFail($id);
 
@@ -85,7 +87,7 @@ class CityController extends Controller
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $city = City::findOrFail($id);
 
@@ -210,7 +212,7 @@ class CityController extends Controller
         return $output;
     }
 
-    public function getCitiesByState($id)
+    public function getCitiesByState($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $cities = City::where('business_id', $business_id)

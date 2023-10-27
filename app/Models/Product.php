@@ -18,7 +18,7 @@ class Product extends Model
      *
      * @return string
      */
-    public function getImageUrlAttribute()
+    public function getImageUrlAttribute(): string
     {
         if (! empty($this->image)) {
             $image_url = asset('/uploads/img/'.$this->image);

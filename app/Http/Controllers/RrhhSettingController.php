@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\RrhhSetting;
 use DB;
@@ -9,7 +11,7 @@ use Illuminate\Http\Request;
 
 class RrhhSettingController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('rrhh_setting.access')) {
             abort(403, 'Unauthorized action.');
@@ -21,7 +23,7 @@ class RrhhSettingController extends Controller
         return view('rrhh.settings.index', compact('setting'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_setting.access')) {
             abort(403, 'Unauthorized action.');

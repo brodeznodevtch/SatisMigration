@@ -89,7 +89,7 @@ class AccountingUtil extends Util
      * @param  Date  $date
      * @return int
      */
-    public function getEntryNumber($date)
+    public function getEntryNumber(Date $date): int
     {
         $business_id = request()->session()->get('user.business_id');
         $entry_date = Carbon::parse($date);
@@ -131,7 +131,7 @@ class AccountingUtil extends Util
      * @param  array  $remittance_entry
      * @return bool
      */
-    public function createBankTransactionEntry($remittance_entry)
+    public function createBankTransactionEntry(array $remittance_entry): bool
     {
         if (empty($remittance_entry['bank_account_id']) ||
             empty($remittance_entry['accounting_entrie_id']) ||

@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Illuminate\Http\Response;
 use App\Models\BusinessLocation;
 use App\Models\Product;
 use App\Models\System;
@@ -17,7 +18,7 @@ class ModuleUtil extends Util
      * @param  string  $module_name (Exact module name, with first letter capital)
      * @return bool
      */
-    public function isModuleInstalled($module_name)
+    public function isModuleInstalled(string $module_name): bool
     {
         $is_available = Module::has($module_name);
 
@@ -39,7 +40,7 @@ class ModuleUtil extends Util
      *
      * @return bool
      */
-    public function isSuperadminInstalled()
+    public function isSuperadminInstalled(): bool
     {
         return $this->isModuleInstalled('Superadmin');
     }
@@ -51,7 +52,7 @@ class ModuleUtil extends Util
      * @param  string  $function_name
      * @return array
      */
-    public function getModuleData($function_name)
+    public function getModuleData(string $function_name): array
     {
         $modules = Module::toCollection()->toArray();
 
@@ -85,7 +86,7 @@ class ModuleUtil extends Util
      * @param  string  $module_name
      * @return bool
      */
-    public function isModuleDefined($module_name)
+    public function isModuleDefined(string $module_name): bool
     {
         $is_installed = $this->isModuleInstalled($module_name);
 
@@ -107,7 +108,7 @@ class ModuleUtil extends Util
      * @param  int  $business_id
      * @return bool
      */
-    public static function isSubscribed($business_id)
+    public static function isSubscribed(int $business_id): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -130,7 +131,7 @@ class ModuleUtil extends Util
      * @param  string  $callback_function = null
      * @return bool
      */
-    public static function hasThePermissionInSubscription($business_id, $permission, $callback_function = null)
+    public static function hasThePermissionInSubscription(int $business_id, string $permission, string $callback_function = null): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -172,7 +173,7 @@ class ModuleUtil extends Util
      *
      * @return string
      */
-    public static function expiredResponse($redirect_url = null)
+    public static function expiredResponse($redirect_url = null): string
     {
         $response_array = ['success' => 0,
             'msg' => __(
@@ -205,7 +206,7 @@ class ModuleUtil extends Util
      * @param  int  $business_id
      * @return bool
      */
-    public static function isQuotaAvailable($type, $business_id)
+    public static function isQuotaAvailable(string $type, int $business_id): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -285,7 +286,7 @@ class ModuleUtil extends Util
      * @param  string  $redirect_url = null
      * @return \Illuminate\Http\Response
      */
-    public static function quotaExpiredResponse($type, $business_id, $redirect_url = null)
+    public static function quotaExpiredResponse(string $type, int $business_id, string $redirect_url = null): Response
     {
 
         if ($type == 'locations') {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Charts\CurrentFinancialYear;
 use App\Charts\Last30DaySales;
 use App\Charts\PurchasesLast30Days;
@@ -59,7 +61,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         $business_id = request()->session()->get('user.business_id');
         if (! auth()->user()->can('dashboard.data')) {
@@ -618,7 +620,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPeakSalesHoursByMonthChart()
+    public function getPeakSalesHoursByMonthChart(): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -653,7 +655,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPeakSalesHoursChart()
+    public function getPeakSalesHoursChart(): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -740,7 +742,7 @@ class HomeController extends Controller
         }
     }
 
-    public function getWeekSales()
+    public function getWeekSales(): JsonResponse
     {
         if (request()->ajax()) {
             $location_id = request()->location_id;
@@ -791,7 +793,7 @@ class HomeController extends Controller
         }
     }
 
-    public function welcome()
+    public function welcome(): View
     {
         return view('welcome');
     }

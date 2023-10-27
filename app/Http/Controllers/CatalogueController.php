@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CatalogueRequest;
 use App\Imports\CatalogueImport;
 use App\Models\AccountingEntriesDetail;
@@ -286,7 +287,7 @@ class CatalogueController extends Controller
     }
 
     //Adittional Functions
-    public function verifyDeleteAccount($id)
+    public function verifyDeleteAccount($id): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -330,7 +331,7 @@ class CatalogueController extends Controller
         return response()->json($datos);
     }
 
-    public function getAccounts()
+    public function getAccounts(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -385,7 +386,7 @@ class CatalogueController extends Controller
         }
     }
 
-    public function getAccountsParents(Catalogue $account)
+    public function getAccountsParents(Catalogue $account): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');

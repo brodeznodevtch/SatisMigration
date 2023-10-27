@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
@@ -51,7 +54,7 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('rrhh_employees.view')) {
             abort(403, 'Unauthorized action.');
@@ -107,7 +110,7 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -158,7 +161,7 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -341,7 +344,7 @@ class EmployeesController extends Controller
      * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id): View
     {
 
         if (! auth()->user()->can('rrhh_employees.view')) {
@@ -439,7 +442,7 @@ class EmployeesController extends Controller
      * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
 
         if (! auth()->user()->can('rrhh_employees.update')) {
@@ -512,7 +515,7 @@ class EmployeesController extends Controller
      * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_employees.update')) {
             abort(403, 'Unauthorized action.');
@@ -751,7 +754,7 @@ class EmployeesController extends Controller
         }
     }
 
-    public function getPhoto($id)
+    public function getPhoto($id): View
     {
 
         if ($id != null) {
@@ -773,7 +776,7 @@ class EmployeesController extends Controller
         }
     }
 
-    public function downloadCv($id)
+    public function downloadCv($id): BinaryFileResponse
     {
 
         if ($id != null) {

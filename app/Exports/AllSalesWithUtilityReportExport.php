@@ -22,7 +22,7 @@ class AllSalesWithUtilityReportExport implements WithEvents, WithTitle
      * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($sales, $business_name, $transactionUtil)
+    public function __construct(array $sales, $business_name, $transactionUtil)
     {
         $this->sales = $sales;
         $this->business_name = $business_name;

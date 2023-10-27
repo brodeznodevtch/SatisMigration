@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
@@ -116,7 +119,7 @@ class BusinessController extends Controller
         ];
     }
 
-    public function getChangeBusiness()
+    public function getChangeBusiness(): View
     {
         $businessIds = User::select('business_id')
             ->where('username', Auth::user()->username)
@@ -128,7 +131,7 @@ class BusinessController extends Controller
         return view('business.partials.change_business_modal')->with(compact('business'));
     }
 
-    public function changeBusiness(Request $request)
+    public function changeBusiness(Request $request): JsonResponse
     {
         $credentials = $request->only(['username', 'password']);
         $business_id = $request->input('business_id');
@@ -379,7 +382,7 @@ class BusinessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getBusinessSettings()
+    public function getBusinessSettings(): View
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -553,7 +556,7 @@ class BusinessController extends Controller
         ));
     }
 
-    public function getAccountingSettings()
+    public function getAccountingSettings(): View
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -674,7 +677,7 @@ class BusinessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postBusinessSettings(Request $request)
+    public function postBusinessSettings(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');

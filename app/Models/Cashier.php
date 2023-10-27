@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,7 +39,7 @@ class Cashier extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function business_location()
+    public function business_location(): HasRelationships
     {
         return $this->belongsTo(\App\Models\BusinessLocation::class);
     }
@@ -48,7 +49,7 @@ class Cashier extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function cashier_closure()
+    public function cashier_closure(): HasRelationships
     {
         return $this->hasMany(App\Models\CashierClosure::class);
     }
@@ -61,7 +62,7 @@ class Cashier extends Model
      * @param  array  $receipt_printer_type_attribute
      * @return array
      */
-    public static function forDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    public static function forDropdown(int $business_id, $prepend_none = true, $prepend_all = false): array
     {
         $query = Cashier::where('business_id', $business_id)->where('is_active', '1');
 
@@ -90,7 +91,7 @@ class Cashier extends Model
      *
      * @return string or array
      */
-    public static function permittedCashiers()
+    public static function permittedCashiers(): string
     {
         if (auth()->user()->can('access_all_cashiers')) {
             return 'all';

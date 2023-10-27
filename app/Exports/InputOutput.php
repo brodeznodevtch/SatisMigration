@@ -28,7 +28,7 @@ class InputOutput implements WithEvents, WithTitle
      *
      * @author
      */
-    public function __construct($categories, $no_categories, $business_name, $start_date, $end_date)
+    public function __construct(collect $categories, collect $no_categories, string $business_name, string $start_date, string $end_date)
     {
         $this->categories = $categories;
         $this->no_categories = $no_categories;

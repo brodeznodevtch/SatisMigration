@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use DataTables;
@@ -15,7 +17,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         return view('banks.index');
@@ -26,7 +28,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -37,7 +39,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -78,7 +80,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(BankAccount $bankAccount)
+    public function show(BankAccount $bankAccount): JsonResponse
     {
 
         return response()->json($bankAccount);
@@ -89,7 +91,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(BankAccount $bankAccount)
+    public function edit(BankAccount $bankAccount): JsonResponse
     {
 
         return response()->json($bankAccount);
@@ -100,7 +102,7 @@ class BankAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BankAccount $bankAccount)
+    public function update(Request $request, BankAccount $bankAccount): JsonResponse
     {
 
         $id = $bankAccount->id;
@@ -196,7 +198,7 @@ class BankAccountController extends Controller
         return DataTables::of($bankAccounts)->toJson();
     }
 
-    public function getBankAccounts()
+    public function getBankAccounts(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -208,7 +210,7 @@ class BankAccountController extends Controller
         return response()->json($bankAccounts);
     }
 
-    public function getBankAccountsById($id)
+    public function getBankAccountsById($id): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');

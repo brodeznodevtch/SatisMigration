@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -33,7 +34,7 @@ class TransferSheetReportExport implements FromView, WithEvents, WithTitle
      * @param  string  $size
      * @return void
      */
-    public function __construct($lines, $size, $business, $enable_signature_column, $delivers, $receives)
+    public function __construct(array $lines, string $size, Business $business, int $enable_signature_column, $delivers, $receives)
     {
         $this->lines = $lines;
         $this->size = $size;

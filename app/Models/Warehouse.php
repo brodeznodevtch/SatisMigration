@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -41,7 +42,7 @@ class Warehouse extends Model
      *
      * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function business_location()
+    public function business_location(): HasRelationships
     {
         return $this->belongsTo(\App\Models\BusinessLocation::class);
     }
@@ -80,7 +81,7 @@ class Warehouse extends Model
      *
      * @return string or array
      */
-    public static function permittedWarehouses()
+    public static function permittedWarehouses(): string
     {
         if (auth()->user()->can('access_all_warehouses')) {
             return 'all';

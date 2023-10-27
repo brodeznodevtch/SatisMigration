@@ -37,7 +37,7 @@ class Contact extends Model
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function contactDropdown($business_id, $exclude_default = false, $prepend_none = true)
+    public static function contactDropdown($business_id, $exclude_default = false, $prepend_none = true): array
     {
         $query = Contact::where('business_id', $business_id)
             ->select('id', DB::raw("IF (supplier_business_name IS not null, CONCAT(name, ' (', supplier_business_name, ')'), name) as supplier"));
@@ -62,7 +62,7 @@ class Contact extends Model
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function suppliersDropdown($business_id, $prepend_none = true)
+    public static function suppliersDropdown($business_id, $prepend_none = true): array
     {
 
         $all_contacts = Contact::where('business_id', $business_id)
@@ -86,7 +86,7 @@ class Contact extends Model
      * @param $prepend_none = true (boolean)
      * @return array users
      */
-    public static function customersDropdown($business_id, $prepend_none = true)
+    public static function customersDropdown($business_id, $prepend_none = true): array
     {
 
         $all_contacts = Contact::where('business_id', $business_id)

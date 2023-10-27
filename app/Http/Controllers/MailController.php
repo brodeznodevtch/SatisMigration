@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
@@ -31,7 +32,7 @@ class MailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendAccountStatement()
+    public function sendAccountStatement(): RedirectResponse
     {
         try {
             $customer_id = request()->input('email_customer_id');
@@ -113,7 +114,7 @@ class MailController extends Controller
      * @param  array  $params
      * @return array
      */
-    public function getLinesForAccountStatement($params)
+    public function getLinesForAccountStatement(array $params)
     {
         // Customer filter
         $customer_id = ! empty($params['customer_id']) ? $params['customer_id'] : 0;

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 use App\Exports\AccountsReceivableReportExport;
 use App\Models\Brands;
 use App\Models\Business;
@@ -63,7 +66,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -252,7 +255,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -517,7 +520,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -542,7 +545,7 @@ class CustomerController extends Controller
         return response()->json($customer);
     }
 
-    public function getContacts($id)
+    public function getContacts($id): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -614,7 +617,7 @@ class CustomerController extends Controller
         return back()->with('status', $output);
     }
 
-    public function getContacts1($id)
+    public function getContacts1($id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -735,7 +738,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('customer.update')) {
             abort(403, 'Unauthorized action.');
@@ -1022,7 +1025,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAddCustomer($customer_name = null)
+    public function getAddCustomer($customer_name = null): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1151,7 +1154,7 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function getImportCustomers()
+    public function getImportCustomers(): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1179,7 +1182,7 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function postImportCustomers(Request $request)
+    public function postImportCustomers(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1583,7 +1586,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getFollowCustomer($id)
+    public function getFollowCustomer(int $id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -1611,7 +1614,7 @@ class CustomerController extends Controller
      * @param  string  $q
      * @return JSON
      */
-    public function getCustomers()
+    public function getCustomers(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -1678,7 +1681,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexBalancesCustomer()
+    public function indexBalancesCustomer(): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -1819,7 +1822,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return JSON
      */
-    public function showBalances($id)
+    public function showBalances(int $id): JSON
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -1902,7 +1905,7 @@ class CustomerController extends Controller
      *
      * @return PDF | Excel
      */
-    public function accountsReceivableReport()
+    public function accountsReceivableReport(): PDF
     {
         if (! auth()->user()->can('cxc.access')) {
             abort(403, 'Unauthorized action.');
@@ -1972,7 +1975,7 @@ class CustomerController extends Controller
      * @param  int  $business_id
      * @return string
      */
-    public function createAllOpeningBalances($business_id)
+    public function createAllOpeningBalances(int $business_id)
     {
         try {
             $customers = Customer::where('opening_balance', '>', 0)->get();
@@ -2037,7 +2040,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getVehicleRow()
+    public function getVehicleRow(): View
     {
         if (request()->ajax()) {
             $row_count = request()->input('row_count');
@@ -2052,7 +2055,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createCustomerAndPatient($customer_name = null)
+    public function createCustomerAndPatient($customer_name = null): View
     {
         if (! auth()->user()->can('customer.create') && ! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -2249,7 +2252,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @param  json
      */
-    public function getCustomerVehicles($id)
+    public function getCustomerVehicles(int $id): JsonResponse
     {
         $customer_vehicles = CustomerVehicle::where('customer_id', $id)
             ->leftJoin('brands', 'brands.id', 'customer_vehicles.brand_id')

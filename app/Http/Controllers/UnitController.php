@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\Product;
 use App\Models\Unit;
@@ -78,7 +80,7 @@ class UnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('unit.create')) {
             abort(403, 'Unauthorized action.');
@@ -143,7 +145,7 @@ return $output;
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $unit = Unit::where('id', $id)->first();
 
@@ -156,7 +158,7 @@ return $output;
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
@@ -177,7 +179,7 @@ return $output;
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
@@ -229,7 +231,7 @@ return $output;
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('unit.delete')) {
             abort(403, 'Unauthorized action.');

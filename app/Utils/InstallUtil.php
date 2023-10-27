@@ -22,7 +22,7 @@ class InstallUtil extends Util
      *
      * @return int
      */
-    public function resetStockAdjustmentForAllBusiness()
+    public function resetStockAdjustmentForAllBusiness(): int
     {
         try {
             DB::beginTransaction();
@@ -74,7 +74,7 @@ class InstallUtil extends Util
      * @param  string  $key
      * @return mixed
      */
-    public function getSystemInfo($key)
+    public function getSystemInfo(string $key)
     {
         $system = DB::table('system')->where('key', $key)->first();
 
@@ -92,7 +92,7 @@ class InstallUtil extends Util
      * @param  string  $value
      * @return mixed
      */
-    public function setSystemInfo($key, $value)
+    public function setSystemInfo(string $key, string $value)
     {
         DB::table('system')->where('key', $key)->update(['value' => $value]);
     }
@@ -104,7 +104,7 @@ class InstallUtil extends Util
      * @param  float  $app_version
      * @return bool
      */
-    public function updateFrom13To20($db_version, $app_version)
+    public function updateFrom13To20(float $db_version, float $app_version): bool
     {
         if ($db_version == 1.3 && $app_version == 2.0) {
             //Fix for purchase_lines table, copy data from  purchase_price to pp_without_discount
@@ -120,7 +120,7 @@ class InstallUtil extends Util
      *
      * @return void
      */
-    public function createExistingProductsVariationsToTemplate()
+    public function createExistingProductsVariationsToTemplate(): void
     {
         try {
             DB::beginTransaction();

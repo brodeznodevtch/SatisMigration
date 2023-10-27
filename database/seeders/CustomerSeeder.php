@@ -46,7 +46,7 @@ class CustomerSeeder extends Seeder
      *
      * @author Arquímides Martínez
      */
-    public function syncCustomer($id, $code, $business_id)
+    public function syncCustomer(int $id, string $code, int $business_id): void
     {
         /** If business_id not setted, exit */
         if (is_null($business_id)) {

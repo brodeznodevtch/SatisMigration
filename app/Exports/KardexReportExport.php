@@ -2,6 +2,9 @@
 
 namespace App\Exports;
 
+use App\Business;
+use App\Warehouse;
+use App\Variation;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -32,7 +35,7 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
      * @param  \App\Variation  $variation
      * @return void
      */
-    public function __construct($kardex, $start, $end, $business, $warehouse, $variation)
+    public function __construct(array $kardex, $start, $end, Business $business, Warehouse $warehouse, Variation $variation)
     {
         $this->kardex = $kardex;
         $this->start = $start;

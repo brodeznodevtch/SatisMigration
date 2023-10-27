@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
 use App\Models\Transaction;
@@ -14,7 +15,7 @@ class TaxUtil extends Util
      * @param  int  $group_tax_id
      * @return void
      */
-    public function updateGroupTaxAmount($group_tax_id)
+    public function updateGroupTaxAmount(int $group_tax_id): void
     {
         $amount = 0;
         $tax_rate = TaxRate::where('id', $group_tax_id)->with(['sub_taxes'])->first();
@@ -33,7 +34,7 @@ class TaxUtil extends Util
      * @param  bool  $with_percentages
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function getTaxGroups($business_id, $type = '', $with_percentages = false)
+    public function getTaxGroups(int $business_id, string $type = '', bool $with_percentages = false): Collection
     {
 
         if ($type) {
@@ -100,7 +101,7 @@ class TaxUtil extends Util
      * @param  float  $amount
      * @return float
      */
-    public function getTaxPercent($tax_group_id)
+    public function getTaxPercent(int $tax_group_id): float
     {
         if (is_null($tax_group_id)) {
             return null;
@@ -127,7 +128,7 @@ class TaxUtil extends Util
      * @param  float  $amount
      * @return float
      */
-    public function getTaxMinAmount($tax_group_id)
+    public function getTaxMinAmount(int $tax_group_id): float
     {
         if (is_null($tax_group_id)) {
             return 0;
@@ -153,7 +154,7 @@ class TaxUtil extends Util
      * @param  float  $amount
      * @return float
      */
-    public function getTaxMaxAmount($tax_group_id)
+    public function getTaxMaxAmount(int $tax_group_id): float
     {
         if (is_null($tax_group_id)) {
             return 0;
@@ -179,7 +180,7 @@ class TaxUtil extends Util
      * @param  float  $amount
      * @return float
      */
-    public function getPriceExcTax($tax_group_id, $amount)
+    public function getPriceExcTax(int $tax_group_id, float $amount): float
     {
         if (is_null($tax_group_id) || is_null($amount)) {
             exit('N/A');
@@ -206,7 +207,7 @@ class TaxUtil extends Util
      * @param  float  $amount
      * @return float
      */
-    public function getPriceIncTax($tax_group_id, $amount)
+    public function getPriceIncTax(int $tax_group_id, float $amount): float
     {
         if (is_null($tax_group_id) || is_null($amount)) {
             exit('N/A');
@@ -232,7 +233,7 @@ class TaxUtil extends Util
      * @param  int  $transaction_id
      * @return int //**  -1 Withheld; 1 Perception; 0 exempt
      */
-    public function getTaxType($transaction_id)
+    public function getTaxType(int $transaction_id): int
     {
         $transaction = Transaction::find($transaction_id);
 
@@ -257,7 +258,7 @@ class TaxUtil extends Util
      * @param  int  $transaction_id
      * @return float
      */
-    public function getTaxAmount($transaction_id, $type = 'sell', $discount_amount = 0)
+    public function getTaxAmount(int $transaction_id, $type = 'sell', $discount_amount = 0): float
     {
         $trans_lines = Transaction::find($transaction_id);
 
@@ -304,7 +305,7 @@ class TaxUtil extends Util
      * @param  int  $transaction_id
      * @return string
      */
-    public function getTaxName($tax_id, $type = 'tax_group')
+    public function getTaxName($tax_id, $type = 'tax_group'): string
     {
         $tax_name = '';
 
@@ -325,7 +326,7 @@ class TaxUtil extends Util
      * @param  int  $transaction_id
      * @return array
      */
-    public function getTaxDetailsTransaction($transaction_id)
+    public function getTaxDetailsTransaction(int $transaction_id): array
     {
         $transaction = Transaction::find($transaction_id);
 
@@ -350,7 +351,7 @@ class TaxUtil extends Util
      * @param int @transction_id
      * @return float
      */
-    public function getLinesTaxPercent($transaction_id)
+    public function getLinesTaxPercent($transaction_id): float
     {
         if (empty($transaction_id)) {
             return 0;
@@ -402,7 +403,7 @@ class TaxUtil extends Util
      * @param  int  $transaction_id
      * @return int
      */
-    public function getTaxPercentSellReturn($transaction_id)
+    public function getTaxPercentSellReturn(int $transaction_id): int
     {
         $tax = Transaction::join('transaction_sell_lines as tsl', 'tsl.transaction_id', 'transactions.id')
             ->where('transactions.id', $transaction_id)
