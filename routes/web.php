@@ -1397,7 +1397,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/products/get-recalculate-cost', [Optics\ProductController::class, 'getRecalculateCost']);
             Route::post('/products/get-recalculate-cost', [Optics\ProductController::class, 'postRecalculateCost']);
 
-            Route::resource('products', 'ProductController');
+            Route::resource('products', ProductController::class);
 
             // Materials
             Route::get('/products/getMaterialsData', [Optics\ProductController::class, 'getMaterialsData']);
@@ -1424,7 +1424,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
             Route::get('/expenses/get_contacts', [Optics\ExpenseController::class, 'getAccount']);
             Route::get('/expenses/update-taxes', [Optics\ExpenseController::class, 'updateTaxes']);
             Route::get('/expenses/set-final-total-from-expenses', [Optics\ExpenseController::class, 'setFinalTotalFromExpenses']);
-            Route::resource('expenses', 'ExpenseController');
+            Route::resource('expenses', ExpenseController::class);
             Route::get('/expenses/get_add_expenses/{bank_transaction_id?}', [Optics\ExpenseController::class, 'getAddExpenses']);
             Route::post('/expenses/post_add_expenses', [Optics\ExpenseController::class, 'postAddExpenses']);
             Route::get('/expenses/get_add_expense', [Optics\ExpenseController::class, 'getAddExpense']);
