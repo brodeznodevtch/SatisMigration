@@ -1,10 +1,10 @@
 # Directorios y archivos generados por Composer
-/vendor/
-/composer.lock
+vendor
+composer.lock
 vendor.zip
  
 # Directorios y archivos generados por npm o yarn
-/node_modules/
+node_modules/
 npm-debug.log
  
 # Entorno y configuraciones
@@ -13,24 +13,19 @@ npm-debug.log
 .env.example
  
 # Directorio de caché de Laravel
-/bootstrap/cache/
+bootstrap/cache/
  
 # Directorio de almacenamiento de Laravel (excluye el almacenamiento de enlaces simbólicos)
-/storage/
+storage/
 !storage/.gitignore
 /storage/*.key
- 
-# Directorio de caché de configuración
-/config/cache/
- 
+
 # Directorio publico (enlace simbólico para almacenamiento)
 public/storage
 public/hot
-/public/uploads/business_logos
 /public/uploads/slides
 /public/uploads/documents
 /public/uploads/img
-/public/uploads/invoice_logos
 /public/uploads/employee_photo
 /public/uploads/employee_curriculum_vitae
 /public/uploads/employee_documents
