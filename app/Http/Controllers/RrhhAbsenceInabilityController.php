@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Employees;
 use App\Models\RrhhAbsenceInability;
 use App\Models\RrhhData;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhAbsenceInabilityController extends Controller

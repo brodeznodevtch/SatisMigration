@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\AccountBusinessLocation;
 use App\Models\Bank;
 use App\Models\BankAccount;
@@ -56,6 +55,7 @@ use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class SellPosController extends Controller
 {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
@@ -11,6 +10,7 @@ use App\Models\TransactionPayment;
 use App\Utils\Util;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Http\RedirectResponse;
 
 // use MAIL;
 // use PDF;

@@ -2,9 +2,9 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Http\Response;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PurchaseSellMismatch extends Exception
 {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
 use App\Optics\LabOrder;
@@ -11,6 +10,7 @@ use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class PatientController extends Controller

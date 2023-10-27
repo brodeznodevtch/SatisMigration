@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\CashDetail;
 use App\Models\Cashier;
 use App\Models\CashierClosure;
@@ -15,7 +13,9 @@ use App\Utils\CashierUtil;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ProductUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CashRegisterController extends Controller
 {

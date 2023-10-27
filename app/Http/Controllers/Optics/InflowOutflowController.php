@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\View\View;
 use App\Models\Contact;
 use App\Models\DocumentType;
 use App\Models\Employees;
@@ -17,6 +16,7 @@ use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class InflowOutflowController extends Controller

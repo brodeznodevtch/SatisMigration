@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\View\View;
 use App\Optics\Diagnostic;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class DiagnosticController extends Controller

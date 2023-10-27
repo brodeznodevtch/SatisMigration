@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\BankAccount;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
@@ -11,6 +10,7 @@ use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class PosController extends Controller
 {

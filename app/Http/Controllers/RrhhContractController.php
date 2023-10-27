@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
@@ -18,7 +16,9 @@ use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhContractController extends Controller

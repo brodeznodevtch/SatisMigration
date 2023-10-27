@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Exports\QuoteExport;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -26,6 +25,7 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use View;
 

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use Illuminate\View\View;
 use App\Models\Transaction;
 use App\Utils\RestaurantUtil;
 use App\Utils\Util;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 
 class KitchenController extends Controller
 {

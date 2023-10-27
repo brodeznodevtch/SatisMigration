@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\UnitGroup;
 use App\Models\UnitGroupLines;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class UnitGroupController extends Controller
 {

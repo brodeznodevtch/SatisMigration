@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Customer;
 use App\Models\Employees;
@@ -26,8 +24,10 @@ use App\Utils\TransactionUtil;
 use App\Utils\Util;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class LabOrderController extends Controller

@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
@@ -23,10 +20,13 @@ use App\Utils\ProductUtil;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EmployeesController extends Controller
 {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\CreditDocuments;
 use App\Models\Customer;
 use App\Models\DocumentType;
@@ -15,6 +14,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class CreditDocumentsController extends Controller
 {

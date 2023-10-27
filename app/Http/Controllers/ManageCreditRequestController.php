@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\Business;
 use App\Models\CreditHasFamilyMember;
 use App\Models\CreditHasReference;
 use App\Models\CreditRequest;
 use Carbon\Carbon;
 use DataTables;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class ManageCreditRequestController extends Controller

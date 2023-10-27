@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingEntriesDetail;
 use App\Models\AccountingPeriod;
@@ -20,6 +19,7 @@ use App\Models\TypeEntrie;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AccountingEntrieController extends Controller

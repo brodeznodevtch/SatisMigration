@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use Illuminate\View\View;
 use App\Models\Product;
 use App\Utils\ProductUtil;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class ModifierSetsController extends Controller
 {

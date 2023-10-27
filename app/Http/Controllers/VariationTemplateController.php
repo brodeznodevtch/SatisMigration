@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\ProductVariation;
 use App\Models\Variation;
 use App\Models\VariationTemplate;
 use App\Models\VariationValueTemplate;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class VariationTemplateController extends Controller

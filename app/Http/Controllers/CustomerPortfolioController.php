@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Customer;
 use App\Models\CustomerPortfolio;
 use App\Models\Employees;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class CustomerPortfolioController extends Controller

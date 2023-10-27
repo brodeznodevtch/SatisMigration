@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\RrhhHeader;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhHeaderController extends Controller
 {

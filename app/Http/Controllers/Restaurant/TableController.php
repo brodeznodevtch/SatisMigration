@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Restaurant\ResTable;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 
 class TableController extends Controller
 {

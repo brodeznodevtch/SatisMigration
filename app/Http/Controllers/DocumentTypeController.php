@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use App\Models\DocumentClass;
 use App\Models\DocumentType;
 use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class DocumentTypeController extends Controller

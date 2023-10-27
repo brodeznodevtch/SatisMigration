@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\BonusCalculation;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BonusCalculationController extends Controller
 {

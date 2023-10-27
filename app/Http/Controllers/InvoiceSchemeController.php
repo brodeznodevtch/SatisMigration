@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use App\Models\DiscountCard;
 use App\Models\InvoiceLayout;
 use App\Models\InvoiceScheme;
 use Datatables;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class InvoiceSchemeController extends Controller
 {

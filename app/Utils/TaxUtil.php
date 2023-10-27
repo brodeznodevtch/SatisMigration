@@ -2,10 +2,10 @@
 
 namespace App\Utils;
 
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Collection;
 
 class TaxUtil extends Util
 {

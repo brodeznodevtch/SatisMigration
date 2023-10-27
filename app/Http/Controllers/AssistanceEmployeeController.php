@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Exports\AssistanceEmployeeReportExport;
 use App\Models\AssistanceEmployee;
 use App\Models\Business;
@@ -14,6 +13,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class AssistanceEmployeeController extends Controller
 {

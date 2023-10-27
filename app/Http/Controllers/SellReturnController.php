@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\DocumentCorrelative;
 use App\Models\DocumentType;
@@ -18,6 +17,7 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class SellReturnController extends Controller

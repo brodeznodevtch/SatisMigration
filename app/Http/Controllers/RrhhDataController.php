@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Employees;
 use App\Models\RrhhAbsenceInability;
 use App\Models\RrhhData;
@@ -14,6 +13,7 @@ use DataTables;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class RrhhDataController extends Controller
 {

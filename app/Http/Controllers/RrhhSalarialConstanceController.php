@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Employees;
@@ -17,7 +15,9 @@ use App\Utils\PayrollUtil;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhSalarialConstanceController extends Controller
 {

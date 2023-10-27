@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\View\View;
 use App\Models\Module;
 use App\Models\Permission;
 use App\Optics\StatusLabOrder;
@@ -11,6 +10,7 @@ use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class StatusLabOrderController extends Controller

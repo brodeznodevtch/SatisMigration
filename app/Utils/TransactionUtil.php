@@ -2,13 +2,12 @@
 
 namespace App\Utils;
 
-use App\LabOrderDetail;
-use Illuminate\Support\Collection;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
 use App\Exceptions\PurchaseSellMismatch;
 use App\get_sub_products;
+use App\LabOrderDetail;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Cashier;
@@ -41,6 +40,7 @@ use App\Models\User;
 use App\Models\Variation;
 use App\Models\VariationLocationDetails;
 use App\Restaurant\ResTable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 

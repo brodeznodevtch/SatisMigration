@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\Bank;
 use App\Models\BankAccount;
 use App\Models\BankCheckbook;
@@ -17,7 +15,9 @@ use App\Models\TypeEntrie;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BankController extends Controller
 {

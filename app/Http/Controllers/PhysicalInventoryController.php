@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Kardex;
@@ -20,7 +18,9 @@ use App\Models\VariationLocationDetails;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class PhysicalInventoryController extends Controller

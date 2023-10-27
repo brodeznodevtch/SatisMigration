@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\CRMContactMode;
@@ -10,6 +9,7 @@ use App\Models\CRMContactReason;
 use App\Models\CRMOportunity;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class CRMOportunityController extends Controller

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Exports\KardexReportExport;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasTransaction;
@@ -28,6 +27,7 @@ use App\Utils\TransactionUtil;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class KardexController extends Controller

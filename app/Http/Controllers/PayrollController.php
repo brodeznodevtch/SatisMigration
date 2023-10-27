@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use App\Exports\PaymentFileReportExport;
 use App\Exports\PayrollBonusReportExport;
 use App\Exports\PayrollHonoraryReportExport;
@@ -33,8 +31,10 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class PayrollController extends Controller
 {

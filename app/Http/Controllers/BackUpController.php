@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\View\View;
 use Log;
 use Storage;
 

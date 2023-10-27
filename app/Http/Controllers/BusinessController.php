@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
@@ -23,10 +20,13 @@ use App\Utils\RestaurantUtil;
 use App\Utils\TaxUtil;
 use Carbon\Carbon;
 use DateTimeZone;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 
 class BusinessController extends Controller

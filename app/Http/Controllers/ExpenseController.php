@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Models\BusinessLocation;
@@ -21,6 +20,7 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ExpenseController extends Controller

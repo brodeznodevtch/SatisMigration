@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\TaxRate;
 use Datatables;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class GroupTaxController extends Controller
 {

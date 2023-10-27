@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\CreditHasFamilyMember;
 use App\Models\CreditHasReference;
@@ -10,6 +9,7 @@ use App\Models\CreditRequest;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CreditRequestController extends Controller
 {

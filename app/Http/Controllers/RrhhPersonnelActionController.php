@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Bank;
 use App\Models\Business;
 use App\Models\Employees;
@@ -22,6 +21,7 @@ use DataTables;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhPersonnelActionController extends Controller

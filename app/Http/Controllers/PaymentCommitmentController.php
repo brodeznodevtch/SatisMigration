@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\Contact;
 use App\Models\PaymentCommitment;
@@ -12,6 +11,7 @@ use App\Utils\TransactionUtil;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PaymentCommitmentController extends Controller
 {

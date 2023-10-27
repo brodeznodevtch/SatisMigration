@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\InstitutionLaw;
 use App\Models\LawDiscount;
 use App\Models\PaymentPeriod;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LawDiscountController extends Controller
 {

@@ -2,12 +2,12 @@
 
 namespace App\Utils;
 
-use Illuminate\Http\Response;
 use App\Models\BusinessLocation;
 use App\Models\Product;
 use App\Models\System;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Module;
 
 class ModuleUtil extends Util

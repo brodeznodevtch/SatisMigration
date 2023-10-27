@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Exports\BankReconciliationReportExport;
 use App\Models\AccountingEntrie;
 use App\Models\AccountingEntriesDetail;
@@ -20,8 +18,10 @@ use App\Utils\TransactionUtil;
 use Carbon\Carbon;
 use DataTables;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class BankTransactionController extends Controller
 {

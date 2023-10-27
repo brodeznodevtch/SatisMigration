@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\Business;
 use App\Models\Claim;
 use App\Models\ClaimType;
@@ -12,7 +10,9 @@ use App\Models\StatusClaim;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ClaimController extends Controller
 {

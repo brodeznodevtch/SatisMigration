@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-use App\Utils\TransactionUtil;
 use App\Models\Apportionment;
 use App\Models\ApportionmentHasTransaction;
 use App\Models\Brands;

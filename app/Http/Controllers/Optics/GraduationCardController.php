@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Optics;
 
-use Illuminate\View\View;
 use App\Models\Employees;
 use App\Optics\Diagnostic;
 use App\Optics\GraduationCard;
@@ -12,6 +11,7 @@ use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class GraduationCardController extends Controller

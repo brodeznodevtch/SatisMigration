@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Exports\AccountStatementExport;
 use App\Exports\AllSalesWithUtilityReportExport;
 use App\Exports\CollectionReport;
@@ -66,6 +65,7 @@ use DateTime;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Contracts\DataTable;
 
 class ReportController extends Controller

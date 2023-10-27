@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
 use App\Models\Category;
@@ -27,8 +25,10 @@ use App\Models\State;
 use App\Models\Variation;
 use App\Models\Zone;
 use App\Utils\TaxUtil;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class OportunityController extends Controller

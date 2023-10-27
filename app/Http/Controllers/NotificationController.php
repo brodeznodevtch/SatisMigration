@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\NotificationTemplate;
 use App\Models\Transaction;
 use App\Notifications\CustomerNotification;
@@ -10,6 +9,7 @@ use App\Notifications\SupplierNotification;
 use App\Restaurant\Booking;
 use App\Utils\NotificationUtil;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Notification;
 
 class NotificationController extends Controller

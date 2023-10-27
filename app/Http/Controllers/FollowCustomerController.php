@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Country;
@@ -13,7 +11,9 @@ use App\Models\FollowCustomer;
 use App\Models\FollowCustomersHasProduct;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class FollowCustomerController extends Controller
 {

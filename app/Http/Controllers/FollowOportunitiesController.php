@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\BusinessLocation;
 use App\Models\Category;
 use App\Models\Contact;
@@ -16,7 +14,9 @@ use App\Models\Oportunity;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class FollowOportunitiesController extends Controller
 {

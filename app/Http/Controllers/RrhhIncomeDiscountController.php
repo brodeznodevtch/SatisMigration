@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\Employees;
 use App\Models\PaymentPeriod;
@@ -11,6 +10,7 @@ use App\Models\RrhhTypeIncomeDiscount;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhIncomeDiscountController extends Controller

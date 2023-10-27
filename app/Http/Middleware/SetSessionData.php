@@ -2,13 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use App\Models\Business;
 use App\Utils\BusinessUtil;
 use App\Utils\GlobalUtil;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class SetSessionData
 {

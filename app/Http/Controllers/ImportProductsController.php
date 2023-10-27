@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Brands;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -25,7 +23,9 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ImportProductsController extends Controller
 {

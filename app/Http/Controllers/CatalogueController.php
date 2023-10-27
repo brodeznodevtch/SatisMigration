@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CatalogueRequest;
 use App\Imports\CatalogueImport;
 use App\Models\AccountingEntriesDetail;
@@ -12,6 +11,7 @@ use App\Models\Category;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CatalogueController extends Controller

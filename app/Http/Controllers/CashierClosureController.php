@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use App\Models\AccountBusinessLocation;
 use App\Models\Business;
 use App\Models\BusinessLocation;
@@ -16,6 +14,8 @@ use App\Models\TypeEntrie;
 use App\Utils\AccountingUtil;
 use App\Utils\CashierUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CashierClosureController extends Controller
 {

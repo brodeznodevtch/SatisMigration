@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\MovementType;
 use App\Models\PurchaseLine;
@@ -18,6 +17,7 @@ use App\Utils\TransactionUtil;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class StockTransferController extends Controller
 {

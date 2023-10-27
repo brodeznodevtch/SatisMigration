@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Restaurant;
 
-use Illuminate\View\View;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Utils\RestaurantUtil;
 use App\Utils\Util;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {

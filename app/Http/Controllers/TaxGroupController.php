@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
 use App\Models\TaxRateTaxGroup;
@@ -12,6 +11,7 @@ use App\Utils\TaxUtil;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TaxGroupController extends Controller
 {

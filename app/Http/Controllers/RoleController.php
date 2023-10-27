@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\BusinessLocation;
 use App\Models\Module;
 use App\Models\SellingPriceGroup;
 use App\Utils\ModuleUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\AccountingPeriod;
 use App\Models\FiscalYear;
 use DataTables;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FiscalYearController extends Controller

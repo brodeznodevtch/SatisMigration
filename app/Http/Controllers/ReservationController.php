@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Bank;
 use App\Models\Brands;
 use App\Models\BusinessLocation;
@@ -34,6 +33,7 @@ use App\Utils\TransactionUtil;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReservationController extends Controller

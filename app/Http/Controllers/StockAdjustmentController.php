@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\MovementType;
@@ -17,6 +16,7 @@ use App\Utils\TransactionUtil;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class StockAdjustmentController extends Controller
 {

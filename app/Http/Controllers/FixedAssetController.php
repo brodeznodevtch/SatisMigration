@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Brands;
 use App\Models\BusinessLocation;
 use App\Models\FixedAsset;
@@ -10,6 +9,7 @@ use App\Models\FixedAssetType;
 use App\Utils\TransactionUtil;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class FixedAssetController extends Controller
 {

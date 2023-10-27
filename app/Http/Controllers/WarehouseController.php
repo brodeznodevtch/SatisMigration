@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Models\BusinessLocation;
 use App\Models\Catalogue;
 use App\Models\Module;
@@ -11,7 +9,9 @@ use App\Models\Permission;
 use App\Models\Warehouse;
 use App\Utils\Util;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class WarehouseController extends Controller

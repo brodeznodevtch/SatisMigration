@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Exports\DebtsToPayReportExport;
 use App\Exports\SuggestedPurchaseReportExport;
 use App\Models\AccountBusinessLocation;
@@ -41,6 +40,7 @@ use App\Utils\TransactionUtil;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class PurchaseController extends Controller
