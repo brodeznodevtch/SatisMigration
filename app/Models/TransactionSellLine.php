@@ -36,7 +36,6 @@ class TransactionSellLine extends Model
     /**
      * Get the quantity column.
      *
-     * @param  string  $value
      * @return float $value
      */
     public function getQuantityAttribute(string $value): float

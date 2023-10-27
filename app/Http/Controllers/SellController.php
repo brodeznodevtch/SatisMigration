@@ -443,9 +443,6 @@ class SellController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -496,7 +493,6 @@ class SellController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -766,11 +762,6 @@ class SellController extends Controller
 
     /**
      * Update transaction payments paid_on date
-     *
-     * @param  int  $transaction_id
-     * @param  datetime  $old_date
-     * @param  datetime  $new_date
-     * @return void
      */
     private function updatePaidOn(int $transaction_id, datetime $old_date, datetime $new_date): void
     {
@@ -786,8 +777,6 @@ class SellController extends Controller
 
     /**
      * Display a listing sell drafts.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getDrafts(): View
     {
@@ -800,8 +789,6 @@ class SellController extends Controller
 
     /**
      * Display a listing sell quotations.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getQuotations(): View
     {
@@ -816,7 +803,6 @@ class SellController extends Controller
      * Get invoice parent correlative for final customer documents
      *
      * @param \Illuminate\Http\Request
-     * @return json
      *
      * @author Arquímides Martínez
      */
@@ -847,9 +833,6 @@ class SellController extends Controller
 
     /**
      * Get transactions due by customer
-     *
-     * @param  int  $customer_id
-     * @return json
      */
     public function getTransDueByCustomer(Request $request, int $customer_id): JsonResponse
     {
@@ -957,9 +940,6 @@ class SellController extends Controller
 
     /**
      * Creates copy of the requested sale.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function duplicateSell(int $id): RedirectResponse
     {
@@ -1033,7 +1013,6 @@ class SellController extends Controller
     /**
      * Get sales data.
      *
-     * @param  array  $params
      * @return array
      */
     public function getSalesData(array $params)

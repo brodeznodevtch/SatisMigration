@@ -20,9 +20,6 @@ class SalesTrackingReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $orders
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $orders, int $size, Business $business)

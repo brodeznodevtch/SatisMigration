@@ -13,7 +13,6 @@ class SalesSummaryBySeller implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $transactions
      * @return void
      */
     public function __construct(array $transactions)

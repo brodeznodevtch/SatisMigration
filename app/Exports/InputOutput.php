@@ -19,11 +19,6 @@ class InputOutput implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $categories
-     * @param  collect  $no_categories
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @return void
      *
      * @author

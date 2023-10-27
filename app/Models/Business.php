@@ -105,8 +105,6 @@ class Business extends Model
 
     /**
      * Creates a new business based on the input provided.
-     *
-     * @return object
      */
     public static function create_business($details): object
     {
@@ -117,10 +115,6 @@ class Business extends Model
 
     /**
      * Updates a business based on the input provided.
-     *
-     * @param  int  $business_id
-     * @param  array  $details
-     * @return object
      */
     public static function update_business(int $business_id, array $details): object
     {

@@ -33,8 +33,6 @@ class FixDuplicatedProducts extends Seeder
 
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -96,10 +94,6 @@ class FixDuplicatedProducts extends Seeder
 
     /**
      * Update variation records
-     *
-     * @param  int  $first_id
-     * @param  int  $last_id
-     * @return void
      */
     private function update_records(int $first_id, int $last_id, $business_id): void
     {

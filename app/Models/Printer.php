@@ -54,9 +54,7 @@ class Printer extends Model
     /**
      * Return list of printers for a business
      *
-     * @param  int  $business_id
      * @param  bool  $show_select = true
-     * @return array
      */
     public static function forDropdown(int $business_id, bool $show_select = true): array
     {

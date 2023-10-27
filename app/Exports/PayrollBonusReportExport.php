@@ -21,9 +21,6 @@ class PayrollBonusReportExport implements WithEvents, WithTitle, ShouldAutoSize
     /**
      * Constructor.
      *
-     * @param  array  $payroll
-     * @param  array  $payrollDetails
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $payroll, array $payrollDetails, Business $business, $moduleUtil)

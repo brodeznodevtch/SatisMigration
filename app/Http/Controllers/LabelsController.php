@@ -33,8 +33,6 @@ class LabelsController extends Controller
 
     /**
      * Display labels
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(Request $request): View
     {
@@ -60,8 +58,6 @@ class LabelsController extends Controller
 
     /**
      * Returns the html for product row
-     *
-     * @return \Illuminate\Http\Response
      */
     public function addProductRow(Request $request): View
     {
@@ -167,9 +163,6 @@ class LabelsController extends Controller
 
     /**
      * Get barcode setting
-     *
-     * @param  int  $has_logo
-     * @return json
      */
     public function getBarcodeSetting(int $has_logo = 0): JsonResponse
     {

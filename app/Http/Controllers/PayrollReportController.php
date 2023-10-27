@@ -111,7 +111,6 @@ class PayrollReportController extends Controller
     /**
      * Get annual summary data.
      *
-     * @param  array  $params
      * @return array
      */
     public function getAnnualSummaryData(array $params)

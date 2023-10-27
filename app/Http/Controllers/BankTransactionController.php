@@ -38,8 +38,6 @@ class BankTransactionController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -49,8 +47,6 @@ class BankTransactionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -473,8 +469,6 @@ class BankTransactionController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(BankTransaction $bankTransaction): JsonResponse
     {
@@ -492,8 +486,6 @@ class BankTransactionController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(BankTransaction $bankTransaction): JsonResponse
     {
@@ -1233,8 +1225,6 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie.
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
     public function printCheck(int $id, int $print)
@@ -1258,8 +1248,6 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie. (Nuves format)
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
     public function printCheckFormat1(int $id, int $print)
@@ -1618,8 +1606,6 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie. (Recielsa format)
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
     public function printCheckFormat2(int $id, int $print)
@@ -2195,7 +2181,6 @@ class BankTransactionController extends Controller
     /**
      * Print out transfers
      *
-     * @param  int  $id
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
@@ -2465,10 +2450,6 @@ class BankTransactionController extends Controller
 
     /**
      * Get the balance of the entrie.
-     *
-     * @param  int  $id
-     * @param  string  $code
-     * @return collect
      */
     protected function getHigherEntrieBalance(int $id, string $code): collect
     {
@@ -2817,9 +2798,6 @@ class BankTransactionController extends Controller
 
     /**
      * Convert quantity to letters.
-     *
-     * @param  string  $numero
-     * @return string
      */
     protected function convertir(string $numero): string
     {

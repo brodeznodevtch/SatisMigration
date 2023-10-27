@@ -67,8 +67,6 @@ class LoginController extends Controller
 
     /**
      * Show the application's login form.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function showLoginForm(): View
     {
@@ -146,8 +144,6 @@ class LoginController extends Controller
 
     /**
      * Get the needed authorization credentials from the request.
-     *
-     * @return array
      */
     protected function credentials(Request $request): array
     {

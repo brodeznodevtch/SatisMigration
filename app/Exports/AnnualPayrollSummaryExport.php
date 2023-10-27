@@ -23,7 +23,6 @@ class AnnualPayrollSummaryExport implements WithEvents, WithTitle, ShouldAutoSiz
      *
      * @param  array  $payroll
      * @param  array  $payrollDetails
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct($summaries, Business $business, $year, $moduleUtil)

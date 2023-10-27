@@ -51,8 +51,6 @@ class GraduationCard extends Model
 
     /**
      * Gets the patient to which the graduation card belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function patient(): HasRelationships
     {

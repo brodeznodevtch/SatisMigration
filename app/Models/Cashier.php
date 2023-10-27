@@ -36,8 +36,6 @@ class Cashier extends Model
 
     /**
      * Gets the business location to which the cashier belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function business_location(): HasRelationships
     {
@@ -46,8 +44,6 @@ class Cashier extends Model
 
     /**
      * Get cashier closure what casier has
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function cashier_closure(): HasRelationships
     {
@@ -57,10 +53,8 @@ class Cashier extends Model
     /**
      * Return list of cashiers
      *
-     * @param  int  $business_id
      * @param  bool  $show_all = false
      * @param  array  $receipt_printer_type_attribute
-     * @return array
      */
     public static function forDropdown(int $business_id, $prepend_none = true, $prepend_all = false): array
     {

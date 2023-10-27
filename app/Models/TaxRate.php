@@ -22,7 +22,6 @@ class TaxRate extends Model
      * @param $business_id int
      * @param $prepend_none = true (boolean)
      * @param $include_attributes = false (boolean)
-     * @return array['tax_rates', 'attributes']
      */
     public static function forBusinessDropdown(
         $business_id,
@@ -56,8 +55,6 @@ class TaxRate extends Model
 
     /**
      * Return list of tax rate for a business
-     *
-     * @return array
      */
     public static function forBusiness($business_id): array
     {
@@ -71,8 +68,6 @@ class TaxRate extends Model
 
     /**
      * Return list of tax rates associated with the group_tax
-     *
-     * @return object
      */
     public function tax_groups(): object
     {

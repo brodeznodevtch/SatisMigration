@@ -177,8 +177,6 @@ class ExpenseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -252,8 +250,6 @@ class ExpenseController extends Controller
 
     /**
      * Get expense categories by term
-     *
-     * @return json
      */
     public function getCategories(): json
     {
@@ -415,7 +411,6 @@ class ExpenseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -468,7 +463,6 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -613,7 +607,6 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -651,10 +644,6 @@ class ExpenseController extends Controller
 
     /**
      * Create expense accounting entry by range
-     *
-     * @param  date  $start_date
-     * @param  date  $end_date
-     * @return json
      */
     public function accountingByRange(date $start_date, date $end_date): json
     {
@@ -682,9 +671,6 @@ class ExpenseController extends Controller
 
     /**
      * Show all expenses from checks.
-     *
-     * @param  int  $bank_transaction_id
-     * @return \Illuminate\Http\Response
      */
     public function getAddExpenses(int $bank_transaction_id = null): View
     {
@@ -835,8 +821,6 @@ class ExpenseController extends Controller
 
     /**
      * GET Add expense from checks.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getAddExpense(): View
     {
@@ -860,9 +844,6 @@ class ExpenseController extends Controller
 
     /**
      * Get expense details.
-     *
-     * @param  int  $expense_id
-     * @return json
      */
     public function getExpenseDetails(int $expense_id): json
     {
@@ -1031,10 +1012,6 @@ class ExpenseController extends Controller
     /**
      * Calculate perception value.
      *
-     * @param  float  $amount
-     * @param  float  $min_amount
-     * @param  float  $max_amount
-     * @param  float  $tax_percent
      * @return float
      */
     public function calcContactTax(float $amount, float $min_amount, float $max_amount, float $tax_percent)

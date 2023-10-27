@@ -11,9 +11,6 @@ class TaxUtil extends Util
 {
     /**
      * Updates tax amount of a tax group
-     *
-     * @param  int  $group_tax_id
-     * @return void
      */
     public function updateGroupTaxAmount(int $group_tax_id): void
     {
@@ -29,10 +26,7 @@ class TaxUtil extends Util
     /**
      * Get tax groups for a business
      *
-     * @param  int  $business_id
      * @param  string  $type = sell|purchase
-     * @param  bool  $with_percentages
-     * @return Illuminate\Database\Eloquent\Collection
      */
     public function getTaxGroups(int $business_id, string $type = '', bool $with_percentages = false): Collection
     {
@@ -97,9 +91,7 @@ class TaxUtil extends Util
     /**
      * Get total percent from tax groups given
      *
-     * @param  int  $tax_group_id
      * @param  float  $amount
-     * @return float
      */
     public function getTaxPercent(int $tax_group_id): float
     {
@@ -124,9 +116,7 @@ class TaxUtil extends Util
     /**
      * Get min amount from tax rate given.
      *
-     * @param  int  $tax_group_id
      * @param  float  $amount
-     * @return float
      */
     public function getTaxMinAmount(int $tax_group_id): float
     {
@@ -150,9 +140,7 @@ class TaxUtil extends Util
     /**
      * Get max amount from tax rate given.
      *
-     * @param  int  $tax_group_id
      * @param  float  $amount
-     * @return float
      */
     public function getTaxMaxAmount(int $tax_group_id): float
     {
@@ -175,10 +163,6 @@ class TaxUtil extends Util
 
     /**
      * Get price excluding taxes
-     *
-     * @param  int  $tax_group_id
-     * @param  float  $amount
-     * @return float
      */
     public function getPriceExcTax(int $tax_group_id, float $amount): float
     {
@@ -202,10 +186,6 @@ class TaxUtil extends Util
 
     /**
      * Get price including taxes
-     *
-     * @param  int  $tax_group_id
-     * @param  float  $amount
-     * @return float
      */
     public function getPriceIncTax(int $tax_group_id, float $amount): float
     {
@@ -230,7 +210,6 @@ class TaxUtil extends Util
     /**
      * Get tax type from transaction
      *
-     * @param  int  $transaction_id
      * @return int //**  -1 Withheld; 1 Perception; 0 exempt
      */
     public function getTaxType(int $transaction_id): int
@@ -254,9 +233,6 @@ class TaxUtil extends Util
 
     /**
      * Get total amount taxes products from transaction
-     *
-     * @param  int  $transaction_id
-     * @return float
      */
     public function getTaxAmount(int $transaction_id, $type = 'sell', $discount_amount = 0): float
     {
@@ -303,7 +279,6 @@ class TaxUtil extends Util
      * Get tax name
      *
      * @param  int  $transaction_id
-     * @return string
      */
     public function getTaxName($tax_id, $type = 'tax_group'): string
     {
@@ -322,9 +297,6 @@ class TaxUtil extends Util
 
     /**
      * Get transaction tax details for purchase
-     *
-     * @param  int  $transaction_id
-     * @return array
      */
     public function getTaxDetailsTransaction(int $transaction_id): array
     {
@@ -349,7 +321,6 @@ class TaxUtil extends Util
      * Get transaction line tax percent
      *
      * @param int @transction_id
-     * @return float
      */
     public function getLinesTaxPercent($transaction_id): float
     {
@@ -399,9 +370,6 @@ class TaxUtil extends Util
 
     /**
      * get the id of the tax_group of a sales line
-     *
-     * @param  int  $transaction_id
-     * @return int
      */
     public function getTaxPercentSellReturn(int $transaction_id): int
     {

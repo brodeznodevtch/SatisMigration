@@ -19,7 +19,6 @@ class SalesBySeller implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $transactions
      * @return void
      */
     public function __construct(array $transactions, $start_date, $end_date, $business_name)

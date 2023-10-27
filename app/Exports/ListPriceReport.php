@@ -17,9 +17,6 @@ class ListPriceReport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $products
-     * @param  string  $business_name
-     * @param  array  $list_prices
      * @return void
      *
      * @author

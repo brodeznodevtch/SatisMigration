@@ -36,8 +36,6 @@ class PhysicalInventoryLine extends Model
 
     /**
      * Get product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product(): BelongsTo
     {
@@ -46,8 +44,6 @@ class PhysicalInventoryLine extends Model
 
     /**
      * Get variation.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function variation(): BelongsTo
     {

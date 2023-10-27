@@ -280,7 +280,6 @@ class RrhhDocumentsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhDocuments  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {

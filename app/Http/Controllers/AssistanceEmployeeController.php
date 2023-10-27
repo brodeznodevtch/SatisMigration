@@ -247,7 +247,6 @@ class AssistanceEmployeeController extends Controller
     /**
      * Get assistances data.
      *
-     * @param  array  $params
      * @return array
      */
     public function getAssitancesData(array $params)

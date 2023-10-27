@@ -57,10 +57,6 @@ class BusinessController extends Controller
     /**
      * Constructor.
      *
-     * @param  App\Utils\BusinessUtil  $businessUtil
-     * @param  App\Utils\RestaurantUtil  $restaurantUtil
-     * @param  App\Utils\ModuleUtil  $moduleUtil
-     * @param  App\Utils\TaxUtil  $taxUtil
      * @return void
      */
     public function __construct(BusinessUtil $businessUtil, RestaurantUtil $restaurantUtil, ModuleUtil $moduleUtil, TaxUtil $taxUtil)
@@ -379,8 +375,6 @@ class BusinessController extends Controller
 
     /**
      * Shows business settings form
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getBusinessSettings(): View
     {
@@ -674,8 +668,6 @@ class BusinessController extends Controller
 
     /**
      * Updates business settings
-     *
-     * @return \Illuminate\Http\Response
      */
     public function postBusinessSettings(Request $request): RedirectResponse
     {

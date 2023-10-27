@@ -58,8 +58,6 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -596,7 +594,6 @@ class HomeController extends Controller
     /**
      * Get the monetary value of the total stock.
      *
-     * @param  float  $request
      * @return \Illuminate\Http\Response
      */
     public function getTotalStock(Request $request)
@@ -617,8 +614,6 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours by month chart.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPeakSalesHoursByMonthChart(): View
     {
@@ -652,8 +647,6 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours chart.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPeakSalesHoursChart(): View
     {

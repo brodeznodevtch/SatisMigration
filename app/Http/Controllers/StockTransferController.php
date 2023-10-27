@@ -33,7 +33,6 @@ class StockTransferController extends Controller
     /**
      * Constructor
      *
-     * @param  \App\Utils\ProductUtils  $productUtil
      * @return void
      */
     public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, ModuleUtil $moduleUtil)
@@ -477,9 +476,6 @@ class StockTransferController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -528,9 +524,6 @@ class StockTransferController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(int $id): View
     {
@@ -606,7 +599,6 @@ class StockTransferController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -920,7 +912,6 @@ class StockTransferController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -1069,7 +1060,6 @@ class StockTransferController extends Controller
      * Get product rows for stock transfer
      *
      * @param Resquest
-     * @return view
      */
     public function getProductRowTransfer(Request $request): View
     {
@@ -1163,10 +1153,6 @@ class StockTransferController extends Controller
     /**
      * Reserve the product of the "from warehouse".
      *
-     * @param  \App\Models\Transaction  $sell_transfer
-     * @param  array  $product
-     * @param  string  $type
-     * @param  int  $old_qty
      * @return void
      */
     public function reserve(Transaction $sell_transfer, array $product, string $type = 'create', int $old_qty = 0)
@@ -1204,10 +1190,6 @@ class StockTransferController extends Controller
      * Download the product from the "from warehouse" and update the reserved
      * quantity.
      *
-     * @param  \App\Models\Transaction  $sell_transfer
-     * @param  array  $product
-     * @param  string  $type
-     * @param  int  $old_qty
      * @return void
      */
     public function send(Transaction $sell_transfer, array $product, string $type = 'create', int $old_qty = 0)
@@ -1242,7 +1224,6 @@ class StockTransferController extends Controller
     /**
      * Load the product to the "to warehouse".
      *
-     * @param  int  $id
      * @return array
      */
     public function receive(int $id)
@@ -1380,7 +1361,6 @@ class StockTransferController extends Controller
     /**
      * Create accounting entrie from stock transfer.
      *
-     * @param  int  $id
      * @return array
      */
     public function count(int $id)
@@ -1425,7 +1405,6 @@ class StockTransferController extends Controller
     /**
      * Add price instead of cost to transfers.
      *
-     * @param  int  $transaction_id
      * @return string
      */
     public function fixTransfer(int $transaction_id)

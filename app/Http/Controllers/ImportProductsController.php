@@ -59,8 +59,6 @@ class ImportProductsController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function indexOld(): View
     {
@@ -85,8 +83,6 @@ class ImportProductsController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -820,11 +816,6 @@ class ImportProductsController extends Controller
 
     /**
      * Adds opening stock of a single product
-     *
-     * @param  array  $opening_stock
-     * @param  obj  $product
-     * @param  int  $business_id
-     * @return void
      */
     private function addOpeningStock(array $opening_stock, obj $product, int $business_id): void
     {
@@ -1255,9 +1246,6 @@ class ImportProductsController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
-     * @param  array  $default_data
      * @return array
      */
     public function checkRow(array $row, int $row_no, array $default_data = null)
@@ -1866,8 +1854,6 @@ class ImportProductsController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function import(Request $request): RedirectResponse
     {
@@ -2088,8 +2074,6 @@ class ImportProductsController extends Controller
 
     /**
      * Display edit products screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(): View
     {
@@ -2120,8 +2104,6 @@ class ImportProductsController extends Controller
 
     /**
      * Check file to importer.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function checkEditFile(Request $request): View
     {
@@ -2560,8 +2542,6 @@ class ImportProductsController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @return array
      */
     public function checkEditRow(array $row, int $row_no)
@@ -3410,8 +3390,6 @@ class ImportProductsController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function update(): RedirectResponse
     {

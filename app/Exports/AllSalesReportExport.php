@@ -20,9 +20,6 @@ class AllSalesReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $sales
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $sales, int $size, Business $business)

@@ -20,9 +20,6 @@ class ProductsReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $products
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $products, int $size, Business $business)

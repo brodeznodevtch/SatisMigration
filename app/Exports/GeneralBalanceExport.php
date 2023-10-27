@@ -42,9 +42,6 @@ class GeneralBalanceExport implements WithEvents, WithTitle
         $this->business = $business;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function title(): string
     {
         return __('accounting.general_balance');

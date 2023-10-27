@@ -9,8 +9,6 @@ class VariationLocationDetails extends Model
 {
     /**
      * Gets the warehouse to which the variation location detail belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function warehouse(): HasRelationships
     {
@@ -19,8 +17,6 @@ class VariationLocationDetails extends Model
 
     /**
      * Gets the business location to which the variation location detail belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function location(): HasRelationships
     {

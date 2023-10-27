@@ -17,8 +17,6 @@ class SaleCostProductReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $transactions
-     * @param  string  $business_name
      * @param  string  $date;
      * @return void
      */

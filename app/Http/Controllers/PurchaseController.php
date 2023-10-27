@@ -763,9 +763,6 @@ class PurchaseController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -827,7 +824,6 @@ class PurchaseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -1035,7 +1031,6 @@ class PurchaseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -1384,7 +1379,6 @@ class PurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -1689,8 +1683,6 @@ class PurchaseController extends Controller
 
     /**
      * Retrieves products list.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPurchaseEntryRow(): View
     {
@@ -1922,7 +1914,6 @@ class PurchaseController extends Controller
      * Shows import option for purchases.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function getImportPurchases(): View
     {
@@ -2525,8 +2516,6 @@ class PurchaseController extends Controller
 
     /**
      * Create purchase accounting entry
-     *
-     * @param  int  $transaction_id
      */
     public function createAccountinEntry(int $transaction_id)
     {
@@ -2574,8 +2563,6 @@ class PurchaseController extends Controller
 
     /**
      * Get purchase accounting entry
-     *
-     * @param  int  $transaction_id
      */
     private function getPurchaseAccountingEntry(int $transaction_id)
     {
@@ -2718,7 +2705,6 @@ class PurchaseController extends Controller
      * Get suggested purchase
      *
      * @param \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function suggestedPurchase(Request $request): View
     {
@@ -2739,7 +2725,6 @@ class PurchaseController extends Controller
      * Get suggested purchas report
      *
      * @param \Illuminate\Http\Request
-     * @return Excel
      */
     public function suggestedPurchaseReport(Request $request): Excel
     {
@@ -2829,8 +2814,6 @@ class PurchaseController extends Controller
 
     /**
      * Retrieves purchases.
-     *
-     * @return json
      */
     public function getPurchases(): json
     {
@@ -2867,8 +2850,6 @@ class PurchaseController extends Controller
 
     /**
      * Retrieves purchase row.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPurchaseRow(): View
     {

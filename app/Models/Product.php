@@ -15,8 +15,6 @@ class Product extends Model
 
     /**
      * Get the products image.
-     *
-     * @return string
      */
     public function getImageUrlAttribute(): string
     {

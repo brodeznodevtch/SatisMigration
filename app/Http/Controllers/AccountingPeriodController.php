@@ -35,8 +35,6 @@ class AccountingPeriodController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): JsonResponse
     {
@@ -70,8 +68,6 @@ class AccountingPeriodController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(AccountingPeriod $accountingPeriod): JsonResponse
     {
@@ -81,8 +77,6 @@ class AccountingPeriodController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(AccountingPeriod $accountingPeriod): JsonResponse
     {
@@ -92,8 +86,6 @@ class AccountingPeriodController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, AccountingPeriod $accountingPeriod): JsonResponse
     {

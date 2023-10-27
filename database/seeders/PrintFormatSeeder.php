@@ -12,8 +12,6 @@ class PrintFormatSeeder extends Seeder
 {
     /**
      * Create default print formats.
-     *
-     * @return void
      */
     public function run(): void
     {

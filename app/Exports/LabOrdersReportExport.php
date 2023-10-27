@@ -20,9 +20,6 @@ class LabOrdersReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $lab_orders
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $lab_orders, int $size, Business $business)

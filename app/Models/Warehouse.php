@@ -39,8 +39,6 @@ class Warehouse extends Model
 
     /**
      * Gets the business location to which the warehouse belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function business_location(): HasRelationships
     {

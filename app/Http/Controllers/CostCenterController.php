@@ -70,8 +70,6 @@ class CostCenterController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -126,7 +124,6 @@ class CostCenterController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\CostCenter  $costCenter
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -139,7 +136,6 @@ class CostCenterController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\CostCenter  $costCenter
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -224,9 +220,6 @@ class CostCenterController extends Controller
 
     /**
      * GET for Main Accounts
-     *
-     * @param  int  $cost_center_id
-     * @return \Response
      */
     public function getMainAccounts(int $cost_center_id): View
     {
@@ -256,9 +249,6 @@ class CostCenterController extends Controller
 
     /**
      * POST for Main Accounts
-     *
-     * @param  int  $cost_center_id
-     * @return JSON
      */
     public function postMainAccounts(int $cost_center_id): JSON
     {
@@ -294,9 +284,6 @@ class CostCenterController extends Controller
 
     /**
      * Get for Operation Accounts
-     *
-     * @param  int  $cost_center_id
-     * @return \Response
      */
     public function getOperationAccounts(int $cost_center_id): View
     {
@@ -347,9 +334,6 @@ class CostCenterController extends Controller
 
     /**
      * POST for Operation Accounts
-     *
-     * @param  int  $cost_center_id
-     * @return JSON
      */
     public function postOperationAccounts(int $cost_center_id): JSON
     {

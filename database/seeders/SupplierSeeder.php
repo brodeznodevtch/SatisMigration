@@ -14,8 +14,6 @@ class SupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -39,10 +37,6 @@ class SupplierSeeder extends Seeder
     /**
      * Sync Suppliers
      *
-     * @param  int  $id
-     * @param  string  $code
-     * @param  int  $business_id
-     * @return void
      *
      * @author Arquímides Martínez
      */

@@ -156,8 +156,6 @@ class OrderController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -219,8 +217,6 @@ class OrderController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -357,9 +353,6 @@ class OrderController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -414,7 +407,6 @@ class OrderController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -533,7 +525,6 @@ class OrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Quote  $order
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): RedirectResponse
     {
@@ -660,7 +651,6 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -769,7 +759,6 @@ class OrderController extends Controller
      * Retrieves list of quotes, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
     public function getOrders(): JSON
     {
@@ -1014,8 +1003,6 @@ class OrderController extends Controller
 
     /**
      * Mark a order as prepared
-     *
-     * @param  int  $id
      */
     public function changeOrderStatus(int $id, $employee_id = null)
     {
@@ -1209,9 +1196,6 @@ class OrderController extends Controller
 
     /**
      * Add spares to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
     public function addSpare(int $variation_id): json
     {
@@ -1300,8 +1284,6 @@ class OrderController extends Controller
 
     /**
      * Get quote_lines info.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getSpareLines(): View
     {

@@ -63,8 +63,6 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -252,8 +250,6 @@ class CustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -518,7 +514,6 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -736,7 +731,6 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): RedirectResponse
     {
@@ -1022,8 +1016,6 @@ class CustomerController extends Controller
 
     /**
      * Add customer from POS modal
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getAddCustomer($customer_name = null): View
     {
@@ -1152,7 +1144,6 @@ class CustomerController extends Controller
      * Shows import option for customers
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function getImportCustomers(): View
     {
@@ -1180,7 +1171,6 @@ class CustomerController extends Controller
      * Imports customers
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function postImportCustomers(Request $request): RedirectResponse
     {
@@ -1582,9 +1572,6 @@ class CustomerController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function getFollowCustomer(int $id): JsonResponse
     {
@@ -1612,7 +1599,6 @@ class CustomerController extends Controller
      * Retrieves list of customers, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
     public function getCustomers(): JSON
     {
@@ -1678,8 +1664,6 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function indexBalancesCustomer(): View
     {
@@ -1818,9 +1802,6 @@ class CustomerController extends Controller
 
     /**
      * Get details of the customer's account statement.
-     *
-     * @param  int  $id
-     * @return JSON
      */
     public function showBalances(int $id): JSON
     {
@@ -1972,7 +1953,6 @@ class CustomerController extends Controller
     /**
      * Create opening balance transactions from customer opening balances.
      *
-     * @param  int  $business_id
      * @return string
      */
     public function createAllOpeningBalances(int $business_id)
@@ -2037,8 +2017,6 @@ class CustomerController extends Controller
 
     /**
      * Retrieves vehicle row.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getVehicleRow(): View
     {
@@ -2052,8 +2030,6 @@ class CustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function createCustomerAndPatient($customer_name = null): View
     {
@@ -2249,7 +2225,6 @@ class CustomerController extends Controller
     /**
      * Get customer vehicles list.
      *
-     * @param  int  $id
      * @param  json
      */
     public function getCustomerVehicles(int $id): JsonResponse

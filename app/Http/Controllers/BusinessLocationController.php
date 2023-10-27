@@ -166,7 +166,6 @@ class BusinessLocationController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\StoreFront  $storeFront
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -239,8 +238,6 @@ class BusinessLocationController extends Controller
 
     /**
      * get add/update accounting accounts by location
-     *
-     * @param  int  $location_id
      */
     public function getAccountingAccountByLocation(int $location_id): View
     {

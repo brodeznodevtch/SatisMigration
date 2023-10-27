@@ -11,7 +11,6 @@ class PurchaseSellMismatch extends Exception
     /**
      * Create a new authentication exception.
      *
-     * @param  string  $message
      * @param  array  $guards
      * @return void
      */
@@ -22,9 +21,6 @@ class PurchaseSellMismatch extends Exception
 
     /**
      * Render the exception as an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function render(Request $request): Response
     {

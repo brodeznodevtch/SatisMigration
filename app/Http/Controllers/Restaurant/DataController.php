@@ -25,8 +25,6 @@ class DataController extends Controller
 
     /**
      * Show the restaurant module related details in pos screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPosDetails(Request $request): View
     {

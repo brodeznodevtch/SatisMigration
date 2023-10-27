@@ -82,7 +82,6 @@ class StatusClaimController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\StatusClaim  $statusClaim
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {

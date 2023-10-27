@@ -16,7 +16,6 @@ class ModuleUtil extends Util
      * This function check if a module is installed or not.
      *
      * @param  string  $module_name (Exact module name, with first letter capital)
-     * @return bool
      */
     public function isModuleInstalled(string $module_name): bool
     {
@@ -37,8 +36,6 @@ class ModuleUtil extends Util
 
     /**
      * This function check if superadmin module is installed or not.
-     *
-     * @return bool
      */
     public function isSuperadminInstalled(): bool
     {
@@ -48,9 +45,6 @@ class ModuleUtil extends Util
     /**
      * This function check if a function provided exist in all modules
      * DataController, merges the data and returned it.
-     *
-     * @param  string  $function_name
-     * @return array
      */
     public function getModuleData(string $function_name): array
     {
@@ -82,9 +76,6 @@ class ModuleUtil extends Util
 
     /**
      * Checks if a module is defined
-     *
-     * @param  string  $module_name
-     * @return bool
      */
     public function isModuleDefined(string $module_name): bool
     {
@@ -104,9 +95,6 @@ class ModuleUtil extends Util
 
     /**
      * This function check if a business has active subscription packages
-     *
-     * @param  int  $business_id
-     * @return bool
      */
     public static function isSubscribed(int $business_id): bool
     {
@@ -126,10 +114,7 @@ class ModuleUtil extends Util
     /**
      * This function checks if a business has
      *
-     * @param  int  $business_id
-     * @param  string  $permission
      * @param  string  $callback_function = null
-     * @return bool
      */
     public static function hasThePermissionInSubscription(int $business_id, string $permission, string $callback_function = null): bool
     {
@@ -170,8 +155,6 @@ class ModuleUtil extends Util
 
     /**
      * Returns the name of view used to display for subscription expired.
-     *
-     * @return string
      */
     public static function expiredResponse($redirect_url = null): string
     {
@@ -201,10 +184,6 @@ class ModuleUtil extends Util
 
     /**
      * This function check if a business has available quota for various types.
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @return bool
      */
     public static function isQuotaAvailable(string $type, int $business_id): bool
     {
@@ -281,10 +260,7 @@ class ModuleUtil extends Util
     /**
      * This function returns the response for expired quota
      *
-     * @param  string  $type
-     * @param  int  $business_id
      * @param  string  $redirect_url = null
-     * @return \Illuminate\Http\Response
      */
     public static function quotaExpiredResponse(string $type, int $business_id, string $redirect_url = null): Response
     {

@@ -19,8 +19,6 @@ class InstallUtil extends Util
      * USED ONLY TO UPDATE FROM VERSION 1.1 to 1.2
      *
      * DEPRECIATED AFTER 1.2
-     *
-     * @return int
      */
     public function resetStockAdjustmentForAllBusiness(): int
     {
@@ -71,7 +69,6 @@ class InstallUtil extends Util
     /**
      * Get system information as per the key passed.
      *
-     * @param  string  $key
      * @return mixed
      */
     public function getSystemInfo(string $key)
@@ -88,8 +85,6 @@ class InstallUtil extends Util
     /**
      * Set system information as per the key value passed
      *
-     * @param  string  $key
-     * @param  string  $value
      * @return mixed
      */
     public function setSystemInfo(string $key, string $value)
@@ -99,10 +94,6 @@ class InstallUtil extends Util
 
     /**
      * Runs only if updated from v 1.3 to v2.0
-     *
-     * @param  float  $db_version
-     * @param  float  $app_version
-     * @return bool
      */
     public function updateFrom13To20(float $db_version, float $app_version): bool
     {
@@ -117,8 +108,6 @@ class InstallUtil extends Util
     /**
      * This function checks for product variations, maps if existing in
      * template or else create a new variation template
-     *
-     * @return void
      */
     public function createExistingProductsVariationsToTemplate(): void
     {

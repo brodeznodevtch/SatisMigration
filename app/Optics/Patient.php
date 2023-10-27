@@ -41,8 +41,6 @@ class Patient extends Model
 
     /**
      * Gets the employee to which the patient belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
     public function employee(): HasRelationships
     {

@@ -39,8 +39,6 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -65,8 +63,6 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -225,11 +221,6 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Adds opening stock of a single product
-     *
-     * @param  array  $opening_stock
-     * @param  obj  $product
-     * @param  int  $business_id
-     * @return void
      */
     private function addOpeningStock(array $opening_stock, obj $product, int $business_id, $unit_cost_before_tax, $transaction = null): void
     {

@@ -197,8 +197,6 @@ class RrhhImportEmployeesController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @param  array  $default_data
      * @return array
      */
@@ -1125,8 +1123,6 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function import(Request $request): RedirectResponse
     {
@@ -1215,8 +1211,6 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Display edit employees screen.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(): View
     {
@@ -1383,8 +1377,6 @@ class RrhhImportEmployeesController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @param  array  $default_data
      * @return array
      */
@@ -2314,8 +2306,6 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function update(): RedirectResponse
     {

@@ -84,8 +84,6 @@ class RrhhContractController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create($id): View
     {
@@ -508,7 +506,6 @@ class RrhhContractController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\RrhhContract  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
     public function show($id, $employee_id): View
     {

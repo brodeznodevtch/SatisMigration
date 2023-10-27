@@ -14,8 +14,6 @@ class TypeEntrieController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -24,8 +22,6 @@ class TypeEntrieController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -34,8 +30,6 @@ class TypeEntrieController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): JsonResponse
     {
@@ -63,8 +57,6 @@ class TypeEntrieController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(TypeEntrie $typeEntrie): JsonResponse
     {
@@ -75,7 +67,6 @@ class TypeEntrieController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TypeEntrie  $typeEntrie
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {
@@ -88,7 +79,6 @@ class TypeEntrieController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\TypeEntrie  $typeEntrie
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): JsonResponse
     {

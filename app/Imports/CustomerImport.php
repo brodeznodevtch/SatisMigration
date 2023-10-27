@@ -25,9 +25,6 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
         $this->user_id = $user_id;
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
     public function model(array $row): ?Model
     {
 

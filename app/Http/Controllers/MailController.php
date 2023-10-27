@@ -29,8 +29,6 @@ class MailController extends Controller
 
     /**
      * Send mail with customer account statement.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function sendAccountStatement(): RedirectResponse
     {
@@ -111,7 +109,6 @@ class MailController extends Controller
     /**
      * Get lines for customer account statement.
      *
-     * @param  array  $params
      * @return array
      */
     public function getLinesForAccountStatement(array $params)

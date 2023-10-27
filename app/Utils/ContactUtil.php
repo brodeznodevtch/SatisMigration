@@ -10,9 +10,6 @@ class ContactUtil
 {
     /**
      * Returns Walk In Customer for a Business
-     *
-     * @param  int  $business_id
-     * @return array/false
      */
     public function getWalkInCustomer(int $business_id): array
     {
@@ -43,9 +40,6 @@ class ContactUtil
 
     /**
      * Returns Walk In Customer for a Business
-     *
-     * @param  int  $business_id
-     * @return array/false
      */
     public function getDefaultCustomer(int $business_id): array
     {
@@ -75,10 +69,6 @@ class ContactUtil
 
     /**
      * Returns the customer group
-     *
-     * @param  int  $business_id
-     * @param  int  $customer_id
-     * @return array
      */
     public function getCustomerGroup(int $business_id, int $customer_id): array
     {
@@ -99,9 +89,6 @@ class ContactUtil
 
     /**
      * Get customer's employee asigned name
-     *
-     * @param  int  $customer_id
-     * @return string
      */
     public function getCustomerEmployeeName(int $customer_id): string
     {

@@ -56,8 +56,6 @@ class User extends Authenticatable
 
     /**
      * Creates a new user based on the input provided.
-     *
-     * @return object
      */
     public static function create_user($details): object
     {
@@ -100,8 +98,6 @@ class User extends Authenticatable
      * Returns if a user can access the input location
      *
      * @param: int $location_id
-     *
-     * @return bool
      */
     public static function can_access_this_location($location_id): bool
     {
@@ -251,8 +247,6 @@ class User extends Authenticatable
 
     /**
      * Get the user's full name.
-     *
-     * @return string
      */
     public function getUserFullNameAttribute(): string
     {
@@ -266,8 +260,6 @@ class User extends Authenticatable
 
     /**
      * Return true/false based on selected_contact access
-     *
-     * @return bool
      */
     public static function isSelectedContacts($user_id): bool
     {

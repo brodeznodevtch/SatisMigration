@@ -11,7 +11,6 @@ class RestaurantUtil
     /**
      * Retrieves all orders/sales
      *
-     * @param  int  $business_id
      * @param  array  $filter
      * *For new orders order_status is 'received'
      * @return obj $orders

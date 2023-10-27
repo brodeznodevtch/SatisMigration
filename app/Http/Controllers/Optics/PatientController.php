@@ -33,8 +33,6 @@ class PatientController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -48,8 +46,6 @@ class PatientController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create($patient_name = null): View
     {
@@ -151,7 +147,6 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Patient  $patient
      * @return \Illuminate\Http\Response
      */
     public function show(Patient $patient)
@@ -163,7 +158,6 @@ class PatientController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Patient  $patient
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -358,7 +352,6 @@ class PatientController extends Controller
      * Retrieves list of patients, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
     public function getPatients(): JSON
     {

@@ -17,7 +17,6 @@ class AllSalesWithUtilityReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $sales
      * @param  int  $size
      * @param  \App\Business  $business
      * @return void

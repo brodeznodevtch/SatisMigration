@@ -44,8 +44,6 @@ class RrhhPersonnelActionController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -804,7 +802,6 @@ class RrhhPersonnelActionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhPersonnelAction  $rrhhPersonnelAction
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {

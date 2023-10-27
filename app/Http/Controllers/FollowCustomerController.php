@@ -29,8 +29,6 @@ class FollowCustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -144,7 +142,6 @@ class FollowCustomerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\FollowCustomer  $followCustomer
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -168,7 +165,6 @@ class FollowCustomerController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\FollowCustomer  $followCustomer
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {

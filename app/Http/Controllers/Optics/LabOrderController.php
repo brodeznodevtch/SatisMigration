@@ -243,8 +243,6 @@ class LabOrderController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -547,7 +545,6 @@ class LabOrderController extends Controller
      * Display the specified resource.
      *
      * @param  \App\LabOrder  $labOrder
-     * @return \Illuminate\Http\Response
      */
     public function show($id): View
     {
@@ -603,7 +600,6 @@ class LabOrderController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\LabOrder  $labOrder
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {
@@ -1615,7 +1611,6 @@ class LabOrderController extends Controller
     /**
      * Print lab order.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function print(int $id)
@@ -1690,8 +1685,6 @@ class LabOrderController extends Controller
     /**
      * Change status and print lab order.
      *
-     * @param  int  $id
-     * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatusAndPrint(int $id, int $status_id)
@@ -1785,8 +1778,6 @@ class LabOrderController extends Controller
     /**
      * Change lab order status.
      *
-     * @param  int  $order_id
-     * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatus(int $order_id, int $status_id)
@@ -1878,7 +1869,6 @@ class LabOrderController extends Controller
     /**
      * Get data for lab orders report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getLabOrders(array $params)
@@ -1996,8 +1986,6 @@ class LabOrderController extends Controller
     /**
      * Change lab order status and print lab order.
      *
-     * @param  int  $id
-     * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatusAndTransfer(int $id, int $status_id)
@@ -2051,8 +2039,6 @@ class LabOrderController extends Controller
     /**
      * Change lab order status and copy lab order.
      *
-     * @param  int  $id
-     * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatusAndCopy(int $id, int $status_id)
@@ -2107,8 +2093,6 @@ class LabOrderController extends Controller
     /**
      * Change lab order status and edit lab order.
      *
-     * @param  int  $id
-     * @param  int  $status_id
      * @return \Illuminate\Http\Response
      */
     public function changeStatusAndEdit(int $id, int $status_id)

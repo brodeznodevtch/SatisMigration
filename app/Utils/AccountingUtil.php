@@ -85,9 +85,6 @@ class AccountingUtil extends Util
 
     /**
      * Get accounting entry number
-     *
-     * @param  Date  $date
-     * @return int
      */
     public function getEntryNumber(Date $date): int
     {
@@ -127,9 +124,6 @@ class AccountingUtil extends Util
 
     /**
      * create bank transaction entry
-     *
-     * @param  array  $remittance_entry
-     * @return bool
      */
     public function createBankTransactionEntry(array $remittance_entry): bool
     {

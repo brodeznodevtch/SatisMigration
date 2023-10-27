@@ -16,8 +16,6 @@ class CashRegisterUtil extends Util
     /**
      * Returns number of opened Cash Registers for the
      * current logged in user
-     *
-     * @return int
      */
     public function countOpenedRegister(): int
     {
@@ -42,10 +40,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Adds sell payments to currently opened cash register
-     *
-     * @param object/int $transaction
-     * @param  array  $payments
-     * @return bool
      */
     public function addSellPayments(object $transaction, array $payments): bool
     {
@@ -74,9 +68,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Adds credit sell payments to currently opened cash register
-     *
-     * @param object/int $transaction
-     * @return bool
      */
     public function addCreditSellPayment(object $transaction, $total_paid, $final_amount): bool
     {
@@ -93,10 +84,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Adds sell payments to currently opened cash register
-     *
-     * @param object/int $transaction
-     * @param  array  $payments
-     * @return bool
      */
     public function updateSellPayments($status_before, object $transaction, array $payments): bool
     {
@@ -165,9 +152,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Refunds all payments of a sell
-     *
-     * @param object/int $transaction
-     * @return bool
      */
     public function refundSell(object $transaction): bool
     {
@@ -221,12 +205,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Retrieves details of given rigister id else currently opened register.
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  string  $close_date
-     * @return object
      */
     public function getRegisterDetails(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
@@ -280,7 +258,6 @@ class CashRegisterUtil extends Util
      * @param $user_id int
      * @param $open_time datetime
      * @param $close_time datetime
-     * @return array
      */
     public function getRegisterTransactionDetails($user_id, $open_time, $close_time): array
     {
@@ -315,11 +292,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Retrieves details of given rigister id else currently opened register
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @return object
      */
     public function getRegisterDetailsWithPayments(int $cashier_id, string $start_date, string $end_date): object
     {
@@ -353,11 +325,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Get initial amount when opening cash register.
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @return float
      */
     public function getInitialAmount(int $cashier_id, string $start_date, string $end_date): float
     {
@@ -372,11 +339,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Get inflow and outflow amount when opening cash register.
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @return float
      */
     public function getInflowOutflow(int $cashier_id, string $start_date, string $end_date): float
     {
@@ -393,12 +355,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Retrieves details of given rigister id else currently opened register.
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  string  $close_date
-     * @return object
      */
     public function getReservationPayments(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
@@ -443,12 +399,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Retrieves details of given rigister id else currently opened register
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  string  $close_date
-     * @return object
      */
     public function getReservationPays(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
@@ -472,12 +422,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Get details of reservations converted to sales.
-     *
-     * @param  int  $cashier_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  string  $close_date
-     * @return object
      */
     public function getReservationsToSales(int $cashier_id, string $start_date, string $end_date, string $close_date): object
     {
@@ -523,10 +467,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Adds sell payments to currently opened cash register.
-     *
-     * @param  \App\Quote  $quote
-     * @param  array  $payments
-     * @return bool
      */
     public function addSellPaymentsToQuotes(Quote $quote, array $payments): bool
     {
@@ -555,9 +495,6 @@ class CashRegisterUtil extends Util
 
     /**
      * Adds credit sell payments to currently opened cash register
-     *
-     * @param  \App\Quote  $quote
-     * @return bool
      */
     public function addCreditSellPaymentToQuotes(Quote $quote, $total_paid, $final_amount): bool
     {
@@ -576,7 +513,6 @@ class CashRegisterUtil extends Util
      * Refunds all payments of a sell
      *
      * @param object/int $transaction
-     * @return bool
      */
     public function refundQuote($quote): bool
     {

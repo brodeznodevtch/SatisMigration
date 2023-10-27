@@ -21,9 +21,6 @@ class AccountsReceivableReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $transactions
-     * @param  string  $business_name
-     * @param  string  $report_name
      * @param  App\Util\TransactionUtil  $transactionUtil;
      * @return void
      */

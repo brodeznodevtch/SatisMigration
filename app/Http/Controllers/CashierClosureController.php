@@ -155,7 +155,6 @@ class CashierClosureController extends Controller
     /**
      * Show cashier closure report
      *
-     * @param  int  $location_id
      * @param  int  $cashier_closure_id | null
      * @param  int  $cashier_id | null
      */
@@ -320,7 +319,6 @@ class CashierClosureController extends Controller
      * Recalculate Cashier Closure
      *
      * @param  int  $cashier_closure_id
-     * @param  int  $location_id
      * @return array
      */
     public function recalcCashierClosure($id, int $location_id)
@@ -382,8 +380,6 @@ class CashierClosureController extends Controller
 
     /**
      * Create sale accounting entry
-     *
-     * @param  int  $cashier_closure_id
      */
     public function createSaleAccountingEntry(int $cashier_closure_id)
     {
@@ -436,8 +432,6 @@ class CashierClosureController extends Controller
 
     /**
      * Get sale accounting entry lines
-     *
-     * @param  int  $cashier_closure_id
      */
     private function getSaleAccountingEntryLines(int $cashier_closure_id)
     {
@@ -539,8 +533,6 @@ class CashierClosureController extends Controller
 
     /**
      * Create cost accounting entry
-     *
-     * @param  int  $cashier_closure_id
      */
     private function createCostAccountingEntry(int $cashier_closure_id)
     {
@@ -586,8 +578,6 @@ class CashierClosureController extends Controller
 
     /**
      * Get cost accounting entry lines
-     *
-     * @param  int  $cashier_closure_id
      */
     private function getCostAccountingEntryLines(int $cashier_closure_id)
     {

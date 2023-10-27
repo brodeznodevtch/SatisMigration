@@ -38,9 +38,6 @@ class ComprobationBalanceExport implements FromView, WithEvents, WithTitle
         $this->enable_empty_values = $enable_empty_values;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function title(): string
     {
         return __('accounting.comprobation_balance');

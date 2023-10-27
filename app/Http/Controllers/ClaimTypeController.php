@@ -18,8 +18,6 @@ class ClaimTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -32,8 +30,6 @@ class ClaimTypeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -138,7 +134,6 @@ class ClaimTypeController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\ClaimType  $claimType
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -154,7 +149,6 @@ class ClaimTypeController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\ClaimType  $claimType
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {

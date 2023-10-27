@@ -16,8 +16,6 @@ class NotificationTemplate extends Model
     /**
      * Retrives notification template from database
      *
-     * @param  int  $business_id
-     * @param  string  $template_for
      * @return array $template
      */
     public static function getTemplate(int $business_id, string $template_for): array

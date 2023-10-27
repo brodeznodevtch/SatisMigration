@@ -21,9 +21,6 @@ class PayrollVacationReportExport implements WithEvents, WithTitle, ShouldAutoSi
     /**
      * Constructor.
      *
-     * @param  array  $payroll
-     * @param  array  $payrollDetails
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $payroll, array $payrollDetails, Business $business, $moduleUtil)

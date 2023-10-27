@@ -457,8 +457,6 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -630,7 +628,6 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
      */
     public function show($id): View
     {
@@ -646,9 +643,6 @@ class ProductController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(int $id): View
     {
@@ -767,9 +761,6 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id): RedirectResponse
     {
@@ -1178,8 +1169,6 @@ class ProductController extends Controller
 
     /**
      * Get product form parts.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getProductVariationFormPart(Request $request): View
     {
@@ -1221,8 +1210,6 @@ class ProductController extends Controller
 
     /**
      * Get product form parts.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getVariationValueRow(Request $request): View
     {
@@ -1241,8 +1228,6 @@ class ProductController extends Controller
 
     /**
      * Get product form parts.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getProductVariationRow(Request $request): View
     {
@@ -1263,8 +1248,6 @@ class ProductController extends Controller
 
     /**
      * Get product form parts.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getVariationTemplate(Request $request): View
     {
@@ -1286,7 +1269,6 @@ class ProductController extends Controller
      *
      * @param  string  $q
      * @param  bool  $check_qty
-     * @return JSON
      */
     public function getProducts(): JSON
     {
@@ -1629,7 +1611,6 @@ class ProductController extends Controller
      *
      * @param  string  $q
      * @param  bool  $check_qty
-     * @return JSON
      */
     public function getProductsWithoutVariations(): JSON
     {
@@ -1713,8 +1694,6 @@ class ProductController extends Controller
 
     /**
      * Loads quick add product modal.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function quickAdd(): View
     {
@@ -1846,7 +1825,6 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
      */
     public function view($id): View
     {
@@ -1907,8 +1885,6 @@ class ProductController extends Controller
 
     /**
      * Mass deletes products.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function massDestroy(Request $request): RedirectResponse
     {
@@ -1961,9 +1937,6 @@ class ProductController extends Controller
 
     /**
      * Shows form to add selling price group prices for a product.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function addSellingPrices(int $id): View
     {
@@ -1990,8 +1963,6 @@ class ProductController extends Controller
 
     /**
      * Saves selling price group prices for a product.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function saveSellingPrices(Request $request): RedirectResponse
     {
@@ -2775,8 +2746,6 @@ class ProductController extends Controller
 
     /**
      * Get services list.
-     *
-     * @return json
      */
     public function getServices(): json
     {
@@ -2820,7 +2789,6 @@ class ProductController extends Controller
     /**
      * Recalculate average product cost based on transactions and update data.
      *
-     * @param  int  $variation_id
      * @return array
      */
     public function recalculateProductCost(int $variation_id)
@@ -2964,7 +2932,6 @@ class ProductController extends Controller
     /**
      * Get product accounts location
      *
-     * @param  int  $product_id
      *
      * @author Arquímides Martínez
      */
@@ -3049,7 +3016,6 @@ class ProductController extends Controller
     /**
      * Post product accounts by location
      *
-     * @param  int  $product_id
      *
      * @author Arquímides Martínez
      */
@@ -3127,8 +3093,6 @@ class ProductController extends Controller
 
     /**
      * Show the form for recalculate cost.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getRecalculateCost(): View
     {

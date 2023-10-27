@@ -24,10 +24,6 @@ class AccountStatementExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $lines
-     * @param  date  $date
-     * @param  \App\Business  $business
-     * @param  \App\Customer  $customer
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, array $lines, date $date, Business $business, Customer $customer)

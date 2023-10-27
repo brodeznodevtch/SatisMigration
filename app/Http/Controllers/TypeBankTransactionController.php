@@ -14,8 +14,6 @@ class TypeBankTransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -24,8 +22,6 @@ class TypeBankTransactionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -79,7 +75,6 @@ class TypeBankTransactionController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -92,7 +87,6 @@ class TypeBankTransactionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {
@@ -199,7 +193,6 @@ class TypeBankTransactionController extends Controller
     /**
      * Get bank transactions type enabled checkbook
      *
-     * @param  int  $bank_transaction_type_id
      * @return int
      */
     public function getIfEnableCheckbook(int $bank_transaction_type_id)

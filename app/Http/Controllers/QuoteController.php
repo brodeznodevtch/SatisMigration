@@ -49,8 +49,6 @@ class QuoteController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): \Illuminate\View\View
     {
@@ -714,7 +712,6 @@ class QuoteController extends Controller
      * Retrieves list of quotes, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
     public function getQuotes(): JSON
     {
@@ -1140,7 +1137,6 @@ class QuoteController extends Controller
     /**
      * Add service block to quote form.
      *
-     * @param  int  $id
      * @return array
      */
     public function addServiceBlock(int $id)
@@ -1223,9 +1219,6 @@ class QuoteController extends Controller
 
     /**
      * Add spares to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
     public function addSpare(int $variation_id): json
     {
@@ -1327,9 +1320,6 @@ class QuoteController extends Controller
 
     /**
      * Add spares not stock to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
     public function addSpareNotStock(int $variation_id): json
     {
@@ -1410,9 +1400,6 @@ class QuoteController extends Controller
 
     /**
      * Get service blocks by quote.
-     *
-     * @param  int  $id
-     * @return json
      */
     public function getServiceBlocksByQuote(int $id): json
     {
@@ -1524,7 +1511,6 @@ class QuoteController extends Controller
     /**
      * Get quote in PDF format.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function viewQuoteWorkshop(int $id)
@@ -1674,9 +1660,6 @@ class QuoteController extends Controller
 
     /**
      * Get workshop data.
-     *
-     * @param  int  $id
-     * @return json
      */
     public function workshopData(int $id): json
     {

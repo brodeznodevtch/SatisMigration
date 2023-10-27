@@ -21,9 +21,7 @@ class AssistanceEmployeeReportExport implements WithEvents, WithTitle
      * Constructor.
      *
      * @param  array  $assistance
-     * @param  array  $assistanceSummary
      * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct($assistances, array $assistanceSummary, Business $business, $transactionUtil)

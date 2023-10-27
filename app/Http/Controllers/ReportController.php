@@ -705,8 +705,6 @@ class ReportController extends Controller
 
     /**
      * Shows product stock details
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getStockDetails(Request $request): View
     {
@@ -813,8 +811,6 @@ class ReportController extends Controller
 
     /**
      * Shows trending products
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getTrendingProducts(Request $request): View
     {
@@ -866,8 +862,6 @@ class ReportController extends Controller
 
     /**
      * Shows expense report of a business
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getExpenseReport(Request $request): View
     {
@@ -1157,8 +1151,6 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative report
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getSalesRepresentativeReport(Request $request): View
     {
@@ -1178,8 +1170,6 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total expense
-     *
-     * @return json
      */
     public function getSalesRepresentativeTotalExpense(Request $request): json
     {
@@ -1201,8 +1191,6 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total sales
-     *
-     * @return json
      */
     public function getSalesRepresentativeTotalSell(Request $request): json
     {
@@ -1228,8 +1216,6 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total commission
-     *
-     * @return json
      */
     public function getSalesRepresentativeTotalCommission(Request $request): json
     {
@@ -1432,8 +1418,6 @@ class ReportController extends Controller
 
     /**
      * Shows product stock expiry report
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getStockExpiryReportEditModal(Request $request, $purchase_line_id): View
     {
@@ -3975,8 +3959,6 @@ class ReportController extends Controller
 
     /**
      * Get price lists report
-     *
-     * @return Illuminate\Http\Response
      */
     public function getPriceListsReport(): View
     {
@@ -3997,9 +3979,6 @@ class ReportController extends Controller
 
     /**
      * Post price lists report
-     *
-     * @return Illuminate\Http\Request
-     * @return Excel
      */
     public function postPriceListsReport(Request $request): Request
     {
@@ -4179,8 +4158,6 @@ class ReportController extends Controller
     /**
      * Gets sales for report.
      *
-     * @param  array  $params
-     * @param  bool  $print
      * @return array
      */
     public function getSalesForReport(array $params, bool $print = false)
@@ -4640,7 +4617,6 @@ class ReportController extends Controller
     /**
      * Get data for detailed sales report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToDetailedCommissionsReport(array $params)
@@ -4767,7 +4743,6 @@ class ReportController extends Controller
     /**
      * Get lines for customer account statement.
      *
-     * @param  array  $params
      * @return array
      */
     public function getLinesForAccountStatement(array $params)
@@ -5517,8 +5492,6 @@ class ReportController extends Controller
 
     /**
      * Show transfer sheet form.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getTransferSheet(): View
     {
@@ -5738,7 +5711,6 @@ class ReportController extends Controller
     /**
      * Get data for payment notes report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToPaymentNoteReport(array $params)
@@ -5905,7 +5877,6 @@ class ReportController extends Controller
     /**
      * Get data for lab orders report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToLabOrdersReport(array $params)
@@ -6331,7 +6302,6 @@ class ReportController extends Controller
     /**
      * Get data for glasses consumption report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToGlassesConsumptionReport(array $params, $print = false)
@@ -6543,7 +6513,6 @@ class ReportController extends Controller
     /**
      * Get data for stock report by location.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToStockReportByLocation(array $params, $print = false)
@@ -6600,7 +6569,6 @@ class ReportController extends Controller
      * Show sales per seller report view.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function getSalesPerSellerReport(Request $request): View
     {
@@ -6712,7 +6680,6 @@ class ReportController extends Controller
     /**
      * Get data to sales per seller report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToSalesPerSellerReport(array $params)
@@ -6791,7 +6758,6 @@ class ReportController extends Controller
      * Show payment report view.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function getPaymentReport(Request $request): View
     {
@@ -6903,7 +6869,6 @@ class ReportController extends Controller
     /**
      * Get data to sales per seller report.
      *
-     * @param  array  $params
      * @return array
      */
     public function getDataToPaymentReport(array $params)

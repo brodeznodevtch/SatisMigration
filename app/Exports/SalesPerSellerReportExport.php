@@ -23,10 +23,7 @@ class SalesPerSellerReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $records
      * @param  string  $title
-     * @param  string  $start
-     * @param  string  $end
      * @return void
      */
     public function __construct(array $records, Business $business, string $start, string $end, TransactionUtil $transactionUtil)

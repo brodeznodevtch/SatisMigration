@@ -15,8 +15,6 @@ class CustomerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -39,10 +37,6 @@ class CustomerSeeder extends Seeder
     /**
      * Sync customers
      *
-     * @param  int  $id
-     * @param  string  $code
-     * @param  int  $business_id
-     * @return void
      *
      * @author Arquímides Martínez
      */

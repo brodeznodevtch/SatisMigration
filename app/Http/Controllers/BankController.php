@@ -38,8 +38,6 @@ class BankController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -151,8 +149,6 @@ class BankController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -162,8 +158,6 @@ class BankController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): JsonResponse
     {
@@ -197,8 +191,6 @@ class BankController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(Bank $bank): JsonResponse
     {
@@ -208,8 +200,6 @@ class BankController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(Bank $bank): JsonResponse
     {
@@ -219,8 +209,6 @@ class BankController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Bank $bank): JsonResponse
     {
@@ -323,9 +311,6 @@ class BankController extends Controller
 
     /**
      * Get bank account from bank
-     *
-     * @param  int  $bank_id
-     * @return json
      */
     public function getBankAccounts(int $bank_id): JsonResponse
     {

@@ -25,8 +25,6 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
     /**
      * Constructor.
      *
-     * @param  array  $data
-     * @param  string  $title
      * @return void
      */
     public function __construct(array $data, string $title)
@@ -48,7 +46,6 @@ class AnnexExport extends DefaultValueBinder implements WithEvents, WithTitle, W
      * Bind value to a cell.
      *
      * @param  mixed  $value
-     * @return bool
      */
     public function bindValue(Cell $cell, $value): bool
     {

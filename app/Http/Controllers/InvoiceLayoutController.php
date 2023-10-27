@@ -38,8 +38,6 @@ class InvoiceLayoutController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -54,8 +52,6 @@ class InvoiceLayoutController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -136,7 +132,6 @@ class InvoiceLayoutController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\InvoiceLayout  $invoiceLayout
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -160,7 +155,6 @@ class InvoiceLayoutController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\InvoiceLayout  $invoiceLayout
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): RedirectResponse
     {

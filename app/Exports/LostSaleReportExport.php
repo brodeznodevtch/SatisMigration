@@ -20,9 +20,6 @@ class LostSaleReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $quotes
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $quotes, int $size, Business $business)

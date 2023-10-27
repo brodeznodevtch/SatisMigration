@@ -35,9 +35,6 @@ class Category extends Model
 
     /**
      * Combines Category and sub-category
-     *
-     * @param  int  $business_id
-     * @return array
      */
     public static function catAndSubCategories(int $business_id): array
     {

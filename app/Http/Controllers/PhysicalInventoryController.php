@@ -141,8 +141,6 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -336,7 +334,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -370,7 +367,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -411,7 +407,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -534,10 +529,6 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Change the status of the physical inventory.
-     *
-     * @param  int  $id
-     * @param  string  $status
-     * @return \Illuminate\Http\Response
      */
     public function changeStatus(int $id, string $status): RedirectResponse
     {
@@ -594,9 +585,7 @@ class PhysicalInventoryController extends Controller
     /**
      * Change physical inventory status to finished and run stock adjustment.
      *
-     * @param  int  $id
      * @param  string  $status
-     * @return \Illuminate\Http\Response
      */
     public function finalize(int $id): RedirectResponse
     {
@@ -767,8 +756,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Get data from physical inventory lines.
      *
-     * @param  int  $id
-     * @param  int  $is_editable
      * @return \Illuminate\Http\Response
      */
     public function getData(int $id, int $is_editable)
@@ -892,8 +879,6 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Get produts for search bar.
-     *
-     * @return json
      */
     public function getProducts(): json
     {
@@ -953,7 +938,6 @@ class PhysicalInventoryController extends Controller
     /**
      * Add a mapping between purchase and sell lines.
      *
-     * @param  int  $id
      * @return array
      */
     public function mapping(int $id)
@@ -1037,8 +1021,6 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Update execution date.
-     *
-     * @return json
      */
     public function updateExecutionDate(): json
     {
@@ -1071,8 +1053,6 @@ class PhysicalInventoryController extends Controller
 
     /**
      * Update code.
-     *
-     * @return json
      */
     public function updateCode(): json
     {

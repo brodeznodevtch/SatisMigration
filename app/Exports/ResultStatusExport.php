@@ -51,9 +51,6 @@ class ResultStatusExport implements WithEvents, WithTitle
         $this->extra_expense_accounts = $extra_expense_accounts;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function title(): string
     {
 

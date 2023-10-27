@@ -160,7 +160,6 @@ class RrhhIncomeDiscountController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
     public function show($id): View
     {
@@ -180,7 +179,6 @@ class RrhhIncomeDiscountController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {

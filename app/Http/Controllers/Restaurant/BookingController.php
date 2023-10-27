@@ -188,9 +188,6 @@ class BookingController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -218,7 +215,6 @@ class BookingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Booking  $booking
      * @return \Illuminate\Http\Response
      */
     public function edit(Booking $booking)

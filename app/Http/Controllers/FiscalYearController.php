@@ -32,8 +32,6 @@ class FiscalYearController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): JsonResponse
     {
@@ -63,8 +61,6 @@ class FiscalYearController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function show(FiscalYear $fiscalYear): JsonResponse
     {
@@ -73,8 +69,6 @@ class FiscalYearController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(FiscalYear $fiscalYear): JsonResponse
     {
@@ -83,8 +77,6 @@ class FiscalYearController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, FiscalYear $fiscalYear): JsonResponse
     {

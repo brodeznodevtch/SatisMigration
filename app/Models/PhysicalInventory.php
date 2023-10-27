@@ -45,8 +45,6 @@ class PhysicalInventory extends Model
 
     /**
      * Get business location.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function location(): BelongsTo
     {
@@ -55,8 +53,6 @@ class PhysicalInventory extends Model
 
     /**
      * Get warehouse.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function warehouse(): BelongsTo
     {
@@ -65,8 +61,6 @@ class PhysicalInventory extends Model
 
     /**
      * Get user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -75,8 +69,6 @@ class PhysicalInventory extends Model
 
     /**
      * Get physical inventory lines.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function physical_inventory_lines(): HasMany
     {

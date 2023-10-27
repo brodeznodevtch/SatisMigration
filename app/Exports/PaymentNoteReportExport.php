@@ -20,9 +20,6 @@ class PaymentNoteReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $payments
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
     public function __construct(array $payments, int $size, Business $business)

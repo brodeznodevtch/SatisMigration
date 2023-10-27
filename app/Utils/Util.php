@@ -23,9 +23,6 @@ class Util
 {
     /**
      * This function unformats a number and returns them in plain eng format
-     *
-     * @param  int  $input_number
-     * @return float
      */
     public function num_uf(int $input_number, $currency_details = []): float
     {
@@ -49,9 +46,7 @@ class Util
     /**
      * This function formats a number and returns them in specified format
      *
-     * @param  int  $input_number
      * @param  bool  $add_symbol = false
-     * @return string
      */
     public function num_f(int $input_number, bool $add_symbol = false, $precision = 2): string
     {
@@ -71,10 +66,7 @@ class Util
     /**
      * Calculates percentage for a given number
      *
-     * @param  int  $number
-     * @param  int  $percent
      * @param  int  $addition default = 0
-     * @return float
      */
     public function calc_percentage(int $number, int $percent, int $addition = 0): float
     {
@@ -83,10 +75,6 @@ class Util
 
     /**
      * Calculates base value on which percentage is calculated
-     *
-     * @param  int  $number
-     * @param  int  $percent
-     * @return float
      */
     public function calc_percentage_base(int $number, int $percent): float
     {
@@ -96,10 +84,6 @@ class Util
 
     /**
      * Calculates percentage
-     *
-     * @param  int  $base
-     * @param  int  $number
-     * @return float
      */
     public function get_percent(int $base, int $number): float
     {
@@ -120,9 +104,7 @@ class Util
     /**
      * Get total percent from tax groups given
      *
-     * @param  int  $tax_group_id
      * @param  float  $amount
-     * @return float
      */
     public function getTaxPercent(int $tax_group_id): float
     {
@@ -144,8 +126,6 @@ class Util
 
     /**
      * Returns printing formats | array index represent file name format
-     *
-     * @return array
      */
     public function print_formats(): array
     {
@@ -166,8 +146,6 @@ class Util
 
     /**
      * Defines available Payment Types
-     *
-     * @return array
      */
     public function payment_types(): array
     {
@@ -183,8 +161,6 @@ class Util
 
     /**
      * Returns the list of modules enabled
-     *
-     * @return array
      */
     public function allModulesEnabled(): array
     {
@@ -197,8 +173,6 @@ class Util
 
     /**
      * Returns the list of modules enabled
-     *
-     * @return array
      */
     public function isModuleEnabled($module): array
     {
@@ -214,9 +188,7 @@ class Util
     /**
      * Converts date in business format to mysql format
      *
-     * @param  string  $date
      * @param  bool  $time (default = false)
-     * @return strin
      */
     public function uf_date(string $date, bool $time = false): strin
     {
@@ -236,9 +208,6 @@ class Util
 
     /**
      * Converts time in business format to mysql format
-     *
-     * @param  string  $time
-     * @return strin
      */
     public function uf_time(string $time): strin
     {
@@ -252,9 +221,6 @@ class Util
 
     /**
      * Converts time in business format to mysql format
-     *
-     * @param  string  $time
-     * @return strin
      */
     public function format_time(string $time): strin
     {
@@ -269,9 +235,7 @@ class Util
     /**
      * Converts date in business format to mysql format
      *
-     * @param  string  $date
      * @param  bool  $time (default = false)
-     * @return strin
      */
     public function format_date(string $date, $show_time = false): strin
     {
@@ -290,11 +254,6 @@ class Util
     /**
      * Increments reference count for a given type and given business
      * and gives the updated reference count
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @param  bool  $setter
-     * @return int
      */
     public function setAndGetReferenceCount(string $type, int $business_id = null, bool $setter = true): int
     {
@@ -327,10 +286,6 @@ class Util
 
     /**
      * Generates reference number
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @return int
      */
     public function generateReferenceNumber(string $type, $ref_count, int $business_id = null): int
     {
@@ -394,9 +349,6 @@ class Util
 
     /**
      * Get fixed asset prefix
-     *
-     * @param  int  $business_id
-     * @return string
      */
     public function generateFixedAssetPrefix(int $business_id, $last_id): string
     {
@@ -421,10 +373,6 @@ class Util
 
     /**
      * Checks if the given user is admin
-     *
-     * @param  obj  $user
-     * @param  int  $business_id
-     * @return bool
      */
     public function is_admin(obj $user, int $business_id): bool
     {
@@ -453,9 +401,6 @@ class Util
 
     /**
      * Sends SMS notification.
-     *
-     * @param  array  $data
-     * @return void
      */
     public function sendSms(array $data): void
     {
@@ -496,7 +441,6 @@ class Util
      * Uploads document to the server if present in the request
      *
      * @param  obj  $request, string $file_name, string dir_name
-     * @return string
      */
     public function uploadFile($request, $file_name, $dir_name): string
     {
@@ -530,8 +474,6 @@ class Util
 
     /**
      * Get banks list.
-     *
-     * @return array
      */
     public function checkbook_formats(): array
     {
@@ -572,7 +514,6 @@ class Util
      * First and last day of the month of the date set as parameter.
      *
      * @param  mixed  $actual_date,
-     * @return array
      */
     public function first_last_month_day($actual_date): array
     {
@@ -593,9 +534,6 @@ class Util
 
     /**
      * Generate lab order code.
-     *
-     * @param  int  $location_id
-     * @return string
      */
     public function generateLabOrderCode(int $location_id = null): string
     {
@@ -624,8 +562,6 @@ class Util
 
     /**
      * Generate status lab order code.
-     *
-     * @return string
      */
     public function generateStatusLabOrderCode(): string
     {
@@ -649,8 +585,6 @@ class Util
 
     /**
      * Generate patient code.
-     *
-     * @return string
      */
     public function generatePatientsCode(): string
     {
@@ -674,8 +608,6 @@ class Util
 
     /**
      * Returns all avilable sexs.
-     *
-     * @return array
      */
     public function Sexs(): array
     {
@@ -688,12 +620,8 @@ class Util
     /**
      * Register action in binnacle.
      *
-     * @param  string  $module
-     * @param  string  $action
-     * @param  string  $reference
      * @param  mixed  $old_record
      * @param  mixed  $new_record
-     * @return void
      */
     public function registerBinnacle(string $module, string $action, string $reference = null, $old_record = null, $new_record = null): void
     {
@@ -761,8 +689,6 @@ class Util
 
     /**
      * Generate reference for quote.
-     *
-     * @return  string
      */
     public function generateQuoteReference(): string
     {

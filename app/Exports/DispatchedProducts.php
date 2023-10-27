@@ -19,11 +19,6 @@ class DispatchedProducts implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $products
-     * @param  collect  $dispatched_products
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @return void
      *
      * @author

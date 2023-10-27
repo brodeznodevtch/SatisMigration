@@ -213,8 +213,6 @@ class KardexController extends Controller
 
     /**
      * Show the form for kardex generation.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getRegisterKardex(): View
     {
@@ -480,10 +478,6 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $movement
-     * @param  string  $reference
-     * @param  string  $type
      * @return void
      */
     public function kardexForTransactions(Transaction $transaction, string $movement, string $reference, string $type)
@@ -572,7 +566,6 @@ class KardexController extends Controller
      * Retrieves products list.
      *
      * @param  string  $q
-     * @return JSON
      */
     public function getProducts(): JSON
     {
@@ -738,8 +731,6 @@ class KardexController extends Controller
     /**
      * Refresh balance.
      *
-     * @param  int  $warehouse_id
-     * @param  int  $variation_id
      * @return string
      */
     public function refreshBalance(int $warehouse_id, int $variation_id)
@@ -973,7 +964,6 @@ class KardexController extends Controller
      * Substitute in the kardex the cost of the variable for the cost of the
      * sale or purchase line.
      *
-     * @param  int  $variation_id
      * @return string
      */
     public function updateCost(int $variation_id)
@@ -1025,8 +1015,6 @@ class KardexController extends Controller
 
     /**
      * Generate kardex of the product in the selected warehouse.
-     *
-     * @return json
      */
     public function generateProductKardex(): json
     {
@@ -1131,10 +1119,6 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $movement
-     * @param  string  $reference
-     * @param  string  $type
      * @param  int  $varation_id
      * @return void
      */
@@ -1539,8 +1523,6 @@ class KardexController extends Controller
     /**
      * Calculate stock with purchase, sales and stock adjustment lines.
      *
-     * @param  int  $variation_id
-     * @param  int  $warehouse_id
      * @return float
      */
     public function calculateStock(int $variation_id, int $warehouse_id)
@@ -1591,7 +1573,6 @@ class KardexController extends Controller
     /**
      * Create kardex lines for lab orders.
      *
-     * @param  \App\LabOrder  $lab_order
      * @return void
      */
     public function kardexForLabOrders(App\LabOrder $lab_order)
@@ -1612,7 +1593,6 @@ class KardexController extends Controller
     /**
      * Create kardex lines for lab orders.
      *
-     * @param  \App\LabOrder  $lab_order
      * @return void
      */
     public function kardexForLabOrderLines(App\LabOrder $lab_order, $warehouse_id, $variation_id)
@@ -1751,10 +1731,6 @@ class KardexController extends Controller
     /**
      * Generate kardex of the product in the selected warehouse.
      *
-     * @param  int  $variation_id
-     * @param  int  $warehouse_id
-     * @param  bool  $update_vld
-     * @param  bool  $show_messages
      * @return void
      */
     public function __generateProductKardex(int $variation_id, int $warehouse_id, bool $update_vld = true, bool $show_messages = false)
@@ -2292,10 +2268,6 @@ class KardexController extends Controller
 
     /**
      * Store records from table stock_adjustment_lines in kardex.
-     *
-     * @param  int  $variation_id
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
      */
     public function fixStockAdjustments(int $variation_id, int $location_id, int $warehouse_id)
     {
@@ -2337,8 +2309,6 @@ class KardexController extends Controller
 
     /**
      * Show the form for recalculate cost.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getRecalculateCost(): View
     {
@@ -2348,7 +2318,6 @@ class KardexController extends Controller
     /**
      * Recalculate average product cost based on transactions and update data.
      *
-     * @param  int  $variation_id
      * @return array
      */
     public function recalculateProductCost(int $variation_id)
@@ -2921,7 +2890,6 @@ class KardexController extends Controller
     /**
      * Compare sale lines with purchase lines.
      *
-     * @param  int  $warehouse_id
      * @return string
      */
     public function compareSellAndPurchaseLines(int $warehouse_id)
@@ -2995,8 +2963,6 @@ class KardexController extends Controller
     /**
      * Fix registration of purchase_lines to be the same as transaction_sell_lines.
      *
-     * @param  int  $sell_transfer_id
-     * @param  int  $no_massive
      * @return mixed
      */
     public function fixPurchaseLines(int $sell_transfer_id, int $no_massive = 0)

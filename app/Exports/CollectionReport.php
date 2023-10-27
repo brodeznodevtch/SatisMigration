@@ -25,9 +25,6 @@ class CollectionReport implements WithEvents, WithTitle
      *
      * @param  collect  $transaction_transactions
      * @param  collect  $transactions
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @param App\Utils\TransactionUtil
      * @return void
      */
@@ -242,11 +239,6 @@ class CollectionReport implements WithEvents, WithTitle
 
     /**
      * Set common values
-     *
-     * @param  object  $event
-     * @param  object  $record
-     * @param  string  $row
-     * @return void
      */
     private function setCommonValues(object $event, object $record, string $row): void
     {

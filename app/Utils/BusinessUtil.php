@@ -20,10 +20,6 @@ class BusinessUtil extends Util
 {
     /**
      * Adds a default settings/resources for a new business
-     *
-     * @param  int  $business_id
-     * @param  int  $user_id
-     * @return bool
      */
     public function newBusinessDefaultResources(int $business_id, int $user_id): bool
     {
@@ -137,8 +133,6 @@ class BusinessUtil extends Util
 
     /**
      * Gives a list of all currencies
-     *
-     * @return array
      */
     public function allCurrencies(): array
     {
@@ -151,8 +145,6 @@ class BusinessUtil extends Util
 
     /**
      * Gives a list of all timezone
-     *
-     * @return array
      */
     public function allTimeZones(): array
     {
@@ -169,8 +161,6 @@ class BusinessUtil extends Util
 
     /**
      * Gives a list of all accouting methods
-     *
-     * @return array
      */
     public function allAccountingMethods(): array
     {
@@ -182,8 +172,6 @@ class BusinessUtil extends Util
 
     /**
      * Creates new business with default settings.
-     *
-     * @return array
      */
     public function createNewBusiness($business_details): array
     {
@@ -217,8 +205,6 @@ class BusinessUtil extends Util
 
     /**
      * Gives details for a business
-     *
-     * @return object
      */
     public function getDetails($business_id): object
     {
@@ -236,8 +222,6 @@ class BusinessUtil extends Util
 
     /**
      * Gives current financial year
-     *
-     * @return array
      */
     public function getCurrentFinancialYear($business_id): array
     {
@@ -274,8 +258,6 @@ class BusinessUtil extends Util
     /**
      * Adds a new location to a business
      *
-     * @param  int  $business_id
-     * @param  array  $location_details
      * @param  int  $invoice_layout_id default null
      * @return location object
      */
@@ -321,7 +303,6 @@ class BusinessUtil extends Util
     /**
      * Return the invoice layout details
      *
-     * @param  int  $business_id
      * @param  array  $location_details
      * @param  array  $layout_id = null
      * @return location object
@@ -345,10 +326,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the printer configuration
-     *
-     * @param  int  $business_id
-     * @param  int  $printer_id
-     * @return array
      */
     public function printerConfig(int $business_id, int $printer_id): array
     {
@@ -371,10 +348,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the date range for which editing of transaction for a business is allowed.
-     *
-     * @param  int  $business_id
-     * @param  char  $edit_transaction_period
-     * @return array
      */
     public function editTransactionDateRange(int $business_id, char $edit_transaction_period): array
     {
@@ -394,8 +367,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default setting for the pos screen.
-     *
-     * @return array
      */
     public function defaultPosSettings(): array
     {
@@ -416,8 +387,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default setting for the email.
-     *
-     * @return array
      */
     public function defaultEmailSettings(): array
     {
@@ -426,8 +395,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default setting for the email.
-     *
-     * @return array
      */
     public function defaultSmsSettings(): array
     {
@@ -436,8 +403,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default settings for the dashboard.
-     *
-     * @return array
      */
     public function defaultDashboardSettings(): array
     {
@@ -458,8 +423,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default settings for the customers.
-     *
-     * @return array
      */
     public function defaultCustomerSettings(): array
     {
@@ -470,8 +433,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default settings for the customers.
-     *
-     * @return array
      */
     public function defaultProductSettings(): array
     {
@@ -489,8 +450,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default settings for the sales.
-     *
-     * @return array
      */
     public function defaultSaleSettings(): array
     {
@@ -501,8 +460,6 @@ class BusinessUtil extends Util
 
     /**
      * Return the default settings for the customers.
-     *
-     * @return array
      */
     public function defaultExpenseSettings(): array
     {

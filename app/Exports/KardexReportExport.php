@@ -28,11 +28,7 @@ class KardexReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $kardex
      * @param  string  $date
-     * @param  \App\Business  $business
-     * @param  \App\Warehouse  $warehouse
-     * @param  \App\Variation  $variation
      * @return void
      */
     public function __construct(array $kardex, $start, $end, Business $business, Warehouse $warehouse, Variation $variation)

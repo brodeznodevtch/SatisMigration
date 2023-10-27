@@ -22,11 +22,6 @@ class JournalBookReport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  collect  $journal_book
-     * @param  \App\Utils\TransactionUtil  $transactionUtil
      * @return void
      */
     public function __construct(string $business_name, string $start_date, string $end_date, collect $journal_book, TransactionUtil $transactionUtil)

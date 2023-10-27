@@ -75,8 +75,6 @@ class WarehouseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -155,7 +153,6 @@ class WarehouseController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Warehouse  $warehouse
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -290,7 +287,6 @@ class WarehouseController extends Controller
     /**
      * Return location_id from a warehouse
      *
-     * @param  int  $warehouse_id
      * @return int
      */
     public function getLocation(int $warehouse_id)

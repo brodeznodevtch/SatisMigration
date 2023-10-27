@@ -22,10 +22,6 @@ class CostSaleDetailExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $query
-     * @param  \App\Business  $business
-     * @param  string  $start
-     * @param  string  $end
      * @return void
      */
     public function __construct(array $query, Business $business, string $start, string $end)

@@ -15,8 +15,6 @@ class CustomerVehicleController extends Controller
 {
     /**
      * Show import option for customer vehicles.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getImporter(): View
     {
@@ -49,7 +47,6 @@ class CustomerVehicleController extends Controller
      * Process data before import.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
     public function postImporter(Request $request): View
     {
@@ -255,8 +252,6 @@ class CustomerVehicleController extends Controller
 
     /**
      * Import customer vehicles.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function import(): RedirectResponse
     {

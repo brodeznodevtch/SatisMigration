@@ -49,8 +49,6 @@ class CashRegisterController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -101,8 +99,6 @@ class CashRegisterController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function storeCashier(Request $request): RedirectResponse
     {
@@ -184,8 +180,6 @@ class CashRegisterController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function storeCashRegister(Request $request): RedirectResponse
     {
@@ -278,9 +272,6 @@ class CashRegisterController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -325,7 +316,6 @@ class CashRegisterController extends Controller
      * Shows register details modal.
      *
      * @param  void
-     * @return \Illuminate\Http\Response
      */
     public function getRegisterDetails(): View
     {
@@ -345,7 +335,6 @@ class CashRegisterController extends Controller
      * Shows close register form.
      *
      * @param  void
-     * @return \Illuminate\Http\Response
      */
     public function getCloseRegister(): View
     {
@@ -424,8 +413,6 @@ class CashRegisterController extends Controller
 
     /**
      * Closes currently opened register.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function postCloseRegister(Request $request): RedirectResponse
     {

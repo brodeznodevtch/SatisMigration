@@ -38,8 +38,6 @@ class InflowOutflow extends Model
 
     /**
      * Get contact.
-     *
-     * @return \App\Models\Contact
      */
     public function contact(): Contact
     {
@@ -48,8 +46,6 @@ class InflowOutflow extends Model
 
     /**
      * Get employee.
-     *
-     * @return \App\Models\Employees
      */
     public function employee(): Employees
     {

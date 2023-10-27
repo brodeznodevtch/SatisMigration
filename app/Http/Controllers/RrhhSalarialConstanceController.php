@@ -61,8 +61,6 @@ class RrhhSalarialConstanceController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -154,8 +152,6 @@ class RrhhSalarialConstanceController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -173,7 +169,6 @@ class RrhhSalarialConstanceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\RrhhSalarialConstance  $rrhhTypeContract
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): RedirectResponse
     {

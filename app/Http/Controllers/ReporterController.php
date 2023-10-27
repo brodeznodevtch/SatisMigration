@@ -550,11 +550,6 @@ class ReporterController extends Controller
 
     /**
      * Displays subledger by account and date range.
-     *
-     * @param  int  $id
-     * @param  date  $from
-     * @param  date  $to
-     * @return json
      */
     public function getAuxiliarDetail(int $id, date $from, date $to): json
     {
@@ -1073,8 +1068,6 @@ class ReporterController extends Controller
 
     /**
      * Get General Journal Book
-     *
-     * @return Json
      */
     public function getGralJournalBook(): Json
     {
@@ -1096,8 +1089,6 @@ class ReporterController extends Controller
 
     /**
      * Post General Journal Book
-     *
-     * @param  Illuminate\Http\Request  $request
      */
     public function postGralJournalBook(Request $request)
     {
@@ -2133,8 +2124,6 @@ class ReporterController extends Controller
 
     /**
      * View sales book to final consumer index.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function viewBookFinalConsumer(): View
     {
@@ -2206,8 +2195,6 @@ class ReporterController extends Controller
 
     /**
      * View sales book to taxpayer index.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function viewBookTaxpayer(): View
     {
@@ -2270,8 +2257,6 @@ class ReporterController extends Controller
 
     /**
      * View purchases book index.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function viewPurchasesBook(): View
     {
@@ -2339,7 +2324,6 @@ class ReporterController extends Controller
      * Get Cash Register Report
      *
      * @param null
-     * @return \PDF
      */
     public function getCashRegisterReport(): PDF
     {
@@ -2369,7 +2353,6 @@ class ReporterController extends Controller
      * Get Cash Register Report 2.0
      *
      * @param null
-     * @return \PDF
      */
     public function getNewCashRegisterReport(): PDF
     {
@@ -2422,9 +2405,6 @@ class ReporterController extends Controller
 
     /**
      * Get audit tape report
-     *
-     * @param  int  $cashier_closure_id
-     * @return \PDF
      */
     public function getAuditTapeReport(int $cashier_closure_id): PDF
     {
@@ -2740,8 +2720,6 @@ class ReporterController extends Controller
 
     /**
      * Shows treasury annexes forms.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getTreasuryAnnexes(): View
     {

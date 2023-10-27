@@ -9,8 +9,6 @@ class CashierUtil extends Util
 {
     /**
      * Returns number of opened cashiers for current logged user
-     *
-     * @return int
      */
     public function countOpenedCashier(): int
     {
@@ -32,9 +30,6 @@ class CashierUtil extends Util
 
     /**
      * Return current cashier closure for a cashier open
-     *
-     * @param  int  $cashier_id
-     * @return int
      */
     public function getCashierClosureActive(int $cashier_id): int
     {
@@ -49,8 +44,6 @@ class CashierUtil extends Util
 
     /**
      * Returnss last cashier closured
-     *
-     * @param  int  $cashier_id
      */
     public function getLastCashierClosure(int $cashier_id)
     {

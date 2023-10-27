@@ -40,8 +40,6 @@ class OportunityController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -161,8 +159,6 @@ class OportunityController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -236,7 +232,6 @@ class OportunityController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Oportunity  $oportunity
-     * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
@@ -264,7 +259,6 @@ class OportunityController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Oportunity  $oportunity
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -406,8 +400,6 @@ class OportunityController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function createCustomer($id): View
     {

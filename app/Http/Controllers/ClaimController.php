@@ -18,8 +18,6 @@ class ClaimController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -86,8 +84,6 @@ class ClaimController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -176,7 +172,6 @@ class ClaimController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Claim  $claim
-     * @return \Illuminate\Http\Response
      */
     public function show($id): View
     {
@@ -202,7 +197,6 @@ class ClaimController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Claim  $claim
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): JsonResponse
     {

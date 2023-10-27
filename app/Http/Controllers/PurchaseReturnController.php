@@ -144,8 +144,6 @@ class PurchaseReturnController extends Controller
 
     /**
      * Show the form for purchase return.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function add($id): View
     {
@@ -186,8 +184,6 @@ class PurchaseReturnController extends Controller
 
     /**
      * Saves Purchase returns in the database.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -304,9 +300,6 @@ class PurchaseReturnController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -337,8 +330,6 @@ class PurchaseReturnController extends Controller
     /**
      * get purchase return by discount
      *
-     * @param  int  $id
-     * @return Response
      *
      * @author Arquímides Martínez
      */
@@ -370,7 +361,6 @@ class PurchaseReturnController extends Controller
      * post purchase return by discount
      *
      * @param  int  $int
-     * @return json
      *
      * @author Arquímides Martínez
      */
@@ -436,9 +426,6 @@ class PurchaseReturnController extends Controller
     /**
      * Update payment status for return discount transaction
      *
-     * @param  int  $parent_id
-     * @param  float  $final_total
-     * @return void
      *
      * @author Arquímides Martínez
      */

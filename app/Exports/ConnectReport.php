@@ -19,10 +19,6 @@ class ConnectReport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $transactions
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @return void
      *
      * @author

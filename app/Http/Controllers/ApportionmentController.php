@@ -30,9 +30,6 @@ class ApportionmentController extends Controller
     /**
      * Constructor
      *
-     * @param  \App\TransactionUtil  $transactionUtil
-     * @param  \App\TaxUtil  $taxUtil
-     * @param  \App\ProductUtil  $productUtil
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, TaxUtil $taxUtil, ProductUtil $productUtil)
@@ -109,8 +106,6 @@ class ApportionmentController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(): View
     {
@@ -132,8 +127,6 @@ class ApportionmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -195,9 +188,6 @@ class ApportionmentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(int $id): View
     {
@@ -327,9 +317,6 @@ class ApportionmentController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(int $id): View
     {
@@ -424,7 +411,6 @@ class ApportionmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Apportionment  $apportionment
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): RedirectResponse
     {
@@ -589,8 +575,6 @@ class ApportionmentController extends Controller
 
     /**
      * Retrieves products list.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function addProductRow(): View
     {
@@ -637,7 +621,6 @@ class ApportionmentController extends Controller
     /**
      * Save lines of import expenses, purchases and products.
      *
-     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
     public function save(Apportionment $apportionment, Request $request)
@@ -709,7 +692,6 @@ class ApportionmentController extends Controller
     /**
      * Update lines of import expenses, purchases and products.
      *
-     * @param  \App\Models\Apportionment  $apportionment
      * @return void
      */
     public function updateApportionment(Apportionment $apportionment, Request $request)
@@ -819,7 +801,6 @@ class ApportionmentController extends Controller
     /**
      * Calculate the average cost of all prorated products.
      *
-     * @param  int  $apportionment_id
      * @return void
      */
     public function calculateAvgCost(int $apportionment_id)

@@ -18,8 +18,6 @@ class PaymentFileReportExport implements WithEvents, WithTitle, ShouldAutoSize
     /**
      * Constructor.
      *
-     * @param  array  $payroll
-     * @param  array  $payrollDetails
      * @param  \App\Business  $business
      * @param    $moduleUtil
      * @return void

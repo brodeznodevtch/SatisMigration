@@ -158,8 +158,6 @@ class SellPosController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(): View
     {
@@ -1054,11 +1052,7 @@ class SellPosController extends Controller
     /**
      * Returns the content for the receipt
      *
-     * @param  int  $business_id
-     * @param  int  $location_id
-     * @param  int  $transaction_id
      * @param  string  $printer_type = null
-     * @return array
      */
     private function receiptContent(
         $transaction_type,
@@ -1123,7 +1117,6 @@ class SellPosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -1134,7 +1127,6 @@ class SellPosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -1473,7 +1465,6 @@ class SellPosController extends Controller
      * Update the specified resource in storage.
      * TODO: Add edit log.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -1831,7 +1822,6 @@ class SellPosController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -2141,8 +2131,6 @@ class SellPosController extends Controller
 
     /**
      * Create transaction accounting entry
-     *
-     * @param  int  $transaction_id
      */
     public function createTransAccountingEntry(int $transaction_id)
     {
@@ -2199,8 +2187,6 @@ class SellPosController extends Controller
     /**
      * Create transaction accounting entry lines
      *
-     * @param  int  $transaction_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
@@ -2370,9 +2356,6 @@ class SellPosController extends Controller
     /**
      * Get inputs from transaction by product
      *
-     * @param  int  $transaction_id
-     * @param  int  $location_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
@@ -2404,9 +2387,7 @@ class SellPosController extends Controller
     /**
      * Get costs from transaction by product
      *
-     * @param  int  $transaction_id
      * @param int location_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
@@ -2463,8 +2444,6 @@ class SellPosController extends Controller
     /**
      * Returns the HTML row for a product in POS
      *
-     * @param  int  $variation_id
-     * @param  int  $location_id
      * @return \Illuminate\Http\Response
      */
     public function getProductRow(int $variation_id, int $location_id)
@@ -2641,8 +2620,6 @@ class SellPosController extends Controller
 
     /**
      * Returns the HTML row for a payment in POS
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getPaymentRow(Request $request): View
     {
@@ -2676,8 +2653,6 @@ class SellPosController extends Controller
 
     /**
      * Returns recent transactions
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getRecentTransactions(Request $request): View
     {
@@ -2751,7 +2726,6 @@ class SellPosController extends Controller
     /**
      * Print CCF detail for sells
      *
-     * @param  int  $transaction_id
      * @return \Illuminate\Http\Response
      */
     public function printCCF(int $transaction_id)
@@ -2814,8 +2788,6 @@ class SellPosController extends Controller
 
     /**
      * Gives suggetion for product based on category
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getProductSuggestion(Request $request): View
     {
@@ -2902,8 +2874,6 @@ class SellPosController extends Controller
     /**
      * Check if the correlative exists.
      *
-     * @param  int  $document
-     * @param  string  $correlative
      * @return array
      */
     public function validateCorrelative($location, int $document, string $correlative, $transaction_id = 0)
@@ -3018,10 +2988,6 @@ class SellPosController extends Controller
 
     /**
      * Get lab order for transaction
-     *
-     * @param  int  $transaction_id
-     * @param  int  $patient_id
-     * @return \Illuminate\Http\Response
      */
     public function getLabOrder(int $transaction_id = null, int $patient_id = null): View
     {
@@ -3333,8 +3299,6 @@ class SellPosController extends Controller
     /**
      * Fill in the unit_cost_exc_tax and unit_cost_inc_tax fields.
      *
-     * @param  int  $tsl_initial
-     * @param  int  $tsl_final
      * @return string
      */
     public function updateUnitCostToSellLines(int $tsl_initial = null, int $tsl_final = null)
@@ -3383,8 +3347,6 @@ class SellPosController extends Controller
     /**
      * Fill the sale_price field in the transaction_sell_lines table.
      *
-     * @param  int  $tsl_initial
-     * @param  int  $tsl_final
      * @return string
      */
     public function updateSalePriceToSellLines(int $tsl_initial = null, int $tsl_final = null)
@@ -3436,8 +3398,6 @@ class SellPosController extends Controller
     /**
      * Fill the sale_price field in the purchase_lines table.
      *
-     * @param  int  $pl_initial
-     * @param  int  $pl_final
      * @return string
      */
     public function updateSalePriceToPurchaseLines(int $pl_initial = null, int $pl_final = null)

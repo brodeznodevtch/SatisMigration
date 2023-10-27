@@ -21,8 +21,6 @@ class UserController extends Controller
 
     /**
      * Shows profile of logged in user
-     *
-     * @return \Illuminate\Http\Response
      */
     public function getProfile(): View
     {
@@ -54,8 +52,6 @@ class UserController extends Controller
 
     /**
      * updates user profile
-     *
-     * @return \Illuminate\Http\Response
      */
     public function updateProfile(Request $request): RedirectResponse
     {
@@ -95,8 +91,6 @@ class UserController extends Controller
 
     /**
      * updates user password
-     *
-     * @return \Illuminate\Http\Response
      */
     public function updatePassword(Request $request): RedirectResponse
     {
