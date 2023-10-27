@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFollowOportunitiesHasProductsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -38,4 +38,4 @@ class CreateFollowOportunitiesHasProductsTable extends Migration
     {
         Schema::dropIfExists('follow_oportunities_has_products');
     }
-}
+};

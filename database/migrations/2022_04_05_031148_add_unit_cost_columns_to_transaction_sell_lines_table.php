@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUnitCostColumnsToTransactionSellLinesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -42,4 +42,4 @@ class AddUnitCostColumnsToTransactionSellLinesTable extends Migration
             $table->dropColumn('unit_cost_inc_tax');
         });
     }
-}
+};

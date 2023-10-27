@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRrhhAbsenceInabilitiesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -39,4 +39,4 @@ class CreateRrhhAbsenceInabilitiesTable extends Migration
     {
         Schema::dropIfExists('rrhh_absence_inabilities');
     }
-}
+};

@@ -10,7 +10,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyColumnsContactsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -144,4 +144,4 @@ class ModifyColumnsContactsTable extends Migration
             //
         });
     }
-}
+};

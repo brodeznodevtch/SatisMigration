@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToPhysicalInventoryLinesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class ModifyColumnsToPhysicalInventoryLinesTable extends Migration
     {
         DB::statement('ALTER TABLE physical_inventory_lines MODIFY COLUMN price DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }
-}
+};

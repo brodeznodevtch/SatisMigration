@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToQuotesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,4 +29,4 @@ class ModifyColumnsToQuotesTable extends Migration
         DB::statement('ALTER TABLE quotes MODIFY COLUMN tax_amount DECIMAL(10, 4) NULL DEFAULT 0');
         DB::statement('ALTER TABLE quotes MODIFY COLUMN total_final DECIMAL(10, 4) NOT NULL');
     }
-}
+};

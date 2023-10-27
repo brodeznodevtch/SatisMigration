@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToBarcodesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -82,4 +82,4 @@ class AddColumnsToBarcodesTable extends Migration
             $table->dropColumn('stickers_in_one_sheet_with_logo');
         });
     }
-}
+};

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyAllQuantityFieldsToKardexTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -25,4 +25,4 @@ class ModifyAllQuantityFieldsToKardexTable extends Migration
         DB::statement('ALTER TABLE kardexes MODIFY COLUMN inputs_quantity DECIMAL(8, 2) DEFAULT 0');
         DB::statement('ALTER TABLE kardexes MODIFY COLUMN outputs_quantity DECIMAL(8, 2) DEFAULT 0');
     }
-}
+};

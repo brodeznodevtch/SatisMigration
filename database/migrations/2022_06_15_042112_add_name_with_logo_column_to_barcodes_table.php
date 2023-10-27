@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNameWithLogoColumnToBarcodesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -62,4 +62,4 @@ class AddNameWithLogoColumnToBarcodesTable extends Migration
             $table->dropColumn('name_with_logo');
         });
     }
-}
+};

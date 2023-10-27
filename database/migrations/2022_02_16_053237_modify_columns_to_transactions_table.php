@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToTransactionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -33,4 +33,4 @@ class ModifyColumnsToTransactionsTable extends Migration
         DB::statement('ALTER TABLE transactions MODIFY COLUMN dai_amount DOUBLE(10, 4) NULL DEFAULT 0');
         DB::statement('ALTER TABLE transactions MODIFY COLUMN final_total DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }
-}
+};

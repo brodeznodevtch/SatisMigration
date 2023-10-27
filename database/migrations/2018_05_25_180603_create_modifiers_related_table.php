@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModifiersRelatedTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -30,4 +30,4 @@ class CreateModifiersRelatedTable extends Migration
         //Schema::dropIfExists('res_product_modifier_sets');
         Schema::dropIfExists('res_product_modifier_sets');
     }
-}
+};

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnsToTransactionSellLinesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -33,4 +33,4 @@ class ModifyColumnsToTransactionSellLinesTable extends Migration
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN unit_price_exc_tax DECIMAL(20, 4) NOT NULL');
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN tax_amount DECIMAL(10, 4) NOT NULL');
     }
-}
+};

@@ -3,7 +3,7 @@
 use App\Utils\InstallUtil;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyVariableProductData extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -25,4 +25,4 @@ class ModifyVariableProductData extends Migration
     {
         //
     }
-}
+};

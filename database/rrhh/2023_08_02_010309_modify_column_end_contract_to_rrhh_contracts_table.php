@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyColumnEndContractToRrhhContractsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,4 +23,4 @@ class ModifyColumnEndContractToRrhhContractsTable extends Migration
     {
         DB::statement('ALTER TABLE rrhh_contracts MODIFY COLUMN contract_end_date DATE NULL');
     }
-}
+};

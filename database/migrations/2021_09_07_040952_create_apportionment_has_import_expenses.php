@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApportionmentHasImportExpenses extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -37,4 +37,4 @@ class CreateApportionmentHasImportExpenses extends Migration
     {
         Schema::dropIfExists('apportionment_has_import_expenses');
     }
-}
+};
