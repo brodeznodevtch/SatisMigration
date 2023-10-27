@@ -202,7 +202,7 @@ Route::get('/products/get_only_products', [ProductController::class, 'getProduct
 
 //Routes for authenticated users only
 Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', 'language', 'timezone'])->group(function () {
-    Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+    // Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
     //rutas para busineestypes y paymentTerm
     Route::resource('business_types', BusinessTypeController::class);
