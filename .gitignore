@@ -56,3 +56,4 @@ Thumbs.db
 /.vagrant
 Homestead.json
 Homestead.yaml
+/.phpunit.cache
