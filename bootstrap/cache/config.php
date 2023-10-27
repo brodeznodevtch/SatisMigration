@@ -386,6 +386,7 @@
   ),
   'charts' => 
   array (
+    'default_library' => 'Chartjs',
     'default' => 
     array (
       'type' => 'line',

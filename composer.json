@@ -8,17 +8,20 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.4.33",
+        "php": "^8.1.0",
         "automattic/woocommerce": "^2.0",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "composer/semver": "^1.4",
+        "consoletvs/charts": "6.*",
         "doctrine/dbal": "^2.13",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "7.7.0",
         "iatstuti/laravel-cascade-soft-deletes": "^4.0",
         "knox/pesapal": "^1.4",
         "laravel/framework": "^8.83",
         "laravel/helpers": "*",
         "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.2",
         "maatwebsite/excel": "^3.1",
         "mike42/escpos-php": "^3.0",
@@ -30,9 +33,7 @@
         "spatie/laravel-permission": "^3.16",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^6.10",
-        "yajra/laravel-datatables-oracle": "^9.11",
-        "laravel/ui": "^3.0",
-        "fruitcake/laravel-cors": "^2.0"
+        "yajra/laravel-datatables-oracle": "^9.11"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
