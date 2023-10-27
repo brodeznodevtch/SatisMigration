@@ -128,7 +128,7 @@
 												@if (empty($edit))
 													{{ @num_format($business_details->tax_calculation_amount) }}
 												@else
-													{{ @num_format(optional($transaction->tax)->amount) }}
+													{{ @num_format($transaction->tax?->amount) }}
 												@endif"
 											data-default="{{ $business_details->tax_calculation_amount }}">
 									</span>

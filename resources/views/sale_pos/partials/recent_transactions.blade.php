@@ -4,7 +4,7 @@
 			<tr class="cursor-pointer" 
 	    		data-toggle="tooltip"
 	    		data-html="true"
-	    		title="Customer: {{optional($transaction->contact)->name}} 
+	    		title="Customer: {{$transaction->contact?->name}} 
 		    		@if(!empty($transaction->contact->mobile) && $transaction->contact->is_default == 0)
 		    			<br/>Mobile: {{$transaction->contact->mobile}}
 		    		@endif
@@ -13,7 +13,7 @@
 					{{ $loop->iteration}}.
 				</td>
 				<td>
-					{{ $transaction->invoice_no }} ({{optional($transaction->contact)->name}})
+					{{ $transaction->invoice_no }} ({{$transaction->contact?->name}})
 				</td>
 				<td class="display_currency">
 					{{ $transaction->final_total }}
