@@ -20,7 +20,7 @@
             <div class="col-sm-12">
                 <div class="box box-default">
                     <div class="box-body">
-                        {!! Form::open(['action' => 'ReportController@postPriceListsReport', 'method' => 'post', 'target' => '_blank']) !!}
+                        {!! Form::open(['url' => route('postPriceListsReport'), 'method' => 'post', 'target' => '_blank']) !!}
                         <div class="row">
                             <div class="col-lg-4 col-md-6">
                                 <div class="form-group">

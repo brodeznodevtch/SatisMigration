@@ -24,7 +24,7 @@
                     <div class="box-body">
                         {!! Form::open([
                             'id'=>'form_sales_per_seller_report',
-                            'action' => 'ReportController@postSalesPerSellerReport',
+                            'url' => route('sales_per_seller'),
                             'method' => 'post',
                             'target' => '_blank'
                         ]) !!}

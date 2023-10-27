@@ -24,7 +24,7 @@
                     <div class="box-body">
                         {!! Form::open([
                             'id'=>'form_payment_report',
-                            'action' => 'ReportController@postPaymentReport',
+                            'url' => route('payment_report_post'),
                             'method' => 'post',
                             'target' => '_blank'
                         ]) !!}

@@ -20,7 +20,7 @@
             <div class="col-sm-12">
                 <div class="box box-default">
                     <div class="box-body">
-                        {!! Form::open(['id' => 'dispatched_products_form', 'action' => 'ReportController@postDispatchedProducts', 'method' => 'post', 'target' => '_blank']) !!}
+                        {!! Form::open(['id' => 'dispatched_products_form', 'url' => route('sales.postDispatchedProducts'), 'method' => 'post', 'target' => '_blank']) !!}
                         <input type="hidden" id="product_counts" value="{{ $product_counts }}">
                         <div class="row">
                             <div class="col-sm-3">

@@ -20,7 +20,7 @@
             <div class="col-sm-12">
                 <div class="box box-default">
                     <div class="box-body">
-                        {!! Form::open(['id' => 'connect_report_form', 'action' => 'ReportController@postConnectReport', 'method' => 'post', 'target' => '_blank']) !!}
+                        {!! Form::open(['id' => 'connect_report_form', 'url' => route('sales.postConnectReport'), 'method' => 'post', 'target' => '_blank']) !!}
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">

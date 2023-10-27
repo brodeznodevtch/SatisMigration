@@ -1517,11 +1517,11 @@
                     @if(in_array('Tipos de Movimientos', $enabled_modules))
                       {{-- Movement types --}}
                       @if (auth()->user()->can('movement_type.view') || auth()->user()->can('movement_type.create'))
-                        <li class="{{ $request->segment(1) == 'movement-types' ? 'active' : '' }}">
+                        {{-- <li class="{{ $request->segment(1) == 'movement-types' ? 'active' : '' }}">
                           <a href="{{ action([\App\Http\Controllers\MovementTypeController::class, 'index']) }}">
                             <i class="fa fa-arrows"></i> @lang('movement_type.movement_types')
                           </a>
-                        </li>
+                        </li> --}}
                       @endif
                     @endif
                   </ul>

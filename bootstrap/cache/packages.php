@@ -18,7 +18,7 @@
     ),
     'aliases' => 
     array (
-      'PDF' => 'Barryvdh\\DomPDF\\Facade',
+      'PDF' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
     ),
   ),
   'consoletvs/charts' => 

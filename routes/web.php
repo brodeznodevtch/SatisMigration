@@ -978,11 +978,7 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     Route::get('manage-credit-requests/getCreditsData', [ManageCreditRequestController::class, 'getCreditsData']);
     Route::post('manage-credit-requests/edit', [ManageCreditRequestController::class, 'editCredit']);
 
-<<<<<<< HEAD
-/*    Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestControllerupdate/product::class, 'viewCredit']);*/
-=======
     Route::get('manage-credit-requests/view/{id}', [ManageCreditRequestController::class, 'viewCredit']);
->>>>>>> a84fc06d (restored basic function)
     Route::resource('manage-credit-requests', ManageCreditRequestController::class);
 
     // Customers
@@ -1112,19 +1108,19 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
     /** Dispatched products report */
     Route::get('/reports/dispatched-products-count', [ReportController::class, 'getDispatchedProductsCount']);
     Route::get('/reports/dispatched-products-report', [ReportController::class, 'getDispatchedProducts']);
-    Route::post('/reports/dispatched-products-report', [ReportController::class, 'postDispatchedProducts']);
+    Route::post('/reports/dispatched-products-report', [ReportController::class, 'postDispatchedProducts'])->name("sales.postDispatchedProducts");
 
     /** Connect report for Disproci */
     Route::get('/reports/connect-report', [ReportController::class, 'getConnectReport']);
-    Route::post('/reports/connect-report', [ReportController::class, 'postConnectReport']);
+    Route::post('/reports/connect-report', [ReportController::class, 'postConnectReport'])->name("sales.postConnectReport");
 
     /** Sale cost by product report */
     Route::get('/reports/sale-cost-product-report', [ReportController::class, 'saleCostProductReport']);
-    Route::post('/reports/sale-cost-product-report', [ReportController::class, 'getSaleCostProductReport']);
+    Route::post('/reports/sale-cost-product-report', [ReportController::class, 'getSaleCostProductReport'])->name("sales.getSaleCostProductReport");
 
     /** Price List report for Nuves/AGL */
     Route::get('/reports/price-lists-report', [ReportController::class, 'getPriceListsReport']);
-    Route::post('/reports/post-price-lists-report', [ReportController::class, 'postPriceListsReport']);
+    Route::post('/reports/post-price-lists-report', [ReportController::class, 'postPriceListsReport'])->name("postPriceListsReport");
 
     Route::get('/debs-pay', [PurchaseController::class, 'showDebsToPay']);
 
@@ -1195,19 +1191,19 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // All Sales report routes
     Route::get('/sales-reports/all-sales-report', [ReportController::class, 'getAllSalesReport']);
-    Route::post('/sales-reports/all-sales-report', [ReportController::class, 'postAllSalesReport']);
+    Route::post('/sales-reports/all-sales-report', [ReportController::class, 'postAllSalesReport'])->name("sales_reports.all_sales_report");
 
     // All Sales report routes
     Route::get('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'getAllSalesWithUtilityReport']);
-    Route::post('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'postAllSalesWithUtilityReport']);
+    Route::post('/sales-reports/all-sales-with-utility-report', [ReportController::class, 'postAllSalesWithUtilityReport'])->name("sales.postAllSalesWithUtility");
 
     /** Sales summary by seller */
     Route::get('/reports/sales-summary-report', [ReporterController::class, 'getSalesSummarySellerReport']);
-    Route::post('/reports/sales-summary-report', [ReporterController::class, 'postSalesSummarySellerReport']);
+    Route::post('/reports/sales-summary-report', [ReporterController::class, 'postSalesSummarySellerReport'])->name("sales.postSalesSummarySellerReport");
 
     /** Sales by seller report */
     Route::get('/reports/sales-by-seller-report', [ReporterController::class, 'getSalesBySellerReport']);
-    Route::post('/reports/sales-by-seller-report', [ReporterController::class, 'postSalesBySellerReport']);
+    Route::post('/reports/sales-by-seller-report', [ReporterController::class, 'postSalesBySellerReport'])->name("sales.postSalesBySellerReport");
 
     /** Expense Purchase report */
     Route::get('/reports/expense-purchase-report', [ReporterController::class, 'getExpensePurchaseReport']);
@@ -1294,11 +1290,11 @@ Route::middleware(['PasswordChanged', 'IsInstalled', 'auth', 'SetSessionData', '
 
     // Sales per seller report
     Route::get('/reports/sales-per-seller', [ReportController::class, 'getSalesPerSellerReport']);
-    Route::post('/reports/sales-per-seller', [ReportController::class, 'postSalesPerSellerReport']);
+    Route::post('/reports/sales-per-seller', [ReportController::class, 'postSalesPerSellerReport'])->name("sales_per_seller");
 
     // Payment report
-    Route::get('/reports/payment', [ReportController::class, 'getPaymentReport']);
-    Route::post('/reports/payment', [ReportController::class, 'postPaymentReport']);
+    Route::get('/reports/payment', [ReportController::class, 'getPaymentReport'])->name("payment_report_get");
+    Route::post('/reports/payment', [ReportController::class, 'postPaymentReport'])->name("payment_report_post");
 
     // Binnacle routes
     Route::resource('binnacle', BinnacleController::class);

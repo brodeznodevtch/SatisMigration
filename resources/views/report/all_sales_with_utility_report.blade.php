@@ -22,7 +22,7 @@
               </div>
               <div id="collapseFilter" class="panel-collapse active collapse in" aria-expanded="true">
                 <div class="box-body">
-                    {!! Form::open(['id'=>'form_all_sales_with_utility_report', 'action' => 'ReportController@postAllSalesWithUtilityReport', 'method' => 'post', 'target' => '_blank']) !!}
+                    {!! Form::open(['id'=>'form_all_sales_with_utility_report', 'url' => route('sales.postAllSalesWithUtility'), 'method' => 'post', 'target' => '_blank']) !!}
                     <div class="row">
                         {{-- location_id --}}
                         <div class="col-sm-3">

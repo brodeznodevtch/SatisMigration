@@ -12,7 +12,7 @@
 <section class="content">
     <div class="box">
         <div class="box-body">
-            {!! Form::open(['action' => 'ReportController@getSaleCostProductReport', 'method' => 'post', 'target' => '_blank']) !!}
+            {!! Form::open(['url' => route('sales.getSaleCostProductReport'), 'method' => 'post', 'target' => '_blank']) !!}
             <div class="row">
                 {{-- location --}}
                 <div class="col-lg-3 col-md-4 col-sm-6">

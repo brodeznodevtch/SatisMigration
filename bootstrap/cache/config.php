@@ -1161,8 +1161,8 @@
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'encryption' => 'tls',
-        'username' => 'devtch.envex@gmail.com',
-        'password' => 'd7uXR23jTiq75gy',
+        'username' => 'notificaciones.satiserp@gmail.com',
+        'password' => 'kjmkczdmfjvhsxjz',
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
@@ -1618,10 +1618,11 @@
   array (
     'show_warnings' => false,
     'orientation' => 'portrait',
+    'convert_entities' => true,
     'defines' => 
     array (
-      'font_dir' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts/',
-      'font_cache' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts/',
+      'font_dir' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts',
+      'font_cache' => 'C:\\laragon\\www\\SatisMigration\\storage\\fonts',
       'temp_dir' => 'C:\\Users\\DEVELO~1\\AppData\\Local\\Temp',
       'chroot' => 'C:\\laragon\\www\\SatisMigration',
       'enable_font_subsetting' => false,

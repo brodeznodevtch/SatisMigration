@@ -20,7 +20,7 @@
             <div class="col-sm-12">
                 <div class="box box-default">
                     <div class="box-body">
-                        {!! Form::open(['id' => 'form_sales_by_seller', 'action' => 'ReporterController@postSalesBySellerReport', 'method' => 'post', 'target' => '_blank']) !!}
+                        {!! Form::open(['id' => 'form_sales_by_seller', 'url' => route('sales.postSalesBySellerReport'), 'method' => 'post', 'target' => '_blank']) !!}
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
