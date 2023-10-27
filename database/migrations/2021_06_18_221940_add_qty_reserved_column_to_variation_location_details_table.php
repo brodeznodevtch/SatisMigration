@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('variation_location_details', function (Blueprint $table) {
             $table->decimal('qty_reserved', 20, 4)->nullable()->default(0)->after('qty_available');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('variation_location_details', function (Blueprint $table) {
             $table->dropColumn('qty_reserved');

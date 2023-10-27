@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('rrhh_datas', function (Blueprint $table) {
             $table->boolean('number_required')->nullable()->after('date_required');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('rrhh_datas', function (Blueprint $table) {
             $table->dropColumn('number_required');

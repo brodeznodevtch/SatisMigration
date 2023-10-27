@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('notification_templates', function (Blueprint $table) {
             $table->boolean('auto_send_sms')->after('auto_send')->default(0);
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('notification_templates', function (Blueprint $table) {
             //

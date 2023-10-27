@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('roles', function (Blueprint $table) {
             $table->boolean('is_service_staff')->default(0)->after('is_default');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('roles', function (Blueprint $table) {
             //

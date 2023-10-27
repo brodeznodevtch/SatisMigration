@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('rrhh_type_income_discounts', function (Blueprint $table) {
             $table->boolean('payroll_column')->nullable()->after('name');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('rrhh_type_income_discounts', function (Blueprint $table) {
             $table->dropColumn('payroll_column');

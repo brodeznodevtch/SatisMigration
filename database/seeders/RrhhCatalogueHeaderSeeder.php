@@ -17,7 +17,7 @@ class RrhhCatalogueHeaderSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $business = Business::all();
 

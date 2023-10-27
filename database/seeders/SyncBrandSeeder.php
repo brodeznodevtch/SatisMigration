@@ -27,7 +27,7 @@ class SyncBrandSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         /** Business id to sync with */
         $business_id = null;

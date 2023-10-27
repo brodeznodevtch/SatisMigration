@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('stock_adjustment_lines', function (Blueprint $table) {
             $table->integer('lot_no_line_id')->nullable()->after('removed_purchase_line');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('stock_adjustment_lines', function (Blueprint $table) {
             //

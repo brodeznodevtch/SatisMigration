@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('lab_orders', function (Blueprint $table) {
             $table->boolean('is_annulled')->default(0)->after('business_id');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('lab_orders', function (Blueprint $table) {
             $table->dropColumn('is_annulled');

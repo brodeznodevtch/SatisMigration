@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('claims', function (Blueprint $table) {
             $table->unsignedInteger('status_claim_id')->nullable()->after('claim_type');
@@ -26,7 +26,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('claims', function (Blueprint $table) {
             //

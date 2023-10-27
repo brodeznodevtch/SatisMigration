@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('business_id');
@@ -27,7 +27,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->dropForeign(['created_by']);

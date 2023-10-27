@@ -15,7 +15,7 @@ class GeographicConfSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $business_id = null;
 

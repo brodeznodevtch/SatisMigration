@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('graduation_cards', function (Blueprint $table) {
             DB::statement('ALTER TABLE graduation_cards MODIFY COLUMN dnsp_os VARCHAR(191)');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

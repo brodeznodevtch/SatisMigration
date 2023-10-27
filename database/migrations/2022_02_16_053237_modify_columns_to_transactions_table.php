@@ -9,7 +9,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE transactions MODIFY COLUMN total_before_tax DECIMAL(20, 6) NOT NULL DEFAULT 0');
         DB::statement('ALTER TABLE transactions MODIFY COLUMN tax_amount DECIMAL(20, 6) NOT NULL DEFAULT 0');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::statement('ALTER TABLE transactions MODIFY COLUMN total_before_tax DECIMAL(20, 4) NOT NULL DEFAULT 0');
         DB::statement('ALTER TABLE transactions MODIFY COLUMN tax_amount DECIMAL(20, 4) NOT NULL DEFAULT 0');

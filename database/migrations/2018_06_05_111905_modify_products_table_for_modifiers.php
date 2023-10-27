@@ -10,7 +10,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement("ALTER TABLE products MODIFY COLUMN type ENUM('single','variable', 'modifier')");
         DB::statement('ALTER TABLE products MODIFY COLUMN unit_id INT(11) UNSIGNED DEFAULT NULL');
@@ -21,7 +21,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

@@ -12,7 +12,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE account_business_locations DROP FOREIGN KEY account_business_locations_account_payable_id_foreign');
         DB::statement('ALTER TABLE account_business_locations DROP COLUMN account_payable_id');
@@ -41,7 +41,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('account_business_locations', function (Blueprint $table) {
             //

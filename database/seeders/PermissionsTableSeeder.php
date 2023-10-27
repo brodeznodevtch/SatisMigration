@@ -12,7 +12,7 @@ class PermissionsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $data = [
             ['name' => 'user.view'],

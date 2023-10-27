@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('rrhh_salary_histories', function (Blueprint $table) {
             $table->dropColumn('salary');
@@ -27,7 +27,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('rrhh_salary_histories', function (Blueprint $table) {
             $table->dropColumn('previous_salary');

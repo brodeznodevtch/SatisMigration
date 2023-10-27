@@ -9,7 +9,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE rrhh_type_income_discounts MODIFY COLUMN payroll_column VARCHAR(191) NULL');
     }
@@ -19,7 +19,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

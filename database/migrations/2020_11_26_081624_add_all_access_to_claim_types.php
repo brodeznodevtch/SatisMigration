@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('claim_types', function (Blueprint $table) {
             $table->boolean('all_access')->default(1)->after('required_invoice');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('claim_types', function (Blueprint $table) {
             //

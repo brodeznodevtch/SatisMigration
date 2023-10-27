@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('pos', function (Blueprint $table) {
             $table->string('authorization_key')->nullable()->after('status');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('pos', function (Blueprint $table) {
             $table->dropColumn('authorization_key');

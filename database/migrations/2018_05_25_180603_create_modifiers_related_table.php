@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('res_product_modifier_sets', function (Blueprint $table) {
             $table->integer('modifier_set_id')->unsigned();
@@ -25,7 +25,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //Schema::dropIfExists('res_product_modifier_sets');
         Schema::dropIfExists('res_product_modifier_sets');

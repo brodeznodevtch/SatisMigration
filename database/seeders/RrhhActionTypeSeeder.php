@@ -12,7 +12,7 @@ class RrhhActionTypeSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         RrhhActionType::firstOrCreate([
             'rrhh_type_personnel_action_id' => 1,

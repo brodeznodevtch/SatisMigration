@@ -12,7 +12,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('transaction_sell_lines', function (Blueprint $table) {
             $table->decimal('unit_cost_exc_tax', 20, 6)->after('service_parent_id')->default(0);
@@ -35,7 +35,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transaction_sell_lines', function (Blueprint $table) {
             $table->dropColumn('unit_cost_exc_tax');

@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->enum('business_type', ['small_business', 'medium_business', 'large_business'])
@@ -26,7 +26,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->dropColumn('business_type');

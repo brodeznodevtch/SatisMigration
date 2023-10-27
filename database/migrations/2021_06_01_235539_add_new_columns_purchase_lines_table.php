@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->float('weight_kg', 10, 4)->nullable()->after('tax_amount');
@@ -31,7 +31,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->dropColumn([

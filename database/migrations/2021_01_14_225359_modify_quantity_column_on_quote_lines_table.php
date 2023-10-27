@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE `quote_lines` CHANGE `quantity` `quantity` DECIMAL(8,2) NOT NULL');
         Schema::table('quote_lines', function (Blueprint $table) {
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('quote_lines', function (Blueprint $table) {
             //

@@ -10,7 +10,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement("ALTER TABLE invoice_layouts MODIFY COLUMN design VARCHAR(256) DEFAULT 'classic'");
     }
@@ -20,7 +20,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

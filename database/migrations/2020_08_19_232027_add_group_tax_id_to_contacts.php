@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->unsignedInteger('tax_group_id')
@@ -28,7 +28,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->dropForeign('tax_group_id');

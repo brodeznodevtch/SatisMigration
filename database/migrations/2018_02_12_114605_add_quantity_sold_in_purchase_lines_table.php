@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->decimal('quantity_sold', 8, 2)->default(0)->after('tax_id')->comment('Quanity sold from this purchase line');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->dropColumn('quantity_sold');

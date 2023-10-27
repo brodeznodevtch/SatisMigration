@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('credit_requests', function (Blueprint $table) {
             $table->string('payment_manager')->nullable()->after('email_purchasing_agent');
@@ -25,7 +25,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('credit_requests', function (Blueprint $table) {
             //

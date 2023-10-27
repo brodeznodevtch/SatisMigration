@@ -15,7 +15,7 @@ class DropboxServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Storage::extend('dropbox', function ($app, $config) {
             $client = new DropboxClient(
@@ -31,7 +31,7 @@ class DropboxServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

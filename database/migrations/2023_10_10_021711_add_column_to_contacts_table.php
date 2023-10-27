@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->boolean('is_excluded_subject')->nullable()->after('is_exempt')->default(false);
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->dropColumn('is_excluded_subject');

@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('apportionments', function (Blueprint $table) {
             $table->date('apportionment_date')->nullable()->after('business_id');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('apportionments', function (Blueprint $table) {
             $table->dropColumn('apportionment_date');

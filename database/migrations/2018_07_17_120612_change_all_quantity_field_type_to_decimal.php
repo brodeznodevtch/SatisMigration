@@ -10,7 +10,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE purchase_lines MODIFY COLUMN quantity DECIMAL(20, 4) NOT NULL');
         DB::statement('ALTER TABLE purchase_lines MODIFY COLUMN quantity_sold DECIMAL(20, 4) DEFAULT 0.00');
@@ -29,7 +29,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

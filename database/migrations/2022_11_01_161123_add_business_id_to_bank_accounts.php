@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('bank_accounts', function (Blueprint $table) {
             $table->integer('business_id')->unsigned()->after('id')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('bank-accounts', function (Blueprint $table) {
             //

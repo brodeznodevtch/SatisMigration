@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('bank_checkbooks', function (Blueprint $table) {
             $table->dropColumn('print_format');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('bank_checkbooks', function (Blueprint $table) {
             $table->string('print_format')->nullable()->after('actual_correlative');

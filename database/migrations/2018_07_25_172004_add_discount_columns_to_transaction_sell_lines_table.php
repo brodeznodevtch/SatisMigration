@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('transaction_sell_lines', function (Blueprint $table) {
             $table->enum('line_discount_type', ['fixed', 'percentage'])->nullable()->after('unit_price');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transaction_sell_lines', function (Blueprint $table) {
             //

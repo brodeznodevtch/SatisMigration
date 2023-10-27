@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->decimal('pp_without_discount', 20, 2)->after('quantity')->default(0)->comment('Purchase price before inline discounts');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             //

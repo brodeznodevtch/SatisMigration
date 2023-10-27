@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('document_types', function (Blueprint $table) {
             $table->decimal('max_operation', 20, 4)->nullable()->after('print_format');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('document_types', function (Blueprint $table) {
             $table->dropColumn('max_operation');

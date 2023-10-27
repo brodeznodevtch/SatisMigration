@@ -9,7 +9,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE physical_inventory_lines MODIFY COLUMN price DECIMAL(20, 6) NOT NULL DEFAULT 0');
     }
@@ -19,7 +19,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::statement('ALTER TABLE physical_inventory_lines MODIFY COLUMN price DECIMAL(20, 4) NOT NULL DEFAULT 0');
     }

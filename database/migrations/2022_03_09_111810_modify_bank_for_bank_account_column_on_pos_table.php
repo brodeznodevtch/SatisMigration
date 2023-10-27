@@ -13,7 +13,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         /** get pos */
         $list_pos = Pos::select('id')->get();
@@ -54,7 +54,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('pos', function (Blueprint $table) {
             //

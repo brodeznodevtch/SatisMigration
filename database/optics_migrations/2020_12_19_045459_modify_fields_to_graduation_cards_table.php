@@ -9,7 +9,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE graduation_cards MODIFY COLUMN sphere_os VARCHAR(191)');
         DB::statement('ALTER TABLE graduation_cards MODIFY COLUMN sphere_od VARCHAR(191)');
@@ -30,7 +30,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

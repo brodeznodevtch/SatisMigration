@@ -13,7 +13,7 @@ class ModifyExpensesSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $current_expenses = Transaction::select('id', 'expense_category_id', 'total_before_tax as line_total')
             ->where('type', 'expense')

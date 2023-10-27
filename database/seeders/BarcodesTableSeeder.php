@@ -12,7 +12,7 @@ class BarcodesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Barcode::create([
             'id' => 1,

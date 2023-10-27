@@ -9,7 +9,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE quote_lines MODIFY COLUMN unit_price_exc_tax DECIMAL(20, 6) NOT NULL');
         DB::statement('ALTER TABLE quote_lines MODIFY COLUMN unit_price_inc_tax DECIMAL(20, 6) NOT NULL');
@@ -22,7 +22,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::statement('ALTER TABLE quote_lines MODIFY COLUMN unit_price_exc_tax DECIMAL(10, 4) NOT NULL');
         DB::statement('ALTER TABLE quote_lines MODIFY COLUMN unit_price_inc_tax DECIMAL(20, 4) NOT NULL');

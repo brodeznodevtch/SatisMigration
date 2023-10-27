@@ -15,7 +15,7 @@ class PrintFormatSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $print_formats = [
             'FCF' => 'invoice',

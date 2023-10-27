@@ -12,7 +12,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         //Create booking related permissions
         $insert_data = [['name' => 'crud_all_bookings',
@@ -51,7 +51,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('bookings');
     }

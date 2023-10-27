@@ -13,7 +13,7 @@ class RrhhTypeContractSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $business = Business::all();
         foreach ($business as $key => $item) {

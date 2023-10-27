@@ -12,7 +12,7 @@ class CurrenciesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $data = [
             ['id' => '1', 'country' => 'Albania', 'currency' => 'Leke', 'code' => 'ALL', 'symbol' => 'Lek',

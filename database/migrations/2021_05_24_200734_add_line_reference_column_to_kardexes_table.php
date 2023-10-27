@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->unsignedInteger('line_reference')->nullable()->after('balance');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->dropColumn('line_reference');

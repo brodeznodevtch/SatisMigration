@@ -13,7 +13,7 @@ class TransferStateSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         try {
             DB::beginTransaction();

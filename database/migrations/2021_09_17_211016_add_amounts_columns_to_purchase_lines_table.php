@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->decimal('initial_purchase_price', 20, 4)->nullable()->after('lot_number');
@@ -24,7 +24,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('purchase_lines', function (Blueprint $table) {
             $table->dropColumn('initial_purchase_price');

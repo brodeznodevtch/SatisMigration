@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('inflow_outflows', function (Blueprint $table) {
             $table->unsignedInteger('employee_id')->nullable()->after('supplier_id');
@@ -33,7 +33,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('inflow_outflows', function (Blueprint $table) {
             $table->dropForeign(['employee_id']);

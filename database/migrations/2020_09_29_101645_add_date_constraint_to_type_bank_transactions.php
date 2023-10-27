@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('type_bank_transactions', function (Blueprint $table) {
             $table->boolean('enable_date_constraint')->default(0)->after('enable_headline');
@@ -23,7 +23,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('type_bank_transactions', function (Blueprint $table) {
             //
