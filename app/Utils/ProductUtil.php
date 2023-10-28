@@ -832,7 +832,7 @@ class ProductUtil extends Util
     /**
      * Generated SKU based on the barcode type.
      */
-    public function generateSubSku(string $sku, string $c, string $barcode_type): void
+    public function generateSubSku(string $sku, string $c, string $barcode_type): string
     {
         $sub_sku = $sku.$c;
 
@@ -870,7 +870,7 @@ class ProductUtil extends Util
     /**
      * Get rack details.
      */
-    public function getRackDetails(int $business_id, int $product_id, $get_location = false): void
+    public function getRackDetails(int $business_id, int $product_id, $get_location = false): array
     {
 
         $query = ProductRack::where('product_racks.business_id', $business_id)
@@ -1401,7 +1401,7 @@ class ProductUtil extends Util
      *
      * @author Arquímides Martínez
      */
-    public function syncCategory(int $id, string $name = '', Category $delete = null, TransactionUtil $transactionUtil = null, string $module_name = ''): void
+    public function syncCategory(int $id, string $name = '', Category $delete = null, TransactionUtil $transactionUtil = null, string $module_name = ''): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1491,7 +1491,7 @@ class ProductUtil extends Util
      *
      * @author Arquímides Martínez
      */
-    public function syncUnit(int $id, string $name = '', Unit $delete = null): void
+    public function syncUnit(int $id, string $name = '', Unit $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1552,7 +1552,7 @@ class ProductUtil extends Util
      *
      * @author Arquímides Martínez
      */
-    public function syncBrand(int $id, string $name = '', Brands $delete = null): void
+    public function syncBrand(int $id, string $name = '', Brands $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1613,7 +1613,7 @@ class ProductUtil extends Util
      *
      * @author Arquímides Martínez
      */
-    public function syncTaxGroup(int $id, string $description = '', TaxGroup $delete = null): void
+    public function syncTaxGroup(int $id, string $description = '', TaxGroup $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;

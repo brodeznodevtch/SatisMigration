@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -275,9 +276,16 @@ class HomeController extends Controller
         $business_locations = BusinessLocation::where('business_id', $business_id)->get();
 
         // Locations
-        $locations = BusinessLocation::forDropdown($business_id, false, false);
+        $locations = BusinessLocation::forDropdown($business_id, false, []);
 
-        $first_location = $locations->first();
+        // Comprobar el tipo de $locations
+        if ($locations instanceof Collection){
+            $first_location = $locations->first();
+        }elseif (is_array($locations) && isset($locations['locations'])){
+            $first_location = $locations['locations']->first();
+        }else {
+            $first_location = null;
+        }
 
         $default_location = null;
 

@@ -2905,7 +2905,7 @@ class TransactionUtil extends Util
      *
      * @param  array  $filters
      */
-    public function getSellsLast30Days(int $business_id): Obj
+    public function getSellsLast30Days(int $business_id): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -2943,7 +2943,7 @@ class TransactionUtil extends Util
     /**
      * Gives total sells of current FY month-wise
      */
-    public function getSellsCurrentFy(int $business_id, string $start, string $end): Obj
+    public function getSellsCurrentFy(int $business_id, string $start, string $end): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -3700,7 +3700,7 @@ class TransactionUtil extends Util
      * Adjust the existing mapping between purchase & sell on edit of
      * purchase
      */
-    public function adjustMappingPurchaseSellAfterEditingPurchase(string $before_status, object $transaction, object $delete_purchase_lines): void
+    public function adjustMappingPurchaseSellAfterEditingPurchase(string $before_status, object $transaction, object $delete_purchase_lines): bool
     {
 
         if ($before_status == 'received' && $transaction->status == 'received') {
@@ -6157,7 +6157,7 @@ class TransactionUtil extends Util
     /**
      * Gives total stock of last 30 days day-wise
      */
-    public function getStockLast30Days(int $business_id): array
+    public function getStockLast30Days(int $business_id): Collection
     {
         $location_id = 0;
 
@@ -6168,13 +6168,13 @@ class TransactionUtil extends Util
         ))
             ->pluck('total', 'full_date');
 
-        return $result;
+        return collect($result);
     }
 
     /**
      * Gives total purchases of current fiscal year month-wise
      */
-    public function getStockCurrentFy(int $business_id, string $start): array
+    public function getStockCurrentFy(int $business_id, string $start): Collection
     {
         $location_id = 0;
 
