@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->decimal('exchange_rate', 8, 3)->default(1)->after('expense_for');
@@ -20,10 +18,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('exchange_rate');

@@ -30,10 +30,8 @@ class NotifyUserCreated extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
         if ($this->type == 'new_user') {
             return $this->markdown('emails.credentials.password')->subject(__('mail.welcome').config('app.name'));

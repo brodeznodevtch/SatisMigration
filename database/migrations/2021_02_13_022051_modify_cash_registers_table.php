@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('cash_registers', function (Blueprint $table) {
             $table->decimal('total_amount_transfer', 10, 4)
@@ -34,10 +32,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('cash_registers', function (Blueprint $table) {
             //

@@ -15,7 +15,9 @@ use App\Models\TypeEntrie;
 use App\Utils\TransactionUtil;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BankController extends Controller
 {
@@ -36,10 +38,8 @@ class BankController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -149,10 +149,8 @@ class BankController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -160,10 +158,8 @@ class BankController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -195,10 +191,8 @@ class BankController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(Bank $bank)
+    public function show(Bank $bank): JsonResponse
     {
 
         return response()->json($bank);
@@ -206,10 +200,8 @@ class BankController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Bank $bank)
+    public function edit(Bank $bank): JsonResponse
     {
 
         return response()->json($bank);
@@ -217,10 +209,8 @@ class BankController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bank $bank)
+    public function update(Request $request, Bank $bank): JsonResponse
     {
 
         $id = $bank->id;
@@ -298,7 +288,7 @@ class BankController extends Controller
         return DataTables::of($banks)->toJson();
     }
 
-    public function getBanks()
+    public function getBanks(): JsonResponse
     {
 
         $banks = Bank::select('id', 'name')->get();
@@ -306,7 +296,7 @@ class BankController extends Controller
         return response()->json($banks);
     }
 
-    public function getCheckNumber($id)
+    public function getCheckNumber($id): JsonResponse
     {
 
         $checkbook = BankCheckbook::findOrFail($id);
@@ -321,11 +311,8 @@ class BankController extends Controller
 
     /**
      * Get bank account from bank
-     *
-     * @param  int  $bank_id
-     * @return json
      */
-    public function getBankAccounts($bank_id)
+    public function getBankAccounts(int $bank_id): JsonResponse
     {
 
         $bank_accounts = BankAccount::where('bank_id', $bank_id)

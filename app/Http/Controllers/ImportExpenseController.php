@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\ImportExpense;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ImportExpenseController extends Controller
@@ -72,10 +73,8 @@ class ImportExpenseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('import_expense.create')) {
             abort(403, 'Unauthorized action.');
@@ -133,11 +132,8 @@ class ImportExpenseController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('import_expense.update')) {
             abort(403, 'Unauthorized action.');
@@ -191,10 +187,9 @@ class ImportExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('import_expense.delete')) {
             abort(403, 'Unauthorized action.');
@@ -226,10 +221,8 @@ class ImportExpenseController extends Controller
 
     /**
      * Retrieves import expenses.
-     *
-     * @return json
      */
-    public function getImportExpenses()
+    public function getImportExpenses(): json
     {
         if (request()->ajax()) {
             $term = request()->term;
@@ -253,10 +246,8 @@ class ImportExpenseController extends Controller
 
     /**
      * Retrieves import expesnse row.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getImportExpenseRow()
+    public function getImportExpenseRow(): View
     {
         if (request()->ajax()) {
             $id = request()->input('id');

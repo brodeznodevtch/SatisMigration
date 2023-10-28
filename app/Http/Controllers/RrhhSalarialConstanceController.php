@@ -15,7 +15,9 @@ use App\Utils\PayrollUtil;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhSalarialConstanceController extends Controller
 {
@@ -59,10 +61,8 @@ class RrhhSalarialConstanceController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
@@ -71,7 +71,7 @@ class RrhhSalarialConstanceController extends Controller
         return view('rrhh.catalogues.salarial_constances.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
@@ -152,10 +152,8 @@ class RrhhSalarialConstanceController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
@@ -171,9 +169,8 @@ class RrhhSalarialConstanceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\RrhhSalarialConstance  $rrhhTypeContract
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');

@@ -6,6 +6,7 @@ use App\Models\Reason;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class ReasonController extends Controller
 {
@@ -56,10 +57,8 @@ class ReasonController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('pos.create')) {
             abort(403, 'Unauthorized action.');
@@ -113,21 +112,17 @@ class ReasonController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('quotes.edit')) {
             abort(403, 'Unauthorized action.');
@@ -141,10 +136,9 @@ class ReasonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');
@@ -183,10 +177,9 @@ class ReasonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('quotes.update')) {
             abort(403, 'Unauthorized action.');

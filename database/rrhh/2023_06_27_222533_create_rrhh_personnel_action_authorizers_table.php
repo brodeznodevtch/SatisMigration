@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('rrhh_personnel_action_authorizers', function (Blueprint $table) {
             $table->increments('id');
@@ -29,7 +27,7 @@ return new class extends Migration
      *
      * @r
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('rrhh_personnel_action_authorizers');
     }

@@ -19,16 +19,11 @@ class DispatchedProducts implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $products
-     * @param  collect  $dispatched_products
-     * @param  string  $business_name
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @return void
      *
      * @author
      */
-    public function __construct($products, $dispatched_products, $business_name, $start_date, $end_date)
+    public function __construct(collect $products, collect $dispatched_products, string $business_name, string $start_date, string $end_date)
     {
         $this->products = $products;
         $this->dispatched_products = $dispatched_products;

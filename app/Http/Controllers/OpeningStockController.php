@@ -12,6 +12,7 @@ use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class OpeningStockController extends Controller
 {
@@ -38,9 +39,8 @@ class OpeningStockController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function add($product_id)
+    public function add($product_id): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');

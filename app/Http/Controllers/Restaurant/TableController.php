@@ -8,15 +8,14 @@ use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 
 class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         // if (!auth()->user()->can('table.view') && !auth()->user()->can('table.create')) {
         //     abort(403, 'Unauthorized action.');
@@ -51,10 +50,8 @@ class TableController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return Response
      */
-    public function create()
+    public function create(): View
     {
         $business_id = request()->session()->get('user.business_id');
         $business_locations = BusinessLocation::forDropdown($business_id);
@@ -65,10 +62,8 @@ class TableController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         // if (!auth()->user()->can('table.create')) {
         //     abort(403, 'Unauthorized action.');
@@ -98,20 +93,16 @@ class TableController extends Controller
 
     /**
      * Show the specified resource.
-     *
-     * @return Response
      */
-    public function show()
+    public function show(): View
     {
         return view('restaurant.table.show');
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -124,10 +115,8 @@ class TableController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): Response
     {
         // if (!auth()->user()->can('table.update')) {
         //     abort(403, 'Unauthorized action.');
@@ -160,10 +149,8 @@ class TableController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @return Response
      */
-    public function destroy($id)
+    public function destroy($id): Response
     {
         // if (!auth()->user()->can('table.delete')) {
         //     abort(403, 'Unauthorized action.');

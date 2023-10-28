@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\NotificationTemplate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class NotificationTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');
@@ -49,10 +49,8 @@ class NotificationTemplateController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');

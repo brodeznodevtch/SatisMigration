@@ -10,11 +10,8 @@ class ContactUtil
 {
     /**
      * Returns Walk In Customer for a Business
-     *
-     * @param  int  $business_id
-     * @return array/false
      */
-    public function getWalkInCustomer($business_id)
+    public function getWalkInCustomer(int $business_id): array
     {
         $contact = Contact::leftJoin('tax_rate_tax_group AS trtg', 'contacts.tax_group_id', 'trtg.tax_group_id')
             ->leftJoin('tax_rates as tr', 'trtg.tax_rate_id', 'tr.id')
@@ -43,11 +40,8 @@ class ContactUtil
 
     /**
      * Returns Walk In Customer for a Business
-     *
-     * @param  int  $business_id
-     * @return array/false
      */
-    public function getDefaultCustomer($business_id)
+    public function getDefaultCustomer(int $business_id): array
     {
         $contact = Customer::leftJoin('tax_rate_tax_group AS trtg', 'customers.tax_group_id', 'trtg.tax_group_id')
             ->leftJoin('tax_rates as tr', 'trtg.tax_rate_id', 'tr.id')
@@ -75,12 +69,8 @@ class ContactUtil
 
     /**
      * Returns the customer group
-     *
-     * @param  int  $business_id
-     * @param  int  $customer_id
-     * @return array
      */
-    public function getCustomerGroup($business_id, $customer_id)
+    public function getCustomerGroup(int $business_id, int $customer_id): array
     {
         $cg = [];
 
@@ -99,11 +89,8 @@ class ContactUtil
 
     /**
      * Get customer's employee asigned name
-     *
-     * @param  int  $customer_id
-     * @return string
      */
-    public function getCustomerEmployeeName($customer_id)
+    public function getCustomerEmployeeName(int $customer_id): string
     {
         if (! $customer_id) {
             return '';

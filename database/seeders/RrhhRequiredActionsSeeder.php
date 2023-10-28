@@ -9,10 +9,8 @@ class RrhhRequiredActionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         RrhhRequiredAction::firstOrCreate([
             'name' => 'Cambiar estado de empleado (De inactivo a activo)',

@@ -8,6 +8,7 @@ use App\Models\RrhhDocuments;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhDocumentsController extends Controller
@@ -35,7 +36,7 @@ class RrhhDocumentsController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_document_employee.view')) {
             abort(403, 'Unauthorized action.');
@@ -62,7 +63,7 @@ class RrhhDocumentsController extends Controller
         //
     }
 
-    public function createDocument($id)
+    public function createDocument($id): View
     {
         if (! auth()->user()->can('rrhh_document_employee.create')) {
             abort(403, 'Unauthorized action.');
@@ -244,7 +245,7 @@ class RrhhDocumentsController extends Controller
         //
     }
 
-    public function files($id, $employee_id)
+    public function files($id, $employee_id): View
     {
         if (! auth()->user()->can('rrhh_document_employee.view')) {
             abort(403, 'Unauthorized action.');
@@ -256,7 +257,7 @@ class RrhhDocumentsController extends Controller
         return view('rrhh.documents.files', compact('documentsFile', 'employee'));
     }
 
-    public function viewFile($id)
+    public function viewFile($id): View
     {
         if (! auth()->user()->can('rrhh_document_employee.view')) {
             abort(403, 'Unauthorized action.');
@@ -279,9 +280,8 @@ class RrhhDocumentsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhDocuments  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_document_employee.edit')) {
             abort(403, 'Unauthorized action.');

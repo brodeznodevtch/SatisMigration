@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -19,12 +20,9 @@ class ProductsReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $products
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($products, $size, $business)
+    public function __construct(array $products, int $size, Business $business)
     {
         $this->products = $products;
         $this->size = $size;

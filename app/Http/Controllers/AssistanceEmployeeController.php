@@ -13,6 +13,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class AssistanceEmployeeController extends Controller
 {
@@ -246,10 +247,9 @@ class AssistanceEmployeeController extends Controller
     /**
      * Get assistances data.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getAssitancesData($params)
+    public function getAssitancesData(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -824,7 +824,7 @@ class AssistanceEmployeeController extends Controller
     }
 
     //Show employee assistance detail
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('rrhh_assistance.view')) {
             abort(403, 'Unauthorized action.');
@@ -866,7 +866,7 @@ class AssistanceEmployeeController extends Controller
     }
 
     //Show the employee's photo in a larger way in the assitance detail
-    public function viewImage($id)
+    public function viewImage($id): View
     {
         $business_id = request()->session()->get('user.business_id');
         $assistance = AssistanceEmployee::where('id', $id)

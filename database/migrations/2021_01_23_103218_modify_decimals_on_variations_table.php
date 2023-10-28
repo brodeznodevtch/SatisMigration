@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('variations', function (Blueprint $table) {
             $table->decimal('default_purchase_price', 20, 4)->change();
@@ -24,10 +22,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('variations', function (Blueprint $table) {
             //

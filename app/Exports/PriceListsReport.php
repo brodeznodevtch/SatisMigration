@@ -15,11 +15,9 @@ class PriceListsReport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  string  $business_name
-     * @param  collect  $price_lists
      * @return void
      */
-    public function __construct($business_name, $price_lists)
+    public function __construct(string $business_name, collect $price_lists)
     {
         $this->business_name = $business_name;
         $this->price_lists = $price_lists;

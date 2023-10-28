@@ -14,6 +14,8 @@ use App\Models\TypeEntrie;
 use App\Utils\AccountingUtil;
 use App\Utils\CashierUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CashierClosureController extends Controller
 {
@@ -42,7 +44,7 @@ class CashierClosureController extends Controller
     /**
      * Return cashier closure information
      */
-    public function getCashierClosure($cashier_closure_id = null)
+    public function getCashierClosure($cashier_closure_id = null): View
     {
         $cashier_id = request()->input('cashier_id', null);
 
@@ -64,7 +66,7 @@ class CashierClosureController extends Controller
     /**
      * Store cashier closure
      */
-    public function postCashierClosure()
+    public function postCashierClosure(): RedirectResponse
     {
         try {
             $cashier_closure_id = request()->input('cashier_closure_id');
@@ -153,11 +155,10 @@ class CashierClosureController extends Controller
     /**
      * Show cashier closure report
      *
-     * @param  int  $location_id
      * @param  int  $cashier_closure_id | null
      * @param  int  $cashier_id | null
      */
-    public function dailyZCutReport($location_id, $cashier_id = null, $cashier_closure_id = null)
+    public function dailyZCutReport(int $location_id, int $cashier_id = null, int $cashier_closure_id = null)
     {
         if (! auth()->user()->can('daily_z_cut_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -298,7 +299,7 @@ class CashierClosureController extends Controller
      *
      * @param  int  $cashier_closure_id
      */
-    public function showDailyZCut($id)
+    public function showDailyZCut($id): View
     {
         if (! auth()->user()->can('daily_z_cut_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -318,10 +319,9 @@ class CashierClosureController extends Controller
      * Recalculate Cashier Closure
      *
      * @param  int  $cashier_closure_id
-     * @param  int  $location_id
      * @return array
      */
-    public function recalcCashierClosure($id, $location_id)
+    public function recalcCashierClosure($id, int $location_id)
     {
         try {
             $cc = CashierClosure::findOrFail($id);
@@ -380,10 +380,8 @@ class CashierClosureController extends Controller
 
     /**
      * Create sale accounting entry
-     *
-     * @param  int  $cashier_closure_id
      */
-    public function createSaleAccountingEntry($cashier_closure_id)
+    public function createSaleAccountingEntry(int $cashier_closure_id)
     {
 
         $business_id = auth()->user()->business_id;
@@ -434,10 +432,8 @@ class CashierClosureController extends Controller
 
     /**
      * Get sale accounting entry lines
-     *
-     * @param  int  $cashier_closure_id
      */
-    private function getSaleAccountingEntryLines($cashier_closure_id)
+    private function getSaleAccountingEntryLines(int $cashier_closure_id)
     {
         $cashier_closure =
             CashierClosure::join('cashiers as c', 'cashier_closures.cashier_id', 'c.id')
@@ -537,10 +533,8 @@ class CashierClosureController extends Controller
 
     /**
      * Create cost accounting entry
-     *
-     * @param  int  $cashier_closure_id
      */
-    private function createCostAccountingEntry($cashier_closure_id)
+    private function createCostAccountingEntry(int $cashier_closure_id)
     {
         $cashier_closure = CashierClosure::find($cashier_closure_id);
         $location =
@@ -584,10 +578,8 @@ class CashierClosureController extends Controller
 
     /**
      * Get cost accounting entry lines
-     *
-     * @param  int  $cashier_closure_id
      */
-    private function getCostAccountingEntryLines($cashier_closure_id)
+    private function getCostAccountingEntryLines(int $cashier_closure_id)
     {
         $cashier_closure =
             CashierClosure::join('cashiers as c', 'cashier_closures.cashier_id', 'c.id')

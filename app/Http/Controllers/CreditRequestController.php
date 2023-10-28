@@ -9,15 +9,14 @@ use App\Models\CreditRequest;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CreditRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         $business = Business::where('id', 3)->first();

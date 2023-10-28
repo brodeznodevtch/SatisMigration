@@ -9,8 +9,10 @@ use App\Providers\RouteServiceProvider;
 use App\Utils\BusinessUtil;
 use App\Utils\Util;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
@@ -65,17 +67,15 @@ class LoginController extends Controller
 
     /**
      * Show the application's login form.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         $business = Business::where('is_active', 1)->pluck('name', 'id');
 
         return view('auth.login')->with(compact('business'));
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(Request $request): RedirectResponse
     {
         $credenciales = $this->validate(request(), [
             'username' => 'required',
@@ -97,7 +97,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         request()->session()->invalidate();
         request()->session()->flush();
@@ -144,10 +144,8 @@ class LoginController extends Controller
 
     /**
      * Get the needed authorization credentials from the request.
-     *
-     * @return array
      */
-    protected function credentials(Request $request)
+    protected function credentials(Request $request): array
     {
         return $request->only($this->username(), 'password', 'business_id');
     }

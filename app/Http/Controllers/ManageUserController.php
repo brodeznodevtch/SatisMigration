@@ -9,9 +9,12 @@ use App\Models\User;
 use App\Notifications\NewNotification;
 use App\Utils\ModuleUtil;
 use DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -30,10 +33,8 @@ class ManageUserController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         if (! auth()->user()->can('user.view') && ! auth()->user()->can('user.create')) {
@@ -99,10 +100,8 @@ class ManageUserController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): RedirectResponse
     {
 
         return redirect('/home');
@@ -212,11 +211,8 @@ class ManageUserController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         if (! auth()->user()->can('user.view')) {
             abort(403, 'Unauthorized action.');
@@ -236,11 +232,8 @@ class ManageUserController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): JsonResponse
     {
 
         if (! auth()->user()->can('user.update')) {
@@ -260,11 +253,8 @@ class ManageUserController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         if (! auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');
@@ -327,11 +317,8 @@ class ManageUserController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         if (! auth()->user()->can('user.delete')) {
             abort(403, 'Unauthorized action.');
@@ -356,7 +343,7 @@ class ManageUserController extends Controller
         }
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): JsonResponse
     {
         if (! auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');

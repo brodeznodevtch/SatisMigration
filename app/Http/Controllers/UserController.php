@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -19,10 +21,8 @@ class UserController extends Controller
 
     /**
      * Shows profile of logged in user
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getProfile()
+    public function getProfile(): View
     {
         $user_id = request()->session()->get('user.id');
         $user = User::where('id', $user_id)->first();
@@ -36,7 +36,7 @@ class UserController extends Controller
         return view('user.profile', compact('user', 'languages'));
     }
 
-    public function getFirstSession()
+    public function getFirstSession(): View
     {
         $user_id = request()->session()->get('user.id');
         $user = User::where('id', $user_id)->first();
@@ -52,10 +52,8 @@ class UserController extends Controller
 
     /**
      * updates user profile
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request): RedirectResponse
     {
         //Redirect back if demo application
         if (config('app.env') == 'demo') {
@@ -93,10 +91,8 @@ class UserController extends Controller
 
     /**
      * updates user password
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): RedirectResponse
     {
         //Redirect back if demo application
         if (config('app.env') == 'demo') {
@@ -133,7 +129,7 @@ class UserController extends Controller
         return redirect('user/profile')->with('status', $output);
     }
 
-    public function updatePasswordFirst(Request $request)
+    public function updatePasswordFirst(Request $request): RedirectResponse
     {
         //Redirect back if demo application
         if (config('app.env') == 'demo') {

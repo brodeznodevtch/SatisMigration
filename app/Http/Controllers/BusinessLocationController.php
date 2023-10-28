@@ -11,6 +11,7 @@ use App\Utils\ModuleUtil;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -165,9 +166,8 @@ class BusinessLocationController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\StoreFront  $storeFront
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('location.update')) {
             abort(403, 'Unauthorized action.');
@@ -238,10 +238,8 @@ class BusinessLocationController extends Controller
 
     /**
      * get add/update accounting accounts by location
-     *
-     * @param  int  $location_id
      */
-    public function getAccountingAccountByLocation($location_id)
+    public function getAccountingAccountByLocation(int $location_id): View
     {
         $location =
             BusinessLocation::where('id', $location_id)

@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Utils\TaxUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class TaxRateController extends Controller
@@ -68,10 +69,8 @@ class TaxRateController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('tax_rate.create')) {
             abort(403, 'Unauthorized action.');
@@ -119,21 +118,17 @@ class TaxRateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('tax_rate.update')) {
             abort(403, 'Unauthorized action.');
@@ -153,10 +148,9 @@ class TaxRateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('tax_rate.update')) {
             abort(403, 'Unauthorized action.');
@@ -213,10 +207,9 @@ class TaxRateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('tax_rate.delete')) {
             abort(403, 'Unauthorized action.');

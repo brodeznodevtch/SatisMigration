@@ -9,10 +9,8 @@ class RrhhClassActionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         RrhhClassAction::firstOrCreate([
             'rrhh_class_personnel_action_id' => 1,

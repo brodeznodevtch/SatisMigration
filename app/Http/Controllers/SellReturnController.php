@@ -17,6 +17,7 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class SellReturnController extends Controller
@@ -519,11 +520,8 @@ class SellReturnController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('sell.view')) {
             abort(403, 'Unauthorized action.');
@@ -567,10 +565,9 @@ class SellReturnController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -578,10 +575,9 @@ class SellReturnController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -589,10 +585,9 @@ class SellReturnController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }
@@ -610,18 +605,14 @@ class SellReturnController extends Controller
     /**
      * Returns the content for the receipt
      *
-     * @param  int  $business_id
-     * @param  int  $location_id
-     * @param  int  $transaction_id
      * @param  string  $printer_type = null
-     * @return array
      */
     private function receiptContent(
-        $business_id,
-        $location_id,
-        $transaction_id,
-        $printer_type = null
-    ) {
+        int $business_id,
+        int $location_id,
+        int $transaction_id,
+        string $printer_type = null
+    ): array {
 
         $output = [
             'is_enabled' => false,

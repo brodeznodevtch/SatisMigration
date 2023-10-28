@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE rrhh_income_discounts MODIFY COLUMN quotas_applied DECIMAL(10, 2) NOT NULL DEFAULT 0');
         Schema::table('rrhh_income_discounts', function (Blueprint $table) {
@@ -21,10 +19,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }

@@ -49,9 +49,8 @@ class System extends Model
      * Return the value of the multiple properties
      *
      * @param $keys array
-     * @return array
      */
-    public static function getProperties($keys, $pluck = false)
+    public static function getProperties($keys, $pluck = false): array
     {
         if ($pluck == true) {
             return System::whereIn('key', $keys)
@@ -67,9 +66,8 @@ class System extends Model
      * Return the system default currency details
      *
      * @param void
-     * @return object
      */
-    public static function getCurrency()
+    public static function getCurrency(): object
     {
         $c_id = System::where('key', 'app_currency_id')
             ->first()
@@ -82,11 +80,8 @@ class System extends Model
 
     /**
      * Set the property
-     *
-     *
-     * @return void
      */
-    public static function setProperty($key, $value)
+    public static function setProperty($key, $value): void
     {
         System::where('key', $key)
             ->update(['value' => $value]);

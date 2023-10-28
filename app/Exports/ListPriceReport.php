@@ -17,14 +17,11 @@ class ListPriceReport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $products
-     * @param  string  $business_name
-     * @param  array  $list_prices
      * @return void
      *
      * @author
      */
-    public function __construct($products, $business_name, $list_prices)
+    public function __construct(array $products, string $business_name, array $list_prices)
     {
         $this->products = $products;
         $this->business_name = $business_name;

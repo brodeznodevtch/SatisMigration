@@ -36,10 +36,9 @@ class PurchaseLine extends Model
     /**
      * Set the quantity.
      *
-     * @param  string  $value
      * @return float $value
      */
-    public function getQuantityAttribute($value)
+    public function getQuantityAttribute(string $value): float
     {
         return (float) $value;
     }

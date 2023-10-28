@@ -65,6 +65,7 @@ use DateTime;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Contracts\DataTable;
 
 class ReportController extends Controller
@@ -704,10 +705,8 @@ class ReportController extends Controller
 
     /**
      * Shows product stock details
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getStockDetails(Request $request)
+    public function getStockDetails(Request $request): View
     {
         //Return the details in ajax call
         if ($request->ajax()) {
@@ -812,10 +811,8 @@ class ReportController extends Controller
 
     /**
      * Shows trending products
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getTrendingProducts(Request $request)
+    public function getTrendingProducts(Request $request): View
     {
         if (! auth()->user()->can('trending_product_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -865,10 +862,8 @@ class ReportController extends Controller
 
     /**
      * Shows expense report of a business
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getExpenseReport(Request $request)
+    public function getExpenseReport(Request $request): View
     {
         if (! auth()->user()->can('expense_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -1156,10 +1151,8 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative report
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getSalesRepresentativeReport(Request $request)
+    public function getSalesRepresentativeReport(Request $request): View
     {
 
         if (! auth()->user()->can('sales_representative.view')) {
@@ -1177,10 +1170,8 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total expense
-     *
-     * @return json
      */
-    public function getSalesRepresentativeTotalExpense(Request $request)
+    public function getSalesRepresentativeTotalExpense(Request $request): json
     {
 
         if (! auth()->user()->can('sales_representative.view')) {
@@ -1200,10 +1191,8 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total sales
-     *
-     * @return json
      */
-    public function getSalesRepresentativeTotalSell(Request $request)
+    public function getSalesRepresentativeTotalSell(Request $request): json
     {
         if (! auth()->user()->can('sales_representative.view')) {
             abort(403, 'Unauthorized action.');
@@ -1227,10 +1216,8 @@ class ReportController extends Controller
 
     /**
      * Shows sales representative total commission
-     *
-     * @return json
      */
-    public function getSalesRepresentativeTotalCommission(Request $request)
+    public function getSalesRepresentativeTotalCommission(Request $request): json
     {
         if (! auth()->user()->can('sales_representative.view')) {
             abort(403, 'Unauthorized action.');
@@ -1431,10 +1418,8 @@ class ReportController extends Controller
 
     /**
      * Shows product stock expiry report
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getStockExpiryReportEditModal(Request $request, $purchase_line_id)
+    public function getStockExpiryReportEditModal(Request $request, $purchase_line_id): View
     {
 
         if (! auth()->user()->can('stock_expiry_report.update')) {
@@ -3974,10 +3959,8 @@ class ReportController extends Controller
 
     /**
      * Get price lists report
-     *
-     * @return Illuminate\Http\Response
      */
-    public function getPriceListsReport()
+    public function getPriceListsReport(): View
     {
         if (! auth()->user()->can('price_lists_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -3996,11 +3979,8 @@ class ReportController extends Controller
 
     /**
      * Post price lists report
-     *
-     * @return Illuminate\Http\Request
-     * @return Excel
      */
-    public function postPriceListsReport(Request $request)
+    public function postPriceListsReport(Request $request): Request
     {
         if (! auth()->user()->can('price_lists_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -4178,11 +4158,9 @@ class ReportController extends Controller
     /**
      * Gets sales for report.
      *
-     * @param  array  $params
-     * @param  bool  $print
      * @return array
      */
-    public function getSalesForReport($params, $print = false)
+    public function getSalesForReport(array $params, bool $print = false)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -4639,10 +4617,9 @@ class ReportController extends Controller
     /**
      * Get data for detailed sales report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToDetailedCommissionsReport($params)
+    public function getDataToDetailedCommissionsReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -4766,10 +4743,9 @@ class ReportController extends Controller
     /**
      * Get lines for customer account statement.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getLinesForAccountStatement($params)
+    public function getLinesForAccountStatement(array $params)
     {
         // Customer filter
         $customer_id = ! empty($params['customer_id']) ? $params['customer_id'] : 0;
@@ -5516,10 +5492,8 @@ class ReportController extends Controller
 
     /**
      * Show transfer sheet form.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getTransferSheet()
+    public function getTransferSheet(): View
     {
         if (! auth()->user()->can('transfer_sheet.view')) {
             abort(403, 'Unauthorized action.');
@@ -5737,10 +5711,9 @@ class ReportController extends Controller
     /**
      * Get data for payment notes report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToPaymentNoteReport($params)
+    public function getDataToPaymentNoteReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -5904,10 +5877,9 @@ class ReportController extends Controller
     /**
      * Get data for lab orders report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToLabOrdersReport($params)
+    public function getDataToLabOrdersReport(array $params)
     {
         // Business filter
         $business_id = request()->session()->get('user.business_id');
@@ -6330,10 +6302,9 @@ class ReportController extends Controller
     /**
      * Get data for glasses consumption report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToGlassesConsumptionReport($params, $print = false)
+    public function getDataToGlassesConsumptionReport(array $params, $print = false)
     {
         // Business filter
         $business_id = $params['business_id'];
@@ -6542,10 +6513,9 @@ class ReportController extends Controller
     /**
      * Get data for stock report by location.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToStockReportByLocation($params, $print = false)
+    public function getDataToStockReportByLocation(array $params, $print = false)
     {
         // Business filter
         $business_id = $params['business_id'];
@@ -6599,9 +6569,8 @@ class ReportController extends Controller
      * Show sales per seller report view.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function getSalesPerSellerReport(Request $request)
+    public function getSalesPerSellerReport(Request $request): View
     {
         if (! auth()->user()->can('sales_per_seller_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -6711,10 +6680,9 @@ class ReportController extends Controller
     /**
      * Get data to sales per seller report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToSalesPerSellerReport($params)
+    public function getDataToSalesPerSellerReport(array $params)
     {
         // Business filter
         $business_id = $params['business']->id;
@@ -6790,9 +6758,8 @@ class ReportController extends Controller
      * Show payment report view.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function getPaymentReport(Request $request)
+    public function getPaymentReport(Request $request): View
     {
         if (! auth()->user()->can('payment_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -6902,10 +6869,9 @@ class ReportController extends Controller
     /**
      * Get data to sales per seller report.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getDataToPaymentReport($params)
+    public function getDataToPaymentReport(array $params)
     {
         // Business filter
         $business_id = $params['business']->id;
@@ -6977,7 +6943,7 @@ class ReportController extends Controller
         return $result;
     }
 
-    public function printTest()
+    public function printTest(): View
     {
         return view('reports.print_test');
     }

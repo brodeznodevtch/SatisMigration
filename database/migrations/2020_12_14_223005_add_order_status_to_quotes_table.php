@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement("ALTER TABLE `quotes` ADD `order_status`
             ENUM('pending','prepared') NULL DEFAULT NULL AFTER `type`");
@@ -26,10 +24,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('quotes', function (Blueprint $table) {
             $table->dropColumn('order_status');

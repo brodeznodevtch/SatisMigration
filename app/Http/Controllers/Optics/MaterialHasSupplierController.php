@@ -41,7 +41,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\MaterialHasSupplier  $materialHasSupplier
      * @return \Illuminate\Http\Response
      */
     public function show(MaterialHasSupplier $materialHasSupplier)
@@ -52,7 +51,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\MaterialHasSupplier  $materialHasSupplier
      * @return \Illuminate\Http\Response
      */
     public function edit(MaterialHasSupplier $materialHasSupplier)
@@ -63,7 +61,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\MaterialHasSupplier  $materialHasSupplier
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, MaterialHasSupplier $materialHasSupplier)
@@ -74,7 +71,6 @@ class MaterialHasSupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\MaterialHasSupplier  $materialHasSupplier
      * @return \Illuminate\Http\Response
      */
     public function destroy(MaterialHasSupplier $materialHasSupplier)

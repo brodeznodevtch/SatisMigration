@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Business;
+use App\BusinessLocation;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -23,14 +25,9 @@ class SalesAdjustmentsReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $query
-     * @param  int  $size
-     * @param  string  $month_name
-     * @param  \App\Business  $business
-     * @param  \App\BusinessLocation  $location
      * @return void
      */
-    public function __construct($query, $size, $month_name, $business, $location)
+    public function __construct(array $query, int $size, string $month_name, Business $business, BusinessLocation $location)
     {
         $this->query = $query;
         $this->size = $size;

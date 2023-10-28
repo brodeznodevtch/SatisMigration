@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('rrhh_position_histories', function (Blueprint $table) {
             $table->dropForeign('rrhh_position_histories_department_id_foreign');
@@ -34,10 +32,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('rrhh_position_histories', function (Blueprint $table) {
             $table->dropForeign('previous_department_id');

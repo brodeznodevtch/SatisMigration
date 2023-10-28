@@ -2,6 +2,7 @@
 
 namespace App\Optics;
 
+use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
@@ -40,10 +41,8 @@ class Patient extends Model
 
     /**
      * Gets the employee to which the patient belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Concerns\HasRelationships
      */
-    public function employee()
+    public function employee(): HasRelationships
     {
         return $this->belongsTo(\App\Models\Employees::class);
     }

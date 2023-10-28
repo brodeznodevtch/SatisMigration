@@ -22,7 +22,9 @@ use App\Utils\CashRegisterUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TransactionPaymentController extends Controller
 {
@@ -67,10 +69,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.create_payments')) {
             abort(403, 'Unauthorized action.');
@@ -238,11 +238,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('sell.view_payments')) {
             abort(403, 'Unauthorized action.');
@@ -284,12 +281,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @param  string  $entity_type
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id, $entity_type = 'transaction')
+    public function edit(int $id, string $entity_type = 'transaction'): View
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('$sell.create_payments')) {
             abort(403, 'Unauthorized action.');
@@ -399,11 +392,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.create_payments')) {
             abort(403, 'Unauthorized action.');
@@ -597,11 +587,9 @@ class TransactionPaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @param  string  $entity_type
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, $entity_type = 'transaction')
+    public function destroy(int $id, string $entity_type = 'transaction')
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.delete_payments')) {
             abort(403, 'Unauthorized action.');
@@ -703,10 +691,9 @@ class TransactionPaymentController extends Controller
     /**
      * Adds new payment to the given transaction.
      *
-     * @param  int  $transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function addPayment($transaction_id)
+    public function addPayment(int $transaction_id)
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.payments')) {
             abort(403, 'Unauthorized action.');
@@ -880,10 +867,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Get multipayment view
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function multiPayments()
+    public function multiPayments(): View
     {
         if (! auth()->user()->can('sell.create_payments')) {
             abort(403, 'Unauthorized action.');
@@ -904,9 +889,8 @@ class TransactionPaymentController extends Controller
      * Store multi payments
      *
      * @param \Illuminate\Http\Request
-     * @return json
      */
-    public function storeMultiPayments(Request $request)
+    public function storeMultiPayments(Request $request): json
     {
         if (! auth()->user()->can('sell.create_payments')) {
             abort(403, 'Unauthorized action.');
@@ -985,11 +969,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Shows contact's payment due modal
-     *
-     * @param  int  $contact_id
-     * @return \Illuminate\Http\Response
      */
-    public function getPayContactDue($contact_id)
+    public function getPayContactDue(int $contact_id): View
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1105,10 +1086,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Adds Payments for Contact due
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function postPayContactDue(Request $request)
+    public function postPayContactDue(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1204,10 +1183,8 @@ class TransactionPaymentController extends Controller
      * payment.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $entity_type
-     * @return \Illuminate\Http\Response
      */
-    public function viewPayment($payment_id, $entity_type = null)
+    public function viewPayment($payment_id, string $entity_type = null): View
     {
         // if (!auth()->user()->can('purchase.payments') && !auth()->user()->can('sell.payments')) {
         //     abort(403, 'Unauthorized action.');
@@ -1251,9 +1228,8 @@ class TransactionPaymentController extends Controller
      * payment.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function showChildPayments($payment_id)
+    public function showChildPayments($payment_id): View
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.payments')) {
             abort(403, 'Unauthorized action.');
@@ -1275,7 +1251,7 @@ class TransactionPaymentController extends Controller
     }
 
     //Editar metodos de pago
-    public function editPaymentMethod($id)
+    public function editPaymentMethod($id): View
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1307,10 +1283,9 @@ class TransactionPaymentController extends Controller
     /**
      * Add new payment to the given quote.
      *
-     * @param  int  $quote_id
      * @return \Illuminate\Http\Response
      */
-    public function addPaymentToQuote($quote_id)
+    public function addPaymentToQuote(int $quote_id)
     {
         if (! auth()->user()->can('purchase.payments') && ! auth()->user()->can('sell.payments')) {
             abort(403, 'Unauthorized action.');
@@ -1427,10 +1402,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function storeToQuote(Request $request)
+    public function storeToQuote(Request $request): RedirectResponse
     {
         try {
             $business_id = $request->session()->get('user.business_id');
@@ -1553,11 +1526,8 @@ class TransactionPaymentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function showToQuote($id)
+    public function showToQuote(int $id): View
     {
         if (! auth()->user()->can('purchase.create') && ! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');

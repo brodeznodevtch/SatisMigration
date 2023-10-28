@@ -11,7 +11,9 @@ use App\Models\FollowCustomer;
 use App\Models\FollowCustomersHasProduct;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class FollowCustomerController extends Controller
 {
@@ -27,10 +29,8 @@ class FollowCustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('follow_customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -142,9 +142,8 @@ class FollowCustomerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\FollowCustomer  $followCustomer
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         if (! auth()->user()->can('follow_customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -166,9 +165,8 @@ class FollowCustomerController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\FollowCustomer  $followCustomer
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         if (! auth()->user()->can('follow_customer.update')) {
             abort(403, 'Unauthorized action.');
@@ -300,7 +298,7 @@ class FollowCustomerController extends Controller
         return DataTables::of($follow_customers)->toJson();
     }
 
-    public function getProductsByFollowCustomer($id)
+    public function getProductsByFollowCustomer($id): JsonResponse
     {
         $items = DB::table('follow_customers_has_products as follow')
             ->join('variations as variation', 'variation.id', '=', 'follow.variation_id')

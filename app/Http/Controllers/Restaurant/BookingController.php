@@ -10,6 +10,7 @@ use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class BookingController extends Controller
@@ -187,11 +188,8 @@ class BookingController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -217,7 +215,6 @@ class BookingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Booking  $booking
      * @return \Illuminate\Http\Response
      */
     public function edit(Booking $booking)

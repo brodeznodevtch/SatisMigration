@@ -31,13 +31,8 @@ class FlowReason extends Model
 
     /**
      * Return list of reasons for a business.
-     *
-     * @param  int  $business_id
-     * @param  bool  $prepend_none
-     * @param  array  $prepend_all
-     * @return array
      */
-    public static function forDropdown($business_id, $prepend_none = false, $prepend_all = false)
+    public static function forDropdown(int $business_id, bool $prepend_none = false, array $prepend_all = false): array
     {
         $query = FlowReason::where('business_id', $business_id);
 

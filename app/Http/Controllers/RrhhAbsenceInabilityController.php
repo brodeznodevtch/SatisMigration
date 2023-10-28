@@ -8,6 +8,7 @@ use App\Models\RrhhData;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhAbsenceInabilityController extends Controller
@@ -35,7 +36,7 @@ class RrhhAbsenceInabilityController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.view')) {
             abort(403, 'Unauthorized action.');
@@ -57,7 +58,7 @@ class RrhhAbsenceInabilityController extends Controller
         //
     }
 
-    public function createAbsenceInability($id)
+    public function createAbsenceInability($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.create')) {
             abort(403, 'Unauthorized action.');
@@ -159,9 +160,8 @@ class RrhhAbsenceInabilityController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhAbsenceInability  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_absence_inability.edit')) {
             abort(403, 'Unauthorized action.');

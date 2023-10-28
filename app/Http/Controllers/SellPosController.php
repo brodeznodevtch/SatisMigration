@@ -55,6 +55,7 @@ use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class SellPosController extends Controller
 {
@@ -157,10 +158,8 @@ class SellPosController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('sell.view') && ! auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1053,19 +1052,15 @@ class SellPosController extends Controller
     /**
      * Returns the content for the receipt
      *
-     * @param  int  $business_id
-     * @param  int  $location_id
-     * @param  int  $transaction_id
      * @param  string  $printer_type = null
-     * @return array
      */
     private function receiptContent(
         $transaction_type,
-        $business_id,
-        $location_id,
-        $transaction_id,
-        $printer_type = null
-    ) {
+        int $business_id,
+        int $location_id,
+        int $transaction_id,
+        string $printer_type = null
+    ): array {
 
         $output = ['is_enabled' => false,
             'print_type' => 'browser',
@@ -1122,10 +1117,9 @@ class SellPosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -1133,10 +1127,9 @@ class SellPosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('sell.update')) {
             abort(403, 'Unauthorized action.');
@@ -1472,10 +1465,9 @@ class SellPosController extends Controller
      * Update the specified resource in storage.
      * TODO: Add edit log.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('sell.update') && ! auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
@@ -1830,10 +1822,9 @@ class SellPosController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('sell.delete')) {
             abort(403, 'Unauthorized action.');
@@ -2140,10 +2131,8 @@ class SellPosController extends Controller
 
     /**
      * Create transaction accounting entry
-     *
-     * @param  int  $transaction_id
      */
-    public function createTransAccountingEntry($transaction_id)
+    public function createTransAccountingEntry(int $transaction_id)
     {
         $transaction = Transaction::join('customers as c', 'transactions.customer_id', 'c.id')
             ->join('document_types as dt', 'transactions.document_types_id', 'dt.id')
@@ -2198,12 +2187,10 @@ class SellPosController extends Controller
     /**
      * Create transaction accounting entry lines
      *
-     * @param  int  $transaction_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
-    private function createTransAccountingEntryLines($transaction_id)
+    private function createTransAccountingEntryLines(int $transaction_id): array
     {
         $entry_lines = [];
 
@@ -2369,13 +2356,10 @@ class SellPosController extends Controller
     /**
      * Get inputs from transaction by product
      *
-     * @param  int  $transaction_id
-     * @param  int  $location_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
-    private function getTransactionInputs($transaction_id, $location_id)
+    private function getTransactionInputs(int $transaction_id, int $location_id): array
     {
         $sell_lines =
         TransactionSellLine::join('product_accounts_locations as pal', 'transaction_sell_lines.product_id', 'pal.product_id')
@@ -2403,13 +2387,11 @@ class SellPosController extends Controller
     /**
      * Get costs from transaction by product
      *
-     * @param  int  $transaction_id
      * @param int location_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
-    private function getTransactionCosts($transaction_id, $location_id)
+    private function getTransactionCosts(int $transaction_id, $location_id): array
     {
         $products = TransactionSellLine::join('products as p', 'transaction_sell_lines.product_id', 'p.id')
             ->where('p.clasification', 'product')
@@ -2462,11 +2444,9 @@ class SellPosController extends Controller
     /**
      * Returns the HTML row for a product in POS
      *
-     * @param  int  $variation_id
-     * @param  int  $location_id
      * @return \Illuminate\Http\Response
      */
-    public function getProductRow($variation_id, $location_id)
+    public function getProductRow(int $variation_id, int $location_id)
     {
         $output = [];
 
@@ -2640,10 +2620,8 @@ class SellPosController extends Controller
 
     /**
      * Returns the HTML row for a payment in POS
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getPaymentRow(Request $request)
+    public function getPaymentRow(Request $request): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -2675,10 +2653,8 @@ class SellPosController extends Controller
 
     /**
      * Returns recent transactions
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getRecentTransactions(Request $request)
+    public function getRecentTransactions(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $user_id = $request->session()->get('user.id');
@@ -2750,10 +2726,9 @@ class SellPosController extends Controller
     /**
      * Print CCF detail for sells
      *
-     * @param  int  $transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function printCCF($transaction_id)
+    public function printCCF(int $transaction_id)
     {
         if (request()->ajax()) {
             try {
@@ -2813,10 +2788,8 @@ class SellPosController extends Controller
 
     /**
      * Gives suggetion for product based on category
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getProductSuggestion(Request $request)
+    public function getProductSuggestion(Request $request): View
     {
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
@@ -2901,11 +2874,9 @@ class SellPosController extends Controller
     /**
      * Check if the correlative exists.
      *
-     * @param  int  $document
-     * @param  string  $correlative
      * @return array
      */
-    public function validateCorrelative($location, $document, $correlative, $transaction_id = 0)
+    public function validateCorrelative($location, int $document, string $correlative, $transaction_id = 0)
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -3017,12 +2988,8 @@ class SellPosController extends Controller
 
     /**
      * Get lab order for transaction
-     *
-     * @param  int  $transaction_id
-     * @param  int  $patient_id
-     * @return \Illuminate\Http\Response
      */
-    public function getLabOrder($transaction_id = null, $patient_id = null)
+    public function getLabOrder(int $transaction_id = null, int $patient_id = null): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -3332,11 +3299,9 @@ class SellPosController extends Controller
     /**
      * Fill in the unit_cost_exc_tax and unit_cost_inc_tax fields.
      *
-     * @param  int  $tsl_initial
-     * @param  int  $tsl_final
      * @return string
      */
-    public function updateUnitCostToSellLines($tsl_initial = null, $tsl_final = null)
+    public function updateUnitCostToSellLines(int $tsl_initial = null, int $tsl_final = null)
     {
         try {
             // Set maximum PHP execution time
@@ -3382,11 +3347,9 @@ class SellPosController extends Controller
     /**
      * Fill the sale_price field in the transaction_sell_lines table.
      *
-     * @param  int  $tsl_initial
-     * @param  int  $tsl_final
      * @return string
      */
-    public function updateSalePriceToSellLines($tsl_initial = null, $tsl_final = null)
+    public function updateSalePriceToSellLines(int $tsl_initial = null, int $tsl_final = null)
     {
         try {
             // Set maximum PHP execution time
@@ -3435,11 +3398,9 @@ class SellPosController extends Controller
     /**
      * Fill the sale_price field in the purchase_lines table.
      *
-     * @param  int  $pl_initial
-     * @param  int  $pl_final
      * @return string
      */
-    public function updateSalePriceToPurchaseLines($pl_initial = null, $pl_final = null)
+    public function updateSalePriceToPurchaseLines(int $pl_initial = null, int $pl_final = null)
     {
         try {
             // Set maximum PHP execution time

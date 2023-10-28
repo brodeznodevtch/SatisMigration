@@ -21,13 +21,10 @@ class AccountsReceivableReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $transactions
-     * @param  string  $business_name
-     * @param  string  $report_name
      * @param  App\Util\TransactionUtil  $transactionUtil;
      * @return void
      */
-    public function __construct($transactions, $business_name, $report_name, $final_totals, $transactionUtil)
+    public function __construct(array $transactions, string $business_name, string $report_name, $final_totals, $transactionUtil)
     {
         $this->transactions = $transactions;
         $this->business_name = $business_name;

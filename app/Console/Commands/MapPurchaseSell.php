@@ -41,10 +41,8 @@ class MapPurchaseSell extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         try {
             ini_set('max_execution_time', 0);

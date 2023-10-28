@@ -6,7 +6,9 @@ use App\Models\Barcode;
 use App\Models\Product;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LabelsController extends Controller
 {
@@ -31,10 +33,8 @@ class LabelsController extends Controller
 
     /**
      * Display labels
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Request $request): View
     {
         $business_id = $request->session()->get('user.business_id');
         $purchase_id = $request->get('purchase_id', false);
@@ -58,10 +58,8 @@ class LabelsController extends Controller
 
     /**
      * Returns the html for product row
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function addProductRow(Request $request)
+    public function addProductRow(Request $request): View
     {
         if ($request->ajax()) {
             $product_id = $request->input('product_id');
@@ -165,11 +163,8 @@ class LabelsController extends Controller
 
     /**
      * Get barcode setting
-     *
-     * @param  int  $has_logo
-     * @return json
      */
-    public function getBarcodeSetting($has_logo = 0)
+    public function getBarcodeSetting(int $has_logo = 0): JsonResponse
     {
         $name = $has_logo ? 'name_with_logo' : 'name';
 

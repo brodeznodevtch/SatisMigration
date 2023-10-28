@@ -11,12 +11,11 @@ class RestaurantUtil
     /**
      * Retrieves all orders/sales
      *
-     * @param  int  $business_id
      * @param  array  $filter
      * *For new orders order_status is 'received'
      * @return obj $orders
      */
-    public function getAllOrders($business_id, $filter = [])
+    public function getAllOrders(int $business_id, array $filter = []): obj
     {
         $query = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
             ->leftjoin(

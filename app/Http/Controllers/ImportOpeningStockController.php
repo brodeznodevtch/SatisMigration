@@ -14,7 +14,9 @@ use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ImportOpeningStockController extends Controller
 {
@@ -37,10 +39,8 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('product.opening_stock')) {
             abort(403, 'Unauthorized action.');
@@ -63,10 +63,8 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.opening_stock')) {
             abort(403, 'Unauthorized action.');
@@ -223,13 +221,8 @@ class ImportOpeningStockController extends Controller
 
     /**
      * Adds opening stock of a single product
-     *
-     * @param  array  $opening_stock
-     * @param  obj  $product
-     * @param  int  $business_id
-     * @return void
      */
-    private function addOpeningStock($opening_stock, $product, $business_id, $unit_cost_before_tax, $transaction = null)
+    private function addOpeningStock(array $opening_stock, obj $product, int $business_id, $unit_cost_before_tax, $transaction = null): void
     {
 
         $user_id = request()->session()->get('user.id');

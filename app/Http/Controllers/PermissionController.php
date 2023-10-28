@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Permission;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -25,10 +25,8 @@ class PermissionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -68,9 +66,8 @@ class PermissionController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show(Permission $permission)
+    public function show(Permission $permission): JsonResponse
     {
         if (! auth()->user()->can('permission.view')) {
             abort(403, 'Unauthorized action.');
@@ -83,9 +80,8 @@ class PermissionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Permission $permission)
+    public function edit(Permission $permission): JsonResponse
     {
         if (! auth()->user()->can('permission.update')) {
             abort(403, 'Unauthorized action.');

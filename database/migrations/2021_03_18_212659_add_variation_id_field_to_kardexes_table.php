@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->unsignedInteger('variation_id')->nullable()->after('product_id');
@@ -21,10 +19,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('kardexes', function (Blueprint $table) {
             $table->dropForeign(['variation_id']);

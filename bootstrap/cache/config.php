@@ -78,6 +78,7 @@
       'Mail' => 'Illuminate\\Support\\Facades\\Mail',
       'Notification' => 'Illuminate\\Support\\Facades\\Notification',
       'Password' => 'Illuminate\\Support\\Facades\\Password',
+      'Process' => 'Illuminate\\Support\\Facades\\Process',
       'Queue' => 'Illuminate\\Support\\Facades\\Queue',
       'RateLimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
       'Redirect' => 'Illuminate\\Support\\Facades\\Redirect',
@@ -137,7 +138,7 @@
       'users' => 
       array (
         'provider' => 'users',
-        'table' => 'password_resets',
+        'table' => 'password_reset_tokens',
         'expire' => 60,
         'throttle' => 60,
       ),
@@ -291,6 +292,7 @@
         'app_id' => '',
         'options' => 
         array (
+          'cluster' => NULL,
           'host' => 'api-mt1.pusher.com',
           'port' => 443,
           'scheme' => 'https',
@@ -346,6 +348,7 @@
       array (
         'driver' => 'file',
         'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/cache/data',
+        'lock_path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -747,6 +750,7 @@
       array (
         'url' => NULL,
         'host' => '127.0.0.1',
+        'username' => NULL,
         'password' => NULL,
         'port' => '6379',
         'database' => '0',
@@ -755,6 +759,7 @@
       array (
         'url' => NULL,
         'host' => '127.0.0.1',
+        'username' => NULL,
         'password' => NULL,
         'port' => '6379',
         'database' => '1',
@@ -807,6 +812,12 @@
       array (
       ),
       'options' => 0,
+    ),
+    'callback' => 
+    array (
+      0 => '$',
+      1 => '$.',
+      2 => 'function',
     ),
   ),
   'debugbar' => 
@@ -1105,6 +1116,7 @@
         'driver' => 'single',
         'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
+        'replace_placeholders' => true,
       ),
       'daily' => 
       array (
@@ -1112,6 +1124,7 @@
         'path' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
+        'replace_placeholders' => true,
       ),
       'slack' => 
       array (
@@ -1120,6 +1133,7 @@
         'username' => 'Laravel Log',
         'emoji' => ':boom:',
         'level' => 'critical',
+        'replace_placeholders' => true,
       ),
       'papertrail' => 
       array (
@@ -1132,6 +1146,10 @@
           'port' => NULL,
           'connectionString' => 'tls://:',
         ),
+        'processors' => 
+        array (
+          0 => 'Monolog\\Processor\\PsrLogMessageProcessor',
+        ),
       ),
       'stderr' => 
       array (
@@ -1143,16 +1161,23 @@
         array (
           'stream' => 'php://stderr',
         ),
+        'processors' => 
+        array (
+          0 => 'Monolog\\Processor\\PsrLogMessageProcessor',
+        ),
       ),
       'syslog' => 
       array (
         'driver' => 'syslog',
         'level' => 'debug',
+        'facility' => 8,
+        'replace_placeholders' => true,
       ),
       'errorlog' => 
       array (
         'driver' => 'errorlog',
         'level' => 'debug',
+        'replace_placeholders' => true,
       ),
       'null' => 
       array (
@@ -1173,6 +1198,7 @@
       'smtp' => 
       array (
         'transport' => 'smtp',
+        'url' => NULL,
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'encryption' => 'tls',
@@ -1657,25 +1683,48 @@
   'dompdf' => 
   array (
     'show_warnings' => false,
-    'orientation' => 'portrait',
+    'public_path' => NULL,
     'convert_entities' => true,
-    'defines' => 
+    'options' => 
     array (
       'font_dir' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts',
       'font_cache' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration\\storage\\fonts',
       'temp_dir' => 'C:\\Users\\BAYRON~1\\AppData\\Local\\Temp',
       'chroot' => 'C:\\Users\\Bayron Rodezno\\OneDrive\\Documentos\\GitHub\\SatisMigration',
+      'allowed_protocols' => 
+      array (
+        'file://' => 
+        array (
+          'rules' => 
+          array (
+          ),
+        ),
+        'http://' => 
+        array (
+          'rules' => 
+          array (
+          ),
+        ),
+        'https://' => 
+        array (
+          'rules' => 
+          array (
+          ),
+        ),
+      ),
+      'log_output_file' => NULL,
       'enable_font_subsetting' => false,
       'pdf_backend' => 'CPDF',
       'default_media_type' => 'screen',
       'default_paper_size' => 'a4',
+      'default_paper_orientation' => 'portrait',
       'default_font' => 'serif',
       'dpi' => 96,
       'enable_php' => false,
       'enable_javascript' => true,
       'enable_remote' => true,
       'font_height_ratio' => 1.1,
-      'enable_html5_parser' => false,
+      'enable_html5_parser' => true,
     ),
   ),
   'flare' => 
@@ -1746,6 +1795,8 @@
       15 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\MissingLivewireComponentSolutionProvider',
       16 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\UndefinedViewVariableSolutionProvider',
       17 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\GenericLaravelExceptionSolutionProvider',
+      18 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\OpenAiSolutionProvider',
+      19 => 'Spatie\\LaravelIgnition\\Solutions\\SolutionProviders\\SailNetworkSolutionProvider',
     ),
     'ignored_solution_providers' => 
     array (
@@ -1761,6 +1812,22 @@
       1 => 'Spatie\\LaravelIgnition\\Recorders\\JobRecorder\\JobRecorder',
       2 => 'Spatie\\LaravelIgnition\\Recorders\\LogRecorder\\LogRecorder',
       3 => 'Spatie\\LaravelIgnition\\Recorders\\QueryRecorder\\QueryRecorder',
+    ),
+    'open_ai_key' => NULL,
+    'with_stack_frame_arguments' => true,
+    'argument_reducers' => 
+    array (
+      0 => 'Spatie\\Backtrace\\Arguments\\Reducers\\BaseTypeArgumentReducer',
+      1 => 'Spatie\\Backtrace\\Arguments\\Reducers\\ArrayArgumentReducer',
+      2 => 'Spatie\\Backtrace\\Arguments\\Reducers\\StdClassArgumentReducer',
+      3 => 'Spatie\\Backtrace\\Arguments\\Reducers\\EnumArgumentReducer',
+      4 => 'Spatie\\Backtrace\\Arguments\\Reducers\\ClosureArgumentReducer',
+      5 => 'Spatie\\Backtrace\\Arguments\\Reducers\\DateTimeArgumentReducer',
+      6 => 'Spatie\\Backtrace\\Arguments\\Reducers\\DateTimeZoneArgumentReducer',
+      7 => 'Spatie\\Backtrace\\Arguments\\Reducers\\SymphonyRequestArgumentReducer',
+      8 => 'Spatie\\LaravelIgnition\\ArgumentReducers\\ModelArgumentReducer',
+      9 => 'Spatie\\LaravelIgnition\\ArgumentReducers\\CollectionArgumentReducer',
+      10 => 'Spatie\\Backtrace\\Arguments\\Reducers\\StringableArgumentReducer',
     ),
   ),
   'tinker' => 

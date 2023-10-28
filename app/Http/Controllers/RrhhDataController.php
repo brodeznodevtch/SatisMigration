@@ -13,6 +13,7 @@ use DataTables;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class RrhhDataController extends Controller
 {
@@ -109,7 +110,7 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function createItem($id)
+    public function createItem($id): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.create')) {
@@ -307,7 +308,7 @@ class RrhhDataController extends Controller
         //
     }
 
-    public function editItem($id)
+    public function editItem($id): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.update')) {

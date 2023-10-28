@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -20,12 +21,9 @@ class PayrollHonoraryReportExport implements WithEvents, WithTitle, ShouldAutoSi
     /**
      * Constructor.
      *
-     * @param  array  $payroll
-     * @param  array  $payrollDetails
-     * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($payroll, $payrollDetails, $business, $moduleUtil)
+    public function __construct(array $payroll, array $payrollDetails, Business $business, $moduleUtil)
     {
         $this->payroll = $payroll;
         $this->payrollDetails = $payrollDetails;

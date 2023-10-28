@@ -10,6 +10,7 @@ use App\Models\TransactionPayment;
 use App\Utils\Util;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Http\RedirectResponse;
 
 // use MAIL;
 // use PDF;
@@ -28,10 +29,8 @@ class MailController extends Controller
 
     /**
      * Send mail with customer account statement.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function sendAccountStatement()
+    public function sendAccountStatement(): RedirectResponse
     {
         try {
             $customer_id = request()->input('email_customer_id');
@@ -110,10 +109,9 @@ class MailController extends Controller
     /**
      * Get lines for customer account statement.
      *
-     * @param  array  $params
      * @return array
      */
-    public function getLinesForAccountStatement($params)
+    public function getLinesForAccountStatement(array $params)
     {
         // Customer filter
         $customer_id = ! empty($params['customer_id']) ? $params['customer_id'] : 0;

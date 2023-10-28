@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('follow_oportunities', function (Blueprint $table) {
             $table->unsignedInteger('contact_mode_id')->nullable()->after('contact_reason_id');
@@ -21,10 +19,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('follow_oportunities', function (Blueprint $table) {
             //

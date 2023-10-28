@@ -6,6 +6,7 @@ use App\Models\AccountingEntrie;
 use App\Models\AccountingPeriod;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AccountingPeriodController extends Controller
@@ -34,10 +35,8 @@ class AccountingPeriodController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -69,10 +68,8 @@ class AccountingPeriodController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(AccountingPeriod $accountingPeriod)
+    public function show(AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         return response()->json($accountingPeriod);
@@ -80,10 +77,8 @@ class AccountingPeriodController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(AccountingPeriod $accountingPeriod)
+    public function edit(AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         return response()->json($accountingPeriod);
@@ -91,10 +86,8 @@ class AccountingPeriodController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AccountingPeriod $accountingPeriod)
+    public function update(Request $request, AccountingPeriod $accountingPeriod): JsonResponse
     {
 
         $validateData = $request->validate(

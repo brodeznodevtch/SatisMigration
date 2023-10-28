@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\SupportDocuments;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class SupportDocumentsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -25,10 +24,8 @@ class SupportDocumentsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('sdocs.view') && ! auth()->user()->can('sdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -110,9 +107,8 @@ class SupportDocumentsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\SupportDocuments  $supportDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('sdocs.update')) {
             abort(403, 'Unauthorized action.');

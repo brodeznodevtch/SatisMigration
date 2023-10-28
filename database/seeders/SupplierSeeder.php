@@ -14,10 +14,8 @@ class SupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         /** Business id to sync with */
         $business_id = null;
@@ -39,14 +37,10 @@ class SupplierSeeder extends Seeder
     /**
      * Sync Suppliers
      *
-     * @param  int  $id
-     * @param  string  $code
-     * @param  int  $business_id
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncSupplier($id, $code, $business_id)
+    public function syncSupplier(int $id, string $code, int $business_id): void
     {
         /** If business_id not setted, exit */
         if (is_null($business_id)) {

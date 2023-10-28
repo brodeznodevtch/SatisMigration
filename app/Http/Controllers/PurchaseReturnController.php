@@ -9,8 +9,10 @@ use App\Models\Transaction;
 use App\Utils\ProductUtil;
 use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class PurchaseReturnController extends Controller
@@ -142,10 +144,8 @@ class PurchaseReturnController extends Controller
 
     /**
      * Show the form for purchase return.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function add($id)
+    public function add($id): View
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -184,10 +184,8 @@ class PurchaseReturnController extends Controller
 
     /**
      * Saves Purchase returns in the database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -302,11 +300,8 @@ class PurchaseReturnController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('purchase.view')) {
             abort(403, 'Unauthorized action.');
@@ -335,12 +330,10 @@ class PurchaseReturnController extends Controller
     /**
      * get purchase return by discount
      *
-     * @param  int  $id
-     * @return Response
      *
      * @author Arquímides Martínez
      */
-    public function getPurchaseReturnDiscount($id)
+    public function getPurchaseReturnDiscount(int $id): View
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -368,11 +361,10 @@ class PurchaseReturnController extends Controller
      * post purchase return by discount
      *
      * @param  int  $int
-     * @return json
      *
      * @author Arquímides Martínez
      */
-    public function postPurchaseReturnDiscount(Request $request, $id)
+    public function postPurchaseReturnDiscount(Request $request, $id): json
     {
         if (! auth()->user()->can('purchase.update')) {
             abort(403, 'Unauthorized action.');
@@ -434,13 +426,10 @@ class PurchaseReturnController extends Controller
     /**
      * Update payment status for return discount transaction
      *
-     * @param  int  $parent_id
-     * @param  float  $final_total
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    private function updatePaymentStatus($parent_id, $final_total)
+    private function updatePaymentStatus(int $parent_id, float $final_total): void
     {
         $parent_transaction = Transaction::find($parent_id);
 

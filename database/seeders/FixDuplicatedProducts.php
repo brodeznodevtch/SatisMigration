@@ -33,10 +33,8 @@ class FixDuplicatedProducts extends Seeder
 
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $business = Business::pluck('id');
 
@@ -96,12 +94,8 @@ class FixDuplicatedProducts extends Seeder
 
     /**
      * Update variation records
-     *
-     * @param  int  $first_id
-     * @param  int  $last_id
-     * @return void
      */
-    private function update_records($first_id, $last_id, $business_id)
+    private function update_records(int $first_id, int $last_id, $business_id): void
     {
         try {
             Log::info('Replacing '.$last_id.' for '.$first_id);

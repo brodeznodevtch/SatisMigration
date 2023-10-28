@@ -14,15 +14,14 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class CreditDocumentsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('cdocs.view') && ! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -34,10 +33,8 @@ class CreditDocumentsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('cdocs.create')) {
             abort(403, 'Unauthorized action.');
@@ -192,9 +189,8 @@ class CreditDocumentsController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\CreditDocuments  $creditDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('cdocs.view')) {
             abort(403, 'Unauthorized action.');
@@ -217,7 +213,7 @@ class CreditDocumentsController extends Controller
         }
     }
 
-    public function reception($id)
+    public function reception($id): View
     {
         if (! auth()->user()->can('cdocs.reception')) {
             abort(403, 'Unauthorized action.');
@@ -235,7 +231,7 @@ class CreditDocumentsController extends Controller
         }
     }
 
-    public function custodian($id)
+    public function custodian($id): View
     {
         if (! auth()->user()->can('cdocs.custodian')) {
             abort(403, 'Unauthorized action.');
@@ -326,9 +322,8 @@ class CreditDocumentsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\CreditDocuments  $creditDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
 
         if (! auth()->user()->can('cdocs.update')) {

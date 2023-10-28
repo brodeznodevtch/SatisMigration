@@ -34,7 +34,10 @@ use App\Utils\Util;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CustomerController extends Controller
 {
@@ -60,10 +63,8 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -249,10 +250,8 @@ class CustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -515,9 +514,8 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -542,7 +540,7 @@ class CustomerController extends Controller
         return response()->json($customer);
     }
 
-    public function getContacts($id)
+    public function getContacts($id): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -614,7 +612,7 @@ class CustomerController extends Controller
         return back()->with('status', $output);
     }
 
-    public function getContacts1($id)
+    public function getContacts1($id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -733,9 +731,8 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('customer.update')) {
             abort(403, 'Unauthorized action.');
@@ -1019,10 +1016,8 @@ class CustomerController extends Controller
 
     /**
      * Add customer from POS modal
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getAddCustomer($customer_name = null)
+    public function getAddCustomer($customer_name = null): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1149,9 +1144,8 @@ class CustomerController extends Controller
      * Shows import option for customers
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function getImportCustomers()
+    public function getImportCustomers(): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1177,9 +1171,8 @@ class CustomerController extends Controller
      * Imports customers
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function postImportCustomers(Request $request)
+    public function postImportCustomers(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -1579,11 +1572,8 @@ class CustomerController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function getFollowCustomer($id)
+    public function getFollowCustomer(int $id): JsonResponse
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -1609,9 +1599,8 @@ class CustomerController extends Controller
      * Retrieves list of customers, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getCustomers()
+    public function getCustomers(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -1675,10 +1664,8 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function indexBalancesCustomer()
+    public function indexBalancesCustomer(): View
     {
         if (! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -1815,11 +1802,8 @@ class CustomerController extends Controller
 
     /**
      * Get details of the customer's account statement.
-     *
-     * @param  int  $id
-     * @return JSON
      */
-    public function showBalances($id)
+    public function showBalances(int $id): JSON
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -1902,7 +1886,7 @@ class CustomerController extends Controller
      *
      * @return PDF | Excel
      */
-    public function accountsReceivableReport()
+    public function accountsReceivableReport(): PDF
     {
         if (! auth()->user()->can('cxc.access')) {
             abort(403, 'Unauthorized action.');
@@ -1969,10 +1953,9 @@ class CustomerController extends Controller
     /**
      * Create opening balance transactions from customer opening balances.
      *
-     * @param  int  $business_id
      * @return string
      */
-    public function createAllOpeningBalances($business_id)
+    public function createAllOpeningBalances(int $business_id)
     {
         try {
             $customers = Customer::where('opening_balance', '>', 0)->get();
@@ -2034,10 +2017,8 @@ class CustomerController extends Controller
 
     /**
      * Retrieves vehicle row.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getVehicleRow()
+    public function getVehicleRow(): View
     {
         if (request()->ajax()) {
             $row_count = request()->input('row_count');
@@ -2049,10 +2030,8 @@ class CustomerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function createCustomerAndPatient($customer_name = null)
+    public function createCustomerAndPatient($customer_name = null): View
     {
         if (! auth()->user()->can('customer.create') && ! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -2246,10 +2225,9 @@ class CustomerController extends Controller
     /**
      * Get customer vehicles list.
      *
-     * @param  int  $id
      * @param  json
      */
-    public function getCustomerVehicles($id)
+    public function getCustomerVehicles(int $id): JsonResponse
     {
         $customer_vehicles = CustomerVehicle::where('customer_id', $id)
             ->leftJoin('brands', 'brands.id', 'customer_vehicles.brand_id')

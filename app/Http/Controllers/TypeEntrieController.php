@@ -6,36 +6,32 @@ use App\Models\AccountingEntrie;
 use App\Models\TypeEntrie;
 use Datatables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TypeEntrieController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('entries.index');
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('entries.index');
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validateData = $request->validate(
             [
@@ -61,10 +57,8 @@ class TypeEntrieController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(TypeEntrie $typeEntrie)
+    public function show(TypeEntrie $typeEntrie): JsonResponse
     {
         return response()->json($typeEntrie);
     }
@@ -73,9 +67,8 @@ class TypeEntrieController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TypeEntrie  $typeEntrie
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $typeEntrie = TypeEntrie::findOrFail($id);
 
@@ -86,9 +79,8 @@ class TypeEntrieController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\TypeEntrie  $typeEntrie
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $typeEntrie = TypeEntrie::findOrFail($id);
         $validateData = $request->validate(
@@ -149,7 +141,7 @@ class TypeEntrieController extends Controller
         }
     }
 
-    public function getTypes()
+    public function getTypes(): JsonResponse
     {
         $types = TypeEntrie::select('id', 'name')->get();
 

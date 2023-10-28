@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\RrhhHeader;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhHeaderController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.view')) {

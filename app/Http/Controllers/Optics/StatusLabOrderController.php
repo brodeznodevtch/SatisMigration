@@ -10,6 +10,7 @@ use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class StatusLabOrderController extends Controller
@@ -73,10 +74,8 @@ class StatusLabOrderController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('status_lab_order.create')) {
             abort(403, 'Unauthorized action.');
@@ -237,7 +236,6 @@ class StatusLabOrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\StatusLabOrder  $statusLabOrder
      * @return \Illuminate\Http\Response
      */
     public function show(StatusLabOrder $statusLabOrder)
@@ -249,9 +247,8 @@ class StatusLabOrderController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\StatusLabOrder  $statusLabOrder
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('status_lab_order.update')) {
             abort(403, 'Unauthorized action.');

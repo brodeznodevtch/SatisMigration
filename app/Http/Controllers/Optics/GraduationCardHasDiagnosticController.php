@@ -41,7 +41,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\GraduationCardHasDiagnostic  $graduationCardHasDiagnostic
      * @return \Illuminate\Http\Response
      */
     public function show(GraduationCardHasDiagnostic $graduationCardHasDiagnostic)
@@ -52,7 +51,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\GraduationCardHasDiagnostic  $graduationCardHasDiagnostic
      * @return \Illuminate\Http\Response
      */
     public function edit(GraduationCardHasDiagnostic $graduationCardHasDiagnostic)
@@ -63,7 +61,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\GraduationCardHasDiagnostic  $graduationCardHasDiagnostic
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, GraduationCardHasDiagnostic $graduationCardHasDiagnostic)
@@ -74,7 +71,6 @@ class GraduationCardHasDiagnosticController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\GraduationCardHasDiagnostic  $graduationCardHasDiagnostic
      * @return \Illuminate\Http\Response
      */
     public function destroy(GraduationCardHasDiagnostic $graduationCardHasDiagnostic)

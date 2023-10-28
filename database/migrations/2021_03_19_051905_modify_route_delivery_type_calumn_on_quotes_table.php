@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement("ALTER TABLE `quotes` CHANGE `delivery_type` `delivery_type`
             ENUM('at_home','eastern_route','western_route','caex','location','other')
@@ -23,10 +21,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('quotes', function (Blueprint $table) {
             //

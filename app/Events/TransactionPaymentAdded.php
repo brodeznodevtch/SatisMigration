@@ -20,7 +20,7 @@ class TransactionPaymentAdded
      * @param  array  $formInput = []
      * @return void
      */
-    public function __construct(TransactionPayment $transactionPayment, $formInput = [])
+    public function __construct(TransactionPayment $transactionPayment, array $formInput = [])
     {
         $this->transactionPayment = $transactionPayment;
         $this->formInput = $formInput;

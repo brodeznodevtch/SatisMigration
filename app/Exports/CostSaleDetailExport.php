@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -21,13 +22,9 @@ class CostSaleDetailExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $query
-     * @param  \App\Business  $business
-     * @param  string  $start
-     * @param  string  $end
      * @return void
      */
-    public function __construct($query, $business, $start, $end)
+    public function __construct(array $query, Business $business, string $start, string $end)
     {
         $this->query = $query;
         $this->business = $business;

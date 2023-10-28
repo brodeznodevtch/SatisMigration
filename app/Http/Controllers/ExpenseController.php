@@ -20,6 +20,7 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ExpenseController extends Controller
@@ -176,10 +177,8 @@ class ExpenseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('expense.create')) {
             abort(403, 'Unauthorized action.');
@@ -251,10 +250,8 @@ class ExpenseController extends Controller
 
     /**
      * Get expense categories by term
-     *
-     * @return json
      */
-    public function getCategories()
+    public function getCategories(): json
     {
         $term = request()->q;
         if (empty($term)) {
@@ -414,15 +411,14 @@ class ExpenseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('expense.update')) {
             abort(403, 'Unauthorized action.');
@@ -467,10 +463,9 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         // dd($request->contact_id);
         if (! auth()->user()->can('expense.update')) {
@@ -612,10 +607,9 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('expense.delete')) {
             abort(403, 'Unauthorized action.');
@@ -650,12 +644,8 @@ class ExpenseController extends Controller
 
     /**
      * Create expense accounting entry by range
-     *
-     * @param  date  $start_date
-     * @param  date  $end_date
-     * @return json
      */
-    public function accountingByRange($start_date, $end_date)
+    public function accountingByRange(date $start_date, date $end_date): json
     {
         if (! auth()->user()->can('entries.create')) {
             abort(403, 'Unauthorized action.');
@@ -681,11 +671,8 @@ class ExpenseController extends Controller
 
     /**
      * Show all expenses from checks.
-     *
-     * @param  int  $bank_transaction_id
-     * @return \Illuminate\Http\Response
      */
-    public function getAddExpenses($bank_transaction_id = null)
+    public function getAddExpenses(int $bank_transaction_id = null): View
     {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
@@ -834,10 +821,8 @@ class ExpenseController extends Controller
 
     /**
      * GET Add expense from checks.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getAddExpense()
+    public function getAddExpense(): View
     {
         if (! auth()->user()->can('expense.access')) {
             abort(403, 'Unauthorized action.');
@@ -859,11 +844,8 @@ class ExpenseController extends Controller
 
     /**
      * Get expense details.
-     *
-     * @param  int  $expense_id
-     * @return json
      */
-    public function getExpenseDetails($expense_id)
+    public function getExpenseDetails(int $expense_id): json
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -1030,13 +1012,9 @@ class ExpenseController extends Controller
     /**
      * Calculate perception value.
      *
-     * @param  float  $amount
-     * @param  float  $min_amount
-     * @param  float  $max_amount
-     * @param  float  $tax_percent
      * @return float
      */
-    public function calcContactTax($amount, $min_amount, $max_amount, $tax_percent)
+    public function calcContactTax(float $amount, float $min_amount, float $max_amount, float $tax_percent)
     {
         $tax_amount = 0;
 

@@ -22,13 +22,12 @@ class TaxRate extends Model
      * @param $business_id int
      * @param $prepend_none = true (boolean)
      * @param $include_attributes = false (boolean)
-     * @return array['tax_rates', 'attributes']
      */
     public static function forBusinessDropdown(
         $business_id,
         $prepend_none = true,
         $include_attributes = false
-    ) {
+    ): array {
 
         //$all_taxes = TaxRates::where('business_id', $business_id);
         //$tax_rates = $all_taxes->pluck('name', 'id');
@@ -56,10 +55,8 @@ class TaxRate extends Model
 
     /**
      * Return list of tax rate for a business
-     *
-     * @return array
      */
-    public static function forBusiness($business_id)
+    public static function forBusiness($business_id): array
     {
         $tax_rates = TaxRate::where('business_id', $business_id)
             ->select(['id', 'name', 'percent'])
@@ -71,10 +68,8 @@ class TaxRate extends Model
 
     /**
      * Return list of tax rates associated with the group_tax
-     *
-     * @return object
      */
-    public function tax_groups()
+    public function tax_groups(): object
     {
         return $this->belongsToMany(\App\Models\TaxGroup::class, 'tax_rate_tax_group', 'tax_rate_id', 'tax_group_id');
     }

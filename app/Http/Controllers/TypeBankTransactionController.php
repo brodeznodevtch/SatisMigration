@@ -6,26 +6,24 @@ use App\Models\BankTransaction;
 use App\Models\TypeBankTransaction;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TypeBankTransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('banks.index');
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('banks.index');
     }
@@ -77,9 +75,8 @@ class TypeBankTransactionController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
 
@@ -90,9 +87,8 @@ class TypeBankTransactionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TypeBankTransaction  $typeBankTransaction
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $typeBankTransaction = TypeBankTransaction::findOrFail($id);
 
@@ -178,7 +174,7 @@ class TypeBankTransactionController extends Controller
         }
     }
 
-    public function getTypeBankTransactions()
+    public function getTypeBankTransactions(): JsonResponse
     {
         $types = TypeBankTransaction::select('id', 'name')->get();
 
@@ -197,10 +193,9 @@ class TypeBankTransactionController extends Controller
     /**
      * Get bank transactions type enabled checkbook
      *
-     * @param  int  $bank_transaction_type_id
      * @return int
      */
-    public function getIfEnableCheckbook($bank_transaction_type_id)
+    public function getIfEnableCheckbook(int $bank_transaction_type_id)
     {
         if (! empty($bank_transaction_type_id)) {
             $bank_transaction_type = TypeBankTransaction::find($bank_transaction_type_id);

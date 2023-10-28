@@ -25,13 +25,9 @@ class StockReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $products
-     * @param  string  $start
-     * @param  string  $end
-     * @param  array  $product_settings
      * @return void
      */
-    public function __construct($products, Business $business, $start, $end, $product_settings, TransactionUtil $transactionUtil)
+    public function __construct(array $products, Business $business, string $start, string $end, array $product_settings, TransactionUtil $transactionUtil)
     {
         $this->products = $products;
         $this->business = $business;

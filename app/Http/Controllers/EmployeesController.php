@@ -20,10 +20,13 @@ use App\Utils\ProductUtil;
 use Carbon\Carbon;
 use DataTables;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EmployeesController extends Controller
 {
@@ -48,10 +51,8 @@ class EmployeesController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('rrhh_employees.view')) {
             abort(403, 'Unauthorized action.');
@@ -104,10 +105,8 @@ class EmployeesController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -155,10 +154,8 @@ class EmployeesController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -339,9 +336,8 @@ class EmployeesController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Employees  $employee
-     * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id): View
     {
 
         if (! auth()->user()->can('rrhh_employees.view')) {
@@ -437,9 +433,8 @@ class EmployeesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Employees  $employee
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
 
         if (! auth()->user()->can('rrhh_employees.update')) {
@@ -510,9 +505,8 @@ class EmployeesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Employees  $employee
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_employees.update')) {
             abort(403, 'Unauthorized action.');
@@ -751,7 +745,7 @@ class EmployeesController extends Controller
         }
     }
 
-    public function getPhoto($id)
+    public function getPhoto($id): View
     {
 
         if ($id != null) {
@@ -773,7 +767,7 @@ class EmployeesController extends Controller
         }
     }
 
-    public function downloadCv($id)
+    public function downloadCv($id): BinaryFileResponse
     {
 
         if ($id != null) {

@@ -25,8 +25,10 @@ use App\Models\State;
 use App\Models\Variation;
 use App\Models\Zone;
 use App\Utils\TaxUtil;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class OportunityController extends Controller
@@ -38,10 +40,8 @@ class OportunityController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('oportunities.view') && ! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
@@ -159,10 +159,8 @@ class OportunityController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('oportunities.create')) {
             abort(403, 'Unauthorized action.');
@@ -234,9 +232,8 @@ class OportunityController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Oportunity  $oportunity
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         if (! auth()->user()->can('oportunities.view')) {
             abort(403, 'Unauthorized action.');
@@ -262,9 +259,8 @@ class OportunityController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Oportunity  $oportunity
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('oportunities.update')) {
             abort(403, 'Unauthorized action.');
@@ -404,10 +400,8 @@ class OportunityController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function createCustomer($id)
+    public function createCustomer($id): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');

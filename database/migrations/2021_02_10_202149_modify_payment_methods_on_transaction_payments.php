@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement("ALTER TABLE `transaction_payments` CHANGE `method` `method`
             ENUM('cash','card','check','bank_transfer','credit')
@@ -94,10 +92,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transaction_payments', function (Blueprint $table) {
             //

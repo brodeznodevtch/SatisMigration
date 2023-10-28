@@ -9,7 +9,9 @@ use App\Models\Permission;
 use App\Models\Warehouse;
 use App\Utils\Util;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class WarehouseController extends Controller
@@ -73,10 +75,8 @@ class WarehouseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('warehouse.create')) {
             abort(403, 'Unauthorized action.');
@@ -153,9 +153,8 @@ class WarehouseController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Warehouse  $warehouse
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('warehouse.update')) {
             abort(403, 'Unauthorized action.');
@@ -176,7 +175,7 @@ class WarehouseController extends Controller
         }
     }
 
-    public function getWarehouseByLocation($id)
+    public function getWarehouseByLocation($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $warehouses = Warehouse::where('business_id', $business_id)
@@ -288,10 +287,9 @@ class WarehouseController extends Controller
     /**
      * Return location_id from a warehouse
      *
-     * @param  int  $warehouse_id
      * @return int
      */
-    public function getLocation($warehouse_id)
+    public function getLocation(int $warehouse_id)
     {
         if (empty($warehouse_id)) {
             return null;

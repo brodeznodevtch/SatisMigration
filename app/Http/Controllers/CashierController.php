@@ -7,6 +7,7 @@ use App\Models\Cashier;
 use App\Models\Module;
 use App\Utils\Util;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -70,10 +71,8 @@ class CashierController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('cashier.create')) {
             abort(403, 'Unauthorized action.');
@@ -144,9 +143,8 @@ class CashierController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Cashier  $cashier
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('cashier.update')) {
             abort(403, 'Unauthorized action.');

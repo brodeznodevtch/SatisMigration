@@ -116,10 +116,9 @@ class PhysicalInventoryLineController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('physical_inventory.delete')) {
             abort(403, 'Unauthorized action.');

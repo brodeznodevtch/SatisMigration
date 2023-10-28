@@ -6,16 +6,16 @@ use App\Models\Module;
 use App\Models\Permission;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ModuleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('module.view')) {
             abort(403, 'Unauthorized action.');
@@ -26,10 +26,8 @@ class ModuleController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('module.create')) {
             abort(403, 'Unauthorized action.');
@@ -67,10 +65,8 @@ class ModuleController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(Module $module): JsonResponse
     {
         if (! auth()->user()->can('module.view')) {
             abort(403, 'Unauthorized action.');
@@ -81,10 +77,8 @@ class ModuleController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Module $module)
+    public function edit(Module $module): JsonResponse
     {
         if (! auth()->user()->can('module.update')) {
             abort(403, 'Unauthorized action.');
@@ -168,7 +162,7 @@ class ModuleController extends Controller
         return DataTables::of($modules)->toJson();
     }
 
-    public function getModules()
+    public function getModules(): JsonResponse
     {
         $modules = Module::select('id', 'name')->get();
 

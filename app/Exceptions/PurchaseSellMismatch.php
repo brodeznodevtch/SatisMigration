@@ -3,28 +3,26 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PurchaseSellMismatch extends Exception
 {
     /**
      * Create a new authentication exception.
      *
-     * @param  string  $message
      * @param  array  $guards
      * @return void
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         parent::__construct($message);
     }
 
     /**
      * Render the exception as an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function render($request)
+    public function render(Request $request): Response
     {
         $output = ['success' => 0,
             'msg' => $this->getMessage(),

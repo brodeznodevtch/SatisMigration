@@ -35,10 +35,8 @@ class CreateDummyBusiness extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         //Drop database and create the db with same name.
         $servername = env('DB_HOST');

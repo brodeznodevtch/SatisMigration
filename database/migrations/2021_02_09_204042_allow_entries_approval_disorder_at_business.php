@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('business', function (Blueprint $table) {
             $table->boolean('allow_entries_approval_disorder')->default(0)->after('allow_nullate_checks_in_approved_entries');
@@ -20,10 +18,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('business', function (Blueprint $table) {
             //

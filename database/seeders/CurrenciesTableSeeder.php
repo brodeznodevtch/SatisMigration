@@ -9,10 +9,8 @@ class CurrenciesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $data = [
             ['id' => '1', 'country' => 'Albania', 'currency' => 'Leke', 'code' => 'ALL', 'symbol' => 'Lek',

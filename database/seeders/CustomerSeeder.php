@@ -15,10 +15,8 @@ class CustomerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         /** Business id to sync with */
         $business_id = null;
@@ -39,14 +37,10 @@ class CustomerSeeder extends Seeder
     /**
      * Sync customers
      *
-     * @param  int  $id
-     * @param  string  $code
-     * @param  int  $business_id
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncCustomer($id, $code, $business_id)
+    public function syncCustomer(int $id, string $code, int $business_id): void
     {
         /** If business_id not setted, exit */
         if (is_null($business_id)) {

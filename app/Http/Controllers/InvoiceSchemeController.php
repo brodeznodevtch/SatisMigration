@@ -6,7 +6,9 @@ use App\Models\DiscountCard;
 use App\Models\InvoiceLayout;
 use App\Models\InvoiceScheme;
 use Datatables;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class InvoiceSchemeController extends Controller
 {
@@ -84,10 +86,8 @@ class InvoiceSchemeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -134,7 +134,7 @@ class InvoiceSchemeController extends Controller
         return $output;
     }
 
-    public function UpdateDiscoount(Request $request)
+    public function UpdateDiscoount(Request $request): RedirectResponse
     {
         $messages = 'Descuento actualizado';
 
@@ -161,10 +161,9 @@ class InvoiceSchemeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -175,11 +174,8 @@ class InvoiceSchemeController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -195,10 +191,9 @@ class InvoiceSchemeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -226,10 +221,9 @@ class InvoiceSchemeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -263,10 +257,9 @@ class InvoiceSchemeController extends Controller
     /**
      * Sets invoice scheme setting as default
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function setDefault($id)
+    public function setDefault(int $id)
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');

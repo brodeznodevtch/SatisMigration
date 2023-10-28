@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use View;
 
@@ -48,10 +49,8 @@ class QuoteController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         if (auth()->user()->can('quotes.view')) {
             if (! auth()->user()->can('quotes.access')) {
@@ -713,9 +712,8 @@ class QuoteController extends Controller
      * Retrieves list of quotes, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getQuotes()
+    public function getQuotes(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -782,7 +780,7 @@ class QuoteController extends Controller
         }
     }
 
-    public function addProduct($variation_id, $warehouse_id, $selling_price_group_id = null)
+    public function addProduct($variation_id, $warehouse_id, $selling_price_group_id = null): JsonResponse
     {
         $product_q = DB::table('variations as variation')
             ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
@@ -820,7 +818,7 @@ class QuoteController extends Controller
         return response()->json($product);
     }
 
-    public function addProductNotStock($variation_id)
+    public function addProductNotStock($variation_id): JsonResponse
     {
         $product_q = DB::table('variations as variation')
             ->leftJoin('products as product', 'product.id', '=', 'variation.product_id')
@@ -908,7 +906,7 @@ class QuoteController extends Controller
             ->toJson();
     }
 
-    public function getLinesByQuote($id)
+    public function getLinesByQuote($id): JsonResponse
     {
         $product_q = DB::table('quote_lines as line')
             ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
@@ -1025,7 +1023,7 @@ class QuoteController extends Controller
     }
 
     // create lost sale
-    public function createLostSale($id)
+    public function createLostSale($id): \Illuminate\View\View
     {
         if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
@@ -1037,7 +1035,7 @@ class QuoteController extends Controller
         return view('quote.partials.lost_sale_create', compact('reasons', 'quote_id'));
     }
 
-    public function editLostSale($id)
+    public function editLostSale($id): \Illuminate\View\View
     {
         if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
@@ -1139,10 +1137,9 @@ class QuoteController extends Controller
     /**
      * Add service block to quote form.
      *
-     * @param  int  $id
      * @return array
      */
-    public function addServiceBlock($id)
+    public function addServiceBlock(int $id)
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -1222,11 +1219,8 @@ class QuoteController extends Controller
 
     /**
      * Add spares to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
-    public function addSpare($variation_id)
+    public function addSpare(int $variation_id): json
     {
         $selling_price_group_id = request()->input('selling_price_group_id', null);
         $warehouse_id = request()->input('warehouse_id', '');
@@ -1326,11 +1320,8 @@ class QuoteController extends Controller
 
     /**
      * Add spares not stock to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
-    public function addSpareNotStock($variation_id)
+    public function addSpareNotStock(int $variation_id): json
     {
         $selling_price_group_id = request()->input('selling_price_group_id', null);
         $warehouse_id = request()->input('warehouse_id', '');
@@ -1409,11 +1400,8 @@ class QuoteController extends Controller
 
     /**
      * Get service blocks by quote.
-     *
-     * @param  int  $id
-     * @return json
      */
-    public function getServiceBlocksByQuote($id)
+    public function getServiceBlocksByQuote(int $id): json
     {
         $service_block_q = DB::table('quote_lines as line')
             ->join('variations as variation', 'variation.id', '=', 'line.variation_id')
@@ -1523,10 +1511,9 @@ class QuoteController extends Controller
     /**
      * Get quote in PDF format.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function viewQuoteWorkshop($id)
+    public function viewQuoteWorkshop(int $id)
     {
         if (! auth()->user()->can('quotes.view')) {
             abort(403, 'Unauthorized action.');
@@ -1673,11 +1660,8 @@ class QuoteController extends Controller
 
     /**
      * Get workshop data.
-     *
-     * @param  int  $id
-     * @return json
      */
-    public function workshopData($id)
+    public function workshopData(int $id): json
     {
         $quote = Quote::find($id);
 

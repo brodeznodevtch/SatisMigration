@@ -18,8 +18,10 @@ use App\Utils\TransactionUtil;
 use Carbon\Carbon;
 use DataTables;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class BankTransactionController extends Controller
 {
@@ -36,10 +38,8 @@ class BankTransactionController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         return view('banks.index');
@@ -47,10 +47,8 @@ class BankTransactionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -471,10 +469,8 @@ class BankTransactionController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(BankTransaction $bankTransaction)
+    public function show(BankTransaction $bankTransaction): JsonResponse
     {
 
         $transaction = DB::table('bank_transactions as transaction')
@@ -490,10 +486,8 @@ class BankTransactionController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(BankTransaction $bankTransaction)
+    public function edit(BankTransaction $bankTransaction): JsonResponse
     {
 
         $transaction = DB::table('bank_transactions as transaction')
@@ -1231,11 +1225,9 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie.
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheck($id, $print)
+    public function printCheck(int $id, int $print)
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -1256,11 +1248,9 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie. (Nuves format)
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheckFormat1($id, $print)
+    public function printCheckFormat1(int $id, int $print)
     {
 
         // ----- CHECK -----
@@ -1616,11 +1606,9 @@ class BankTransactionController extends Controller
     /**
      * Print check and entrie. (Recielsa format)
      *
-     * @param  int  $id
-     * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printCheckFormat2($id, $print)
+    public function printCheckFormat2(int $id, int $print)
     {
 
         // ----- CHECK -----
@@ -2193,11 +2181,10 @@ class BankTransactionController extends Controller
     /**
      * Print out transfers
      *
-     * @param  int  $id
      * @param  int  $print
      * @return \Illuminate\Http\Response
      */
-    public function printTransferFormat($id)
+    public function printTransferFormat(int $id)
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
@@ -2463,12 +2450,8 @@ class BankTransactionController extends Controller
 
     /**
      * Get the balance of the entrie.
-     *
-     * @param  int  $id
-     * @param  string  $code
-     * @return collect
      */
-    protected function getHigherEntrieBalance($id, $code)
+    protected function getHigherEntrieBalance(int $id, string $code): collect
     {
 
         $valor = DB::table('accounting_entries_details as detalle')
@@ -2815,11 +2798,8 @@ class BankTransactionController extends Controller
 
     /**
      * Convert quantity to letters.
-     *
-     * @param  string  $numero
-     * @return string
      */
-    protected function convertir($numero)
+    protected function convertir(string $numero): string
     {
         $num = str_replace(',', '', $numero);
         $num = number_format($num, 2, '.', '');

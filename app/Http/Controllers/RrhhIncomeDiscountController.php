@@ -10,6 +10,7 @@ use App\Models\RrhhTypeIncomeDiscount;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhIncomeDiscountController extends Controller
@@ -37,7 +38,7 @@ class RrhhIncomeDiscountController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
@@ -59,7 +60,7 @@ class RrhhIncomeDiscountController extends Controller
         //
     }
 
-    public function createIncomeDiscount($id)
+    public function createIncomeDiscount($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.create')) {
             abort(403, 'Unauthorized action.');
@@ -159,9 +160,8 @@ class RrhhIncomeDiscountController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.view')) {
             abort(403, 'Unauthorized action.');
@@ -179,9 +179,8 @@ class RrhhIncomeDiscountController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhIncomeDiscount  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_income_discount.edit')) {
             abort(403, 'Unauthorized action.');

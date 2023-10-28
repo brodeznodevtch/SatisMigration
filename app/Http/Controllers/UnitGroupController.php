@@ -8,16 +8,16 @@ use App\Models\UnitGroup;
 use App\Models\UnitGroupLines;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class UnitGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('home');
     }
@@ -93,11 +93,8 @@ class UnitGroupController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
 
@@ -106,11 +103,8 @@ class UnitGroupController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): JsonResponse
     {
         $UnitGroup = UnitGroup::where('id', $id)->first();
 
@@ -120,10 +114,9 @@ class UnitGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('unit.update')) {
             abort(403, 'Unauthorized action.');
@@ -173,10 +166,9 @@ class UnitGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $group = UnitGroup::find($id);
         $products = Product::where('unit_id', $id)->count();

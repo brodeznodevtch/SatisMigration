@@ -13,7 +13,9 @@ use App\Utils\CashierUtil;
 use App\Utils\CashRegisterUtil;
 use App\Utils\ProductUtil;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CashRegisterController extends Controller
 {
@@ -47,10 +49,8 @@ class CashRegisterController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('cash_register.index');
     }
@@ -99,10 +99,8 @@ class CashRegisterController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function storeCashier(Request $request)
+    public function storeCashier(Request $request): RedirectResponse
     {
         $cashier_closure_id = null;
         $opening_receipt = true;
@@ -182,10 +180,8 @@ class CashRegisterController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function storeCashRegister(Request $request)
+    public function storeCashRegister(Request $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -276,11 +272,8 @@ class CashRegisterController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         $cash_register = CashRegister::where('id', $id)
             ->first();
@@ -323,9 +316,8 @@ class CashRegisterController extends Controller
      * Shows register details modal.
      *
      * @param  void
-     * @return \Illuminate\Http\Response
      */
-    public function getRegisterDetails()
+    public function getRegisterDetails(): View
     {
 
         $register_details = $this->cashRegisterUtil->getRegisterDetails(null, null, null, null);
@@ -343,9 +335,8 @@ class CashRegisterController extends Controller
      * Shows close register form.
      *
      * @param  void
-     * @return \Illuminate\Http\Response
      */
-    public function getCloseRegister()
+    public function getCloseRegister(): View
     {
         $close_date = request()->input('close_date');
         $cashier_id = request()->input('cashier_id');
@@ -422,10 +413,8 @@ class CashRegisterController extends Controller
 
     /**
      * Closes currently opened register.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function postCloseRegister(Request $request)
+    public function postCloseRegister(Request $request): RedirectResponse
     {
         try {
             // Disable in demo

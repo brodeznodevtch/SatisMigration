@@ -19,12 +19,10 @@ class SuggestedPurchaseReportExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  collect  $transactions
-     * @param  string  $business_name
      * @param  string  $date;
      * @return void
      */
-    public function __construct($transactions, $business_name, $location_name, $date)
+    public function __construct(collect $transactions, string $business_name, $location_name, $date)
     {
         $this->transactions = $transactions;
         $this->business_name = $business_name;

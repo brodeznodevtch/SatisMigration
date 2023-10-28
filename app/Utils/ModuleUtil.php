@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\System;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Module;
 
 class ModuleUtil extends Util
@@ -15,9 +16,8 @@ class ModuleUtil extends Util
      * This function check if a module is installed or not.
      *
      * @param  string  $module_name (Exact module name, with first letter capital)
-     * @return bool
      */
-    public function isModuleInstalled($module_name)
+    public function isModuleInstalled(string $module_name): bool
     {
         $is_available = Module::has($module_name);
 
@@ -36,10 +36,8 @@ class ModuleUtil extends Util
 
     /**
      * This function check if superadmin module is installed or not.
-     *
-     * @return bool
      */
-    public function isSuperadminInstalled()
+    public function isSuperadminInstalled(): bool
     {
         return $this->isModuleInstalled('Superadmin');
     }
@@ -47,11 +45,8 @@ class ModuleUtil extends Util
     /**
      * This function check if a function provided exist in all modules
      * DataController, merges the data and returned it.
-     *
-     * @param  string  $function_name
-     * @return array
      */
-    public function getModuleData($function_name)
+    public function getModuleData(string $function_name): array
     {
         $modules = Module::toCollection()->toArray();
 
@@ -81,11 +76,8 @@ class ModuleUtil extends Util
 
     /**
      * Checks if a module is defined
-     *
-     * @param  string  $module_name
-     * @return bool
      */
-    public function isModuleDefined($module_name)
+    public function isModuleDefined(string $module_name): bool
     {
         $is_installed = $this->isModuleInstalled($module_name);
 
@@ -103,11 +95,8 @@ class ModuleUtil extends Util
 
     /**
      * This function check if a business has active subscription packages
-     *
-     * @param  int  $business_id
-     * @return bool
      */
-    public static function isSubscribed($business_id)
+    public static function isSubscribed(int $business_id): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -125,12 +114,9 @@ class ModuleUtil extends Util
     /**
      * This function checks if a business has
      *
-     * @param  int  $business_id
-     * @param  string  $permission
      * @param  string  $callback_function = null
-     * @return bool
      */
-    public static function hasThePermissionInSubscription($business_id, $permission, $callback_function = null)
+    public static function hasThePermissionInSubscription(int $business_id, string $permission, string $callback_function = null): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -169,10 +155,8 @@ class ModuleUtil extends Util
 
     /**
      * Returns the name of view used to display for subscription expired.
-     *
-     * @return string
      */
-    public static function expiredResponse($redirect_url = null)
+    public static function expiredResponse($redirect_url = null): string
     {
         $response_array = ['success' => 0,
             'msg' => __(
@@ -200,12 +184,8 @@ class ModuleUtil extends Util
 
     /**
      * This function check if a business has available quota for various types.
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @return bool
      */
-    public static function isQuotaAvailable($type, $business_id)
+    public static function isQuotaAvailable(string $type, int $business_id): bool
     {
         $is_available = Module::has('Superadmin');
 
@@ -280,12 +260,9 @@ class ModuleUtil extends Util
     /**
      * This function returns the response for expired quota
      *
-     * @param  string  $type
-     * @param  int  $business_id
      * @param  string  $redirect_url = null
-     * @return \Illuminate\Http\Response
      */
-    public static function quotaExpiredResponse($type, $business_id, $redirect_url = null)
+    public static function quotaExpiredResponse(string $type, int $business_id, string $redirect_url = null): Response
     {
 
         if ($type == 'locations') {

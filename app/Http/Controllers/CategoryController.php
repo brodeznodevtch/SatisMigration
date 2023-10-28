@@ -6,7 +6,9 @@ use App\Models\Category;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class CategoryController extends Controller
@@ -93,10 +95,8 @@ class CategoryController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
@@ -194,10 +194,8 @@ class CategoryController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Category $category): JsonResponse
     {
         $category = Category::where('id', $category->id)
             ->with('catalogue')
@@ -208,11 +206,8 @@ class CategoryController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('category.update')) {
             abort(403, 'Unauthorized action.');
@@ -354,10 +349,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('category.delete')) {
             abort(403, 'Unauthorized action.');

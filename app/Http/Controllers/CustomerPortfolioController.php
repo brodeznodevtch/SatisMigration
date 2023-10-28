@@ -8,6 +8,7 @@ use App\Models\Employees;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class CustomerPortfolioController extends Controller
@@ -19,10 +20,8 @@ class CustomerPortfolioController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('portfolios.view') && ! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
@@ -34,10 +33,8 @@ class CustomerPortfolioController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('portfolios.create')) {
             abort(403, 'Unauthorized action.');
@@ -124,9 +121,8 @@ class CustomerPortfolioController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\CustomerPortfolio  $customerPortfolio
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('portfolios.update')) {
             abort(403, 'Unauthorized action.');

@@ -15,7 +15,9 @@ use App\Utils\EmployeeUtil;
 use App\Utils\ModuleUtil;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhImportEmployeesController extends Controller
 {
@@ -30,7 +32,7 @@ class RrhhImportEmployeesController extends Controller
         $this->employeeUtil = $employeeUtil;
     }
 
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_import_employees.create')) {
             abort(403, 'Unauthorized action.');
@@ -195,12 +197,10 @@ class RrhhImportEmployeesController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @param  array  $default_data
      * @return array
      */
-    public function checkRow($row, $row_no)
+    public function checkRow(array $row, int $row_no)
     {
         $employee = [
             'first_name' => null,
@@ -1123,10 +1123,8 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function import(Request $request)
+    public function import(Request $request): RedirectResponse
     {
         try {
             // Set maximum php execution time
@@ -1213,10 +1211,8 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Display edit employees screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(): View
     {
         if (! auth()->user()->can('rrhh_import_employees.update')) {
             abort(403, 'Unauthorized action.');
@@ -1381,12 +1377,10 @@ class RrhhImportEmployeesController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @param  array  $default_data
      * @return array
      */
-    public function checkEditRow($row, $row_no)
+    public function checkEditRow(array $row, int $row_no)
     {
         $employee = [
             'id' => null,
@@ -2312,10 +2306,8 @@ class RrhhImportEmployeesController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_import_employee.update')) {
             abort(403, 'Unauthorized action.');

@@ -9,10 +9,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE system MODIFY COLUMN value VARCHAR(191) DEFAULT NULL');
         Schema::table('users', function (Blueprint $table) {
@@ -22,10 +20,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
             //

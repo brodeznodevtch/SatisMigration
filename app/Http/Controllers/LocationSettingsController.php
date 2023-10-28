@@ -7,6 +7,7 @@ use App\Models\InvoiceLayout;
 use App\Models\InvoiceScheme;
 use App\Models\Printer;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LocationSettingsController extends Controller
 {
@@ -28,10 +29,8 @@ class LocationSettingsController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index($location_id)
+    public function index($location_id): View
     {
         //Check for locations access permission
         if (! auth()->user()->can('business_settings.access') ||

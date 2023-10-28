@@ -7,16 +7,16 @@ use App\Models\Customer;
 use App\Models\CustomerVehicle;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CustomerVehicleController extends Controller
 {
     /**
      * Show import option for customer vehicles.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getImporter()
+    public function getImporter(): View
     {
         if (! auth()->user()->can('customer.create') || config('app.business') != 'workshop') {
             abort(403, 'Unauthorized action.');
@@ -47,9 +47,8 @@ class CustomerVehicleController extends Controller
      * Process data before import.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function postImporter(Request $request)
+    public function postImporter(Request $request): View
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
@@ -253,10 +252,8 @@ class CustomerVehicleController extends Controller
 
     /**
      * Import customer vehicles.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function import()
+    public function import(): RedirectResponse
     {
         if (! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');

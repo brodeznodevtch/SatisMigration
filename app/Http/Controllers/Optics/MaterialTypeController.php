@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Optics;
 use App\Optics\MaterialType;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class MaterialTypeController extends Controller
@@ -47,10 +48,8 @@ class MaterialTypeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('material_type.create')) {
             abort(403, 'Unauthorized action.');
@@ -104,7 +103,6 @@ class MaterialTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\MaterialType  $materialType
      * @return \Illuminate\Http\Response
      */
     public function show(MaterialType $materialType)
@@ -114,11 +112,8 @@ class MaterialTypeController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('material_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -136,10 +131,9 @@ class MaterialTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('material_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -171,10 +165,9 @@ class MaterialTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('material_type.delete')) {
             abort(403, 'Unauthorized action.');

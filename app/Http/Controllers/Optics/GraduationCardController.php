@@ -11,6 +11,7 @@ use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class GraduationCardController extends Controller
@@ -67,10 +68,8 @@ class GraduationCardController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');
@@ -162,7 +161,6 @@ class GraduationCardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\GraduationCard  $graduationCard
      * @return \Illuminate\Http\Response
      */
     public function show(GraduationCard $graduationCard)
@@ -174,9 +172,8 @@ class GraduationCardController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\GraduationCard  $graduationCard
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('graduation_card.update')) {
             abort(403, 'Unauthorized action.');
@@ -335,7 +332,7 @@ class GraduationCardController extends Controller
         }
     }
 
-    public function createOrder()
+    public function createOrder(): View
     {
         if (! auth()->user()->can('graduation_card.create')) {
             abort(403, 'Unauthorized action.');

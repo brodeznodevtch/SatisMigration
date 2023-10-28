@@ -25,7 +25,9 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -154,10 +156,8 @@ class OrderController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('order.create')) {
             abort(403, 'Unauthorized action.');
@@ -217,10 +217,8 @@ class OrderController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('order.create')) {
             abort(403, 'Unauthorized action.');
@@ -355,11 +353,8 @@ class OrderController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -412,9 +407,8 @@ class OrderController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -531,9 +525,8 @@ class OrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Quote  $order
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -658,10 +651,9 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('order.delete')) {
             abort(403, 'Unauthorized action');
@@ -706,7 +698,7 @@ class OrderController extends Controller
     /**
      * Get all orders for orders planner
      */
-    public function orderPlanner()
+    public function orderPlanner(): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -767,9 +759,8 @@ class OrderController extends Controller
      * Retrieves list of quotes, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getOrders()
+    public function getOrders(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -903,7 +894,7 @@ class OrderController extends Controller
      *
      * @param  int  $quote_id
      */
-    public function getQuoteLines()
+    public function getQuoteLines(): View
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', null);
@@ -1012,10 +1003,8 @@ class OrderController extends Controller
 
     /**
      * Mark a order as prepared
-     *
-     * @param  int  $id
      */
-    public function changeOrderStatus($id, $employee_id = null)
+    public function changeOrderStatus(int $id, $employee_id = null)
     {
         if (! auth()->user()->can('order.update')) {
             abort(403, 'Unauthorized action.');
@@ -1070,7 +1059,7 @@ class OrderController extends Controller
      *
      * @return Json $output
      */
-    public function refreshOrdersList()
+    public function refreshOrdersList(): View
     {
         if (! auth()->user()->can('order.view')) {
             abort(403, 'Unauthorized action.');
@@ -1207,11 +1196,8 @@ class OrderController extends Controller
 
     /**
      * Add spares to service block.
-     *
-     * @param  int  $variation_id
-     * @return json
      */
-    public function addSpare($variation_id)
+    public function addSpare(int $variation_id): json
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', '');
@@ -1298,10 +1284,8 @@ class OrderController extends Controller
 
     /**
      * Get quote_lines info.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getSpareLines()
+    public function getSpareLines(): View
     {
         $quote_id = request()->input('quote_id', null);
         $warehouse_id = request()->input('warehouse_id', null);

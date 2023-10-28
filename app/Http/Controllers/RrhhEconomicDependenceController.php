@@ -7,6 +7,7 @@ use App\Models\RrhhEconomicDependence;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhEconomicDependenceController extends Controller
@@ -34,7 +35,7 @@ class RrhhEconomicDependenceController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_economic_dependence.view')) {
             abort(403, 'Unauthorized action.');
@@ -62,7 +63,7 @@ class RrhhEconomicDependenceController extends Controller
         //
     }
 
-    public function createEconomicDependence($id)
+    public function createEconomicDependence($id): View
     {
         if (! auth()->user()->can('rrhh_economic_dependence.create')) {
             abort(403, 'Unauthorized action.');
@@ -133,9 +134,8 @@ class RrhhEconomicDependenceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhEconomicDependence  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_economic_dependence.edit')) {
             abort(403, 'Unauthorized action.');

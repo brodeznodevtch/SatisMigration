@@ -6,16 +6,16 @@ use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BankAccountController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
         return view('banks.index');
@@ -23,10 +23,8 @@ class BankAccountController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('banks.index');
@@ -34,10 +32,8 @@ class BankAccountController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $validateData = $request->validate(
@@ -75,10 +71,8 @@ class BankAccountController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(BankAccount $bankAccount)
+    public function show(BankAccount $bankAccount): JsonResponse
     {
 
         return response()->json($bankAccount);
@@ -86,10 +80,8 @@ class BankAccountController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(BankAccount $bankAccount)
+    public function edit(BankAccount $bankAccount): JsonResponse
     {
 
         return response()->json($bankAccount);
@@ -97,10 +89,8 @@ class BankAccountController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BankAccount $bankAccount)
+    public function update(Request $request, BankAccount $bankAccount): JsonResponse
     {
 
         $id = $bankAccount->id;
@@ -196,7 +186,7 @@ class BankAccountController extends Controller
         return DataTables::of($bankAccounts)->toJson();
     }
 
-    public function getBankAccounts()
+    public function getBankAccounts(): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -208,7 +198,7 @@ class BankAccountController extends Controller
         return response()->json($bankAccounts);
     }
 
-    public function getBankAccountsById($id)
+    public function getBankAccountsById($id): JsonResponse
     {
 
         $business_id = request()->session()->get('user.business_id');

@@ -6,6 +6,7 @@ use App\Optics\ExternalLab;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class ExternalLabController extends Controller
@@ -61,10 +62,8 @@ class ExternalLabController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('external_lab.create')) {
             abort(403, 'Unauthorized action.');
@@ -117,7 +116,6 @@ class ExternalLabController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ExternalLab  $externalLab
      * @return \Illuminate\Http\Response
      */
     public function show(ExternalLab $externalLab)
@@ -129,9 +127,8 @@ class ExternalLabController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\ExternalLab  $externalLab
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('external_lab.update')) {
             abort(403, 'Unauthorized action.');

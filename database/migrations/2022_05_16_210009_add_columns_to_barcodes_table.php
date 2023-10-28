@@ -9,10 +9,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('barcodes', function (Blueprint $table) {
             $table->float('height_with_logo', 8, 2)->nullable()->after('height');
@@ -72,10 +70,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('barcodes', function (Blueprint $table) {
             $table->dropColumn('height_with_logo');

@@ -10,6 +10,7 @@ use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class PatientController extends Controller
@@ -32,10 +33,8 @@ class PatientController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('patients.view') && ! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -47,10 +46,8 @@ class PatientController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create($patient_name = null)
+    public function create($patient_name = null): View
     {
         if (! auth()->user()->can('patients.create')) {
             abort(403, 'Unauthorized action.');
@@ -150,7 +147,6 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Patient  $patient
      * @return \Illuminate\Http\Response
      */
     public function show(Patient $patient)
@@ -162,9 +158,8 @@ class PatientController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Patient  $patient
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('patients.update')) {
             abort(403, 'Unauthorized action.');
@@ -357,9 +352,8 @@ class PatientController extends Controller
      * Retrieves list of patients, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getPatients()
+    public function getPatients(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');

@@ -9,6 +9,7 @@ use App\Notifications\SupplierNotification;
 use App\Restaurant\Booking;
 use App\Utils\NotificationUtil;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Notification;
 
 class NotificationController extends Controller
@@ -27,10 +28,8 @@ class NotificationController extends Controller
 
     /**
      * Display a notification view.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getTemplate($transaction_id, $template_for)
+    public function getTemplate($transaction_id, $template_for): View
     {
         if (! auth()->user()->can('send_notification')) {
             abort(403, 'Unauthorized action.');

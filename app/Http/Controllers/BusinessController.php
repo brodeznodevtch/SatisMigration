@@ -20,10 +20,13 @@ use App\Utils\RestaurantUtil;
 use App\Utils\TaxUtil;
 use Carbon\Carbon;
 use DateTimeZone;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 
 class BusinessController extends Controller
@@ -54,10 +57,6 @@ class BusinessController extends Controller
     /**
      * Constructor.
      *
-     * @param  App\Utils\BusinessUtil  $businessUtil
-     * @param  App\Utils\RestaurantUtil  $restaurantUtil
-     * @param  App\Utils\ModuleUtil  $moduleUtil
-     * @param  App\Utils\TaxUtil  $taxUtil
      * @return void
      */
     public function __construct(BusinessUtil $businessUtil, RestaurantUtil $restaurantUtil, ModuleUtil $moduleUtil, TaxUtil $taxUtil)
@@ -116,7 +115,7 @@ class BusinessController extends Controller
         ];
     }
 
-    public function getChangeBusiness()
+    public function getChangeBusiness(): View
     {
         $businessIds = User::select('business_id')
             ->where('username', Auth::user()->username)
@@ -128,7 +127,7 @@ class BusinessController extends Controller
         return view('business.partials.change_business_modal')->with(compact('business'));
     }
 
-    public function changeBusiness(Request $request)
+    public function changeBusiness(Request $request): JsonResponse
     {
         $credentials = $request->only(['username', 'password']);
         $business_id = $request->input('business_id');
@@ -376,10 +375,8 @@ class BusinessController extends Controller
 
     /**
      * Shows business settings form
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getBusinessSettings()
+    public function getBusinessSettings(): View
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -553,7 +550,7 @@ class BusinessController extends Controller
         ));
     }
 
-    public function getAccountingSettings()
+    public function getAccountingSettings(): View
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -671,10 +668,8 @@ class BusinessController extends Controller
 
     /**
      * Updates business settings
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function postBusinessSettings(Request $request)
+    public function postBusinessSettings(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');

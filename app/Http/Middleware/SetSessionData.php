@@ -6,7 +6,9 @@ use App\Models\Business;
 use App\Utils\BusinessUtil;
 use App\Utils\GlobalUtil;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class SetSessionData
 {
@@ -29,11 +31,8 @@ class SetSessionData
 
     /**
      * Checks if session data is set or not for a user. If data is not set then set it.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
 
         if (! $request->session()->has('user')) {

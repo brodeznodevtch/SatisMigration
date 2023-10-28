@@ -23,11 +23,8 @@ class Util
 {
     /**
      * This function unformats a number and returns them in plain eng format
-     *
-     * @param  int  $input_number
-     * @return float
      */
-    public function num_uf($input_number, $currency_details = [])
+    public function num_uf(int $input_number, $currency_details = []): float
     {
         $thousand_separator = '';
         $decimal_separator = '';
@@ -49,11 +46,9 @@ class Util
     /**
      * This function formats a number and returns them in specified format
      *
-     * @param  int  $input_number
      * @param  bool  $add_symbol = false
-     * @return string
      */
-    public function num_f($input_number, $add_symbol = false, $precision = 2)
+    public function num_f(int $input_number, bool $add_symbol = false, $precision = 2): string
     {
         $formatted = number_format($input_number, $precision, session('currency')['decimal_separator'], session('currency')['thousand_separator']);
 
@@ -71,24 +66,17 @@ class Util
     /**
      * Calculates percentage for a given number
      *
-     * @param  int  $number
-     * @param  int  $percent
      * @param  int  $addition default = 0
-     * @return float
      */
-    public function calc_percentage($number, $percent, $addition = 0)
+    public function calc_percentage(int $number, int $percent, int $addition = 0): float
     {
         return $addition + ($number * ($percent / 100));
     }
 
     /**
      * Calculates base value on which percentage is calculated
-     *
-     * @param  int  $number
-     * @param  int  $percent
-     * @return float
      */
-    public function calc_percentage_base($number, $percent)
+    public function calc_percentage_base(int $number, int $percent): float
     {
 
         return ($number * 100) / (100 + $percent);
@@ -96,12 +84,8 @@ class Util
 
     /**
      * Calculates percentage
-     *
-     * @param  int  $base
-     * @param  int  $number
-     * @return float
      */
-    public function get_percent($base, $number)
+    public function get_percent(int $base, int $number): float
     {
         $diff = $number - $base;
         if ($base <= 0) {
@@ -120,11 +104,9 @@ class Util
     /**
      * Get total percent from tax groups given
      *
-     * @param  int  $tax_group_id
      * @param  float  $amount
-     * @return float
      */
-    public function getTaxPercent($tax_group_id)
+    public function getTaxPercent(int $tax_group_id): float
     {
         if (is_null($tax_group_id)) {
             return null;
@@ -144,10 +126,8 @@ class Util
 
     /**
      * Returns printing formats | array index represent file name format
-     *
-     * @return array
      */
-    public function print_formats()
+    public function print_formats(): array
     {
         $print_formats = [
             'invoice' => __('document_type.invoice'),
@@ -166,10 +146,8 @@ class Util
 
     /**
      * Defines available Payment Types
-     *
-     * @return array
      */
-    public function payment_types()
+    public function payment_types(): array
     {
         $payment_types = [
             'cash' => __('lang_v1.cash'),
@@ -183,10 +161,8 @@ class Util
 
     /**
      * Returns the list of modules enabled
-     *
-     * @return array
      */
-    public function allModulesEnabled()
+    public function allModulesEnabled(): array
     {
         $nameModules = Module::where('status', 1)->orderBy('name', 'ASC')->get()->pluck('name');
         $enabled_modules = $nameModules->all();
@@ -197,10 +173,8 @@ class Util
 
     /**
      * Returns the list of modules enabled
-     *
-     * @return array
      */
-    public function isModuleEnabled($module)
+    public function isModuleEnabled($module): array
     {
         $enabled_modules = $this->allModulesEnabled();
 
@@ -214,11 +188,9 @@ class Util
     /**
      * Converts date in business format to mysql format
      *
-     * @param  string  $date
      * @param  bool  $time (default = false)
-     * @return strin
      */
-    public function uf_date($date, $time = false)
+    public function uf_date(string $date, bool $time = false): strin
     {
         $date_format = session('business.date_format');
         $mysql_format = 'Y-m-d';
@@ -236,11 +208,8 @@ class Util
 
     /**
      * Converts time in business format to mysql format
-     *
-     * @param  string  $time
-     * @return strin
      */
-    public function uf_time($time)
+    public function uf_time(string $time): strin
     {
         $time_format = 'H:i';
         if (session('business.time_format') == 12) {
@@ -252,11 +221,8 @@ class Util
 
     /**
      * Converts time in business format to mysql format
-     *
-     * @param  string  $time
-     * @return strin
      */
-    public function format_time($time)
+    public function format_time(string $time): strin
     {
         $time_format = 'H:i';
         if (session('business.time_format') == 12) {
@@ -269,11 +235,9 @@ class Util
     /**
      * Converts date in business format to mysql format
      *
-     * @param  string  $date
      * @param  bool  $time (default = false)
-     * @return strin
      */
-    public function format_date($date, $show_time = false)
+    public function format_date(string $date, $show_time = false): strin
     {
         $format = session('business.date_format');
         if (! empty($show_time)) {
@@ -290,13 +254,8 @@ class Util
     /**
      * Increments reference count for a given type and given business
      * and gives the updated reference count
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @param  bool  $setter
-     * @return int
      */
-    public function setAndGetReferenceCount($type, $business_id = null, $setter = true)
+    public function setAndGetReferenceCount(string $type, int $business_id = null, bool $setter = true): int
     {
         if (empty($business_id)) {
             $business_id = request()->session()->get('user.business_id');
@@ -327,12 +286,8 @@ class Util
 
     /**
      * Generates reference number
-     *
-     * @param  string  $type
-     * @param  int  $business_id
-     * @return int
      */
-    public function generateReferenceNumber($type, $ref_count, $business_id = null)
+    public function generateReferenceNumber(string $type, $ref_count, int $business_id = null): int
     {
 
         $prefix = '';
@@ -394,11 +349,8 @@ class Util
 
     /**
      * Get fixed asset prefix
-     *
-     * @param  int  $business_id
-     * @return string
      */
-    public function generateFixedAssetPrefix($business_id, $last_id)
+    public function generateFixedAssetPrefix(int $business_id, $last_id): string
     {
         $business = Business::find($business_id);
 
@@ -421,12 +373,8 @@ class Util
 
     /**
      * Checks if the given user is admin
-     *
-     * @param  obj  $user
-     * @param  int  $business_id
-     * @return bool
      */
-    public function is_admin($user, $business_id)
+    public function is_admin(obj $user, int $business_id): bool
     {
         return $user->hasRole('Admin#'.$business_id) ? true : false;
     }
@@ -453,11 +401,8 @@ class Util
 
     /**
      * Sends SMS notification.
-     *
-     * @param  array  $data
-     * @return void
      */
-    public function sendSms($data)
+    public function sendSms(array $data): void
     {
         $sms_settings = $data['sms_settings'];
         $request_data = [
@@ -496,9 +441,8 @@ class Util
      * Uploads document to the server if present in the request
      *
      * @param  obj  $request, string $file_name, string dir_name
-     * @return string
      */
-    public function uploadFile($request, $file_name, $dir_name)
+    public function uploadFile($request, $file_name, $dir_name): string
     {
         //If app environment is demo return null
         if (config('app.env') == 'demo') {
@@ -530,10 +474,8 @@ class Util
 
     /**
      * Get banks list.
-     *
-     * @return array
      */
-    public function checkbook_formats()
+    public function checkbook_formats(): array
     {
         $business_id = request()->session()->get('user.business_id');
         $business = Business::find($business_id);
@@ -572,9 +514,8 @@ class Util
      * First and last day of the month of the date set as parameter.
      *
      * @param  mixed  $actual_date,
-     * @return array
      */
-    public function first_last_month_day($actual_date)
+    public function first_last_month_day($actual_date): array
     {
         // Actual month first day
         $month = date('m', strtotime($actual_date));
@@ -593,11 +534,8 @@ class Util
 
     /**
      * Generate lab order code.
-     *
-     * @param  int  $location_id
-     * @return string
      */
-    public function generateLabOrderCode($location_id = null)
+    public function generateLabOrderCode(int $location_id = null): string
     {
         $business_id = request()->session()->get('user.business_id');
         $laborder_prefix = Business::where('id', $business_id)->value('laborder_prefix');
@@ -624,10 +562,8 @@ class Util
 
     /**
      * Generate status lab order code.
-     *
-     * @return string
      */
-    public function generateStatusLabOrderCode()
+    public function generateStatusLabOrderCode(): string
     {
         $business_id = request()->session()->get('user.business_id');
         $slo_prefix = Business::where('id', $business_id)->value('status_laborder_prefix');
@@ -649,10 +585,8 @@ class Util
 
     /**
      * Generate patient code.
-     *
-     * @return string
      */
-    public function generatePatientsCode()
+    public function generatePatientsCode(): string
     {
         $business_id = request()->session()->get('user.business_id');
         $patients_prefix = Business::where('id', $business_id)->value('patient_prefix');
@@ -674,10 +608,8 @@ class Util
 
     /**
      * Returns all avilable sexs.
-     *
-     * @return array
      */
-    public function Sexs()
+    public function Sexs(): array
     {
         return [
             'female' => __('lang_v1.female'),
@@ -688,14 +620,10 @@ class Util
     /**
      * Register action in binnacle.
      *
-     * @param  string  $module
-     * @param  string  $action
-     * @param  string  $reference
      * @param  mixed  $old_record
      * @param  mixed  $new_record
-     * @return void
      */
-    public function registerBinnacle($module, $action, $reference = null, $old_record = null, $new_record = null)
+    public function registerBinnacle(string $module, string $action, string $reference = null, $old_record = null, $new_record = null): void
     {
         $business = Business::find(request()->session()->get('user.business_id'));
         $globalUtil = new GlobalUtil;
@@ -761,10 +689,8 @@ class Util
 
     /**
      * Generate reference for quote.
-     *
-     * @return  string
      */
-    public function generateQuoteReference()
+    public function generateQuoteReference(): string
     {
         $business_id = request()->session()->get('user.business_id');
 

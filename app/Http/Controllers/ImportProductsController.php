@@ -23,7 +23,9 @@ use App\Utils\TaxUtil;
 use App\Utils\TransactionUtil;
 use DB;
 use Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ImportProductsController extends Controller
 {
@@ -57,10 +59,8 @@ class ImportProductsController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function indexOld()
+    public function indexOld(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -83,10 +83,8 @@ class ImportProductsController extends Controller
 
     /**
      * Display import product screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -818,13 +816,8 @@ class ImportProductsController extends Controller
 
     /**
      * Adds opening stock of a single product
-     *
-     * @param  array  $opening_stock
-     * @param  obj  $product
-     * @param  int  $business_id
-     * @return void
      */
-    private function addOpeningStock($opening_stock, $product, $business_id)
+    private function addOpeningStock(array $opening_stock, obj $product, int $business_id): void
     {
 
         $user_id = request()->session()->get('user.id');
@@ -1253,12 +1246,9 @@ class ImportProductsController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
-     * @param  array  $default_data
      * @return array
      */
-    public function checkRow($row, $row_no, $default_data = null)
+    public function checkRow(array $row, int $row_no, array $default_data = null)
     {
         $product = [
             // Product
@@ -1864,10 +1854,8 @@ class ImportProductsController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function import(Request $request)
+    public function import(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
@@ -2086,10 +2074,8 @@ class ImportProductsController extends Controller
 
     /**
      * Display edit products screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -2118,10 +2104,8 @@ class ImportProductsController extends Controller
 
     /**
      * Check file to importer.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function checkEditFile(Request $request)
+    public function checkEditFile(Request $request): View
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
@@ -2558,11 +2542,9 @@ class ImportProductsController extends Controller
     /**
      * Check row data.
      *
-     * @param  array  $row
-     * @param  int  $row_no
      * @return array
      */
-    public function checkEditRow($row, $row_no)
+    public function checkEditRow(array $row, int $row_no)
     {
         $product = [
             // Product
@@ -3408,10 +3390,8 @@ class ImportProductsController extends Controller
 
     /**
      * Imports the uploaded file to database.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(): RedirectResponse
     {
         if (! auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');

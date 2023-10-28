@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Utils\Util;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class BinnacleController extends Controller
@@ -138,11 +139,8 @@ class BinnacleController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('binnacle.view')) {
             abort(403, 'Unauthorized action.');

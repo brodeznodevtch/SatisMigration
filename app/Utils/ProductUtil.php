@@ -32,10 +32,8 @@ class ProductUtil extends Util
 {
     /**
      * Returns the list of barcode types
-     *
-     * @return array
      */
-    public function barcode_types()
+    public function barcode_types(): array
     {
         $types = ['C128' => 'Code 128 (C128)', 'C39' => 'Code 39 (C39)', 'EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'UPCA' => 'UPC-A', 'UPCE' => 'UPC-E'];
 
@@ -44,10 +42,8 @@ class ProductUtil extends Util
 
     /**
      * Returns the default barcode.
-     *
-     * @return string
      */
-    public function barcode_default()
+    public function barcode_default(): string
     {
         return 'C128';
     }
@@ -190,11 +186,8 @@ class ProductUtil extends Util
 
     /**
      * Update variable type product variation
-     *
-     *
-     * @return bool
      */
-    public function updateVariableProductVariations($product_id, $input_variations_edit)
+    public function updateVariableProductVariations($product_id, $input_variations_edit): bool
     {
         $product = Product::find($product_id);
 
@@ -290,9 +283,8 @@ class ProductUtil extends Util
      * @param $number_format = null
      * @param $warehouse_id = null
      * @param $type = 'available'
-     * @return bool
      */
-    public function updateProductQuantity($location_id, $product_id, $variation_id, $new_quantity, $old_quantity = 0, $number_format = null, $warehouse_id = null, $type = 'available')
+    public function updateProductQuantity($location_id, $product_id, $variation_id, $new_quantity, $old_quantity = 0, $number_format = null, $warehouse_id = null, $type = 'available'): bool
     {
         $qty_difference = $this->num_uf($new_quantity, $number_format) - $this->num_uf($old_quantity, $number_format);
 
@@ -351,9 +343,8 @@ class ProductUtil extends Util
      *
      * @param $old_quantity = 0
      * @param $warehouse_id = null
-     * @return bool
      */
-    public function decreaseProductQuantity($product_id, $variation_id, $location_id, $new_quantity, $old_quantity = 0, $warehouse_id = null)
+    public function decreaseProductQuantity($product_id, $variation_id, $location_id, $new_quantity, $old_quantity = 0, $warehouse_id = null): bool
     {
         $qty_difference = $new_quantity - $old_quantity;
 
@@ -391,13 +382,9 @@ class ProductUtil extends Util
     /**
      * Get all details for a product from its variation id
      *
-     * @param  int  $variation_id
-     * @param  int  $business_id
-     * @param  int  $location_id
      * @param  bool  $check_qty (If false qty_available is not checked)
-     * @return obj
      */
-    public function getDetailsFromVariation($variation_id, $business_id, $location_id = null, $warehouse_id = null, $check_qty = true)
+    public function getDetailsFromVariation(int $variation_id, int $business_id, int $location_id = null, $warehouse_id = null, bool $check_qty = true): obj
     {
         $query = Variation::join('products AS p', 'variations.product_id', '=', 'p.id')
             ->join('product_variations AS pv', 'variations.product_variation_id', '=', 'pv.id')
@@ -533,12 +520,11 @@ class ProductUtil extends Util
     /**
      * Calculates the total amount of invoice
      *
-     * @param  array  $products
      * @param  int  $tax_id
      * @param  array  $discount['discount_type', 'discount_amount']
      * @return mixed (false, array)
      */
-    public function calculateInvoiceTotal($products, $tax_percent, $discount = null)
+    public function calculateInvoiceTotal(array $products, $tax_percent, $discount = null)
     {
 
         if (empty($products)) {
@@ -584,12 +570,10 @@ class ProductUtil extends Util
     /**
      * Calculates the total amount of invoice
      *
-     * @param  array  $products
-     * @param  int  $tax_id
      * @param  array  $discount['discount_type', 'discount_amount']
      * @return mixed (false, array)
      */
-    public function calculateInvoiceTotal_esa($products, $tax_id, $discount = null, $type_doc = null)
+    public function calculateInvoiceTotal_esa(array $products, int $tax_id, $discount = null, $type_doc = null)
     {
 
         if (empty($products)) {
@@ -663,10 +647,9 @@ class ProductUtil extends Util
     /**
      * Generates product sku
      *
-     * @param  string  $string
      * @return generated sku (string)
      */
-    public function generateProductSku($string)
+    public function generateProductSku(string $string): generated
     {
 
         $business_id = request()->session()->get('user.business_id');
@@ -677,12 +660,8 @@ class ProductUtil extends Util
 
     /**
      * Gives list of trending products
-     *
-     * @param  int  $business_id
-     * @param  array  $filters
-     * @return Obj
      */
-    public function getTrendingProducts($business_id, $filters = [])
+    public function getTrendingProducts(int $business_id, array $filters = []): Obj
     {
         $query = Transaction::join(
             'transaction_sell_lines as tsl',
@@ -751,12 +730,9 @@ class ProductUtil extends Util
     /**
      * Gives list of products based on products id and variation id
      *
-     * @param  int  $business_id
-     * @param  int  $product_id
      * @param  int  $variation_id = null
-     * @return Obj
      */
-    public function getDetailsFromProduct($business_id, $product_id, $variation_id = null)
+    public function getDetailsFromProduct(int $business_id, int $product_id, int $variation_id = null): Obj
     {
         $product = Product::leftjoin('variations as v', 'products.id', '=', 'v.product_id')
             ->whereNull('v.deleted_at')
@@ -785,11 +761,8 @@ class ProductUtil extends Util
      * F => F (Newly added product drerease)
      *
      * @param  object  $transaction_before
-     * @param  object  $transaction
-     * @param  array  $input
-     * @return void
      */
-    public function adjustProductStockForInvoice($status_before, $transaction, $input)
+    public function adjustProductStockForInvoice($status_before, object $transaction, array $input): void
     {
 
         if ($status_before == 'final' && $transaction->status == 'draft') {
@@ -823,11 +796,8 @@ class ProductUtil extends Util
 
     /**
      * Updates variation from purchase screen
-     *
-     * @param  array  $variation_data
-     * @return void
      */
-    public function updateProductFromPurchase($variation_data)
+    public function updateProductFromPurchase(array $variation_data): void
     {
         $variation_details = Variation::where('id', $variation_data['variation_id'])
             ->with(['product', 'product.product_tax'])
@@ -861,13 +831,8 @@ class ProductUtil extends Util
 
     /**
      * Generated SKU based on the barcode type.
-     *
-     * @param  string  $sku
-     * @param  string  $c
-     * @param  string  $barcode_type
-     * @return void
      */
-    public function generateSubSku($sku, $c, $barcode_type)
+    public function generateSubSku(string $sku, string $c, string $barcode_type): string
     {
         $sub_sku = $sku.$c;
 
@@ -880,14 +845,8 @@ class ProductUtil extends Util
 
     /**
      * Add rack details.
-     *
-     * @param  int  $business_id
-     * @param  int  $product_id
-     * @param  array  $product_racks
-     * @param  array  $product_racks
-     * @return void
      */
-    public function addRackDetails($business_id, $product_id, $product_racks)
+    public function addRackDetails(int $business_id, int $product_id, array $product_racks): void
     {
 
         if (! empty($product_racks)) {
@@ -910,12 +869,8 @@ class ProductUtil extends Util
 
     /**
      * Get rack details.
-     *
-     * @param  int  $business_id
-     * @param  int  $product_id
-     * @return void
      */
-    public function getRackDetails($business_id, $product_id, $get_location = false)
+    public function getRackDetails(int $business_id, int $product_id, $get_location = false): array
     {
 
         $query = ProductRack::where('product_racks.business_id', $business_id)
@@ -941,13 +896,8 @@ class ProductUtil extends Util
 
     /**
      * Update rack details.
-     *
-     * @param  int  $business_id
-     * @param  int  $product_id
-     * @param  array  $product_racks
-     * @return void
      */
-    public function updateRackDetails($business_id, $product_id, $product_racks)
+    public function updateRackDetails(int $business_id, int $product_id, array $product_racks): void
     {
 
         if (! empty($product_racks)) {
@@ -966,12 +916,9 @@ class ProductUtil extends Util
     /**
      * Retrieves selling price group price for a product variation.
      *
-     * @param  int  $variation_id
-     * @param  int  $price_group_id
      * @param  int  $tax_id
-     * @return decimal
      */
-    public function getVariationGroupPrice($variation_id, $price_group_id, $tax_value)
+    public function getVariationGroupPrice(int $variation_id, int $price_group_id, $tax_value): decimal
     {
         $price_inc_tax = VariationGroupPrice::where('variation_id', $variation_id)
             ->where('price_group_id', $price_group_id)
@@ -993,12 +940,8 @@ class ProductUtil extends Util
 
     /**
      * Creates new variation if not exists.
-     *
-     * @param  int  $business_id
-     * @param  string  $name
-     * @return obj
      */
-    public function createOrNewVariation($business_id, $name)
+    public function createOrNewVariation(int $business_id, string $name): obj
     {
         $variation = VariationTemplate::where('business_id', $business_id)
             ->where('name', 'like', $name)
@@ -1017,15 +960,8 @@ class ProductUtil extends Util
 
     /**
      * Adds opening stock to a single product.
-     *
-     * @param  int  $business_id
-     * @param  obj  $product
-     * @param  array  $input
-     * @param  obj  $transaction_date
-     * @param  int  $user_id
-     * @return void
      */
-    public function addSingleProductOpeningStock($business_id, $product, $input, $transaction_date, $user_id)
+    public function addSingleProductOpeningStock(int $business_id, obj $product, array $input, obj $transaction_date, int $user_id): void
     {
         $locations = BusinessLocation::forDropdown($business_id)->toArray();
 
@@ -1101,14 +1037,8 @@ class ProductUtil extends Util
 
     /**
      * Updates average cost and related data.
-     *
-     * @param  int  $variation_id
-     * @param  float  $new_unit_cost
-     * @param  float  $quantity
-     * @param  bool  $subtract_qty
-     * @return void
      */
-    public function updateAverageCost($variation_id, $new_unit_cost, $quantity, $subtract_qty = false, $additional_data = null)
+    public function updateAverageCost(int $variation_id, float $new_unit_cost, float $quantity, bool $subtract_qty = false, $additional_data = null): void
     {
         $variation = Variation::find($variation_id);
 
@@ -1154,22 +1084,17 @@ class ProductUtil extends Util
      * Checks if products has manage stock enabled then increases quantity
      * reserved for product and its variations.
      *
-     * @param  int  $product_id
-     * @param  int  $variation_id
-     * @param  int  $location_id
-     * @param  float  $new_quantity
      * @param  float  $old_quantity = 0
      * @param  int  $warehouse_id = null
-     * @return bool
      */
     public function incrementProductQtyReserved(
-        $product_id,
-        $variation_id,
-        $location_id,
-        $new_quantity,
-        $old_quantity = 0,
-        $warehouse_id = null
-    ) {
+        int $product_id,
+        int $variation_id,
+        int $location_id,
+        float $new_quantity,
+        float $old_quantity = 0,
+        int $warehouse_id = null
+    ): bool {
         $qty_difference = $new_quantity - $old_quantity;
 
         $product = Product::find($product_id);
@@ -1199,24 +1124,19 @@ class ProductUtil extends Util
      * Checks if products has manage stock enabled then Updates quantity for
      * product and its variations.
      *
-     * @param  int  $location_id
-     * @param  int  $product_id
-     * @param  int  $variation_id
-     * @param  float  $new_quantity
      * @param  float  $old_quantity = 0
      * @param  string  $number_format = null
      * @param  int  $warehouse_id = null
-     * @return bool
      */
     public function updateProductQtyReserved(
-        $location_id,
-        $product_id,
-        $variation_id,
-        $new_quantity,
-        $old_quantity = 0,
-        $number_format = null,
-        $warehouse_id = null
-    ) {
+        int $location_id,
+        int $product_id,
+        int $variation_id,
+        float $new_quantity,
+        float $old_quantity = 0,
+        string $number_format = null,
+        int $warehouse_id = null
+    ): bool {
         $qty_difference = $this->num_uf($new_quantity, $number_format) - $this->num_uf($old_quantity, $number_format);
 
         $product = Product::find($product_id);
@@ -1264,15 +1184,8 @@ class ProductUtil extends Util
     /**
      * Checks if products has manage stock enabled then increase reservated quantity
      * for product and its variations.
-     *
-     * @param  int  $product_id
-     * @param  int  $variation_id
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
-     * @param  int/float  $quantity
-     * @return bool
      */
-    public function increaseReservedQuantity($product_id, $variation_id, $location_id, $warehouse_id, $quantity)
+    public function increaseReservedQuantity(int $product_id, int $variation_id, int $location_id, int $warehouse_id, int $quantity): bool
     {
         $product = Product::where('id', $product_id)->first();
 
@@ -1289,11 +1202,7 @@ class ProductUtil extends Util
         return true;
     }
 
-    /**
-     * @param  array  $input
-     * @return void
-     */
-    public function updateQuantityReserved($input)
+    public function updateQuantityReserved(array $input): void
     {
         foreach ($input['products'] as $product) {
             $vld = VariationLocationDetails::where('variation_id', $product['variation_id'])
@@ -1316,10 +1225,8 @@ class ProductUtil extends Util
 
     /**
      * Recalculate average product cost based on transactions and update data.
-     *
-     * @param  int  $variation_id
      */
-    public function recalculateProductCost($variation_id)
+    public function recalculateProductCost(int $variation_id)
     {
         $variation = Variation::find($variation_id);
 
@@ -1465,13 +1372,8 @@ class ProductUtil extends Util
 
     /**
      * Verify that sku is unique.
-     *
-     * @param  string  $sku
-     * @param  int  $product_id
-     * @param  int  $business_id
-     * @return bool
      */
-    public function checkSkuUnique($sku, $product_id, $business_id)
+    public function checkSkuUnique(string $sku, int $product_id, int $business_id): bool
     {
         $sku = mb_strtoupper($sku);
 
@@ -1496,16 +1398,10 @@ class ProductUtil extends Util
     /**
      * Sync category. Create, update or delete category for others business
      *
-     * @param  int  $id
-     * @param  string  $name
-     * @param  App\Models\Category  $delete
-     * @param  App\Utils\TransactionUtil  $transactionUtil
-     * @param  string  $module_name
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncCategory($id, $name = '', $delete = null, $transactionUtil = null, $module_name = '')
+    public function syncCategory(int $id, string $name = '', Category $delete = null, TransactionUtil $transactionUtil = null, string $module_name = ''): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1592,14 +1488,10 @@ class ProductUtil extends Util
     /**
      * Sync unit. Create, update or delete unit for others business
      *
-     * @param  int  $id
-     * @param  string  $name
-     * @param  App\Models\Unit  $delete
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncUnit($id, $name = '', $delete = null)
+    public function syncUnit(int $id, string $name = '', Unit $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1657,14 +1549,10 @@ class ProductUtil extends Util
     /**
      * Sync brand. Create, update or delete brand for others business
      *
-     * @param  int  $id
-     * @param  string  $name
-     * @param  App\Models\Brands  $delete
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncBrand($id, $name = '', $delete = null)
+    public function syncBrand(int $id, string $name = '', Brands $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1722,14 +1610,10 @@ class ProductUtil extends Util
     /**
      * Sync tax group. Create, update or delete taxes for others business
      *
-     * @param  int  $id
-     * @param  string  $description
-     * @param  App\Models\TaxGroup  $delete
-     * @return void
      *
      * @author Arquímides Martínez
      */
-    public function syncTaxGroup($id, $description = '', $delete = null)
+    public function syncTaxGroup(int $id, string $description = '', TaxGroup $delete = null): bool
     {
         /** Get others business */
         $business_id = auth()->user()->business_id;
@@ -1793,13 +1677,10 @@ class ProductUtil extends Util
     /**
      * Sync taxes. Create and update taxes for others business
      *
-     * @param  int  $id
-     * @param  int  $cloned_business_id
-     * @return array
      *
      * @author Arquímides Martínez
      */
-    private function syncTaxRate($id, $cloned_business_id)
+    private function syncTaxRate(int $id, int $cloned_business_id): array
     {
         $business_id = auth()->user()->business_id;
         $business = Business::where('id', '!=', $business_id)
@@ -1839,13 +1720,10 @@ class ProductUtil extends Util
     /**
      * Sync product for all businees
      *
-     * @param  int  $id
-     * @param  string  $sku
-     * @param  string  $type
      *
      * @author Arquímides Martínez
      */
-    public function syncProduct($id, $sku, $type)
+    public function syncProduct(int $id, string $sku, string $type)
     {
         $business_id = auth()->user()->business_id;
         $current_nrc = Business::where('id', $business_id)->value('nrc');

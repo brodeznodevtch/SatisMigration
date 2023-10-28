@@ -6,10 +6,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN unit_price_before_discount DECIMAL(20, 6) NOT NULL DEFAULT 0');
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN unit_price DECIMAL(20, 6) NULL');
@@ -21,10 +19,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN unit_price_before_discount DECIMAL(20, 4) NOT NULL DEFAULT 0');
         DB::statement('ALTER TABLE transaction_sell_lines MODIFY COLUMN unit_price DECIMAL(20, 4) NULL');

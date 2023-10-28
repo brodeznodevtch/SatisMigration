@@ -8,15 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class ProductModifierSetController extends Controller
 {
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -33,10 +32,8 @@ class ProductModifierSetController extends Controller
 
     /**
      * Add new product row
-     *
-     * @return Response
      */
-    public function product_row($product_id)
+    public function product_row($product_id): View
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -52,10 +49,8 @@ class ProductModifierSetController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return Response
      */
-    public function update($modifier_set_id, Request $request)
+    public function update($modifier_set_id, Request $request): Response
     {
         try {
             DB::beginTransaction();

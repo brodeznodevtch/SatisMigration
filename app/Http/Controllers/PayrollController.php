@@ -31,8 +31,10 @@ use Carbon\Carbon;
 use DataTables;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class PayrollController extends Controller
 {
@@ -56,10 +58,8 @@ class PayrollController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('payroll.view')) {
             abort(403, 'Unauthorized action.');
@@ -133,10 +133,8 @@ class PayrollController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('payroll.create')) {
             abort(403, 'Unauthorized action.');
@@ -291,7 +289,7 @@ class PayrollController extends Controller
     /**
      * Get payment period
      */
-    public function getPaymentPeriod($id)
+    public function getPaymentPeriod($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $paymentPeriod = PaymentPeriod::where('business_id', $business_id)
@@ -304,7 +302,7 @@ class PayrollController extends Controller
     /**
      * Get payroll type
      */
-    public function getPayrollType($id)
+    public function getPayrollType($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $payrollType = PayrollType::where('business_id', $business_id)
@@ -316,11 +314,8 @@ class PayrollController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('plantilla.view')) {
             abort(403, 'Unauthorized action.');
@@ -748,10 +743,9 @@ class PayrollController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -759,10 +753,9 @@ class PayrollController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }

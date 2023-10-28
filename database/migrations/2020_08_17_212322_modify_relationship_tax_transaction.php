@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropIndex('transactions_tax_id_foreign');
@@ -25,10 +23,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropForeign(['tax_id']);

@@ -7,6 +7,7 @@ use App\Models\RrhhTypeIncomeDiscount;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhTypeIncomeDiscountController extends Controller
 {
@@ -65,10 +66,8 @@ class RrhhTypeIncomeDiscountController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.create')) {
@@ -139,9 +138,8 @@ class RrhhTypeIncomeDiscountController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhTypeIncomeDiscount  $rrhhTypeWage
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
 
         if (! auth()->user()->can('rrhh_catalogues.update')) {

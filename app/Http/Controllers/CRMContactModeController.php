@@ -6,6 +6,7 @@ use App\Models\CRMContactMode;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class CRMContactModeController extends Controller
@@ -17,10 +18,8 @@ class CRMContactModeController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('crm-contactmode.view') && ! auth()->user()->can('crm-contactmode.create')) {
             abort(403, 'Unauthorized action.');
@@ -59,10 +58,8 @@ class CRMContactModeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('crm-contactmode.create')) {
             abort(403, 'Unauthorized action.');
@@ -100,21 +97,17 @@ class CRMContactModeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('crm-contactmode.update')) {
             abort(403, 'Unauthorized action.');
@@ -131,10 +124,9 @@ class CRMContactModeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('crm-contactmode.update')) {
             abort(403, 'Unauthorized action.');
@@ -164,10 +156,9 @@ class CRMContactModeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('crm-contactmode.delete')) {
             abort(403, 'Unauthorized action.');

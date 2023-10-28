@@ -7,6 +7,7 @@ use App\Models\RrhhStudy;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Storage;
 
 class RrhhStudyController extends Controller
@@ -34,7 +35,7 @@ class RrhhStudyController extends Controller
         //
     }
 
-    public function getByEmployee($id)
+    public function getByEmployee($id): View
     {
         if (! auth()->user()->can('rrhh_study.view')) {
             abort(403, 'Unauthorized action.');
@@ -62,7 +63,7 @@ class RrhhStudyController extends Controller
         //
     }
 
-    public function createStudy($id)
+    public function createStudy($id): View
     {
         if (! auth()->user()->can('rrhh_study.create')) {
             abort(403, 'Unauthorized action.');
@@ -138,9 +139,8 @@ class RrhhStudyController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhStudy  $rrhhDocuments
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_study.edit')) {
             abort(403, 'Unauthorized action.');

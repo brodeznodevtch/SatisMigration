@@ -21,7 +21,10 @@ use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
@@ -56,10 +59,8 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         $business_id = request()->session()->get('user.business_id');
         if (! auth()->user()->can('dashboard.data')) {
@@ -275,9 +276,16 @@ class HomeController extends Controller
         $business_locations = BusinessLocation::where('business_id', $business_id)->get();
 
         // Locations
-        $locations = BusinessLocation::forDropdown($business_id, false, false);
+        $locations = BusinessLocation::forDropdown($business_id, false, []);
 
-        $first_location = $locations->first();
+        // Comprobar el tipo de $locations
+        if ($locations instanceof Collection){
+            $first_location = $locations->first();
+        }elseif (is_array($locations) && isset($locations['locations'])){
+            $first_location = $locations['locations']->first();
+        }else {
+            $first_location = null;
+        }
 
         $default_location = null;
 
@@ -594,7 +602,6 @@ class HomeController extends Controller
     /**
      * Get the monetary value of the total stock.
      *
-     * @param  float  $request
      * @return \Illuminate\Http\Response
      */
     public function getTotalStock(Request $request)
@@ -615,10 +622,8 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours by month chart.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getPeakSalesHoursByMonthChart()
+    public function getPeakSalesHoursByMonthChart(): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -650,10 +655,8 @@ class HomeController extends Controller
 
     /**
      * Get peak sales hours chart.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getPeakSalesHoursChart()
+    public function getPeakSalesHoursChart(): View
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -740,7 +743,7 @@ class HomeController extends Controller
         }
     }
 
-    public function getWeekSales()
+    public function getWeekSales(): JsonResponse
     {
         if (request()->ajax()) {
             $location_id = request()->location_id;
@@ -791,7 +794,7 @@ class HomeController extends Controller
         }
     }
 
-    public function welcome()
+    public function welcome(): View
     {
         return view('welcome');
     }

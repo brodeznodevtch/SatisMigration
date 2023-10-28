@@ -24,7 +24,11 @@ use App\Utils\TransactionUtil;
 use App\Utils\Util;
 use DB;
 use Excel;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ContactController extends Controller
@@ -87,10 +91,8 @@ class ContactController extends Controller
 
     /**
      * Returns the database object for supplier
-     *
-     * @return \Illuminate\Http\Response
      */
-    private function indexSupplier()
+    private function indexSupplier(): Response
     {
 
         if (! auth()->user()->can('supplier.view')) {
@@ -163,10 +165,8 @@ class ContactController extends Controller
 
     /**
      * Returns the database object for customer
-     *
-     * @return \Illuminate\Http\Response
      */
-    private function indexCustomer()
+    private function indexCustomer(): Response
     {
 
         if (! auth()->user()->can('customer.view')) {
@@ -516,11 +516,8 @@ class ContactController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('supplier.view') && ! auth()->user()->can('customer.view')) {
             abort(403, 'Unauthorized action.');
@@ -542,7 +539,7 @@ class ContactController extends Controller
             ->with(compact('contact'));
     }
 
-    public function showSupplier($id)
+    public function showSupplier($id): JsonResponse
     {
         if (! auth()->user()->can('supplier.view')) {
             abort(403, 'Unauthorized action.');
@@ -555,10 +552,9 @@ class ContactController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         if (! auth()->user()->can('supplier.update') && ! auth()->user()->can('customer.update')) {
             abort(403, 'Unauthorized action.');
@@ -672,10 +668,9 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
 
         try {
@@ -806,10 +801,9 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('supplier.delete') && ! auth()->user()->can('customer.delete')) {
             abort(403, 'Unauthorized action.');
@@ -855,9 +849,8 @@ class ContactController extends Controller
      * Retrieves list of customers, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getCustomers()
+    public function getCustomers(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -907,9 +900,8 @@ class ContactController extends Controller
      * Retrieves list of customers, if filter is passed then filter it accordingly.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getSuppliers()
+    public function getSuppliers(): JSON
     {
         if (request()->ajax()) {
             $term = request()->input('q', '');
@@ -964,9 +956,8 @@ class ContactController extends Controller
      * Shows import option for contacts
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function getImportContacts()
+    public function getImportContacts(): View
     {
 
         if (! auth()->user()->can('supplier.create') && ! auth()->user()->can('customer.create')) {
@@ -993,9 +984,8 @@ class ContactController extends Controller
      * Imports contacts
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
      */
-    public function postImportContacts(Request $request)
+    public function postImportContacts(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('supplier.create') && ! auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');

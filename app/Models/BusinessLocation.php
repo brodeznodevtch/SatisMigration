@@ -24,12 +24,10 @@ class BusinessLocation extends Model
     /**
      * Return list of locations for a business
      *
-     * @param  int  $business_id
      * @param  bool  $show_all = false
      * @param  array  $receipt_printer_type_attribute =
-     * @return array
      */
-    public static function forDropdown($business_id, $show_all = false, $receipt_printer_type_attribute = false)
+    public static function forDropdown(int $business_id, bool $show_all = false, array $receipt_printer_type_attribute = []): array
     {
         $query = BusinessLocation::where('business_id', $business_id);
 
@@ -49,9 +47,9 @@ class BusinessLocation extends Model
                 return [$item->id => ['data-receipt_printer_type' => $item->receipt_printer_type]];
             })->all();
 
-            return ['locations' => $locations, 'attributes' => $attributes];
+            return ['locations' => $locations->toArray(), 'attributes' => $attributes];
         } else {
-            return $locations;
+            return $locations->toArray();
         }
     }
 }

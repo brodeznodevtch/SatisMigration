@@ -8,6 +8,7 @@ use App\Restaurant\ResTable;
 use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 class DataController extends Controller
@@ -24,10 +25,8 @@ class DataController extends Controller
 
     /**
      * Show the restaurant module related details in pos screen.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getPosDetails(Request $request)
+    public function getPosDetails(Request $request): View
     {
         if (request()->ajax()) {
             $business_id = $request->session()->get('user.business_id');

@@ -10,6 +10,7 @@ use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class PosController extends Controller
 {
@@ -76,7 +77,7 @@ class PosController extends Controller
         }
     }
 
-    public function create()
+    public function create(): View
     {
         $business_id = Auth::user()->business_id;
         $bank_accounts = BankAccount::pluck('name', 'id');
@@ -87,7 +88,7 @@ class PosController extends Controller
         return view('pos.create', compact('bank_accounts', 'business_locations', 'status', 'employees'));
     }
 
-    public function show($id)
+    public function show($id): View
     {
         $pos = Pos::findOrFail($id);
 
@@ -151,7 +152,7 @@ class PosController extends Controller
         return $output;
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         $pos = Pos::find($id);
         $business_id = Auth::user()->business_id;

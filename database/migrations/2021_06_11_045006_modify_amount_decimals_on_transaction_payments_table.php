@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('transaction_payments', function (Blueprint $table) {
             DB::statement('ALTER TABLE `satis-erp-luxor`.transaction_payments MODIFY COLUMN amount decimal(20,4) DEFAULT 0.00 NOT NULL;');
@@ -20,10 +18,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('transaction_payments', function (Blueprint $table) {
             //

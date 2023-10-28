@@ -6,6 +6,7 @@ use App\Models\RrhhTypePersonnelAction;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhTypePersonnelActionController extends Controller
 {
@@ -64,10 +65,8 @@ class RrhhTypePersonnelActionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
@@ -150,9 +149,8 @@ class RrhhTypePersonnelActionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\RrhhTypePersonnelAction  $rrhhTypePersonnelAction
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');

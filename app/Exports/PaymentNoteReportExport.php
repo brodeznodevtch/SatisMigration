@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Business;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -19,12 +20,9 @@ class PaymentNoteReportExport implements FromView, WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $payments
-     * @param  int  $size
-     * @param  \App\Business  $business
      * @return void
      */
-    public function __construct($payments, $size, $business)
+    public function __construct(array $payments, int $size, Business $business)
     {
         $this->payments = $payments;
         $this->size = $size;

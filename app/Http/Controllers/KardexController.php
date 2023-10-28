@@ -27,6 +27,7 @@ use App\Utils\TransactionUtil;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class KardexController extends Controller
@@ -212,10 +213,8 @@ class KardexController extends Controller
 
     /**
      * Show the form for kardex generation.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getRegisterKardex()
+    public function getRegisterKardex(): View
     {
         if (! auth()->user()->can('kardex.register')) {
             abort(403, 'Unauthorized action.');
@@ -479,13 +478,9 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $movement
-     * @param  string  $reference
-     * @param  string  $type
      * @return void
      */
-    public function kardexForTransactions($transaction, $movement, $reference, $type)
+    public function kardexForTransactions(Transaction $transaction, string $movement, string $reference, string $type)
     {
         // Data to create kardex lines
         $movement_type = MovementType::where('name', $transaction->type)
@@ -571,9 +566,8 @@ class KardexController extends Controller
      * Retrieves products list.
      *
      * @param  string  $q
-     * @return JSON
      */
-    public function getProducts()
+    public function getProducts(): JSON
     {
         if (request()->ajax()) {
             $term = request()->q;
@@ -737,11 +731,9 @@ class KardexController extends Controller
     /**
      * Refresh balance.
      *
-     * @param  int  $warehouse_id
-     * @param  int  $variation_id
      * @return string
      */
-    public function refreshBalance($warehouse_id, $variation_id)
+    public function refreshBalance(int $warehouse_id, int $variation_id)
     {
         try {
             if ($warehouse_id != 0 && $variation_id != 0) {
@@ -972,10 +964,9 @@ class KardexController extends Controller
      * Substitute in the kardex the cost of the variable for the cost of the
      * sale or purchase line.
      *
-     * @param  int  $variation_id
      * @return string
      */
-    public function updateCost($variation_id)
+    public function updateCost(int $variation_id)
     {
         try {
             DB::beginTransaction();
@@ -1024,10 +1015,8 @@ class KardexController extends Controller
 
     /**
      * Generate kardex of the product in the selected warehouse.
-     *
-     * @return json
      */
-    public function generateProductKardex()
+    public function generateProductKardex(): json
     {
         if (! auth()->user()->can('kardex.generate_product_kardex')) {
             abort(403, 'Unauthorized action.');
@@ -1130,14 +1119,10 @@ class KardexController extends Controller
     /**
      * Create kardex lines for transactions.
      *
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $movement
-     * @param  string  $reference
-     * @param  string  $type
      * @param  int  $varation_id
      * @return void
      */
-    public function kardexForTransactionLines($transaction, $movement, $reference, $type, $variation_id)
+    public function kardexForTransactionLines(Transaction $transaction, string $movement, string $reference, string $type, $variation_id)
     {
         // Data to create kardex lines
         $movement_type = MovementType::where('name', $transaction->type)
@@ -1538,11 +1523,9 @@ class KardexController extends Controller
     /**
      * Calculate stock with purchase, sales and stock adjustment lines.
      *
-     * @param  int  $variation_id
-     * @param  int  $warehouse_id
      * @return float
      */
-    public function calculateStock($variation_id, $warehouse_id)
+    public function calculateStock(int $variation_id, int $warehouse_id)
     {
         $kit_ids = KitHasProduct::where('children_id', $variation_id)->pluck('parent_id');
 
@@ -1590,10 +1573,9 @@ class KardexController extends Controller
     /**
      * Create kardex lines for lab orders.
      *
-     * @param  \App\LabOrder  $lab_order
      * @return void
      */
-    public function kardexForLabOrders($lab_order)
+    public function kardexForLabOrders(App\LabOrder $lab_order)
     {
         /** Data to create kardex lines */
         $lines = LabOrderDetail::where('lab_order_id', $lab_order->id)->get();
@@ -1611,10 +1593,9 @@ class KardexController extends Controller
     /**
      * Create kardex lines for lab orders.
      *
-     * @param  \App\LabOrder  $lab_order
      * @return void
      */
-    public function kardexForLabOrderLines($lab_order, $warehouse_id, $variation_id)
+    public function kardexForLabOrderLines(App\LabOrder $lab_order, $warehouse_id, $variation_id)
     {
         // Data to create kardex lines
         $lines = LabOrderDetail::where('lab_order_id', $lab_order->id)
@@ -1750,13 +1731,9 @@ class KardexController extends Controller
     /**
      * Generate kardex of the product in the selected warehouse.
      *
-     * @param  int  $variation_id
-     * @param  int  $warehouse_id
-     * @param  bool  $update_vld
-     * @param  bool  $show_messages
      * @return void
      */
-    public function __generateProductKardex($variation_id, $warehouse_id, $update_vld = true, $show_messages = false)
+    public function __generateProductKardex(int $variation_id, int $warehouse_id, bool $update_vld = true, bool $show_messages = false)
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -2291,12 +2268,8 @@ class KardexController extends Controller
 
     /**
      * Store records from table stock_adjustment_lines in kardex.
-     *
-     * @param  int  $variation_id
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
      */
-    public function fixStockAdjustments($variation_id, $location_id, $warehouse_id)
+    public function fixStockAdjustments(int $variation_id, int $location_id, int $warehouse_id)
     {
         try {
             DB::beginTransaction();
@@ -2336,10 +2309,8 @@ class KardexController extends Controller
 
     /**
      * Show the form for recalculate cost.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getRecalculateCost()
+    public function getRecalculateCost(): View
     {
         return view('kardex.recalculate-kardex-cost');
     }
@@ -2347,10 +2318,9 @@ class KardexController extends Controller
     /**
      * Recalculate average product cost based on transactions and update data.
      *
-     * @param  int  $variation_id
      * @return array
      */
-    public function recalculateProductCost($variation_id)
+    public function recalculateProductCost(int $variation_id)
     {
         if (! auth()->user()->can('product.recalculate_cost')) {
             abort(403, 'Unauthorized action.');
@@ -2920,10 +2890,9 @@ class KardexController extends Controller
     /**
      * Compare sale lines with purchase lines.
      *
-     * @param  int  $warehouse_id
      * @return string
      */
-    public function compareSellAndPurchaseLines($warehouse_id)
+    public function compareSellAndPurchaseLines(int $warehouse_id)
     {
         try {
             ini_set('max_execution_time', 0);
@@ -2994,11 +2963,9 @@ class KardexController extends Controller
     /**
      * Fix registration of purchase_lines to be the same as transaction_sell_lines.
      *
-     * @param  int  $sell_transfer_id
-     * @param  int  $no_massive
      * @return mixed
      */
-    public function fixPurchaseLines($sell_transfer_id, $no_massive = 0)
+    public function fixPurchaseLines(int $sell_transfer_id, int $no_massive = 0)
     {
         try {
             ini_set('max_execution_time', 0);

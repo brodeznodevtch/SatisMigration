@@ -7,7 +7,9 @@ use App\Models\DocumentType;
 use App\Models\Transaction;
 use App\Utils\TransactionUtil;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class DocumentTypeController extends Controller
@@ -74,7 +76,7 @@ class DocumentTypeController extends Controller
         return view('document_types.index');
     }
 
-    public function verifyDefault()
+    public function verifyDefault(): JsonResponse
     {
         $default = DocumentType::where('is_default', 1)
             ->where('is_document_sale', 1)
@@ -85,10 +87,8 @@ class DocumentTypeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('document_type.create')) {
             abort(403, 'Unauthorized action.');
@@ -152,21 +152,17 @@ class DocumentTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -185,10 +181,9 @@ class DocumentTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('document_type.update')) {
             abort(403, 'Unauthorized action.');
@@ -242,10 +237,9 @@ class DocumentTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('document_type.delete')) {
             abort(403, 'Unauthorized action.');

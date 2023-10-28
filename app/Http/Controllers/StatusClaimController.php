@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\StatusClaim;
 use DataTables;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class StatusClaimController extends Controller
@@ -81,9 +82,8 @@ class StatusClaimController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\StatusClaim  $statusClaim
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         if (! auth()->user()->can('claim_status.update')) {
             abort(403, 'Unauthorized action.');
@@ -216,7 +216,7 @@ class StatusClaimController extends Controller
             ->toJson();
     }
 
-    public function getStatusClaims()
+    public function getStatusClaims(): JsonResponse
     {
         if (! auth()->user()->can('claim_status.view')) {
             abort(403, 'Unauthorized action.');

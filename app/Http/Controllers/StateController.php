@@ -5,26 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\State;
 use DataTables;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class StateController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('geography.index');
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         return view('geography.index');
     }
@@ -71,9 +69,8 @@ class StateController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\State  $state
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $state = State::findOrFail($id);
 
@@ -84,9 +81,8 @@ class StateController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\State  $state
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         $state = State::findOrFail($id);
 
@@ -196,7 +192,7 @@ class StateController extends Controller
         return DataTables::of($states)->toJson();
     }
 
-    public function getStates()
+    public function getStates(): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $states = State::where('business_id', $business_id)->get();
@@ -204,7 +200,7 @@ class StateController extends Controller
         return response()->json($states);
     }
 
-    public function getStatesByCountry($id)
+    public function getStatesByCountry($id): JsonResponse
     {
         $business_id = request()->session()->get('user.business_id');
         $states = State::where('business_id', $business_id)

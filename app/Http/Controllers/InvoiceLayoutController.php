@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceLayout;
 use App\Utils\Util;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Validator;
 
 class InvoiceLayoutController extends Controller
@@ -36,10 +38,8 @@ class InvoiceLayoutController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -52,10 +52,8 @@ class InvoiceLayoutController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -134,9 +132,8 @@ class InvoiceLayoutController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\InvoiceLayout  $invoiceLayout
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');
@@ -158,9 +155,8 @@ class InvoiceLayoutController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\InvoiceLayout  $invoiceLayout
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('invoice_settings.access')) {
             abort(403, 'Unauthorized action.');

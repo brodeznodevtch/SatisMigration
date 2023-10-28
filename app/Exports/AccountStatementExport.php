@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Business;
+use App\Customer;
 use App\Utils\TransactionUtil;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -22,13 +24,9 @@ class AccountStatementExport implements WithEvents, WithTitle
     /**
      * Constructor.
      *
-     * @param  array  $lines
-     * @param  date  $date
-     * @param  \App\Business  $business
-     * @param  \App\Customer  $customer
      * @return void
      */
-    public function __construct(TransactionUtil $transactionUtil, $lines, $date, $business, $customer)
+    public function __construct(TransactionUtil $transactionUtil, array $lines, date $date, Business $business, Customer $customer)
     {
         $this->transactionUtil = $transactionUtil;
         $this->lines = $lines;

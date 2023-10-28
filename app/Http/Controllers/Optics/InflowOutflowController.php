@@ -16,6 +16,7 @@ use App\Utils\TransactionUtil;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class InflowOutflowController extends Controller
@@ -98,11 +99,8 @@ class InflowOutflowController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @param  string  $type
-     * @return \Illuminate\Http\Response
      */
-    public function create($type)
+    public function create(string $type): View
     {
         if (! auth()->user()->can('inflow_outflow.create')) {
             abort(403, 'Unauthorized action.');
@@ -303,7 +301,6 @@ class InflowOutflowController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\InflowOutflow  $inflowOutflow
      * @return \Illuminate\Http\Response
      */
     public function show(InflowOutflow $inflowOutflow)
@@ -313,11 +310,8 @@ class InflowOutflowController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('inflow_outflow.update')) {
             abort(403, 'Unauthorized action.');
@@ -340,10 +334,9 @@ class InflowOutflowController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('inflow_outflow.update')) {
             abort(403, 'Unauthorized action.');
@@ -391,10 +384,9 @@ class InflowOutflowController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('inflow_outflow.delete')) {
             abort(403, 'Unauthorized action.');

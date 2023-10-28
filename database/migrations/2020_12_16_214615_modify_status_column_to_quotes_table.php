@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::statement('ALTER TABLE `quotes` DROP COLUMN `order_status`');
         DB::statement("ALTER TABLE `quotes` ADD `status`
@@ -45,10 +43,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('quotes', function (Blueprint $table) {
             //

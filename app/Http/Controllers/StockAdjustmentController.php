@@ -16,6 +16,7 @@ use App\Utils\TransactionUtil;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class StockAdjustmentController extends Controller
 {
@@ -419,11 +420,8 @@ class StockAdjustmentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): View
     {
         if (! auth()->user()->can('stock_adjustment.view')) {
             abort(403, 'Unauthorized action.');
@@ -514,10 +512,9 @@ class StockAdjustmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('stock_adjustment.delete')) {
             abort(403, 'Unauthorized action.');
@@ -604,10 +601,8 @@ class StockAdjustmentController extends Controller
 
     /**
      * Return product rows
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getProductRow(Request $request)
+    public function getProductRow(Request $request): View
     {
         if (request()->ajax()) {
             $row_index = $request->input('row_index');
@@ -645,10 +640,9 @@ class StockAdjustmentController extends Controller
     /**
      * Sets expired purchase line as stock adjustmnet
      *
-     * @param  int  $purchase_line_id
      * @return json $output
      */
-    public function removeExpiredStock($purchase_line_id)
+    public function removeExpiredStock(int $purchase_line_id): json
     {
 
         if (! auth()->user()->can('stock_adjustment.delete')) {
@@ -734,10 +728,9 @@ class StockAdjustmentController extends Controller
     /**
      * Generates stock adjustment report.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function printInvoice($id)
+    public function printInvoice(int $id)
     {
         try {
             $business_id = request()->session()->get('user.business_id');
@@ -782,12 +775,8 @@ class StockAdjustmentController extends Controller
 
     /**
      * Gets reference number for stock adjustment.
-     *
-     * @param  int  $ref_count
-     * @param  string  $type
-     * @return json
      */
-    public function getReference($ref_count, $type)
+    public function getReference(int $ref_count, string $type): json
     {
         $reference = $this->productUtil->generateReferenceNumber($type, $ref_count);
 

@@ -8,6 +8,7 @@ use App\Models\DocumentType;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class DocumentCorrelativeController extends Controller
@@ -32,10 +33,8 @@ class DocumentCorrelativeController extends Controller
 
     /**
      * Invocar la vista de listado de Correlativos.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('correlatives.view') && ! auth()->user()->can('correlatives.create')) {
             abort(403, 'Unauthorized action.');
@@ -172,10 +171,8 @@ class DocumentCorrelativeController extends Controller
 
     /**
      * Mostrar formulario para registrar nuevo correlativo.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('correlatives.create')) {
             abort(403, 'Unauthorized action.');
@@ -223,21 +220,17 @@ class DocumentCorrelativeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         if (! auth()->user()->can('correlatives.update')) {
             abort(403, 'Unauthorized action.');
@@ -257,10 +250,9 @@ class DocumentCorrelativeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (! auth()->user()->can('correlatives.update')) {
             abort(403, 'Unauthorized action.');
@@ -294,10 +286,9 @@ class DocumentCorrelativeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (! auth()->user()->can('correlatives.delete')) {
             abort(403, 'Unauthorized action.');

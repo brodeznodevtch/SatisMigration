@@ -14,10 +14,8 @@ class DummyBusinessSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         DB::beginTransaction();
 

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\RrhhTypeContract;
 use DataTables;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RrhhTypeContractController extends Controller
 {
@@ -35,10 +37,8 @@ class RrhhTypeContractController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('rrhh_catalogues.create')) {
             abort(403, 'Unauthorized action.');
@@ -47,7 +47,7 @@ class RrhhTypeContractController extends Controller
         return view('rrhh.catalogues.types_contracts.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //dd($request);
         if (! auth()->user()->can('rrhh_catalogues.create')) {
@@ -124,10 +124,8 @@ class RrhhTypeContractController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');
@@ -143,9 +141,8 @@ class RrhhTypeContractController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\RrhhTypeContract  $rrhhTypeContract
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         if (! auth()->user()->can('rrhh_catalogues.update')) {
             abort(403, 'Unauthorized action.');

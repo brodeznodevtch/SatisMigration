@@ -6,6 +6,7 @@ use App\Models\Positions;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
 class ManagePositionsController extends Controller
@@ -23,12 +24,10 @@ class ManagePositionsController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
 
     // Mostrar vista para listar los cargos
-    public function index()
+    public function index(): View
     {
         if (! auth()->user()->can('positions.view') && ! auth()->user()->can('positions.create')) {
             abort(403, 'Unauthorized action.');
@@ -86,7 +85,7 @@ class ManagePositionsController extends Controller
     }
 
     //Mostrar el formulario para crear un nuevo Cargo
-    public function create()
+    public function create(): View
     {
         if (! auth()->user()->can('positions.create')) {
             abort(403, 'Unauthorized action.');
@@ -122,7 +121,7 @@ class ManagePositionsController extends Controller
     }
 
     //Mostrar el formulario para editar un Cargo
-    public function edit($id)
+    public function edit($id): View
     {
         if (! auth()->user()->can('positions.update')) {
             abort(403, 'Unauthorized action.');

@@ -7,6 +7,7 @@ use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
 use App\Exceptions\PurchaseSellMismatch;
 use App\get_sub_products;
+use App\LabOrderDetail;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Cashier;
@@ -39,6 +40,7 @@ use App\Models\User;
 use App\Models\Variation;
 use App\Models\VariationLocationDetails;
 use App\Restaurant\ResTable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -74,14 +76,9 @@ class TransactionUtil extends Util
     /**
      * Add Sell transaction
      *
-     * @param  int  $business_id
-     * @param  array  $input
-     * @param  float  $invoice_total
-     * @param  int  $user_id
      * @param  suplies
-     * @return bool
      */
-    public function createSellTransaction($business_id, $input, $invoice_total, $user_id)
+    public function createSellTransaction(int $business_id, array $input, float $invoice_total, int $user_id): bool
     {
         $invoice_no = ! empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id']);
         $transaction = Transaction::create([
@@ -145,13 +142,8 @@ class TransactionUtil extends Util
      * Add Sell transaction
      *
      * @param  mixed  $transaction_id
-     * @param  int  $business_id
-     * @param  array  $input
-     * @param  float  $invoice_total
-     * @param  int  $user_id
-     * @return bool
      */
-    public function updateSellTransaction($transaction_id, $business_id, $input, $invoice_total, $user_id)
+    public function updateSellTransaction($transaction_id, int $business_id, array $input, float $invoice_total, int $user_id): bool
     {
         $transaction = $transaction_id;
 
@@ -212,14 +204,12 @@ class TransactionUtil extends Util
      * Add/Edit transaction sell lines
      *
      * @param object/int $transaction
-     * @param  array  $products
      * @param  array  $location_id
      * @param  bool  $return_deleted = false
      * @param  array  $extra_line_parameters = []
      *   Example: ['database_trasnaction_linekey' => 'products_line_key'];
-     * @return boolean/object
      */
-    public function CreateOrUpdateSuplies($products, $business_id)
+    public function CreateOrUpdateSuplies(array $products, $business_id): bool
     {
 
         $new_elements = [];
@@ -425,11 +415,8 @@ class TransactionUtil extends Util
 
     /**
      * create transaction tax detail
-     *
-     * @param  TransactionSellLine  $sell_lines
-     * @return void
      */
-    private function createTransactionTaxDetail($sell_lines)
+    private function createTransactionTaxDetail(TransactionSellLine $sell_lines): void
     {
         if (! empty($sell_lines)) {
             foreach ($sell_lines as $sl) {
@@ -458,9 +445,8 @@ class TransactionUtil extends Util
      * Update transaction tax details
      *
      * @param  TransactionSellLine  $sell_lines
-     * @return void
      */
-    private function updateTransactionTaxDetail($sell_line)
+    private function updateTransactionTaxDetail($sell_line): void
     {
         if (! empty($sell_line)) {
             $tax_rate = TaxGroup::find($sell_line['tax_id']);
@@ -483,11 +469,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete transaction tax tax details
-     *
-     * @param  TransactionSellLine  $sell_line
-     * @return void
      */
-    public function deleteTransactionTaxDetail($sell_line)
+    public function deleteTransactionTaxDetail(TransactionSellLine $sell_line): void
     {
         if (! empty($sell_line)) {
             foreach ($sell_line as $sl) {
@@ -502,13 +485,8 @@ class TransactionUtil extends Util
 
     /**
      * Edit transaction sell line
-     *
-     * @param  array  $product
-     * @param  int  $location_id
-     * @param  bool  $adjust_qty
-     * @return bool
      */
-    public function editSellLine($product, $location_id, $status_before, $adjust_qty = true)
+    public function editSellLine(array $product, int $location_id, $status_before, bool $adjust_qty = true): bool
     {
         // Get the old order quantity
         $sell_line = TransactionSellLine::find($product['transaction_sell_lines_id']);
@@ -555,13 +533,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete the products removed and increment product stock.
-     *
-     * @param  array  $transaction_line_ids
-     * @param  int  $location_id
-     * @param  bool  $adjust_qty
-     * @return bool
      */
-    public function deleteSellLines($transaction_line_ids, $location_id, $warehouse_id = null, $adjust_qty = true)
+    public function deleteSellLines(array $transaction_line_ids, int $location_id, $warehouse_id = null, bool $adjust_qty = true): bool
     {
         if (! empty($transaction_line_ids)) {
             $sell_lines = TransactionSellLine::whereIn('id', $transaction_line_ids)
@@ -585,13 +558,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete the products removed and increment product stock. Includes kits.
-     *
-     * @param  array  $transaction_line_ids
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
-     * @return bool
      */
-    public function deleteSaleLines($transaction_line_ids, $location_id, $warehouse_id)
+    public function deleteSaleLines(array $transaction_line_ids, int $location_id, int $warehouse_id): bool
     {
         if (! empty($transaction_line_ids)) {
             $sell_lines = TransactionSellLine::whereIn('id', $transaction_line_ids)
@@ -615,14 +583,8 @@ class TransactionUtil extends Util
 
     /**
      * Adjust the quantity of product and its variation
-     *
-     * @param  int  $location_id
-     * @param  int  $product_id
-     * @param  int  $variation_id
-     * @param  float  $increment_qty
-     * @return bool
      */
-    public function adjustQuantity($location_id, $product_id, $variation_id, $increment_qty, $warehouse_id = null)
+    public function adjustQuantity(int $location_id, int $product_id, int $variation_id, float $increment_qty, $warehouse_id = null): bool
     {
         if ($increment_qty != 0) {
             $enable_stock = Product::find($product_id)->enable_stock;
@@ -652,14 +614,9 @@ class TransactionUtil extends Util
     /**
      * Adjust the quantity of product and its variation. Includes kits.
      *
-     * @param  int  $location_id
      * @param  int  $$warehouse_id
-     * @param  int  $product_id
-     * @param  int  $variation_id
-     * @param  float  $increment_qty
-     * @return void
      */
-    public function adjustStock($location_id, $warehouse_id, $product_id, $variation_id, $increment_qty)
+    public function adjustStock(int $location_id, $warehouse_id, int $product_id, int $variation_id, float $increment_qty): void
     {
         if ($increment_qty != 0) {
             $product = Product::find($product_id);
@@ -714,15 +671,8 @@ class TransactionUtil extends Util
 
     /**
      * Add line for payment
-     *
-     * @param  object/int  $transaction
-     * @param  array  $payments
-     * @param  int  $business_id
-     * @param  int  $user_id
-     * @param  string  $note
-     * @return bool
      */
-    public function createOrUpdatePaymentLines($transaction, $payments, $business_id = null, $user_id = null, $note = null)
+    public function createOrUpdatePaymentLines(object $transaction, array $payments, int $business_id = null, int $user_id = null, string $note = null): bool
     {
         $payments_formatted = [];
         $edit_ids = [0];
@@ -833,11 +783,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete lines for payment
-     *
-     * @param  object  $transaction
-     * @return bool
      */
-    public function deletePaymentLines($transaction)
+    public function deletePaymentLines(object $transaction): bool
     {
         $payment_lines = $transaction->payment_lines()->get();
 
@@ -862,9 +809,8 @@ class TransactionUtil extends Util
      * Edit transaction payment line
      *
      * @param  array  $product
-     * @return bool
      */
-    public function editPaymentLine($payment, $transaction = null)
+    public function editPaymentLine($payment, $transaction = null): bool
     {
         $payment_id = $payment['payment_id'];
         unset($payment['payment_id']);
@@ -899,11 +845,8 @@ class TransactionUtil extends Util
 
     /**
      * Get payment line for a transaction
-     *
-     * @param  int  $transaction_id
-     * @return bool
      */
-    public function getPaymentDetails($transaction_id)
+    public function getPaymentDetails(int $transaction_id): bool
     {
         $payment_lines = TransactionPayment::where('transaction_id', $transaction_id)
             ->get()->toArray();
@@ -1169,9 +1112,8 @@ class TransactionUtil extends Util
      * Get Order seller
      *
      * @param  int  $transaction_id
-     * @return string
      */
-    public function getOrderSeller($transacion_id)
+    public function getOrderSeller($transacion_id): string
     {
         if (empty($transacion_id)) {
             return '';
@@ -1651,15 +1593,9 @@ class TransactionUtil extends Util
     /**
      * Gives the receipt details in proper format.
      *
-     * @param  int  $transaction_id
-     * @param  int  $location_id
-     * @param  object  $invoice_layout
-     * @param  object  $business_details
      * @param  array  $receipt_details
-     * @param  string  $receipt_printer_type
-     * @return array
      */
-    public function getReceiptDetails($transaction_id, $location_id, $invoice_layout, $business_details, $location_details, $receipt_printer_type)
+    public function getReceiptDetails(int $transaction_id, int $location_id, object $invoice_layout, object $business_details, $location_details, string $receipt_printer_type): array
     {
         $il = $invoice_layout;
 
@@ -2213,10 +2149,8 @@ class TransactionUtil extends Util
 
     /**
      * Returns each line details for sell invoice display
-     *
-     * @return array
      */
-    protected function _receiptDetailsSellLines($lines, $il, $is_product_expiry_enabled, $is_lot_number_enabled)
+    protected function _receiptDetailsSellLines($lines, $il, $is_product_expiry_enabled, $is_lot_number_enabled): array
     {
         // Number of decimals
         $business_id = request()->session()->get('user.business_id');
@@ -2370,10 +2304,8 @@ class TransactionUtil extends Util
 
     /**
      * Returns each line details for sell return invoice display
-     *
-     * @return array
      */
-    protected function _receiptDetailsSellReturnLines($lines, $il, $is_product_expiry_enabled, $is_lot_number_enabled)
+    protected function _receiptDetailsSellReturnLines($lines, $il, $is_product_expiry_enabled, $is_lot_number_enabled): array
     {
         // Number of decimals
         $business_id = request()->session()->get('user.business_id');
@@ -2495,13 +2427,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives the invoice number for a Final/Draft invoice
-     *
-     * @param  int  $business_id
-     * @param  string  $status
-     * @param  string  $location_id
-     * @return string
      */
-    public function getInvoiceNumber($business_id, $status, $location_id)
+    public function getInvoiceNumber(int $business_id, string $status, string $location_id): string
     {
         if ($status == 'final') {
             $scheme = $this->getInvoiceScheme($business_id, $location_id);
@@ -2531,13 +2458,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if the correlative exists.
-     *
-     * @param  int  $location
-     * @param  int  $document
-     * @param  string  $correlative
-     * @return array
      */
-    public function validateCorrelative($location, $document, $correlative, $transaction_id = 0)
+    public function validateCorrelative(int $location, int $document, string $correlative, $transaction_id = 0): array
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -2602,12 +2524,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives the list of products for a purchase transaction
-     *
-     * @param  int  $business_id
-     * @param  int  $transaction_id
-     * @return array
      */
-    public function getPurchaseProducts($business_id, $transaction_id)
+    public function getPurchaseProducts(int $business_id, int $transaction_id): array
     {
         $products = Transaction::join('purchase_lines as pl', 'transactions.id', '=', 'pl.transaction_id')
             ->leftjoin('products as p', 'pl.product_id', '=', 'p.id')
@@ -2624,11 +2542,9 @@ class TransactionUtil extends Util
     /**
      * Gives the total purchase amount for a business within the date range passed
      *
-     * @param  int  $business_id
      * @param  int  $transaction_id
-     * @return array
      */
-    public function getPurchaseTotals($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getPurchaseTotals(int $business_id, $start_date = null, $end_date = null, $location_id = null): array
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'purchase')
@@ -2678,11 +2594,9 @@ class TransactionUtil extends Util
     /**
      * Gives the total sell amount for a business within the date range passed
      *
-     * @param  int  $business_id
      * @param  int  $transaction_id
-     * @return array
      */
-    public function getSellTotals($business_id, $start_date = null, $end_date = null, $location_id = null, $created_by = null)
+    public function getSellTotals(int $business_id, $start_date = null, $end_date = null, $location_id = null, $created_by = null): array
     {
         $query = Transaction::where('transactions.business_id', $business_id)
             ->where('transactions.type', 'sell')
@@ -2756,12 +2670,10 @@ class TransactionUtil extends Util
     /**
      * Gives the total input tax for a business within the date range passed
      *
-     * @param  int  $business_id
      * @param  string  $start_date default null
      * @param  string  $end_date default null
-     * @return float
      */
-    public function getInputTax($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getInputTax(int $business_id, string $start_date = null, string $end_date = null, $location_id = null): float
     {
         $query1 = Transaction::where('transactions.business_id', $business_id)
             ->leftjoin('tax_rates as T', 'transactions.tax_id', '=', 'T.id')
@@ -2849,12 +2761,10 @@ class TransactionUtil extends Util
     /**
      * Gives the total output tax for a business within the date range passed
      *
-     * @param  int  $business_id
      * @param  string  $start_date default null
      * @param  string  $end_date default null
-     * @return float
      */
-    public function getOutputTax($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getOutputTax(int $business_id, string $start_date = null, string $end_date = null, $location_id = null): float
     {
         $query1 = Transaction::where('transactions.business_id', $business_id)
             ->leftjoin('tax_rates as T', 'transactions.tax_id', '=', 'T.id')
@@ -2944,11 +2854,9 @@ class TransactionUtil extends Util
     /**
      * Gives total sells of last an week day-wise
      *
-     * @param  int  $business_id
      * @param  array  $filters
-     * @return Obj
      */
-    public function getSellsByWeek($business_id, $start_date, $end_date, $location_id = null)
+    public function getSellsByWeek(int $business_id, $start_date, $end_date, $location_id = null): Obj
     {
         if ($location_id == 0) {
             $location_id = null;
@@ -2995,11 +2903,9 @@ class TransactionUtil extends Util
     /**
      * Gives total sells of last 30 days day-wise
      *
-     * @param  int  $business_id
      * @param  array  $filters
-     * @return Obj
      */
-    public function getSellsLast30Days($business_id)
+    public function getSellsLast30Days(int $business_id): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -3036,13 +2942,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives total sells of current FY month-wise
-     *
-     * @param  int  $business_id
-     * @param  string  $start
-     * @param  string  $end
-     * @return Obj
      */
-    public function getSellsCurrentFy($business_id, $start, $end)
+    public function getSellsCurrentFy(int $business_id, string $start, string $end): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -3080,16 +2981,13 @@ class TransactionUtil extends Util
     /**
      * Retrives expense report
      *
-     * @param  int  $business_id
-     * @param  array  $filters
      * @param  string  $type = by_category (by_category or total)
-     * @return Obj
      */
     public function getExpenseReport(
-        $business_id,
-        $filters = [],
-        $type = 'by_category'
-    ) {
+        int $business_id,
+        array $filters = [],
+        string $type = 'by_category'
+    ): Obj {
 
         $query = Transaction::leftjoin('expense_categories AS ec', 'transactions.expense_category_id', '=', 'ec.id')
             ->where('transactions.business_id', $business_id)
@@ -3138,11 +3036,8 @@ class TransactionUtil extends Util
 
     /**
      * Get total paid amount for a transaction
-     *
-     * @param  int  $transaction_id
-     * @return int
      */
-    public function getTotalPaid($transaction_id)
+    public function getTotalPaid(int $transaction_id): int
     {
         $total_paid = TransactionPayment::where('transaction_id', $transaction_id)
             ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
@@ -3155,11 +3050,9 @@ class TransactionUtil extends Util
     /**
      * Calculates the payment status and returns back.
      *
-     * @param  int  $transaction_id
      * @param  float  $final_amount = null
-     * @return string
      */
-    public function calculatePaymentStatus($transaction_id, $final_amount = null)
+    public function calculatePaymentStatus(int $transaction_id, float $final_amount = null): string
     {
         $transaction = Transaction::find($transaction_id);
 
@@ -3187,11 +3080,8 @@ class TransactionUtil extends Util
     /**
      * Update the payment status for purchase or sell transactions. Returns
      * the status
-     *
-     * @param  int  $transaction_id
-     * @return string
      */
-    public function updatePaymentStatus($transaction_id, $final_amount = null)
+    public function updatePaymentStatus(int $transaction_id, $final_amount = null): string
     {
         $status = $this->calculatePaymentStatus($transaction_id, $final_amount);
 
@@ -3202,11 +3092,8 @@ class TransactionUtil extends Util
 
     /**
      * Purchase currency details
-     *
-     * @param  int  $business_id
-     * @return object
      */
-    public function purchaseCurrencyDetails($business_id)
+    public function purchaseCurrencyDetails(int $business_id): object
     {
         $business = Business::find($business_id);
         $output = ['purchase_in_diff_currency' => false,
@@ -3242,9 +3129,8 @@ class TransactionUtil extends Util
      * Pay contact due at once
      *
      * @param  obj  $parent_payment, string $type
-     * @return void
      */
-    public function payAtOnce($parent_payment, $type)
+    public function payAtOnce($parent_payment, $type): void
     {
 
         //Get all unpaid transaction for the contact
@@ -3342,14 +3228,11 @@ class TransactionUtil extends Util
      * NOTE: Don't use request variable here, request variable don't exist while adding
      * dummybusiness via command line
      *
-     * @param  array  $business
-     * @param  array  $transaction_lines
      * @param  string  $mapping_type = purchase (purchase or stock_adjustment)
      * @param  bool  $check_expiry = true
      * @param  int  $purchase_line_id (default: null)
-     * @return object
      */
-    public function mapPurchaseSell($business, $transaction_lines, $mapping_type = 'purchase', $check_expiry = true, $purchase_line_id = null, $warehouse_id = null)
+    public function mapPurchaseSell(array $business, array $transaction_lines, string $mapping_type = 'purchase', bool $check_expiry = true, int $purchase_line_id = null, $warehouse_id = null): object
     {
         if (empty($transaction_lines)) {
             return false;
@@ -3642,18 +3525,14 @@ class TransactionUtil extends Util
      * D => F (Call the mapPurchaseSell function)
      * F => F (Check for quantity of existing product, call mapPurchase for new products.)
      *
-     * @param  string  $status_before
-     * @param  object  $transaction
-     * @param  array  $business
      * @param  array  $deleted_line_ids = [] //deleted sell lines ids.
-     * @return void
      */
     public function adjustMappingPurchaseSell(
-        $status_before,
-        $transaction,
-        $business,
-        $deleted_line_ids = []
-    ) {
+        string $status_before,
+        object $transaction,
+        array $business,
+        array $deleted_line_ids = []
+    ): void {
 
         if ($status_before == 'final' && $transaction->status == 'draft') {
             //Get sell lines used for the transaction.
@@ -3760,12 +3639,8 @@ class TransactionUtil extends Util
     /**
      * Decrease the purchase quantity from
      * transaction_sell_lines_purchase_lines and purchase_lines.quantity_sold
-     *
-     * @param  int  $sell_line_id
-     * @param  int  $decrement_qty
-     * @return void
      */
-    private function mapDecrementPurchaseQuantity($sell_line_id, $decrement_qty)
+    private function mapDecrementPurchaseQuantity(int $sell_line_id, int $decrement_qty): void
     {
 
         $sell_purchase_line = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line_id)
@@ -3797,11 +3672,8 @@ class TransactionUtil extends Util
      * Decrement quantity adjusted in product line according to
      * transaction_sell_lines_purchase_lines
      * Used in delete of stock adjustment
-     *
-     * @param  array  $line_ids
-     * @return bool
      */
-    public function mapPurchaseQuantityForDeleteStockAdjustment($line_ids)
+    public function mapPurchaseQuantityForDeleteStockAdjustment(array $line_ids): bool
     {
 
         if (empty($line_ids)) {
@@ -3827,13 +3699,8 @@ class TransactionUtil extends Util
     /**
      * Adjust the existing mapping between purchase & sell on edit of
      * purchase
-     *
-     * @param  string  $before_status
-     * @param  object  $transaction
-     * @param  object  $delete_purchase_lines
-     * @return void
      */
-    public function adjustMappingPurchaseSellAfterEditingPurchase($before_status, $transaction, $delete_purchase_lines)
+    public function adjustMappingPurchaseSellAfterEditingPurchase(string $before_status, object $transaction, object $delete_purchase_lines): bool
     {
 
         if ($before_status == 'received' && $transaction->status == 'received') {
@@ -3998,12 +3865,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if transaction can be edited based on business     transaction_edit_days
-     *
-     * @param  int/object $transaction
-     * @param  int  $edit_duration
-     * @return bool
      */
-    public function canBeEdited($transaction, $edit_duration)
+    public function canBeEdited(int $transaction, int $edit_duration): bool
     {
 
         if (! is_object($transaction)) {
@@ -4028,13 +3891,9 @@ class TransactionUtil extends Util
     /**
      * Calculates total stock on the given date
      *
-     * @param  int  $business_id
-     * @param  string  $date
-     * @param  int  $location_id
      * @param  bool  $is_opening = false
-     * @return float
      */
-    public function getOpeningClosingStock($business_id, $date, $location_id, $is_opening = false)
+    public function getOpeningClosingStock(int $business_id, string $date, int $location_id, bool $is_opening = false): float
     {
 
         $query = PurchaseLine::join(
@@ -4090,14 +3949,9 @@ class TransactionUtil extends Util
     /**
      * Calculates total discount on the given date
      *
-     * @param  int  $business_id
-     * @param  string  $transaction_type
-     * @param  string  $start_date
-     * @param  string  $end_date
      * @param  int  $location_id = null
-     * @return float
      */
-    public function getTotalDiscounts($business_id, $transaction_type, $start_date, $end_date, $location_id = null)
+    public function getTotalDiscounts(int $business_id, string $transaction_type, string $start_date, string $end_date, int $location_id = null): float
     {
 
         $query = Transaction::where('business_id', $business_id)
@@ -4129,14 +3983,8 @@ class TransactionUtil extends Util
 
     /**
      * Calculates total expense for a business
-     *
-     * @param  int  $business_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  int  $location_id
-     * @return bool
      */
-    public function getTotalExpense($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getTotalExpense(int $business_id, string $start_date = null, string $end_date = null, int $location_id = null): bool
     {
 
         //Get Total Expense
@@ -4162,14 +4010,8 @@ class TransactionUtil extends Util
 
     /**
      * Calculates total stock adjustment for a business
-     *
-     * @param  int  $business_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  int  $location_id
-     * @return obj
      */
-    public function getTotalStockAdjustment($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getTotalStockAdjustment(int $business_id, string $start_date = null, string $end_date = null, int $location_id = null): obj
     {
 
         //Get Total Expense
@@ -4199,15 +4041,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives the total sell commission for a commission agent within the date range passed
-     *
-     * @param  int  $business_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  int  $location_id
-     * @param  int  $commission_agent
-     * @return array
      */
-    public function getTotalSellCommission($business_id, $start_date = null, $end_date = null, $location_id = null, $commission_agent = null)
+    public function getTotalSellCommission(int $business_id, string $start_date = null, string $end_date = null, int $location_id = null, int $commission_agent = null): array
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -4242,14 +4077,8 @@ class TransactionUtil extends Util
 
     /**
      * Calculates total stock adjustment for a business
-     *
-     * @param  int  $business_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  int  $location_id
-     * @return bool
      */
-    public function getTotalTransferShippingCharges($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getTotalTransferShippingCharges(int $business_id, string $start_date = null, string $end_date = null, int $location_id = null): bool
     {
 
         //Get Total Transfer Shipping charge
@@ -4274,14 +4103,8 @@ class TransactionUtil extends Util
 
     /**
      * Add Sell transaction
-     *
-     * @param  int  $business_id
-     * @param  array  $input
-     * @param  float  $invoice_total
-     * @param  int  $user_id
-     * @return bool
      */
-    public function createSellReturnTransaction($business_id, $input, $invoice_total, $user_id)
+    public function createSellReturnTransaction(int $business_id, array $input, float $invoice_total, int $user_id): bool
     {
         $transaction = Transaction::create([
             'business_id' => $business_id,
@@ -4308,11 +4131,8 @@ class TransactionUtil extends Util
 
     /**
      * Get document type print format from a transaction
-     *
-     * @param  int  $transaction_id
-     * @return string
      */
-    public function getDocumentTypePrintFormat($transaction_id)
+    public function getDocumentTypePrintFormat(int $transaction_id): string
     {
         if (empty($transaction_id)) {
             return '';
@@ -4389,13 +4209,8 @@ class TransactionUtil extends Util
 
     /**
      * Retrieves all available lot numbers of a product from variation id
-     *
-     * @param  int  $variation_id
-     * @param  int  $business_id
-     * @param  int  $location_id
-     * @return bool
      */
-    public function getLotNumbersFromVariation($variation_id, $business_id, $location_id, $exclude_empty_lot = false)
+    public function getLotNumbersFromVariation(int $variation_id, int $business_id, int $location_id, $exclude_empty_lot = false): bool
     {
 
         $query = PurchaseLine::join(
@@ -4450,12 +4265,11 @@ class TransactionUtil extends Util
     /**
      * Checks if credit limit of a customer is exceeded
      *
-     * @param  array  $input
      * @param  int  $exclude_transaction_id (For update sell)
      * @return mixed
      * if exceeded returns credit_limit else false
      */
-    public function isCustomerCreditLimitExeeded($input, $exclude_transaction_id = null)
+    public function isCustomerCreditLimitExeeded(array $input, int $exclude_transaction_id = null)
     {
         //$credit_limit = Contact::find($input['contact_id'])->credit_limit;
         $credit_limit = Customer::find($input['customer_id'])->credit_limit;
@@ -4501,13 +4315,8 @@ class TransactionUtil extends Util
 
     /**
      * Creates a new opening balance transaction for a contact
-     *
-     * @param  int  $business_id
-     * @param  int  $contact_id
-     * @param  int  $amount
-     * @return void
      */
-    public function createOpeningBalanceTransaction($business_id, $contact_id, $amount, $customer_id = null)
+    public function createOpeningBalanceTransaction(int $business_id, int $contact_id, int $amount, $customer_id = null): void
     {
         $business_location = BusinessLocation::where('business_id', $business_id)
             ->first();
@@ -4535,13 +4344,8 @@ class TransactionUtil extends Util
 
     /**
      * Updates quantity sold in purchase line for sell return
-     *
-     * @param  obj  $sell_line
-     * @param  decimal  $new_quantity
-     * @param  decimal  $old_quantity
-     * @return void
      */
-    public function updateQuantitySoldFromSellLine($sell_line, $new_quantity, $old_quantity)
+    public function updateQuantitySoldFromSellLine(obj $sell_line, decimal $new_quantity, decimal $old_quantity): void
     {
         $qty_difference = $this->num_uf($new_quantity) - $this->num_uf($old_quantity);
 
@@ -4600,11 +4404,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if return exist for a particular purchase or sell
-     *
-     * @param  id  $transacion_id
-     * @return bool
      */
-    public function isReturnExist($transacion_id)
+    public function isReturnExist(id $transacion_id): bool
     {
         return Transaction::where('return_parent_id', $transacion_id)->exists();
     }
@@ -4685,11 +4486,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if lot number is used in any sell
-     *
-     * @param  obj  $transaction
-     * @return bool
      */
-    public function isLotUsed($transaction)
+    public function isLotUsed(obj $transaction): bool
     {
         foreach ($transaction->purchase_lines as $purchase_line) {
             $exists = TransactionSellLine::where('lot_no_line_id', $purchase_line->id)->exists();
@@ -4703,13 +4501,8 @@ class TransactionUtil extends Util
 
     /**
      * Return discount value from a amount given
-     *
-     * @param  float  $amount
-     * @param  string  $discount_type
-     * @param  float  $discount_amount
-     * @return float
      */
-    public function getDiscountValue($amount, $discount_type, $discount_amount)
+    public function getDiscountValue(float $amount, string $discount_type, float $discount_amount): float
     {
         if (empty($discount_type) || empty($discount_amount)) {
             return 0;
@@ -4728,11 +4521,8 @@ class TransactionUtil extends Util
 
     /**
      * Get customer information
-     *
-     * @param  int  $customer_id
-     * @return Customer
      */
-    public function getCustomerInfo($customer_id)
+    public function getCustomerInfo(int $customer_id): Customer
     {
         if (empty($customer_id)) {
             return null;
@@ -4752,18 +4542,10 @@ class TransactionUtil extends Util
 
     /**
      * Create or update kardex output lines.
-     *
-     * @param  \App\Models\MovementType  $movement_type
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $reference
-     * @param  \App\Models\TransactionSellLine  $lines
-     * @param  \App\Models\TransactionSellLine  $lines_before
-     * @param  int  $calculate_balance
-     * @return void
      */
     public function createOrUpdateOutputLines(
-        $movement_type, $transaction, $reference, $lines,
-        $lines_before = null, $calculate_balance = null, $old_stock_adjustment = false)
+        MovementType $movement_type, Transaction $transaction, string $reference, TransactionSellLine $lines,
+        TransactionSellLine $lines_before = null, int $calculate_balance = null, $old_stock_adjustment = false): void
     {
         foreach ($lines as $line) {
             $product = Product::find($line->product_id);
@@ -4885,18 +4667,10 @@ class TransactionUtil extends Util
 
     /**
      * Create or update kardex input lines.
-     *
-     * @param  \App\Models\MovementType  $movement_type
-     * @param  \App\Models\Transaction  $transaction
-     * @param  string  $reference
-     * @param  \App\Models\PurchaseLine  $lines
-     * @param  \App\Models\PurchaseLine  $lines_before
-     * @param  int  $calculate_balance
-     * @return void
      */
     public function createOrUpdateInputLines(
-        $movement_type, $transaction, $reference, $lines,
-        $lines_before = null, $calculate_balance = null)
+        MovementType $movement_type, Transaction $transaction, string $reference, PurchaseLine $lines,
+        PurchaseLine $lines_before = null, int $calculate_balance = null): void
     {
         foreach ($lines as $line) {
             $product = Product::find($line->product_id);
@@ -5000,20 +4774,10 @@ class TransactionUtil extends Util
      * Create or update a kardex line.
      *
      * @param  \App\Models\MovementType  $movement_type_id
-     * @param  \App\Models\Transaction  $transaction
-     * @param  \App\Models\Product  $product
-     * @param  float  $quantity
-     * @param  float  $unit_cost
-     * @param  float  $total_cost
-     * @param  int  $variation_id
-     * @param  string  $reference
-     * @param  int  $line_id
-     * @param  float  $balance
-     * @return void
      */
     public function saveKardexLine(
-        $movement_type, $transaction, $product, $quantity, $unit_cost,
-        $total_cost, $variation_id, $reference, $line_id, $balance = null)
+        $movement_type, Transaction $transaction, Product $product, float $quantity, float $unit_cost,
+        float $total_cost, int $variation_id, string $reference, int $line_id, float $balance = null): void
     {
         $flag = false;
 
@@ -5112,15 +4876,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete a kardex line.
-     *
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
-     * @param  \App\Models\Product  $product
-     * @param  int  $transaction_id
-     * @param  int  $variation_id
-     * @return void
      */
-    public function deleteKardexLine($location_id, $warehouse_id, $product, $transaction_id, $variation_id)
+    public function deleteKardexLine(int $location_id, int $warehouse_id, Product $product, int $transaction_id, int $variation_id): void
     {
         $flag = false;
 
@@ -5154,12 +4911,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete kardex line by transaction.
-     *
-     * @param  int  $id
-     * @param  bool  $is_physical_inventory
-     * @return void
      */
-    public function deleteKardexByTransaction($id, $is_physical_inventory = false)
+    public function deleteKardexByTransaction(int $id, bool $is_physical_inventory = false): void
     {
         if (config('app.business') == 'optics') {
             // Do not take kardex lines of the lab order type
@@ -5192,20 +4945,10 @@ class TransactionUtil extends Util
 
     /**
      * Calculate balance for kardex generation.
-     *
-     * @param  \App\Models\Product  $product
-     * @param  int  $variation_id
-     * @param  float  $quantity
-     * @param  int  $business_id
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
-     * @param  Date  $date_time
-     * @param  int  $kardex_id
-     * @return float
      */
     public function calculateBalance(
-        $product, $variation_id, $quantity, $business_id, $location_id, $warehouse_id,
-        $date_time, $kardex_id = null)
+        Product $product, int $variation_id, float $quantity, int $business_id, int $location_id, int $warehouse_id,
+        Date $date_time, int $kardex_id = null): float
     {
         $balance = null;
 
@@ -5265,11 +5008,8 @@ class TransactionUtil extends Util
 
     /**
      * Recalculate balance from last record saved.
-     *
-     * @param  \App\Models\Kardex  $kardex
-     * @return void
      */
-    public function recalculateBalances($kardex)
+    public function recalculateBalances(Kardex $kardex): void
     {
         $lines = Kardex::where('business_location_id', $kardex->business_location_id)
             ->where('warehouse_id', $kardex->warehouse_id)
@@ -5310,12 +5050,8 @@ class TransactionUtil extends Util
 
     /**
      * update the payment methods, if the method is changed then it is deleted and the new fields are saved
-     *
-     * @param int/object $id
-     * @param  object  $payment
-     * @return void
      */
-    public function updatePaymentsMethod($id, $payment)
+    public function updatePaymentsMethod(int $id, object $payment): void
     {
         $transaction_payment = TransactionPayment::find($id);
 
@@ -5344,11 +5080,9 @@ class TransactionUtil extends Util
     /**
      *  All payments per transaction
      *
-     * @param  int  $transaction_id
      * @param  int  $business_id = null
-     * @return object
      */
-    public function sumTransactionPayments($transaction_id, $business_id = null)
+    public function sumTransactionPayments(int $transaction_id, int $business_id = null): object
     {
         $tp = TransactionPayment::where('transaction_id', $transaction_id)
             ->select(
@@ -5369,11 +5103,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if document type is ticket.
-     *
-     * @param  int  $transaction_id
-     * @return int
      */
-    public function isTicket($transaction_id)
+    public function isTicket(int $transaction_id): int
     {
         $document_type = Transaction::leftJoin('document_types as dt', 'dt.id', 'transactions.document_types_id')
             ->where('transactions.id', $transaction_id)
@@ -5391,11 +5122,8 @@ class TransactionUtil extends Util
 
     /**
      * Check if document type is fiscal credit.
-     *
-     * @param  int  $transaction_id
-     * @return int
      */
-    public function isCFC($transaction_id)
+    public function isCFC(int $transaction_id): int
     {
         $document_type = Transaction::leftJoin('document_types as dt', 'dt.id', 'transactions.document_types_id')
             ->where('transactions.id', $transaction_id)
@@ -5414,12 +5142,9 @@ class TransactionUtil extends Util
     /**
      * Validation to allow the check amount not to match expenses total.
      *
-     * @param  float  $check_amount
      * @param  mixed  $expenses
-     * @param  string  $type
-     * @return bool
      */
-    public function validateMatchCheckAndExpense($check_amount, $expenses, $type)
+    public function validateMatchCheckAndExpense(float $check_amount, $expenses, string $type): bool
     {
         $validation = false;
 
@@ -5452,9 +5177,8 @@ class TransactionUtil extends Util
      * return true is month is closed
      *
      * @param  date  $date
-     * @return bool
      */
-    public function isClosed($transaction_date)
+    public function isClosed($transaction_date): bool
     {
         $date = \Carbon::parse($this->uf_date($transaction_date));
 
@@ -5474,12 +5198,8 @@ class TransactionUtil extends Util
 
     /**
      * Add or remove milesimas that do not allow the total paid to match the final total.
-     *
-     * @param  int  $transaction_id
-     * @param  float  $new_pay
-     * @param  float  $old_pay
      */
-    public function convertPayment($transaction_id, $new_pay, $old_pay = 0)
+    public function convertPayment(int $transaction_id, float $new_pay, float $old_pay = 0)
     {
         // Payment to return
         $pay_return = $new_pay;
@@ -5500,11 +5220,8 @@ class TransactionUtil extends Util
 
     /**
      * Save tax and payment amounts.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return void
      */
-    public function saveTaxAndPayment($transaction)
+    public function saveTaxAndPayment(Transaction $transaction): void
     {
         $discount_amount = $this->getDiscountValue($transaction->total_before_tax, $transaction->discount_type, $transaction->discount_amount);
         $tax_group_rate = $this->taxUtil->getLinesTaxPercent($transaction->id);
@@ -5522,13 +5239,9 @@ class TransactionUtil extends Util
     /**
      * Get the number of sales recorded per hour.
      *
-     * @param  int  $business_id
      * @param  mixed  $location_id
-     * @param  string  $start
-     * @param  string  $end
-     * @return array
      */
-    public function getPeakSalesHours($business_id, $location_id, $start, $end)
+    public function getPeakSalesHours(int $business_id, $location_id, string $start, string $end): array
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'sell')
@@ -5552,13 +5265,8 @@ class TransactionUtil extends Util
 
     /**
      * Create reservation.
-     *
-     * @param  int  $business_id
-     * @param  array  $input
-     * @param  int  $user_id
-     * @return \App\Models\Quote
      */
-    public function createReservation($business_id, $input, $user_id)
+    public function createReservation(int $business_id, array $input, int $user_id): Quote
     {
         $quote = Quote::create([
             'customer_id' => $input['customer_id'],
@@ -5599,13 +5307,8 @@ class TransactionUtil extends Util
 
     /**
      * Create quote line.
-     *
-     * @param  \App\Models\Quote  $quote
-     * @param  array  $quote_lines
-     * @param  int  $location_id
-     * @return bool
      */
-    public function createQuoteLines($quote, $quote_lines, $location_id)
+    public function createQuoteLines(Quote $quote, array $quote_lines, int $location_id): bool
     {
         foreach ($quote_lines as $ql) {
             // Calculate unit price and unit price before discount
@@ -5646,17 +5349,10 @@ class TransactionUtil extends Util
     /**
      * Add line for payment.
      *
-     * @param  \App\Models\Quote/int  $quote
-     * @param  array  $payments
      * @param  int  $contacts_id
-     * @param  int  $cashier_id
-     * @param  int  $user_id
-     * @param  string  $quote_date
-     * @param  string  $note
-     * @return bool
      */
     public function createOrUpdatePaymentLinesToQuote(
-        $quote, $payments, $contact_id = null, $cashier_id = null, $user_id = null, $quote_date = null, $note = null)
+        Quote $quote, array $payments, $contact_id = null, int $cashier_id = null, int $user_id = null, string $quote_date = null, string $note = null): bool
     {
         $payments_formatted = [];
         $edit_ids = [0];
@@ -5761,11 +5457,8 @@ class TransactionUtil extends Util
 
     /**
      * Get payment line for a quote.
-     *
-     * @param  int  $quote_id
-     * @return bool
      */
-    public function getPaymentDetailsToQuotes($quote_id)
+    public function getPaymentDetailsToQuotes(int $quote_id): bool
     {
         $payment_lines = TransactionPayment::where('quote_id', $quote_id)
             ->get()
@@ -5776,11 +5469,8 @@ class TransactionUtil extends Util
 
     /**
      * Get total paid amount for a quote
-     *
-     * @param  int  $quote_id
-     * @return float
      */
-    public function getTotalPaidToQuotes($quote_id)
+    public function getTotalPaidToQuotes(int $quote_id): float
     {
         $total_paid = TransactionPayment::where('quote_id', $quote_id)
             ->select(DB::raw('SUM(IF(is_return = 0, amount, amount * -1)) as total_paid'))
@@ -5792,12 +5482,8 @@ class TransactionUtil extends Util
 
     /**
      * Calculates the payment status and returns back.
-     *
-     * @param  int  $quote_id
-     * @param  float  $final_amount
-     * @return string
      */
-    public function calculatePaymentStatusToQuotes($quote_id, $final_amount = null)
+    public function calculatePaymentStatusToQuotes(int $quote_id, float $final_amount = null): string
     {
         $total_paid = $this->getTotalPaidToQuotes($quote_id);
 
@@ -5821,10 +5507,8 @@ class TransactionUtil extends Util
      * Delete the products removed and increment product stock. Includes kits.
      *
      * @param  array  $transaction_line_ids
-     * @param  int  $location_id
-     * @return bool
      */
-    public function deleteQuoteLines($quote_line_ids, $location_id, $warehouse_id)
+    public function deleteQuoteLines($quote_line_ids, int $location_id, $warehouse_id): bool
     {
         if (! empty($quote_line_ids)) {
             $quote_lines = QuoteLine::whereIn('id', $quote_line_ids)
@@ -5847,13 +5531,10 @@ class TransactionUtil extends Util
     /**
      * Adjust the quantity of product and its variation. Includes kits.
      *
-     * @param  int  $location_id
      * @param  int  $product_id
-     * @param  int  $variation_id
      * @param  float  $increment_qty
-     * @return bool
      */
-    public function adjustQuantityReserved($location_id, $warehouse_id, $variation_id, $decrement_qty)
+    public function adjustQuantityReserved(int $location_id, $warehouse_id, int $variation_id, $decrement_qty): bool
     {
         if ($decrement_qty != 0) {
             $variation = Variation::where('id', $variation_id)->first();
@@ -5903,13 +5584,8 @@ class TransactionUtil extends Util
      * Add Sell transaction
      *
      * @param  mixed  $transaction_id
-     * @param  int  $business_id
-     * @param  array  $input
-     * @param  float  $invoice_total
-     * @param  int  $user_id
-     * @return bool
      */
-    public function updateReservation($quote_id, $business_id, $input, $invoice_total, $user_id)
+    public function updateReservation($quote_id, int $business_id, array $input, float $invoice_total, int $user_id): bool
     {
         $quote = $quote_id;
 
@@ -6037,12 +5713,8 @@ class TransactionUtil extends Util
 
     /**
      * Edit transaction sell line
-     *
-     * @param  array  $product
-     * @param  int  $location_id
-     * @return bool
      */
-    public function editQuoteLine($product, $location_id, $status_before)
+    public function editQuoteLine(array $product, int $location_id, $status_before): bool
     {
         // Get the old reservation quantity
         $quote_line = QuoteLine::find($product['transaction_sell_lines_id']);
@@ -6081,17 +5753,10 @@ class TransactionUtil extends Util
 
     /**
      * Create or update kardex lines for lab orders.
-     *
-     * @param  int  $transaction_id
-     * @param  string  $reference
-     * @param  \App\LabOrderDetail  $lines
-     * @param  \App\LabOrderDetail  $lines_before
-     * @param  int  $calculate_balance
-     * @return void
      */
     public function createOrUpdateLabOrderLines(
-        $transaction_id, $reference, $lines,
-        $lines_before = null, $calculate_balance = null)
+        int $transaction_id, string $reference, LabOrderDetail $lines,
+        LabOrderDetail $lines_before = null, int $calculate_balance = null): void
     {
         // Save kardex lines
         foreach ($lines as $line) {
@@ -6168,21 +5833,10 @@ class TransactionUtil extends Util
 
     /**
      * Create or update a kardex line for lab order.
-     *
-     * @param  \App\Models\MovementType  $movement_type
-     * @param  int  $transaction_id
-     * @param  \App\LabOrderDetail  $lod
-     * @param  \App\Models\Product  $product
-     * @param  float  $quantity
-     * @param  float  $unit_cost
-     * @param  float  $total_cost
-     * @param  string  $reference
-     * @param  float  $balance
-     * @return void
      */
     public function saveKardexLineForLabOrder(
-        $movement_type, $transaction_id, $lod, $product, $quantity,
-        $unit_cost, $total_cost, $reference, $balance = null)
+        MovementType $movement_type, int $transaction_id, LabOrderDetail $lod, Product $product, float $quantity,
+        float $unit_cost, float $total_cost, string $reference, float $balance = null): void
     {
         // Check if the product has stock control
         if (($product->clasification == 'product' || $product->clasification == 'material') &&
@@ -6261,15 +5915,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete a kardex line for lab order.
-     *
-     * @param  int  $location_id
-     * @param  int  $warehouse_id
-     * @param  \App\Models\Product  $product
-     * @param  int  $lab_order_id
-     * @param  int  $variation_id
-     * @return void
      */
-    public function deleteKardexLineForLabOrder($location_id, $warehouse_id, $product, $lab_order_id, $variation_id)
+    public function deleteKardexLineForLabOrder(int $location_id, int $warehouse_id, Product $product, int $lab_order_id, int $variation_id): void
     {
         // Check if the product has stock control
         if (($product->clasification == 'product' || $product->clasification == 'material') &&
@@ -6291,11 +5938,8 @@ class TransactionUtil extends Util
 
     /**
      * Delete kardex line by lab order.
-     *
-     * @param  int  $id
-     * @return void
      */
-    public function deleteKardexByLabOrder($id)
+    public function deleteKardexByLabOrder(int $id): void
     {
         $lines = Kardex::where('lab_order_id', $id)->get();
 
@@ -6314,13 +5958,10 @@ class TransactionUtil extends Util
     /**
      * Adjust the quantity of product and its variation. Includes kits.
      *
-     * @param  int  $location_id
      * @param  int  $product_id
-     * @param  int  $variation_id
      * @param  float  $increment_qty
-     * @return bool
      */
-    public function adjustStockToQuote($location_id, $variation_id, $decrement_qty)
+    public function adjustStockToQuote(int $location_id, int $variation_id, $decrement_qty): bool
     {
         if ($decrement_qty != 0) {
             $variation = Variation::find($variation_id);
@@ -6355,11 +5996,8 @@ class TransactionUtil extends Util
 
     /**
      * Update import data.
-     *
-     * @param  int  $transaction_id
-     * @return void
      */
-    public function updateImportData($transaction_id)
+    public function updateImportData(int $transaction_id): void
     {
         $transaction = Transaction::find($transaction_id);
 
@@ -6442,11 +6080,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives total purchases of last 30 days day-wise
-     *
-     * @param  int  $business_id
-     * @return Illuminate\Support\Collection
      */
-    public function getPurchasesLast30Days($business_id)
+    public function getPurchasesLast30Days(int $business_id): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'purchase')
@@ -6483,13 +6118,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives total purchases of current fiscal year month-wise
-     *
-     * @param  int  $business_id
-     * @param  string  $start
-     * @param  string  $end
-     * @return Illuminate\Support\Collection
      */
-    public function getPurchasesCurrentFy($business_id, $start, $end)
+    public function getPurchasesCurrentFy(int $business_id, string $start, string $end): Collection
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'purchase')
@@ -6526,11 +6156,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives total stock of last 30 days day-wise
-     *
-     * @param  int  $business_id
-     * @return array
      */
-    public function getStockLast30Days($business_id)
+    public function getStockLast30Days(int $business_id): Collection
     {
         $location_id = 0;
 
@@ -6541,17 +6168,13 @@ class TransactionUtil extends Util
         ))
             ->pluck('total', 'full_date');
 
-        return $result;
+        return collect($result);
     }
 
     /**
      * Gives total purchases of current fiscal year month-wise
-     *
-     * @param  int  $business_id
-     * @param  string  $start
-     * @return array
      */
-    public function getStockCurrentFy($business_id, $start)
+    public function getStockCurrentFy(int $business_id, string $start): Collection
     {
         $location_id = 0;
 
@@ -6567,14 +6190,8 @@ class TransactionUtil extends Util
 
     /**
      * Gives the total expense amount for a business within the date range passed.
-     *
-     * @param  int  $business_id
-     * @param  string  $start_date
-     * @param  string  $end_date
-     * @param  int  $location_id
-     * @return array
      */
-    public function getExpenseTotals($business_id, $start_date = null, $end_date = null, $location_id = null)
+    public function getExpenseTotals(int $business_id, string $start_date = null, string $end_date = null, int $location_id = null): array
     {
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'expense')
